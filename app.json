@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "feazel-dashboards-v2",
+    "name": "Feazel Dashboards",
     "slug": "feazel-dashboards-v2",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -10,20 +10,30 @@
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#1B2A4A"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.feazel.dashboards",
+      "buildNumber": "1",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#1B2A4A"
       },
       "edgeToEdgeEnabled": true
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "b2595ad8-34f0-400b-96c7-2a6552849da4"
+      }
     }
   }
 }

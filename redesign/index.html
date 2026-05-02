@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Feazel Command Center · Executive Dashboards</title>
+<link rel="stylesheet" href="./shared/styles.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='16' fill='%231f2d4b'/><text x='50' y='66' text-anchor='middle' font-family='Arial' font-size='52' font-weight='800' fill='white'>F</text></svg>">
+</head>
+<body>
+
+<div id="app-host"></div>
+
+<template id="page-tpl">
+  <!-- Hero -->
+  <section class="hub-hero">
+    <span class="eyebrow">FEAZEL ROOFING · COO OFFICE</span>
+    <h1>Command Center</h1>
+    <p>One view of where the residential business stands today: signed contracts, the revenue forecast against the $125.6M budget, the backlog of work waiting for our crews, and what is actually getting installed and invoiced.</p>
+    <div class="hub-hero-stats">
+      <div class="hub-hero-stat">
+        <div class="l">2026 Revenue Target</div>
+        <div class="v">$185M</div>
+        <div class="s">$125.6M residential · $59.4M commercial</div>
+      </div>
+      <div class="hub-hero-stat">
+        <div class="l">Residential Signed YTD</div>
+        <div class="v">$24.5M</div>
+        <div class="s">1,572 contracts across 13 markets</div>
+      </div>
+      <div class="hub-hero-stat">
+        <div class="l">Invoiced YTD</div>
+        <div class="v">$19.3M</div>
+        <div class="s">1,041 unique jobs · $18,553 avg contract</div>
+      </div>
+      <div class="hub-hero-stat">
+        <div class="l">Open Backlog</div>
+        <div class="v">$14.7M</div>
+        <div class="s">713 active pipeline jobs</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Quick rollup callout -->
+  <section class="section">
+    <div class="callout">
+      <span class="callout-title">Where it stands</span>
+      The current 4-week sales pace ($2.6M/wk) projects to <strong>$119.3M annual invoiced revenue</strong> against the
+      <strong>$125.6M budget</strong>, a $6.3M gap. The plan to close it is documented in Revenue Forecast → Budget Recovery
+      and Sales Overview → Action Plan. The backlog and installs dashboards show what we have already sold
+      and need to deliver on time to convert that pace into invoiced revenue.
+    </div>
+  </section>
+
+  <!-- 4 dashboard tiles -->
+  <section class="section">
+    <div class="section-head">
+      <h2>Dashboards</h2>
+      <small>Click into any dashboard for the full sub-tab navigation</small>
+    </div>
+    <div class="grid grid-2">
+
+      <a class="tile" href="./sales-overview/index.html">
+        <div style="display:flex; gap:14px; align-items:flex-start;">
+          <div class="tile-mark">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+          </div>
+          <div>
+            <span class="eyebrow">YTD 2026</span>
+            <h2 style="margin-top:2px;">Residential Sales Overview</h2>
+            <p>Signed contracts, kicked-back rate, branch and rep performance, and the levers to close the gap to plan. 13 dedicated tabs.</p>
+          </div>
+        </div>
+        <div class="tile-stats">
+          <div class="tile-stat"><div class="l">Signed YTD</div><div class="v">$24.46M</div></div>
+          <div class="tile-stat"><div class="l">Sold</div><div class="v">$21.02M</div></div>
+          <div class="tile-stat"><div class="l">Kicked Back</div><div class="v">$880K</div></div>
+          <div class="tile-stat"><div class="l">Avg Deal</div><div class="v">$15,563</div></div>
+        </div>
+        <span class="tile-cta">Open dashboard <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
+      </a>
+
+      <a class="tile" href="./revenue-forecast/index.html">
+        <div style="display:flex; gap:14px; align-items:flex-start;">
+          <div class="tile-mark">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-6"/></svg>
+          </div>
+          <div>
+            <span class="eyebrow">V5 · 2026 OUTLOOK</span>
+            <h2 style="margin-top:2px;">Residential Revenue Forecast</h2>
+            <p>Projects net invoiced revenue against the $125.6M budget using cycle-aware conversion curves. 12 dedicated tabs.</p>
+          </div>
+        </div>
+        <div class="tile-stats">
+          <div class="tile-stat"><div class="l">Annual Forecast</div><div class="v">$119.3M</div></div>
+          <div class="tile-stat"><div class="l">Budget</div><div class="v">$125.6M</div></div>
+          <div class="tile-stat"><div class="l">Gap to Plan</div><div class="v" style="color:var(--danger);">−$6.3M</div></div>
+          <div class="tile-stat"><div class="l">Active Pipeline</div><div class="v">$14.7M</div></div>
+        </div>
+        <span class="tile-cta">Open dashboard <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
+      </a>
+
+      <a class="tile" href="./backlog/index.html">
+        <div style="display:flex; gap:14px; align-items:flex-start;">
+          <div class="tile-mark">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+          </div>
+          <div>
+            <span class="eyebrow">LIVE OPERATIONS</span>
+            <h2 style="margin-top:2px;">Job Backlog &amp; Production</h2>
+            <p>Work-order-level backlog: holds, partial completions, ready-to-schedule, and the cash sitting in unfinished work. 8 tabs.</p>
+          </div>
+        </div>
+        <div class="tile-stats">
+          <div class="tile-stat"><div class="l">Open WOs</div><div class="v">840</div></div>
+          <div class="tile-stat"><div class="l">Partial Jobs</div><div class="v">$1.99M</div></div>
+          <div class="tile-stat"><div class="l">On-Hold WOs</div><div class="v">132</div></div>
+          <div class="tile-stat"><div class="l">Stale &gt;30d</div><div class="v">98</div></div>
+        </div>
+        <span class="tile-cta">Open dashboard <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
+      </a>
+
+      <a class="tile" href="./installs-ytd/index.html">
+        <div style="display:flex; gap:14px; align-items:flex-start;">
+          <div class="tile-mark">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+          <div>
+            <span class="eyebrow">INVOICED PRODUCTION</span>
+            <h2 style="margin-top:2px;">Residential Installs YTD</h2>
+            <p>What is actually closing. Invoiced jobs by PM, market, and trade mix; multi-trade lift and where cycle time slips. 8 tabs.</p>
+          </div>
+        </div>
+        <div class="tile-stats">
+          <div class="tile-stat"><div class="l">True Revenue</div><div class="v">$19.31M</div></div>
+          <div class="tile-stat"><div class="l">Median Days</div><div class="v">27.1</div></div>
+          <div class="tile-stat"><div class="l">Multi-Trade</div><div class="v">27.9%</div></div>
+          <div class="tile-stat"><div class="l">MT Lift</div><div class="v" style="color:var(--success);">+67.9%</div></div>
+        </div>
+        <span class="tile-cta">Open dashboard <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- Suite-wide context -->
+  <section class="section">
+    <div class="grid grid-3">
+      <div class="card">
+        <span class="eyebrow">METHODOLOGY</span>
+        <h3 style="margin-top:6px;">Forecast V5 Locked</h3>
+        <p style="margin-top:8px; font-size:13px;">The Revenue Forecast methodology is locked as of <strong>April 19, 2026</strong>. WIP constants and cycle-time hierarchy are not changed without explicit approval. See Revenue Forecast → Executive Summary for details.</p>
+      </div>
+      <div class="card">
+        <span class="eyebrow">DATA FRESHNESS</span>
+        <h3 style="margin-top:6px;">As of April 29, 2026</h3>
+        <p style="margin-top:8px; font-size:13px;">All four dashboards reflect data through end of business <strong>Wednesday, April 29</strong>. Sales Overview last signed contract recorded at 8:55 PM ET.</p>
+      </div>
+      <div class="card">
+        <span class="eyebrow">SCOPE</span>
+        <h3 style="margin-top:6px;">Residential Only</h3>
+        <p style="margin-top:8px; font-size:13px;">This suite is the residential book. Commercial and multi-family operations sit on a separate dashboard set under <strong>Todd Sandler / Lisa Gibson</strong>.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Markets footprint -->
+  <section class="section">
+    <div class="card">
+      <div class="card-head">
+        <div>
+          <h3>Active Markets</h3>
+          <span class="caption">13 markets · operated by Feazel, Music City Roofers (Nashville), Kearns Brothers (Detroit), Shanco (Richmond/DC)</span>
+        </div>
+      </div>
+      <div class="grid grid-6" style="gap:8px;">
+        <span class="pill pill-info">Columbus</span>
+        <span class="pill pill-info">Cincinnati</span>
+        <span class="pill pill-info">Cleveland</span>
+        <span class="pill pill-info">Dayton</span>
+        <span class="pill pill-info">Detroit</span>
+        <span class="pill pill-info">Grand Rapids</span>
+        <span class="pill pill-info">Nashville</span>
+        <span class="pill pill-info">Knoxville</span>
+        <span class="pill pill-info">DC Metro</span>
+        <span class="pill pill-info">Richmond</span>
+        <span class="pill pill-info">Raleigh</span>
+        <span class="pill pill-info">Charlotte</span>
+        <span class="pill pill-info">Greenville</span>
+      </div>
+    </div>
+  </section>
+</template>
+
+<script src="./shared/pages.js"></script>
+<script src="./shared/layout.js"></script>
+<script>
+  FZ.renderShell({ atRoot: true });
+</script>
+</body>
+</html>

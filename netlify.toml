@@ -1,0 +1,46 @@
+# Feazel Dashboards — Netlify deploy config
+
+[build]
+  # Run the calculator pipeline so any pushed inputs regenerate data.js
+  command = "npm install && node pipeline/build.js"
+  # The dashboards live in redesign/. Netlify serves this folder as the site root.
+  publish = "redesign"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# Pretty URLs: /sales-overview/executive instead of /sales-overview/executive.html
+[[redirects]]
+  from = "/sales-overview/:slug"
+  to = "/sales-overview/:slug.html"
+  status = 200
+
+[[redirects]]
+  from = "/revenue-forecast/:slug"
+  to = "/revenue-forecast/:slug.html"
+  status = 200
+
+[[redirects]]
+  from = "/backlog/:slug"
+  to = "/backlog/:slug.html"
+  status = 200
+
+[[redirects]]
+  from = "/installs-ytd/:slug"
+  to = "/installs-ytd/:slug.html"
+  status = 200
+
+# Security headers
+[[headers]]
+  for = "/*"
+    [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+
+# Long-cache shared assets (data.js gets a content hash via build commit anyway)
+[[headers]]
+  for = "/assets/*"
+    [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"

@@ -39,3 +39,31 @@ yarn-error.*
 # generated native folders
 /ios
 /android
+
+# ============================================================
+# Feazel Dashboard pipeline
+# ============================================================
+# Raw uploaded data (DO NOT commit customer data)
+inputs/sales-overview/*.csv
+inputs/sales-overview/*.xlsx
+inputs/sales-overview/*.xls
+inputs/revenue-forecast/*.csv
+inputs/revenue-forecast/*.xlsx
+inputs/revenue-forecast/*.xls
+inputs/backlog/*.csv
+inputs/backlog/*.xlsx
+inputs/backlog/*.xls
+inputs/installs-ytd/*.csv
+inputs/installs-ytd/*.xlsx
+inputs/installs-ytd/*.xls
+
+# Keep RULES.md and the folder structure
+!inputs/**/RULES.md
+!inputs/**/.gitkeep
+
+# Pipeline artifacts (regenerated each build)
+data/*.json
+
+# Backup files from sed
+*.bak
+

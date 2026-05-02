@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Feazel Data Uploader</title>
+<link rel="stylesheet" href="../redesign/shared/styles.css">
+<style>
+  body { padding: 32px; max-width: 1200px; margin: 0 auto; }
+  .lead { font-size: 16px; color: var(--fg-2); margin: 0 0 24px; max-width: 720px; }
+  .drop {
+    border: 2px dashed var(--line-strong);
+    border-radius: var(--radius-lg);
+    padding: 28px 20px;
+    text-align: center;
+    background: var(--surface);
+    transition: all var(--dur-2) var(--ease-out);
+    cursor: pointer;
+    margin-top: 12px;
+  }
+  .drop:hover, .drop.is-over {
+    border-color: var(--feazel-blue);
+    background: var(--feazel-blue-tint);
+  }
+  .drop-icon {
+    width: 36px; height: 36px;
+    background: var(--feazel-blue-tint);
+    border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    color: var(--feazel-blue);
+    margin-bottom: 8px;
+  }
+  .drop-label { font-size: 14px; font-weight: var(--fw-semibold); color: var(--feazel-navy); }
+  .drop-hint { font-size: 12px; color: var(--fg-3); margin-top: 4px; }
+  .files-list { margin-top: 12px; padding: 0; list-style: none; font-size: 13px; }
+  .files-list li {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 8px 12px; background: var(--bg-2); border-radius: var(--radius-md); margin-top: 6px;
+  }
+  .files-list .name { font-weight: var(--fw-semibold); color: var(--feazel-navy); font-family: ui-monospace, monospace; }
+  .files-list .size { color: var(--fg-3); font-size: 11px; }
+  .files-list .remove { color: var(--danger); cursor: pointer; font-weight: var(--fw-bold); padding: 0 6px; }
+  .actions { display: flex; gap: 12px; margin-top: 32px; align-items: center; }
+  button {
+    background: var(--feazel-navy); color: #fff; border: none;
+    padding: 12px 22px; border-radius: var(--radius-md);
+    font-family: var(--font-sans); font-weight: var(--fw-semibold); font-size: 14px;
+    cursor: pointer; transition: background var(--dur-1);
+  }
+  button:hover { background: var(--feazel-blue); }
+  button:disabled { background: var(--line-strong); cursor: not-allowed; }
+  button.secondary { background: var(--surface); color: var(--feazel-navy); border: 1px solid var(--line-strong); }
+  button.secondary:hover { background: var(--bg-2); }
+  .log {
+    margin-top: 24px;
+    padding: 16px;
+    background: var(--feazel-navy);
+    color: #cfd6e8;
+    border-radius: var(--radius-md);
+    font-family: ui-monospace, "SF Mono", monospace;
+    font-size: 12px;
+    white-space: pre-wrap;
+    max-height: 240px; overflow-y: auto;
+    line-height: 1.6;
+  }
+  .log .ok { color: #82d9b0; }
+  .log .warn { color: #f3c66f; }
+  .log .err { color: #ff8a7a; }
+</style>
+</head>
+<body>
+
+<header style="margin-bottom: 32px;">
+  <span class="eyebrow">FEAZEL · DATA UPLOADER</span>
+  <h1 style="margin-top:6px;">Refresh the dashboards</h1>
+  <p class="lead">Drag your daily exports into each project below. Click <strong>Process &amp; Download</strong> to generate a fresh <code>data.js</code>. Drop the downloaded file into <code>redesign/shared/data.js</code> and refresh any dashboard tab.</p>
+</header>
+
+<div class="callout callout-warn" style="margin-bottom: 24px;">
+  <span class="callout-title">Pre-flight checklist</span>
+  Each project's expected files and rules are documented in
+  <code>inputs/&lt;project&gt;/RULES.md</code>. Confirm column names match before uploading,
+  the calculator will reject the run if a required column is missing.
+</div>
+
+<div class="grid grid-2" id="projects"></div>
+
+<div class="actions">
+  <button id="run-btn" disabled>Process &amp; Download data.js</button>
+  <button id="clear-btn" class="secondary">Clear all</button>
+  <span id="status" style="font-size:13px; color:var(--fg-3);"></span>
+</div>
+
+<div class="log" id="log" style="display:none;"></div>
+
+<!-- Dependencies for in-browser calculation -->
+<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+<script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/dist/xlsx.full.min.js"></script>
+
+<script>
+  const PROJECTS = [
+    { id: 'sales-overview',   title: 'Sales Overview',     hint: 'Salesforce contracts export, completed-jobs list' },
+    { id: 'revenue-forecast', title: 'Revenue Forecast',   hint: 'NetSuite invoiced jobs, Salesforce active pipeline' },
+    { id: 'backlog',          title: 'Backlog',            hint: 'Salesforce FSL work-orders export, holds report' },
+    { id: 'installs-ytd',     title: 'Installs YTD',       hint: 'Invoiced jobs by WO with PM and creator fields' }
+  ];
+
+  const state = {};
+  PROJECTS.forEach(p => state[p.id] = []);
+
+  const grid = document.getElementById('projects');
+  PROJECTS.forEach(p => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <div class="card-head">
+        <div>
+          <h3>${p.title}</h3>
+          <div class="caption">${p.hint}</div>
+        </div>
+        <span class="pill" id="pill-${p.id}">No files</span>
+      </div>
+      <label class="drop" id="drop-${p.id}">
+        <div class="drop-icon">↑</div>
+        <div class="drop-label">Drop CSV or XLSX files here</div>
+        <div class="drop-hint">or click to browse</div>
+        <input type="file" multiple accept=".csv,.xlsx,.xls,.tsv,.json" style="display:none;" id="file-${p.id}">
+      </label>
+      <ul class="files-list" id="list-${p.id}"></ul>
+    `;
+    grid.appendChild(card);
+
+    const drop = card.querySelector('#drop-' + p.id);
+    const input = card.querySelector('#file-' + p.id);
+
+    drop.addEventListener('click', () => input.click());
+    input.addEventListener('change', e => addFiles(p.id, [...e.target.files]));
+    drop.addEventListener('dragover', e => { e.preventDefault(); drop.classList.add('is-over'); });
+    drop.addEventListener('dragleave', () => drop.classList.remove('is-over'));
+    drop.addEventListener('drop', e => {
+      e.preventDefault(); drop.classList.remove('is-over');
+      addFiles(p.id, [...e.dataTransfer.files]);
+    });
+  });
+
+  function addFiles(projectId, files) {
+    state[projectId].push(...files);
+    renderFiles(projectId);
+    updateRunBtn();
+  }
+  function renderFiles(projectId) {
+    const list = document.getElementById('list-' + projectId);
+    list.innerHTML = '';
+    state[projectId].forEach((f, i) => {
+      const li = document.createElement('li');
+      li.innerHTML = `
+        <div><span class="name">${f.name}</span> <span class="size">${(f.size/1024).toFixed(1)} KB</span></div>
+        <span class="remove" data-i="${i}">×</span>
+      `;
+      li.querySelector('.remove').addEventListener('click', () => {
+        state[projectId].splice(i, 1);
+        renderFiles(projectId);
+        updateRunBtn();
+      });
+      list.appendChild(li);
+    });
+    document.getElementById('pill-' + projectId).textContent =
+      state[projectId].length ? state[projectId].length + ' file' + (state[projectId].length > 1 ? 's' : '') : 'No files';
+    document.getElementById('pill-' + projectId).className =
+      'pill ' + (state[projectId].length ? 'pill-info' : '');
+  }
+  function updateRunBtn() {
+    const total = Object.values(state).reduce((a, arr) => a + arr.length, 0);
+    document.getElementById('run-btn').disabled = total === 0;
+    document.getElementById('status').textContent = total ? total + ' file(s) ready' : '';
+  }
+
+  document.getElementById('clear-btn').addEventListener('click', () => {
+    PROJECTS.forEach(p => { state[p.id] = []; renderFiles(p.id); });
+    updateRunBtn();
+    document.getElementById('log').style.display = 'none';
+  });
+
+  document.getElementById('run-btn').addEventListener('click', runProcess);
+
+  async function runProcess() {
+    const log = document.getElementById('log');
+    log.style.display = 'block';
+    log.innerHTML = '';
+    const write = (msg, cls) => log.innerHTML += `<span class="${cls||''}">${msg}</span>\n`;
+
+    write('=== FEAZEL DATA REFRESH · ' + new Date().toISOString() + ' ===');
+
+    // For now, this passes through to the existing extracted-data.json.
+    // When calculators are wired with real rules, swap in per-project processors.
+    write('Loading existing data baseline...');
+    const baseline = await fetch('../redesign/shared/extracted-data.json').then(r => r.json());
+
+    let totalParsed = 0;
+    for (const p of PROJECTS) {
+      if (!state[p.id].length) {
+        write('  · ' + p.id + ': no files, keeping baseline', 'warn');
+        continue;
+      }
+      write('  · ' + p.id + ': processing ' + state[p.id].length + ' file(s)');
+      for (const f of state[p.id]) {
+        try {
+          const rows = await parseFile(f);
+          totalParsed += rows.length;
+          write('    ✓ ' + f.name + ' → ' + rows.length + ' rows', 'ok');
+        } catch (err) {
+          write('    ✗ ' + f.name + ' failed: ' + err.message, 'err');
+        }
+      }
+      // TODO: when rules are implemented, run them here and replace baseline[KEY]
+      // For now, show that we acknowledged the file but the calculator stub will fall back.
+    }
+
+    write('\nTotal rows parsed: ' + totalParsed, 'ok');
+    write('NOTE: calculators are in passthrough mode. The download below preserves the existing snapshot.', 'warn');
+    write('To go live with real rules: implement IMPLEMENT_RULES blocks in calculators/<project>.js');
+
+    // Build the wrapped data.js download
+    const stamp = new Date().toISOString();
+    const combined = Object.assign({}, baseline);
+    if (!combined._meta) combined._meta = {};
+    combined._meta.builtAt = stamp;
+    combined._meta.builtBy = 'admin/upload.html (browser)';
+
+    const js = '/* AUTO-GENERATED by admin/upload.html · ' + stamp + ' */\n' +
+               'window.FZ = window.FZ || {};\n' +
+               'window.FZ.data = ' + JSON.stringify(combined, null, 2) + ';\n';
+
+    const blob = new Blob([js], { type: 'application/javascript' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'data.js';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    write('\n✓ data.js downloaded. Drop it in redesign/shared/data.js and refresh any dashboard tab.', 'ok');
+  }
+
+  function parseFile(file) {
+    return new Promise((resolve, reject) => {
+      const ext = file.name.split('.').pop().toLowerCase();
+      const reader = new FileReader();
+      reader.onerror = () => reject(reader.error);
+      if (ext === 'csv' || ext === 'tsv') {
+        reader.onload = () => {
+          const parsed = Papa.parse(reader.result, { header: true, skipEmptyLines: true });
+          if (parsed.errors.length) console.warn(parsed.errors);
+          resolve(parsed.data);
+        };
+        reader.readAsText(file);
+      } else if (ext === 'xlsx' || ext === 'xls') {
+        reader.onload = () => {
+          const wb = XLSX.read(reader.result, { type: 'binary' });
+          const sheet = wb.Sheets[wb.SheetNames[0]];
+          resolve(XLSX.utils.sheet_to_json(sheet, { defval: null }));
+        };
+        reader.readAsBinaryString(file);
+      } else if (ext === 'json') {
+        reader.onload = () => { try { resolve(JSON.parse(reader.result)); } catch (e) { reject(e); } };
+        reader.readAsText(file);
+      } else {
+        reject(new Error('Unsupported file type: ' + ext));
+      }
+    });
+  }
+</script>
+
+</body>
+</html>

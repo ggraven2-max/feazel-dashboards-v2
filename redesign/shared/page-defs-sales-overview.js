@@ -1,0 +1,957 @@
+/* ============================================================
+   FEAZEL, Sales Overview Page Definitions
+   Loaded after data.js / chart-theme.js / page-renderer.js.
+   Each entry under FZ_PAGE_DEFS["sales-overview"][slug] is a page def.
+   ============================================================ */
+(function () {
+  var D = window.FZ && window.FZ.data && window.FZ.data.SALES_OVERVIEW;
+  if (!D) {
+    console.error('[FZ] SALES_OVERVIEW data missing.');
+    return;
+  }
+  var FZ = window.FZ;
+  var pal = FZ.palette;
+  var fmt = FZ.fmt;
+
+  // ---------- shared chart helpers ----------
+  var BASE_OPTS = {
+    responsive: true,
+    maintainAspectRatio: false,
+    interaction: { intersect: false, mode: 'index' },
+    plugins: { legend: { position: 'bottom' } }
+  };
+  function moneyAxis(short) {
+    return {
+      ticks: {
+        callback: function (v) { return fmt.money(v, { short: short !== false }); }
+      },
+      beginAtZero: true
+    };
+  }
+  function deepClone(o) { return JSON.parse(JSON.stringify(o)); }
+  function withOpts(extra) { return Object.assign({}, deepClone(BASE_OPTS), extra || {}); }
+
+  // ============================================================
+  // INDEX (Sales Overview hub)
+  // ============================================================
+  var pages = {};
+
+  pages.index = {
+    eyebrow: 'YTD 2026 · ' + FZ.daysYTD() + ' days through ' + FZ.formatBuiltAt({ dateOnly: true }),
+    title: 'Residential Sales Overview',
+    intro: 'A consolidated view of every contract signed in 2026, what closed, what is in production review, what got kicked back, and how we are pacing against the $76M annualized rate. Use the sub-tabs above to drill into any dimension.',
+    tags: [
+      { kind: 'info',   text: D.lastSigned ? 'Last signed: ' + D.lastSigned : 'Live data' },
+      { kind: 'success', text: '+213% Jan→Apr' }
+    ],
+    sections: [
+      {
+        kind: 'kpi-row', cols: 4,
+        items: [
+          { label: 'Signed Contracts YTD',  value: '$24.46M', sub: '1,572 contracts · 13 markets', tone: 'navy' },
+          { label: 'Sold (Closed-Sold)',     value: '$21.02M', sub: '1,393 deals · 88.6% conversion', tone: 'success' },
+          { label: 'Production Review',      value: '$2.50M',  sub: '132 deals queued', tone: 'warn' },
+          { label: 'Kicked Back',            value: '$880K',   sub: '44 deals · 2.8% of signed', tone: 'danger' }
+        ]
+      },
+      {
+        kind: 'kpi-row', cols: 4,
+        items: [
+          { label: 'Avg Deal Size',          value: '$15,563', sub: 'Median $14,392 · install $18,252' },
+          { label: 'Annualized Sales Rate',  value: '$76.3M',  sub: 'Based on 117 days YTD' },
+          { label: 'Install vs Repair Mix',  value: '83.6 / 16.1', sub: '1,314 installs · 253 repairs' },
+          { label: 'Active Sales Reps',       value: '129',     sub: 'Across 13 markets' }
+        ]
+      },
+      {
+        kind: 'chart-grid', cols: 2, heading: 'Monthly Sales Pace',
+        caption: 'Volume + dollars by month, with running install/repair mix below',
+        charts: [
+          {
+            title: 'Monthly Signed Sales ($)',
+            sub: 'Bar = $ amount, line = deal count',
+            height: 300,
+            config: {
+              type: 'bar',
+              data: {
+                labels: D.monthly.map(function (m) { return m.label; }),
+                datasets: [
+                  {
+                    type: 'bar',
+                    label: 'Signed $',
+                    data: D.monthly.map(function (m) { return m.amount; }),
+                    backgroundColor: pal.navy,
+                    borderRadius: 4,
+                    yAxisID: 'y'
+                  },
+                  {
+                    type: 'line',
+                    label: 'Deal Count',
+                    data: D.monthly.map(function (m) { return m.count; }),
+                    borderColor: pal.blue,
+                    backgroundColor: pal.blue,
+                    yAxisID: 'y1',
+                    tension: 0.3,
+                    pointBackgroundColor: '#fff'
+                  }
+                ]
+              },
+              options: withOpts({
+                scales: {
+                  y:  Object.assign({ position: 'left'  }, moneyAxis()),
+                  y1: { position: 'right', grid: { display: false }, ticks: { color: pal.blue }, beginAtZero: true }
+                }
+              })
+            }
+          },
+          {
+            title: 'Pipeline Composition',
+            sub: 'Of the $24.46M signed YTD, where each dollar lives today',
+            height: 300,
+            config: {
+              type: 'doughnut',
+              data: {
+                labels: D.pipelineBuckets.map(function (b) { return b.label; }),
+                datasets: [{
+                  data: D.pipelineBuckets.map(function (b) { return b.amount; }),
+                  backgroundColor: [pal.success, pal.warning, pal.danger, pal.slate, pal.dim],
+                  borderColor: '#fff', borderWidth: 2
+                }]
+              },
+              options: withOpts({
+                cutout: '62%',
+                plugins: {
+                  legend: { position: 'right' },
+                  tooltip: { callbacks: { label: function (c) {
+                    var d = D.pipelineBuckets[c.dataIndex];
+                    return c.label + ': ' + fmt.money(d.amount) + ' · ' + d.count + ' deals';
+                  } } }
+                }
+              })
+            }
+          }
+        ]
+      },
+      {
+        kind: 'chart-grid', cols: 1, heading: 'Weekly Velocity',
+        caption: 'Each Friday across 18 weeks of data, drives our run-rate forecast',
+        charts: [
+          {
+            title: 'Weekly Signed Sales',
+            sub: 'Bars = sales $ · line = rolling 4-week average',
+            height: 280,
+            config: {
+              type: 'bar',
+              data: {
+                labels: D.weeklyTrend.map(function (w) { return 'W' + w.w; }),
+                datasets: [
+                  {
+                    type: 'bar',
+                    label: 'Weekly Signed $',
+                    data: D.weeklyTrend.map(function (w) { return w.amount; }),
+                    backgroundColor: pal.blue,
+                    borderRadius: 4
+                  },
+                  {
+                    type: 'line',
+                    label: '4-Wk Avg',
+                    data: (function () {
+                      var arr = D.weeklyTrend.map(function (w) { return w.amount; });
+                      return arr.map(function (_, i) {
+                        var s = Math.max(0, i - 3);
+                        var win = arr.slice(s, i + 1);
+                        return win.reduce(function (a, b) { return a + b; }, 0) / win.length;
+                      });
+                    })(),
+                    borderColor: pal.navy,
+                    backgroundColor: pal.navy,
+                    tension: 0.3,
+                    pointRadius: 2
+                  }
+                ]
+              },
+              options: withOpts({ scales: { y: moneyAxis() } })
+            }
+          }
+        ]
+      },
+      {
+        kind: 'two-col', heading: 'Where the Business Lives',
+        items: [
+          {
+            kind: 'chart', span: 6,
+            title: 'Job Type Mix (Signed YTD)',
+            sub: 'Volume engine vs premium ticket types',
+            height: 260,
+            config: {
+              type: 'bar',
+              data: {
+                labels: D.jobTypeTotals.map(function (j) { return j.jobType; }),
+                datasets: [{
+                  label: 'Signed $',
+                  data: D.jobTypeTotals.map(function (j) { return j.amount; }),
+                  backgroundColor: [pal.navy, pal.blue, pal.slate]
+                }]
+              },
+              options: withOpts({
+                indexAxis: 'y',
+                scales: { x: moneyAxis() },
+                plugins: { legend: { display: false } }
+              })
+            }
+          },
+          {
+            kind: 'chart', span: 6,
+            title: 'Top 7 Markets by Signed $',
+            sub: 'Out of 13 active markets',
+            height: 260,
+            config: {
+              type: 'bar',
+              data: {
+                labels: D.marketScorecard.rows.slice(0, 7).map(function (r) { return r[0]; }),
+                datasets: [{
+                  label: 'Signed $',
+                  data: D.marketScorecard.rows.slice(0, 7).map(function (r) { return r[1]; }),
+                  backgroundColor: pal.navy
+                }]
+              },
+              options: withOpts({
+                indexAxis: 'y',
+                scales: { x: moneyAxis() },
+                plugins: { legend: { display: false } }
+              })
+            }
+          }
+        ]
+      },
+      {
+        kind: 'prose', heading: 'Headlines',
+        cards: [
+          { kind: 'tint', eyebrow: "WHAT'S WORKING", title: 'Trajectory is real', body: '<p>Monthly signed sales went from <strong>$3.24M in January</strong> to <strong>$10.16M in April</strong>, a +213% climb. That trajectory pushes the annualized rate to <strong>$76.3M</strong>. April repair mix dropped to 13.0% vs the YTD 16.1%, so we are also adding the right kind of sales.</p>' },
+          { eyebrow: 'WHAT NEEDS ATTENTION', title: 'Production Review backlog', body: '<p><strong>132 deals worth $2.50M</strong> are sitting in Production Review, that delays revenue recognition. Pair that with <strong>44 kickbacks worth $880K</strong> (Columbus carries the largest share) and the work-quality gate is becoming the bottleneck.</p>' },
+          { kind: 'navy', eyebrow: 'NEXT MOVES', title: 'Run the action plan', body: '<p>Open the Action Plan tab. This-week wins: invoice the $38.6K of Ready-to-Invoice jobs and escalate the four 60+ day unbilled jobs ($134K). Then push the Production Review surge plan and the Columbus kickback review.</p>' }
+        ]
+      }
+    ]
+  };
+
+  // ============================================================
+  // EXECUTIVE OVERVIEW
+  // ============================================================
+  pages.executive = {
+    eyebrow: 'EXECUTIVE BRIEF · YTD',
+    title: 'Executive Overview',
+    intro: 'The five numbers that define where the residential sales book stands today, plus the immediate read on velocity and quality.',
+    tags: [{ kind: 'info', text: 'Updated daily' }],
+    sections: [
+      {
+        kind: 'kpi-row', cols: 5,
+        items: [
+          { label: 'Signed YTD',          value: '$24.46M', sub: '1,572 contracts',                  tone: 'navy' },
+          { label: 'Sold (Confirmed)',     value: '$21.02M', sub: '88.6% of signed',                 tone: 'success' },
+          { label: 'Production Review',    value: '$2.50M',  sub: '132 deals queued',                tone: 'warn' },
+          { label: 'Kicked Back',          value: '$880K',   sub: '44 deals · 2.8%',                 tone: 'danger' },
+          { label: 'Sales Action Pending', value: '$15K',    sub: '1 deal needs follow-up' }
+        ]
+      },
+      {
+        kind: 'chart-grid', cols: 2, heading: 'Run-Rate vs Plan',
+        caption: 'Visual proof of where the trajectory is taking us',
+        charts: [
+          {
+            title: 'Cumulative Signed vs Implied Plan',
+            sub: 'Plan based on $76.3M annualized run rate, prorated by week',
+            height: 320,
+            config: {
+              type: 'line',
+              data: {
+                labels: D.weeklyTrend.map(function (w) { return 'W' + w.w; }),
+                datasets: [
+                  {
+                    label: 'Cumulative Signed',
+                    data: (function () {
+                      var c = 0;
+                      return D.weeklyTrend.map(function (w) { c += w.amount; return c; });
+                    })(),
+                    borderColor: pal.navy,
+                    backgroundColor: function (ctx) { return FZ.areaGradient(ctx, pal.navy); },
+                    fill: true, tension: 0.3
+                  },
+                  {
+                    label: 'Plan (Linear $76M)',
+                    data: D.weeklyTrend.map(function (_, i) { return ((76300000 / 52) * (i + 1)); }),
+                    borderColor: pal.blue, borderDash: [6, 4], pointRadius: 0, fill: false
+                  }
+                ]
+              },
+              options: withOpts({ scales: { y: moneyAxis() } })
+            }
+          },
+          {
+            title: 'Monthly Sales Volume',
+            sub: 'Bars by month with ' + FZ.daysYTD() + ' days through ' + FZ.formatBuiltAt({ dateOnly: true }),
+            height: 320,
+            config: {
+              type: 'bar',
+              data: {
+                labels: D.monthly.map(function (m) { return m.label; }),
+                datasets: [{ label: 'Signed $', data: D.monthly.map(function (m) { return m.amount; }), backgroundColor: pal.navy }]
+              },
+              options: withOpts({ scales: { y: moneyAxis() }, plugins: { legend: { display: false } } })
+            }
+          }
+        ]
+      },
+      {
+        kind: 'table', heading: 'Branch Scorecard',
+        caption: 'All 13 markets, ranked by signed $ YTD',
+        headers: [
+          { label: 'Branch' }, { label: 'Signed $', num: true }, { label: 'Deals', num: true },
+          { label: 'Avg Deal', num: true }, { label: 'Installs', num: true }, { label: 'Repairs', num: true },
+          { label: 'Repair %', num: true }, { label: 'Median Days', num: true }
+        ],
+        rows: D.marketScorecard.rows.map(function (r) {
+          return [
+            r[0],
+            { html: '<strong>' + fmt.money(r[1]) + '</strong>' },
+            r[2],
+            fmt.money(r[3]),
+            r[4],
+            r[5],
+            { html: r[6] >= 25 ? '<span class="pill pill-danger">' + r[6].toFixed(1) + '%</span>'
+                  : r[6] >= 15 ? '<span class="pill pill-warn">' + r[6].toFixed(1) + '%</span>'
+                  : '<span class="pill pill-success">' + r[6].toFixed(1) + '%</span>' },
+            r[7]
+          ];
+        })
+      },
+      {
+        kind: 'callout', tone: 'warn', title: 'Watch list',
+        body: 'Production Review backlog is up to <strong>132 deals worth $2.50M</strong>. Columbus carries the largest share of the 44 company kickbacks ($880K). Add capacity to the review queue and run a Columbus root-cause sweep before the end of the month.'
+      }
+    ]
+  };
+
+  // ============================================================
+  // TRENDS & MOMENTUM
+  // ============================================================
+  pages.trends = {
+    eyebrow: 'TRENDS · 18 WEEKS',
+    title: 'Trends & Momentum',
+    intro: 'Weekly velocity, monthly progression, and where the deal-count vs deal-size dynamic is shifting.',
+    sections: [
+      {
+        kind: 'kpi-row', cols: 4,
+        items: [
+          { label: 'Best Week',     value: fmt.money(Math.max.apply(null, D.weeklyTrend.map(function (w) { return w.amount; })), { short: true }), sub: 'Single best signing week YTD', tone: 'success' },
+          { label: 'Last 4 Weeks',  value: fmt.money(D.weeklyTrend.slice(-4).reduce(function (a, b) { return a + b.amount; }, 0), { short: true }), sub: 'Trailing 4-week sales' },
+          { label: 'Avg Weekly Rate', value: fmt.money(D.weeklyTrend.reduce(function (a, b) { return a + b.amount; }, 0) / D.weeklyTrend.length, { short: true }), sub: 'Across 18 weeks' },
+          { label: 'Mar→Apr Lift',  value: '+46%', sub: '$6.95M → $10.16M', tone: 'success' }
+        ]
+      },
+      {
+        kind: 'chart-grid', cols: 1,
+        charts: [
+          {
+            title: 'Weekly Signed Sales, full 18 weeks',
+            sub: 'Each bar is one Friday roll-up · trend line is rolling 4-week average',
+            height: 320,
+            config: {
+              type: 'bar',
+              data: {
+                labels: D.weeklyTrend.map(function (w) { return 'W' + w.w; }),
+                datasets: [
+                  { label: 'Weekly $', data: D.weeklyTrend.map(function (w) { return w.amount; }), backgroundColor: pal.blue, borderRadius: 4 },
+                  {
+                    type: 'line', label: '4-week Avg',
+                    data: (function () {
+                      var arr = D.weeklyTrend.map(function (w) { return w.amount; });
+                      return arr.map(function (_, i) {
+                        var s = Math.max(0, i - 3);
+                        var win = arr.slice(s, i + 1);
+                        return win.reduce(function (a, b) { return a + b; }, 0) / win.length;
+                      });
+                    })(),
+                    borderColor: pal.navy, tension: 0.3, pointRadius: 2
+                  }
+                ]
+              },
+              options: withOpts({ scales: { y: moneyAxis() } })
+            }
+          }
+        ]
+      },
+      {
+        kind: 'chart-grid', cols: 2,
+        charts: [
+          {
+            title: 'Monthly Deal Count',
+            sub: 'Volume momentum, separate from $ amount',
+            height: 260,
+            config: {
+              type: 'bar',
+              data: {
+                labels: D.monthly.map(function (m) { return m.label; }),
+                datasets: [{ label: 'Deals Signed', data: D.monthly.map(function (m) { return m.count; }), backgroundColor: pal.navy }]
+              },
+              options: withOpts({ plugins: { legend: { display: false } } })
+            }
+          },
+          {
+            title: 'Average Deal Size by Month',
+            sub: 'Are we trading up or trading down month over month?',
+            height: 260,
+            config: {
+              type: 'line',
+              data: {
+                labels: D.monthly.map(function (m) { return m.label; }),
+                datasets: [{
+                  label: 'Avg Deal $',
+                  data: D.monthly.map(function (m) { return m.avgDeal; }),
+                  borderColor: pal.blue, backgroundColor: pal.blue, fill: false, tension: 0.3, pointBackgroundColor: '#fff'
+                }]
+              },
+              options: withOpts({ scales: { y: moneyAxis(false) }, plugins: { legend: { display: false } } })
+            }
+          }
+        ]
+      },
+      {
+        kind: 'chart-grid', cols: 1,
+        charts: [
+          {
+            title: 'Install vs Repair, monthly trend',
+            sub: 'Two stacked series · the gap is the install premium',
+            height: 280,
+            config: {
+              type: 'bar',
+              data: {
+                labels: D.monthly.map(function (m) { return m.label; }),
+                datasets: [
+                  { label: 'Installs', data: D.monthly.map(function (m) { return m.installs; }), backgroundColor: pal.navy, stack: 'a' },
+                  { label: 'Repairs',  data: D.monthly.map(function (m) { return m.repairs;  }), backgroundColor: pal.warning, stack: 'a' }
+                ]
+              },
+              options: withOpts({ scales: { x: { stacked: true }, y: { stacked: true, beginAtZero: true } } })
+            }
+          }
+        ]
+      },
+      {
+        kind: 'callout',
+        title: 'What the trend is telling us',
+        body: 'Deal volume more than tripled from January to April (181 → 653). Average deal size held flat in the $14K–$18K band, meaning the trajectory is volume-led, not price-led. The 4-week trailing average is climbing at roughly +$250K per week, which is what gets us from a $76M annualized rate to a $90M+ exit run rate by year-end if it holds.'
+      }
+    ]
+  };
+
+  // ============================================================
+  // MARKET DEEP DIVE
+  // ============================================================
+  pages.markets = {
+    eyebrow: 'MARKETS · ALL 13',
+    title: 'Market Deep Dive',
+    intro: 'How each branch is contributing to the YTD number, and where the mix is healthy versus where the repair tail is dragging margin.',
+    sections: [
+      {
+        kind: 'kpi-row', cols: 4,
+        items: [
+          { label: 'Top Market', value: 'Columbus', sub: '$7.40M · 502 deals', tone: 'navy' },
+          { label: '#2 Market',  value: 'Detroit Metro', sub: '$4.59M · 277 deals', tone: 'success' },
+          { label: 'Highest Avg Deal', value: 'Richmond', sub: '$23,938 average', tone: 'success' },
+          { label: 'Highest Repair %', value: 'Nashville', sub: '30.2% repair share', tone: 'warn' }
+        ]
+      },
+      {
+        kind: 'chart-grid', cols: 2,
+        charts: [
+          {
+            title: 'Sales by Market',
+            sub: 'YTD signed dollars',
+            height: 380,
+            config: {
+              type: 'bar',
+              data: {
+                labels: D.marketScorecard.rows.map(function (r) { return r[0]; }),
+                datasets: [{ data: D.marketScorecard.rows.map(function (r) { return r[1]; }), backgroundColor: pal.navy, label: 'Signed $' }]
+              },
+              options: withOpts({ indexAxis: 'y', scales: { x: moneyAxis() }, plugins: { legend: { display: false } } })
+            }
+          },
+          {
+            title: 'Repair % by Market',
+            sub: 'Lower = healthier mix · red = ≥25%',
+            height: 380,
+            config: {
+              type: 'bar',
+              data: {
+                labels: D.marketScorecard.rows.map(function (r) { return r[0]; }),
+                datasets: [{
+                  data: D.marketScorecard.rows.map(function (r) { return r[6]; }),
+                  backgroundColor: D.marketScorecard.rows.map(function (r) {
+                    return r[6] >= 25 ? pal.danger : r[6] >= 15 ? pal.warning : pal.success;
+                  })
+                }]
+              },
+              options: withOpts({
+                indexAxis: 'y',
+                scales: { x: { ticks: { callback: function (v) { return v + '%'; } }, beginAtZero: true } },
+                plugins: { legend: { display: false } }
+              })
+            }
+          }
+        ]
+      },
+      {
+        kind: 'table', heading: 'All 13 markets, full scorecard',
+        headers: [
+          'Branch',
+          { label: 'Signed $', num: true }, { label: 'Deals', num: true },
+          { label: 'Avg Deal', num: true }, { label: 'Installs', num: true },
+          { label: 'Repairs', num: true }, { label: 'Repair %', num: true },
+          { label: 'Median Days', num: true }
+        ],
+        rows: D.marketScorecard.rows.map(function (r) {
+          return [
+            { html: '<strong>' + r[0] + '</strong>' },
+            fmt.money(r[1]), r[2], fmt.money(r[3]), r[4], r[5],
+            { html: r[6] >= 25 ? '<span class="pill pill-danger">' + r[6].toFixed(1) + '%</span>'
+                  : r[6] >= 15 ? '<span class="pill pill-warn">' + r[6].toFixed(1) + '%</span>'
+                  : '<span class="pill pill-success">' + r[6].toFixed(1) + '%</span>' },
+            r[7] + 'd'
+          ];
+        })
+      },
+      {
+        kind: 'callout', tone: 'success', title: 'Detroit Metro: the model branch',
+        body: '$4.59M on 277 deals at $16,559 avg with only 8.3% repair mix and 4-day median close. That ratio of volume + ticket size + clean job mix + speed is the template for Columbus and Cleveland to chase.'
+      }
+    ]
+  };
+
+  // ============================================================
+  // PEOPLE & PRODUCTIVITY
+  // ============================================================
+  pages.people = {
+    eyebrow: 'PEOPLE · TOP PRODUCERS',
+    title: 'People & Productivity',
+    intro: 'Who is driving the YTD number. 129 active reps across 13 markets, but production is concentrated.',
+    sections: [
+      {
+        kind: 'kpi-row', cols: 4,
+        items: [
+          { label: 'Active Reps',         value: '129',   sub: '13 markets', tone: 'navy' },
+          { label: 'Top Producer',        value: D.topPeople[0] && D.topPeople[0].name, sub: D.topPeople[0] ? fmt.money(D.topPeople[0].amount) + ' · ' + D.topPeople[0].count + ' deals' : '', tone: 'success' },
+          { label: 'Top 10 Share',        value: (function(){
+              var t10 = D.topPeople.slice(0, 10).reduce(function (a, b) { return a + b.amount; }, 0);
+              return ((t10 / 24460000) * 100).toFixed(0) + '%';
+            })(), sub: 'of $24.46M signed YTD' },
+          { label: 'Avg / Top-10 Rep',    value: fmt.money(D.topPeople.slice(0, 10).reduce(function (a, b) { return a + b.amount; }, 0) / 10, { short: true }), sub: 'per rep YTD' }
+        ]
+      },
+      {
+        kind: 'chart-grid', cols: 1,
+        charts: [
+          {
+            title: 'Top 20 Reps by Signed $',
+            sub: 'YTD ranked',
+            height: 480,
+            config: {
+              type: 'bar',
+              data: {
+                labels: D.topPeople.slice(0, 20).map(function (p) { return p.name; }),
+                datasets: [{
+                  label: 'Signed $',
+                  data: D.topPeople.slice(0, 20).map(function (p) { return p.amount; }),
+                  backgroundColor: pal.navy
+                }]
+              },
+              options: withOpts({ indexAxis: 'y', scales: { x: moneyAxis() }, plugins: { legend: { display: false } } })
+            }
+          }
+        ]
+      },
+      {
+        kind: 'table', heading: 'Top 20 reps · full detail',
+        headers: [
+          'Rep',
+          { label: 'Signed $', num: true }, { label: 'Deals', num: true },
+          { label: 'Avg Deal', num: true }, { label: 'Median Days', num: true },
+          { label: 'Installs', num: true }, { label: 'Repairs', num: true }
+        ],
+        rows: D.topPeople.slice(0, 20).map(function (p) {
+          return [
+            { html: '<strong>' + p.name + '</strong>' },
+            fmt.money(p.amount), p.count, fmt.money(p.avg), (p.medDays != null ? p.medDays + 'd' : ','),
+            p.installs, p.repairs
+          ];
+        })
+      },
+      {
+        kind: 'callout',
+        title: 'Concentration risk',
+        body: 'A small group of producers carries an outsized share of the book. Worth confirming each top-10 rep has a deputy or shadow rep who can absorb territory if they are out for an extended period.'
+      }
+    ]
+  };
+
+  // ============================================================
+  // JOB TYPE & SERVICE MIX
+  // ============================================================
+  pages['job-mix'] = {
+    eyebrow: 'JOB MIX · YTD',
+    title: 'Job Type & Service Mix',
+    intro: 'Three job types do all the work. Volume comes from Retail-No Financing; ticket size comes from Insurance and Retail-Financing.',
+    sections: [
+      {
+        kind: 'kpi-row', cols: 3,
+        items: [
+          { label: 'Retail-No Financing', value: '$9.28M', sub: '809 deals · $11,469 avg · volume engine', tone: 'navy' },
+          { label: 'Insurance',           value: '$8.91M', sub: '447 deals · $19,942 avg · premium ticket', tone: 'success' },
+          { label: 'Retail-Financing',    value: '$3.03M', sub: '145 deals · $20,878 avg · highest avg' }
+        ]
+      },
+      {
+        kind: 'chart-grid', cols: 2,
+        charts: [
+          {
+            title: 'Signed $ by Job Type',
+            height: 280,
+            config: {
+              type: 'doughnut',
+              data: {
+                labels: D.jobTypeTotals.map(function (j) { return j.jobType; }),
+                datasets: [{
+                  data: D.jobTypeTotals.map(function (j) { return j.amount; }),
+                  backgroundColor: [pal.navy, pal.blue, pal.slate],
+                  borderColor: '#fff', borderWidth: 2
+                }]
+              },
+              options: withOpts({ cutout: '60%' })
+            }
+          },
+          {
+            title: 'Avg Deal $ by Job Type',
+            height: 280,
+            config: {
+              type: 'bar',
+              data: {
+                labels: D.jobTypeTotals.map(function (j) { return j.jobType; }),
+                datasets: [{
+                  data: D.jobTypeTotals.map(function (j) { return j.avg; }),
+                  backgroundColor: [pal.navy, pal.blue, pal.slate]
+                }]
+              },
+              options: withOpts({ scales: { y: moneyAxis(false) }, plugins: { legend: { display: false } } })
+            }
+          }
+        ]
+      },
+      {
+        kind: 'chart-grid', cols: 1,
+        charts: [
+          {
+            title: 'Monthly Deal Count by Job Type',
+            sub: 'Where each pillar is showing up over time',
+            height: 320,
+            config: {
+              type: 'bar',
+              data: {
+                labels: D.monthly.map(function (m) { return m.label; }),
+                datasets: [
+                  { label: 'Installs', data: D.monthly.map(function (m) { return m.installs; }), backgroundColor: pal.navy, stack: 'jt' },
+                  { label: 'Repairs',  data: D.monthly.map(function (m) { return m.repairs;  }), backgroundColor: pal.warning, stack: 'jt' }
+                ]
+              },
+              options: withOpts({ scales: { x: { stacked: true }, y: { stacked: true, beginAtZero: true } } })
+            }
+          }
+        ]
+      },
+      {
+        kind: 'table', heading: 'Job type performance',
+        headers: ['Type', { label: 'Signed $', num: true }, { label: 'Deals', num: true }, { label: 'Avg', num: true }],
+        rows: D.jobTypeTotals.map(function (j) {
+          return [{ html: '<strong>' + j.jobType + '</strong>' }, fmt.money(j.amount), j.count, fmt.money(j.avg)];
+        })
+      },
+      {
+        kind: 'callout', tone: 'success', title: 'Financing push opportunity',
+        body: 'Retail-Financing carries the highest average ticket ($20,878) but only 9.2% of the YTD mix. Lifting financing penetration to 15% means $1.5M+ of additional revenue without adding leads. The top financing reps to scale from: Kevin Ditty, Storm Drumm, Scott Scaperato.'
+      }
+    ]
+  };
+
+  // ============================================================
+  // SALES CYCLE ANALYSIS
+  // ============================================================
+  pages.cycle = {
+    eyebrow: 'CYCLE · DAYS-TO-CLOSE',
+    title: 'Sales Cycle Analysis',
+    intro: 'How long it takes us to convert a sit to a signed contract, the leverage variable that drives weekly cash velocity.',
+    sections: [
+      {
+        kind: 'kpi-row', cols: 4,
+        items: D.salesCycle.kpis.map(function (k) { return { label: k.label, value: k.value, sub: k.sub }; })
+      },
+      {
+        kind: 'chart-grid', cols: 2,
+        charts: [
+          {
+            title: 'Median Days to Close by Job Type',
+            height: 300,
+            config: {
+              type: 'bar',
+              data: {
+                labels: D.salesCycle.byJobType.map(function (b) { return b.label; }),
+                datasets: [
+                  { label: 'Median', data: D.salesCycle.byJobType.map(function (b) { return b.median; }), backgroundColor: pal.navy },
+                  { label: 'Mean',   data: D.salesCycle.byJobType.map(function (b) { return b.mean;   }), backgroundColor: pal.blue }
+                ]
+              },
+              options: withOpts({ scales: { y: { ticks: { callback: function (v) { return v + 'd'; } }, beginAtZero: true } } })
+            }
+          },
+          {
+            title: 'Median Days to Close by Market',
+            sub: 'Top 10 markets',
+            height: 300,
+            config: {
+              type: 'bar',
+              data: {
+                labels: D.marketScorecard.rows.slice(0, 10).map(function (r) { return r[0]; }),
+                datasets: [{
+                  label: 'Median Days',
+                  data: D.marketScorecard.rows.slice(0, 10).map(function (r) { return r[7]; }),
+                  backgroundColor: D.marketScorecard.rows.slice(0, 10).map(function (r) {
+                    return r[7] >= 30 ? pal.danger : r[7] >= 14 ? pal.warning : pal.success;
+                  })
+                }]
+              },
+              options: withOpts({ indexAxis: 'y', scales: { x: { ticks: { callback: function (v) { return v + 'd'; } } } }, plugins: { legend: { display: false } } })
+            }
+          }
+        ]
+      },
+      {
+        kind: 'callout', tone: 'warn',
+        title: 'Insurance is the cycle drag',
+        body: 'Insurance jobs have a 27-day median close (76-day mean). That is structural, carrier dependence. But it argues for keeping insurance and retail capacity separately scheduled so the carrier wait does not starve the faster retail flow.'
+      }
+    ]
+  };
+
+  // ============================================================
+  // RISKS & RED FLAGS
+  // ============================================================
+  pages.risks = {
+    eyebrow: 'RISKS · TOP OF MIND',
+    title: 'Risks & Red Flags',
+    intro: 'Every dollar that is at risk of slipping out of 2026, ranked. These are the items that need a meeting, not just a metric.',
+    tags: [{ kind: 'danger', text: '6 critical' }],
+    sections: [
+      {
+        kind: 'kpi-row', cols: 4,
+        items: [
+          { label: 'Pipeline Kickbacks',    value: '$880K', sub: '44 deals · 2.8% of signed', tone: 'danger' },
+          { label: 'Production Review Backlog', value: '$2.50M', sub: '132 deals queued',     tone: 'warn' },
+          { label: 'Unbilled Completed',    value: '$1.0M', sub: '51 jobs · 17d avg',         tone: 'warn' },
+          { label: 'Pending Supplements',   value: '$799K', sub: '37 jobs · oldest 99d',      tone: 'danger' }
+        ]
+      },
+      {
+        kind: 'prose', heading: 'Critical risks',
+        cards: [
+          {
+            kind: 'tint', eyebrow: 'TOP RISKS',
+            list: D.commentary.criticalRisks.map(function (t) { return { text: t, tone: 'danger', icon: '!' }; })
+          },
+          {
+            eyebrow: 'WHAT NEEDS ATTENTION',
+            list: D.commentary.whatNeedsAttention.map(function (t) { return { text: t, tone: 'warn', icon: '⚠' }; })
+          }
+        ],
+        cols: 2
+      },
+      {
+        kind: 'callout', tone: 'danger',
+        title: 'Owner check',
+        body: 'Each item above needs a single owner and a 7-day commitment. Specifically: Columbus kickback root cause (Bruce Lemon Jr), Supplement aging (Matt Henry/Inside Sales), Accounting kickbacks ($172K, 10 jobs, Mahlet Teshome Mandefro), Production Review surge plan (Jeff Craft).'
+      }
+    ]
+  };
+
+  // ============================================================
+  // BUILD ON THE GOOD
+  // ============================================================
+  pages.strengths = {
+    eyebrow: 'WINS · COMPOUND THESE',
+    title: 'Build on the Good',
+    intro: 'Where the model is already working. Each of these is something we should institutionalize, not just celebrate.',
+    tags: [{ kind: 'success', text: '8 strengths' }],
+    sections: [
+      {
+        kind: 'kpi-row', cols: 4,
+        items: [
+          { label: 'Detroit Avg Deal',    value: '$16,559', sub: '277 deals · 8.3% repair mix', tone: 'success' },
+          { label: 'Retail Velocity',     value: '4 days',  sub: 'Median close on 950 retail deals' },
+          { label: 'Insurance Density',   value: '$8.91M',  sub: '447 deals · $19,942 avg' },
+          { label: 'April Repair Rate',   value: '13.0%',   sub: 'Down from 16.1% YTD', tone: 'success' }
+        ]
+      },
+      {
+        kind: 'prose', heading: 'Strengths to amplify',
+        cards: [
+          {
+            kind: 'tint', eyebrow: 'WHAT IS WORKING',
+            body: D.commentary.whatsWorking.map(function (t) { return '<p>• ' + t + '</p>'; }).join('')
+          },
+          {
+            eyebrow: 'STRENGTHS TO AMPLIFY',
+            list: D.commentary.strengthsToAmplify.map(function (t) { return { text: t, tone: 'success', icon: '✓' }; })
+          }
+        ],
+        cols: 2
+      }
+    ]
+  };
+
+  // ============================================================
+  // FIX THE WEAK AREAS
+  // ============================================================
+  pages.fixes = {
+    eyebrow: 'FIX LIST · WHAT TO ATTACK',
+    title: 'Fix the Weak Areas',
+    intro: 'The seven specific weaknesses worth a focused intervention. Each item is sized so a single owner can move the number in 30 days.',
+    sections: [
+      {
+        kind: 'prose',
+        cards: [{
+          eyebrow: 'FIX LIST', title: 'Seven workstreams',
+          list: D.commentary.fixList.map(function (t) { return { text: t, icon: '→' }; })
+        }]
+      }
+    ]
+  };
+
+  // ============================================================
+  // ACTION PLAN
+  // ============================================================
+  pages['action-plan'] = {
+    eyebrow: 'ACTION PLAN · NOW / NEXT / LATER',
+    title: 'Action Plan',
+    intro: 'Sequenced moves to convert the YTD trajectory into a finished 2026.',
+    sections: [
+      {
+        kind: 'prose', heading: 'Sequenced workstreams',
+        cards: [
+          {
+            kind: 'tint', eyebrow: 'THIS WEEK',
+            list: D.commentary.actionPlan.thisWeek.map(function (t) { return { text: t, icon: '1', tone: 'danger' }; })
+          },
+          {
+            eyebrow: 'THIS MONTH',
+            list: D.commentary.actionPlan.thisMonth.map(function (t) { return { text: t, icon: '2', tone: 'warn' }; })
+          },
+          {
+            eyebrow: 'THIS QUARTER',
+            list: D.commentary.actionPlan.thisQuarter.map(function (t) { return { text: t, icon: '3' }; })
+          }
+        ],
+        cols: 3
+      },
+      {
+        kind: 'callout', title: 'How to use this page',
+        body: 'Print this tab on Mondays. The This Week list should be re-baselined every 7 days. The This Month list moves into This Week as items mature. The This Quarter list converts into a Notion ticket with an owner and a date.'
+      }
+    ]
+  };
+
+  // ============================================================
+  // WEEKLY SALES TARGETS
+  // ============================================================
+  pages['weekly-targets'] = {
+    eyebrow: 'WEEKLY TARGETS · BUDGET PLAN',
+    title: 'Weekly Sales Targets',
+    intro: 'The locked weekly target schedule that drives the budget plan. Methodology locked April 19, 2026, do not change WIP constants without explicit approval.',
+    tags: [{ kind: 'info', text: 'Locked V5' }],
+    sections: [
+      {
+        kind: 'callout', tone: 'warn',
+        title: 'Methodology locked',
+        body: 'The Weekly Sales Targets schedule and the Budget Recovery monthly bridge are locked as of <strong>2026-04-19</strong>. WIP constants and cycle-time hierarchy are immutable in this view. See the Revenue Forecast → Weekly Targets tab for the formulaic build-up; this tab presents the locked output.'
+      },
+      {
+        kind: 'prose',
+        body: '<div class="prose"><p>The weekly target view answers a simple question: <strong>how much do we need to sign each week to hit the budget?</strong> The locked numbers behind this dashboard come out of the V5 forecast methodology and reflect the cycle-time hierarchy by job type and market.</p><p>If the actual weekly run rate diverges by more than ±15% from the locked target for two consecutive weeks, escalate to the COO and the FP&A Director (Mahlet Teshome Mandefro) for an off-cycle methodology review.</p></div>'
+      }
+    ]
+  };
+
+  // ============================================================
+  // BUDGET RECOVERY
+  // ============================================================
+  pages['budget-recovery'] = {
+    eyebrow: 'BUDGET RECOVERY · LOCKED V5',
+    title: 'Budget Recovery',
+    intro: 'The path back to the $125.6M residential budget, the monthly sales we need to sign to close the gap to plan.',
+    tags: [{ kind: 'danger', text: '$6.3M gap' }],
+    sections: [
+      {
+        kind: 'kpi-row', cols: 4,
+        items: [
+          { label: 'Q1 Original Budget', value: '$24.4M', sub: 'Original residential plan',  tone: 'navy' },
+          { label: 'Q1 Signed Sales',     value: '$14.3M', sub: 'Through end of March',      tone: 'warn' },
+          { label: 'Q1 Shortfall',        value: '$10.1M', sub: 'To recover across Q2-Q4',   tone: 'danger' },
+          { label: 'Annualized Path',     value: '$119.3M', sub: 'Forecast vs $125.6M',      tone: 'warn' }
+        ]
+      },
+      {
+        kind: 'callout', tone: 'danger',
+        title: 'How recovery works',
+        body: 'The Q1 shortfall ($10.1M) is allocated across Q2-Q4 weeks based on the locked V5 schedule. The deeper the slip in any one month, the steeper the implied sales target for the following month. Open Revenue Forecast → Budget Recovery for the week-by-week schedule and per-market splits.'
+      }
+    ]
+  };
+
+  // ============================================================
+  // COMPLETED → BILLING
+  // ============================================================
+  var billing = (D.completedBilling && D.completedBilling.rows) ? D.completedBilling : null;
+  pages.billing = {
+    eyebrow: 'BILLING · COMPLETED JOBS',
+    title: 'Completed → Billing',
+    intro: 'Jobs that are done in production but not yet invoiced. Every day of slip here is a day of cash sitting in CWIP instead of AR.',
+    tags: [{ kind: 'warn', text: billing ? billing.rows.length + ' jobs unbilled' : '51 jobs unbilled' }],
+    sections: [
+      {
+        kind: 'kpi-row', cols: 4,
+        items: [
+          { label: 'Unbilled Total',          value: '$1.0M',  sub: '51 completed jobs · 17d avg',    tone: 'warn' },
+          { label: 'Ready to Invoice',        value: '$38.6K', sub: '2 jobs ready today',             tone: 'success' },
+          { label: '60+ Days Aged',           value: '$134K',  sub: '4 jobs · escalation candidates', tone: 'danger' },
+          { label: 'Accounting Kickbacks',    value: '$172K',  sub: '10 jobs blocked',                 tone: 'danger' }
+        ]
+      },
+      billing ? {
+        kind: 'table', heading: 'Completed jobs awaiting invoice',
+        caption: 'Sorted by amount · 51 rows total',
+        headers: (billing.headers || ['Job', 'Customer', 'Branch', 'Amount', 'Days', 'Status']).map(function (h, i) {
+          return { label: h, num: i >= 3 };
+        }),
+        rows: billing.rows.map(function (r) { return r; }),
+        maxHeight: '520px'
+      } : null,
+      {
+        kind: 'callout', title: 'SLA target',
+        body: '100% of completed jobs invoiced within 21 days. Currently exceeding 21d ≈ 12 of 51 (24%). Raleigh is the worst offender at a 45-day average across 6 jobs.'
+      }
+    ].filter(Boolean)
+  };
+
+  // ============================================================
+  // EXPORT
+  // ============================================================
+  window.FZ_PAGE_DEFS = window.FZ_PAGE_DEFS || {};
+  window.FZ_PAGE_DEFS['sales-overview'] = pages;
+})();
