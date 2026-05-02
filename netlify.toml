@@ -32,6 +32,27 @@
   to = "/installs-ytd/:slug.html"
   status = 200
 
+# Mobile suite pretty URLs (iOS app loads these)
+[[redirects]]
+  from = "/mobile/sales-overview/:slug"
+  to = "/mobile/sales-overview/:slug.html"
+  status = 200
+
+[[redirects]]
+  from = "/mobile/revenue-forecast/:slug"
+  to = "/mobile/revenue-forecast/:slug.html"
+  status = 200
+
+[[redirects]]
+  from = "/mobile/backlog/:slug"
+  to = "/mobile/backlog/:slug.html"
+  status = 200
+
+[[redirects]]
+  from = "/mobile/installs-ytd/:slug"
+  to = "/mobile/installs-ytd/:slug.html"
+  status = 200
+
 # Security headers
 [[headers]]
   for = "/*"

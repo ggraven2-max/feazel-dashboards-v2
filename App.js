@@ -21,9 +21,11 @@ import {
 import { useState, useCallback, useRef } from 'react';
 
 // === EDIT ME WHEN YOU CONFIRM THE LIVE URL =========================
-// Netlify domain for the unified suite (the redesign/ folder).
-// If your real Netlify subdomain differs, swap it here and rebuild.
+// Netlify domain for the unified suite. The iOS app loads the mobile
+// variant at /mobile/, which is built phone-first. The desktop suite
+// remains at root for browser users.
 const SITE = 'https://feazel-command-center.netlify.app';
+const MOBILE_BASE = `${SITE}/mobile`;
 // ===================================================================
 
 // Feazel brand palette (mirrors redesign/shared/styles.css tokens)
@@ -146,7 +148,7 @@ export default function App() {
             tabBarIcon: ({ color }) => <Icon name="home" color={color} />,
           }}
         >
-          {() => <DashboardScreen url={`${SITE}/`} label="Command Center" />}
+          {() => <DashboardScreen url={`${MOBILE_BASE}/`} label="Command Center" />}
         </Tab.Screen>
 
         <Tab.Screen
@@ -159,7 +161,7 @@ export default function App() {
         >
           {() => (
             <DashboardScreen
-              url={`${SITE}/sales-overview/`}
+              url={`${MOBILE_BASE}/sales-overview/`}
               label="Sales Overview"
             />
           )}
@@ -175,7 +177,7 @@ export default function App() {
         >
           {() => (
             <DashboardScreen
-              url={`${SITE}/revenue-forecast/`}
+              url={`${MOBILE_BASE}/revenue-forecast/`}
               label="Revenue Forecast"
             />
           )}
@@ -190,7 +192,7 @@ export default function App() {
           }}
         >
           {() => (
-            <DashboardScreen url={`${SITE}/backlog/`} label="Backlog" />
+            <DashboardScreen url={`${MOBILE_BASE}/backlog/`} label="Backlog" />
           )}
         </Tab.Screen>
 
@@ -203,7 +205,7 @@ export default function App() {
           }}
         >
           {() => (
-            <DashboardScreen url={`${SITE}/installs-ytd/`} label="Installs" />
+            <DashboardScreen url={`${MOBILE_BASE}/installs-ytd/`} label="Installs" />
           )}
         </Tab.Screen>
       </Tab.Navigator>

@@ -138,6 +138,19 @@ function main() {
   }
 
   writeOutputs(combined);
+
+  // Regenerate mobile HTML scaffolding so any new sub-tab in pages.js
+  // automatically gets a phone-friendly page. Idempotent and fast.
+  try {
+    require('child_process').execFileSync(
+      'node',
+      [path.join(ROOT, 'redesign', 'mobile', 'build-mobile.js')],
+      { stdio: 'inherit' }
+    );
+  } catch (err) {
+    console.warn('  warning: mobile scaffold regen failed (non-fatal):', err.message);
+  }
+
   console.log('\n═══════════════════════════════════════════════════════════');
   console.log(' BUILD COMPLETE · refresh any dashboard tab to see updates');
   console.log('═══════════════════════════════════════════════════════════');

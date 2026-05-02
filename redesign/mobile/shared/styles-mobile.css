@@ -1,0 +1,463 @@
+/* ============================================================
+   FEAZEL DASHBOARDS — MOBILE OVERRIDES
+   Loaded AFTER shared/styles.css. Only contains mobile-specific
+   overrides for layout and component sizing. Brand tokens, type
+   stack, and color palette are inherited from styles.css.
+
+   Target viewport: 320px (iPhone SE) → 430px (iPhone Pro Max).
+   ============================================================ */
+
+/* Mobile-only token tweaks */
+:root {
+  --m-pad: 14px;          /* outer page padding */
+  --m-gap: 12px;          /* default grid gap */
+  --m-radius: 12px;       /* slightly larger radii feel right on phone */
+  --m-tap: 44px;          /* minimum tap target per Apple HIG */
+  --m-topbar-h: 56px;
+  --m-subnav-h: 48px;
+}
+
+/* ============================================================
+   BASE / TYPE — tighten for small screens
+   ============================================================ */
+body {
+  font-size: 15px;        /* base unchanged, but content scales below */
+  background: var(--bg);
+  -webkit-tap-highlight-color: transparent;
+}
+
+h1 { font-size: 22px; line-height: 1.18; letter-spacing: -0.01em; }
+h2 { font-size: 17px; line-height: 1.22; }
+h3 { font-size: 14px; line-height: 1.3; }
+.eyebrow { font-size: 10px; }
+
+/* ============================================================
+   APP SHELL — drop the sidebar, single column
+   ============================================================ */
+.app {
+  display: block;
+  min-height: 100vh;
+  background: var(--bg);
+}
+.sidebar { display: none !important; }
+.main {
+  display: block;
+  width: 100%;
+  background: var(--bg);
+}
+
+/* ============================================================
+   TOP BAR — compact, sticky
+   ============================================================ */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  height: var(--m-topbar-h);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 0 var(--m-pad);
+  background: var(--feazel-navy);
+  color: var(--fg-on-navy);
+  border-bottom: none;
+  box-shadow: 0 1px 0 rgba(255,255,255,0.06);
+}
+.topbar-left,
+.topbar-right { gap: 6px; min-width: 0; }
+.topbar-left { flex: 1 1 auto; }
+.topbar-right { flex: 0 0 auto; }
+
+/* Compress crumbs to a single label, hide the chevron chain */
+.topbar-crumbs {
+  font-size: 13px;
+  font-weight: var(--fw-semibold);
+  color: var(--fg-on-navy);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+}
+.topbar-crumbs span { color: var(--fg-on-navy-soft); }
+.topbar-crumbs span + span { display: none; }
+.topbar-crumbs .crumb-current { color: var(--fg-on-navy); display: inline; }
+.topbar-crumbs .crumb-current ~ span { display: none; }
+
+/* If we have a breadcrumb chain, just keep the LAST one */
+.topbar-crumbs > span:not(:last-child) { display: none; }
+.topbar-crumbs > span:last-child { display: inline; color: var(--fg-on-navy); }
+
+.stamp {
+  font-size: 11px;
+  color: var(--fg-on-navy-soft);
+  background: rgba(255,255,255,0.08);
+  padding: 4px 8px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+.stamp .dot {
+  width: 6px;
+  height: 6px;
+  background: #4ade80;
+  border-radius: 50%;
+}
+.topbar-user { display: none; }     /* avatar+name not useful on phone */
+
+/* ============================================================
+   SUB-NAV — horizontal scrolling pill strip
+   ============================================================ */
+.subnav {
+  position: sticky;
+  top: var(--m-topbar-h);
+  z-index: 25;
+  height: var(--m-subnav-h);
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 6px;
+  padding: 0 var(--m-pad);
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+.subnav::-webkit-scrollbar { display: none; }
+.subnav a {
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: var(--fw-semibold);
+  color: var(--fg-2);
+  background: var(--bg-2);
+  border-radius: 999px;
+  text-decoration: none;
+  white-space: nowrap;
+  border: 1px solid transparent;
+  transition: all var(--dur-1) var(--ease-out);
+}
+.subnav a:hover { background: var(--bg-3); }
+.subnav a.is-active {
+  background: var(--feazel-navy);
+  color: var(--fg-on-navy);
+  border-color: var(--feazel-navy);
+}
+
+/* ============================================================
+   PAGE — generous outer padding, no horizontal scroll
+   ============================================================ */
+.page {
+  padding: var(--m-pad);
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+.page-head { margin-bottom: 14px; }
+.page-head-title h1 { margin-top: 4px; }
+.page-head-title p {
+  font-size: 14px;
+  margin-top: 6px;
+  color: var(--fg-2);
+  line-height: 1.45;
+}
+.page-head-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+.tag { font-size: 11px; padding: 4px 8px; }
+
+/* ============================================================
+   SECTIONS — collapse all multi-col grids to single col by default
+   ============================================================ */
+.section { margin-top: 18px; }
+.section + .section { margin-top: 18px; }
+.section-head { margin-bottom: 10px; }
+.section-head h2 { font-size: 16px; }
+.section-head small { font-size: 12px; color: var(--fg-3); }
+
+.grid {
+  display: grid;
+  gap: var(--m-gap);
+  grid-template-columns: 1fr;       /* default: stack everything */
+}
+.grid-2,
+.grid-3,
+.grid-4,
+.grid-6 { grid-template-columns: 1fr; }
+
+/* The 12-col grid system used by two-col sections collapses to 1 col */
+.grid-12 { grid-template-columns: 1fr; }
+[class*="col-span-"] { grid-column: 1 / -1 !important; }
+
+/* But for compact KPI rows we want 2-col — that's where the value is */
+.section .grid.grid-2.kpi-row,
+.section .grid.kpi-row,
+.kpi-grid {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+/* Auto-detect KPI rows: any grid that contains .kpi children → 2-col */
+.section > .grid:has(> .kpi) { grid-template-columns: repeat(2, 1fr); }
+
+/* ============================================================
+   KPI CARDS — sized for thumb scrolling
+   ============================================================ */
+.kpi {
+  padding: 12px;
+  border-radius: var(--m-radius);
+  min-height: 88px;
+}
+.kpi-label { font-size: 11px; }
+.kpi-value { font-size: 22px; line-height: 1.1; margin-top: 4px; }
+.kpi-value-sm { font-size: 17px; }
+.kpi-sub { font-size: 11px; margin-top: 6px; gap: 6px; }
+.kpi-sub .kpi-delta { font-size: 11px; padding: 2px 6px; }
+.kpi-spark { height: 28px; margin-top: 6px; }
+
+/* When KPIs span 2-col grid, ignore desktop "span 2/3/4" hints */
+.kpi[style*="grid-column"] { grid-column: span 1 !important; }
+
+/* Single-column KPI fallback for ultra narrow */
+@media (max-width: 360px) {
+  .section > .grid:has(> .kpi) { grid-template-columns: 1fr; }
+  .kpi-value { font-size: 24px; }
+}
+
+/* ============================================================
+   CHART CARDS
+   ============================================================ */
+.chart-card {
+  padding: 12px;
+  border-radius: var(--m-radius);
+  grid-column: 1 / -1 !important;   /* always full width */
+}
+.chart-head {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+.chart-head h3 { font-size: 14px; }
+.chart-sub { font-size: 11px; }
+.chart-canvas-wrap { height: 220px !important; }
+.chart-canvas-wrap.h-200 { height: 180px !important; }
+.chart-canvas-wrap.h-240 { height: 200px !important; }
+.chart-canvas-wrap.h-280 { height: 220px !important; }
+.chart-canvas-wrap.h-320 { height: 240px !important; }
+.chart-canvas-wrap.h-360 { height: 260px !important; }
+.chart-canvas-wrap.h-400 { height: 280px !important; }
+.chart-canvas-wrap.h-440 { height: 280px !important; }
+.chart-canvas-wrap.h-480 { height: 280px !important; }
+.chart-foot {
+  font-size: 11px;
+  color: var(--fg-3);
+  margin-top: 8px;
+  line-height: 1.4;
+}
+
+/* ============================================================
+   TABLES — horizontal scroll, condensed cells
+   ============================================================ */
+.tbl-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: var(--m-radius);
+  border: 1px solid var(--line);
+  background: var(--surface);
+}
+.tbl {
+  font-size: 12px;
+  min-width: 100%;
+}
+.tbl th, .tbl td {
+  padding: 8px 10px;
+  white-space: nowrap;
+}
+.tbl-compact th, .tbl-compact td { padding: 6px 8px; font-size: 11px; }
+.tbl tbody tr:nth-child(even) { background: var(--surface-2); }
+
+/* ============================================================
+   PROSE / CARDS
+   ============================================================ */
+.card {
+  padding: 14px;
+  border-radius: var(--m-radius);
+}
+.card-navy h3 { color: var(--fg-on-navy); }
+.prose { font-size: 13px; line-height: 1.5; }
+.prose p { margin: 8px 0; }
+.prose strong { color: var(--feazel-navy); }
+.insights { padding: 0; margin: 0; list-style: none; }
+.insights li {
+  display: flex;
+  gap: 8px;
+  font-size: 13px;
+  padding: 6px 0;
+}
+.insights .ic {
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: var(--fw-bold);
+  background: var(--feazel-blue-tint);
+  color: var(--feazel-navy);
+  margin-top: 2px;
+}
+.insights .ic.danger { background: var(--danger-tint); color: var(--danger); }
+.insights .ic.warning { background: var(--warning-tint); color: var(--warning); }
+.insights .ic.success { background: var(--success-tint); color: var(--success); }
+
+.callout {
+  padding: 14px;
+  border-radius: var(--m-radius);
+  font-size: 13px;
+  line-height: 1.5;
+}
+.callout-title { font-size: 11px; }
+
+/* ============================================================
+   COMMAND CENTER (mobile hub)
+   Hero, tiles, freshness card.
+   ============================================================ */
+.hub-hero {
+  padding: 18px var(--m-pad);
+  margin: 0 calc(-1 * var(--m-pad)) 18px;
+  background: var(--feazel-navy);
+  color: var(--fg-on-navy);
+  border-radius: 0 0 var(--m-radius) var(--m-radius);
+}
+.hub-hero h1 {
+  color: var(--fg-on-navy);
+  font-size: 22px;
+  margin-top: 4px;
+}
+.hub-hero .eyebrow {
+  color: var(--fg-on-navy-soft);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+}
+.hub-hero p {
+  color: var(--fg-on-navy-soft);
+  font-size: 13px;
+  margin-top: 8px;
+  line-height: 1.5;
+}
+.hub-hero-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-top: 16px;
+}
+.hub-hero-stat {
+  padding: 10px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px;
+}
+.hub-hero-stat .l {
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--fg-on-navy-soft);
+}
+.hub-hero-stat .v {
+  font-size: 18px;
+  font-weight: var(--fw-bold);
+  color: var(--fg-on-navy);
+  margin-top: 4px;
+}
+.hub-hero-stat .s {
+  font-size: 10px;
+  color: var(--fg-on-navy-soft);
+  margin-top: 4px;
+  line-height: 1.3;
+}
+
+.tile {
+  display: block;
+  padding: 14px;
+  border-radius: var(--m-radius);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  text-decoration: none;
+  color: inherit;
+  box-shadow: var(--shadow-1);
+}
+.tile h2 { font-size: 16px; }
+.tile p { font-size: 12px; color: var(--fg-2); margin-top: 4px; line-height: 1.4; }
+.tile-mark {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: var(--feazel-blue-tint);
+  color: var(--feazel-navy);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.tile-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin-top: 12px;
+}
+.tile-stat .l { font-size: 10px; color: var(--fg-3); text-transform: uppercase; letter-spacing: 0.04em; }
+.tile-stat .v { font-size: 15px; font-weight: var(--fw-bold); color: var(--feazel-navy); margin-top: 2px; }
+.tile-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 12px;
+  font-size: 12px;
+  font-weight: var(--fw-semibold);
+  color: var(--feazel-blue);
+}
+
+/* Pills (markets list etc) */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: var(--fw-semibold);
+  background: var(--bg-2);
+  color: var(--fg-2);
+}
+.pill-info { background: var(--feazel-blue-tint); color: var(--feazel-navy); }
+.pill-success { background: var(--success-tint); color: var(--success); }
+.pill-warning { background: var(--warning-tint); color: var(--warning); }
+.pill-danger { background: var(--danger-tint); color: var(--danger); }
+
+/* The Active Markets grid stays multi-col on phone but tighter */
+.section .card .grid.grid-6 {
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+}
+
+/* ============================================================
+   UTILITIES
+   ============================================================ */
+.caption { font-size: 11px; color: var(--fg-3); }
+.card-head h3 { font-size: 15px; }
+small { font-size: 11px; }
+
+/* Reset any inline grid-column styles set for desktop */
+.section .grid > * { grid-column: auto !important; }
+
+/* Make any inline width:600px etc shrink */
+.page * { max-width: 100% !important; }
+.page canvas { max-width: 100% !important; height: auto; }
