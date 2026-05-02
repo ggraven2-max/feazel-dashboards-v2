@@ -23,7 +23,7 @@ import { useState, useCallback, useRef } from 'react';
 // === EDIT ME WHEN YOU CONFIRM THE LIVE URL =========================
 // Netlify domain for the unified suite (the redesign/ folder).
 // If your real Netlify subdomain differs, swap it here and rebuild.
-const SITE = 'https://feazel-dashboards-v2.netlify.app';
+const SITE = 'https://feazel-command-center.netlify.app';
 // ===================================================================
 
 // Feazel brand palette (mirrors redesign/shared/styles.css tokens)
