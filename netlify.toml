@@ -1,9 +1,11 @@
 # Feazel Dashboards — Netlify deploy config
 
 [build]
-  # Run the calculator pipeline so any pushed inputs regenerate data.js
-  command = "npm install && node pipeline/build.js"
-  # The dashboards live in redesign/. Netlify serves this folder as the site root.
+  # Static publish only. The pipeline runs locally on Greg's machine before
+  # each git push. Netlify serves the committed redesign/ folder as-is so the
+  # "Refreshed" timestamp on every page reflects when the data was actually
+  # pulled, not when Netlify happened to redeploy.
+  command = "echo 'Static publish, pipeline runs locally before push.'"
   publish = "redesign"
 
 [build.environment]
@@ -44,3 +46,7 @@
   for = "/assets/*"
     [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
+cd "/Users/greggraven/Claude Code/feazel-dashboards-v2"
+# drop today's files into inputs/
+npm run build              # ← this stamps the timestamp
+git add . && git commit -m "Refresh" && git push
