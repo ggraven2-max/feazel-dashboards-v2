@@ -13,7 +13,7 @@
   --m-gap: 12px;          /* default grid gap */
   --m-radius: 12px;       /* slightly larger radii feel right on phone */
   --m-tap: 44px;          /* minimum tap target per Apple HIG */
-  --m-topbar-h: 56px;
+  --m-topbar-h: 32px;
   --m-subnav-h: 48px;
 }
 
@@ -47,16 +47,18 @@ h3 { font-size: 14px; line-height: 1.3; }
 }
 
 /* ============================================================
-   TOP BAR — compact, sticky
+   TOP BAR — slim freshness strip; iOS native header above it
+   already shows the dashboard name, so this band carries only
+   the data-as-of stamp.
    ============================================================ */
 .topbar {
   position: sticky;
   top: 0;
   z-index: 30;
-  height: var(--m-topbar-h);
+  height: 32px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   gap: 8px;
   padding: 0 var(--m-pad);
   background: var(--feazel-navy);
@@ -64,35 +66,20 @@ h3 { font-size: 14px; line-height: 1.3; }
   border-bottom: none;
   box-shadow: 0 1px 0 rgba(255,255,255,0.06);
 }
-.topbar-left,
-.topbar-right { gap: 6px; min-width: 0; }
-.topbar-left { flex: 1 1 auto; }
-.topbar-right { flex: 0 0 auto; }
-
-/* Compress crumbs to a single label, hide the chevron chain */
-.topbar-crumbs {
-  font-size: 13px;
-  font-weight: var(--fw-semibold);
-  color: var(--fg-on-navy);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 200px;
+.topbar-left { display: none; }   /* breadcrumb redundant with iOS header */
+.topbar-crumbs { display: none; }
+.topbar-user { display: none; }
+.topbar-right {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
-.topbar-crumbs span { color: var(--fg-on-navy-soft); }
-.topbar-crumbs span + span { display: none; }
-.topbar-crumbs .crumb-current { color: var(--fg-on-navy); display: inline; }
-.topbar-crumbs .crumb-current ~ span { display: none; }
-
-/* If we have a breadcrumb chain, just keep the LAST one */
-.topbar-crumbs > span:not(:last-child) { display: none; }
-.topbar-crumbs > span:last-child { display: inline; color: var(--fg-on-navy); }
-
 .stamp {
   font-size: 11px;
   color: var(--fg-on-navy-soft);
   background: rgba(255,255,255,0.08);
-  padding: 4px 8px;
+  padding: 3px 8px;
   border-radius: 999px;
   display: inline-flex;
   align-items: center;
@@ -105,7 +92,6 @@ h3 { font-size: 14px; line-height: 1.3; }
   background: #4ade80;
   border-radius: 50%;
 }
-.topbar-user { display: none; }     /* avatar+name not useful on phone */
 
 /* ============================================================
    SUB-NAV — horizontal scrolling pill strip
@@ -158,19 +144,41 @@ h3 { font-size: 14px; line-height: 1.3; }
   max-width: 100vw;
   overflow-x: hidden;
 }
-.page-head { margin-bottom: 14px; }
-.page-head-title h1 { margin-top: 4px; }
+
+/* Page head: title and intro should fill the full viewport width.
+   Desktop uses a flex row with title on the left and tags on the right;
+   on mobile we stack everything vertically and let the body breathe. */
+.page-head {
+  display: block;            /* override desktop's flex */
+  margin-bottom: 18px;
+  width: 100%;
+}
+.page-head-title {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+}
+.page-head-title h1 {
+  margin-top: 4px;
+  font-size: 22px;
+  line-height: 1.18;
+  text-wrap: balance;
+}
 .page-head-title p {
+  display: block;
+  width: 100%;
   font-size: 14px;
-  margin-top: 6px;
+  margin-top: 8px;
   color: var(--fg-2);
-  line-height: 1.45;
+  line-height: 1.5;
+  text-wrap: pretty;
 }
 .page-head-meta {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-  margin-top: 10px;
+  margin-top: 12px;
+  width: 100%;
 }
 .tag { font-size: 11px; padding: 4px 8px; }
 
@@ -333,33 +341,39 @@ h3 { font-size: 14px; line-height: 1.3; }
    Hero, tiles, freshness card.
    ============================================================ */
 .hub-hero {
-  padding: 18px var(--m-pad);
-  margin: 0 calc(-1 * var(--m-pad)) 18px;
-  background: var(--feazel-navy);
+  padding: 22px var(--m-pad) 18px;
+  margin: 0 calc(-1 * var(--m-pad)) 16px;
+  background: linear-gradient(180deg, var(--feazel-navy) 0%, var(--feazel-navy-deep) 100%);
   color: var(--fg-on-navy);
   border-radius: 0 0 var(--m-radius) var(--m-radius);
+  text-align: center;
 }
 .hub-hero h1 {
   color: var(--fg-on-navy);
-  font-size: 22px;
-  margin-top: 4px;
+  font-size: 24px;
+  margin-top: 6px;
+  letter-spacing: -0.01em;
 }
 .hub-hero .eyebrow {
   color: var(--fg-on-navy-soft);
   font-size: 10px;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
+  display: block;
 }
 .hub-hero p {
   color: var(--fg-on-navy-soft);
   font-size: 13px;
-  margin-top: 8px;
+  margin: 10px auto 0;
   line-height: 1.5;
+  max-width: 320px;
+  text-wrap: pretty;
 }
 .hub-hero-stats {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 10px;
-  margin-top: 16px;
+  margin-top: 18px;
+  text-align: left;
 }
 .hub-hero-stat {
   padding: 10px;
