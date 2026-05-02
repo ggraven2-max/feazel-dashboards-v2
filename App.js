@@ -55,16 +55,24 @@ function Icon({ name, color, size = 22 }) {
   );
 }
 
+// Cache buster: appended to every WebView URL so iOS WebView doesn't serve
+// stale HTML/CSS while we're iterating. Fresh per app boot.
+const SESSION_TS = Date.now();
+
 function DashboardScreen({ url, label }) {
   const [loading, setLoading] = useState(true);
   const [errored, setErrored] = useState(false);
-  const [reloadKey, setReloadKey] = useState(0);
+  const [reloadKey, setReloadKey] = useState(Date.now());
 
   const reload = useCallback(() => {
     setErrored(false);
     setLoading(true);
-    setReloadKey((k) => k + 1);
+    setReloadKey(Date.now());
   }, []);
+
+  // Append a cache-busting query string so each WebView mount gets a fresh page
+  const sep = url.indexOf('?') >= 0 ? '&' : '?';
+  const finalUrl = `${url}${sep}t=${SESSION_TS}_${reloadKey}`;
 
   return (
     <SafeAreaView style={styles.screen}>
@@ -72,10 +80,13 @@ function DashboardScreen({ url, label }) {
         {!errored ? (
           <WebView
             key={reloadKey}
-            source={{ uri: url }}
+            source={{ uri: finalUrl }}
             style={styles.webview}
             pullToRefreshEnabled
             bounces
+            cacheEnabled={false}
+            cacheMode="LOAD_NO_CACHE"
+            incognito={true}
             startInLoadingState={false}
             onLoadStart={() => setLoading(true)}
             onLoadEnd={() => setLoading(false)}
