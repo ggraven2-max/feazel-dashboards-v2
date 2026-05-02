@@ -21,22 +21,22 @@
       <div class="hub-hero-stat">
         <div class="l">2026 Revenue Target</div>
         <div class="v">$185M</div>
-        <div class="s">$125.6M residential · $59.4M commercial</div>
+        <div class="s">$125.6M residential, $59.4M commercial</div>
       </div>
       <div class="hub-hero-stat">
         <div class="l">Residential Signed YTD</div>
-        <div class="v">$24.5M</div>
-        <div class="s">1,572 contracts across 13 markets</div>
+        <div class="v" data-bind="hero.signed">—</div>
+        <div class="s" data-bind="hero.signedSub">across 13 markets</div>
       </div>
       <div class="hub-hero-stat">
         <div class="l">Invoiced YTD</div>
-        <div class="v">$19.3M</div>
-        <div class="s">1,041 unique jobs · $18,553 avg contract</div>
+        <div class="v" data-bind="hero.invoiced">—</div>
+        <div class="s" data-bind="hero.invoicedSub">unique jobs</div>
       </div>
       <div class="hub-hero-stat">
         <div class="l">Open Backlog</div>
-        <div class="v">$14.7M</div>
-        <div class="s">713 active pipeline jobs</div>
+        <div class="v" data-bind="hero.backlog">—</div>
+        <div class="s" data-bind="hero.backlogSub">active jobs</div>
       </div>
     </div>
   </section>
@@ -45,8 +45,8 @@
   <section class="section">
     <div class="callout">
       <span class="callout-title">Where it stands</span>
-      The current 4-week sales pace ($2.6M/wk) projects to <strong>$119.3M annual invoiced revenue</strong> against the
-      <strong>$125.6M budget</strong>, a $6.3M gap. The plan to close it is documented in Revenue Forecast → Budget Recovery
+      The current 4-week sales pace (<strong data-bind="rollup.weeklyPace">—</strong>/wk) projects to <strong data-bind="rollup.annualForecast">—</strong> annual invoiced revenue against the
+      <strong data-bind="rollup.budget">—</strong> budget, a <strong data-bind="rollup.gap">—</strong> gap. The plan to close it is documented in Revenue Forecast → Budget Recovery
       and Sales Overview → Action Plan. The backlog and installs dashboards show what we have already sold
       and need to deliver on time to convert that pace into invoiced revenue.
     </div>
@@ -72,10 +72,10 @@
           </div>
         </div>
         <div class="tile-stats">
-          <div class="tile-stat"><div class="l">Signed YTD</div><div class="v">$24.46M</div></div>
-          <div class="tile-stat"><div class="l">Sold</div><div class="v">$21.02M</div></div>
-          <div class="tile-stat"><div class="l">Kicked Back</div><div class="v">$880K</div></div>
-          <div class="tile-stat"><div class="l">Avg Deal</div><div class="v">$15,563</div></div>
+          <div class="tile-stat"><div class="l">Signed YTD</div><div class="v" data-bind="tile.sales.signed">—</div></div>
+          <div class="tile-stat"><div class="l">Sold</div><div class="v" data-bind="tile.sales.sold">—</div></div>
+          <div class="tile-stat"><div class="l">Kicked Back</div><div class="v" data-bind="tile.sales.kicked">—</div></div>
+          <div class="tile-stat"><div class="l">Avg Deal</div><div class="v" data-bind="tile.sales.avg">—</div></div>
         </div>
         <span class="tile-cta">Open dashboard <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
       </a>
@@ -92,10 +92,10 @@
           </div>
         </div>
         <div class="tile-stats">
-          <div class="tile-stat"><div class="l">Annual Forecast</div><div class="v">$119.3M</div></div>
-          <div class="tile-stat"><div class="l">Budget</div><div class="v">$125.6M</div></div>
-          <div class="tile-stat"><div class="l">Gap to Plan</div><div class="v" style="color:var(--danger);">−$6.3M</div></div>
-          <div class="tile-stat"><div class="l">Active Pipeline</div><div class="v">$14.7M</div></div>
+          <div class="tile-stat"><div class="l">Annual Forecast</div><div class="v" data-bind="tile.rev.fcst">—</div></div>
+          <div class="tile-stat"><div class="l">Budget</div><div class="v" data-bind="tile.rev.budget">—</div></div>
+          <div class="tile-stat"><div class="l">Gap to Plan</div><div class="v" data-bind="tile.rev.gap" style="color:var(--danger);">—</div></div>
+          <div class="tile-stat"><div class="l">Active Pipeline</div><div class="v" data-bind="tile.rev.pipe">—</div></div>
         </div>
         <span class="tile-cta">Open dashboard <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
       </a>
@@ -112,10 +112,10 @@
           </div>
         </div>
         <div class="tile-stats">
-          <div class="tile-stat"><div class="l">Open WOs</div><div class="v">840</div></div>
-          <div class="tile-stat"><div class="l">Partial Jobs</div><div class="v">$1.99M</div></div>
-          <div class="tile-stat"><div class="l">On-Hold WOs</div><div class="v">132</div></div>
-          <div class="tile-stat"><div class="l">Stale &gt;30d</div><div class="v">98</div></div>
+          <div class="tile-stat"><div class="l">Open WOs</div><div class="v" data-bind="tile.bl.wos">—</div></div>
+          <div class="tile-stat"><div class="l">Partial Value</div><div class="v" data-bind="tile.bl.partial">—</div></div>
+          <div class="tile-stat"><div class="l">On-Hold WOs</div><div class="v" data-bind="tile.bl.holds">—</div></div>
+          <div class="tile-stat"><div class="l">Avg Hold Age</div><div class="v" data-bind="tile.bl.holdAge">—</div></div>
         </div>
         <span class="tile-cta">Open dashboard <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
       </a>
@@ -132,10 +132,10 @@
           </div>
         </div>
         <div class="tile-stats">
-          <div class="tile-stat"><div class="l">True Revenue</div><div class="v">$19.31M</div></div>
-          <div class="tile-stat"><div class="l">Median Days</div><div class="v">27.1</div></div>
-          <div class="tile-stat"><div class="l">Multi-Trade</div><div class="v">27.9%</div></div>
-          <div class="tile-stat"><div class="l">MT Lift</div><div class="v" style="color:var(--success);">+67.9%</div></div>
+          <div class="tile-stat"><div class="l">True Revenue</div><div class="v" data-bind="tile.inst.rev">—</div></div>
+          <div class="tile-stat"><div class="l">Median Days</div><div class="v" data-bind="tile.inst.days">—</div></div>
+          <div class="tile-stat"><div class="l">Multi-Trade</div><div class="v" data-bind="tile.inst.mt">—</div></div>
+          <div class="tile-stat"><div class="l">Avg Start</div><div class="v" data-bind="tile.inst.start">—</div></div>
         </div>
         <span class="tile-cta">Open dashboard <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
       </a>
@@ -153,8 +153,8 @@
       </div>
       <div class="card">
         <span class="eyebrow">DATA FRESHNESS</span>
-        <h3 style="margin-top:6px;">As of April 29, 2026</h3>
-        <p style="margin-top:8px; font-size:13px;">All four dashboards reflect data through end of business <strong>Wednesday, April 29</strong>. Sales Overview last signed contract recorded at 8:55 PM ET.</p>
+        <h3 style="margin-top:6px;" data-bind="freshness.headline">As of —</h3>
+        <p style="margin-top:8px; font-size:13px;">All four dashboards reflect the most recent uploads from the operating reports. Refreshed <strong data-bind="freshness.stamp">—</strong>.</p>
       </div>
       <div class="card">
         <span class="eyebrow">SCOPE</span>
@@ -170,7 +170,7 @@
       <div class="card-head">
         <div>
           <h3>Active Markets</h3>
-          <span class="caption">13 markets · operated by Feazel, Music City Roofers (Nashville), Kearns Brothers (Detroit), Shanco (Richmond/DC)</span>
+          <span class="caption">13 markets, operated by Feazel, Music City Roofers (Nashville), Kearns Brothers (Detroit), Shanco (Richmond/DC)</span>
         </div>
       </div>
       <div class="grid grid-6" style="gap:8px;">
@@ -192,10 +192,98 @@
   </section>
 </template>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="./shared/chart-theme.js"></script>
+<script src="./shared/data.js"></script>
 <script src="./shared/pages.js"></script>
 <script src="./shared/layout.js"></script>
 <script>
   FZ.renderShell({ atRoot: true });
+
+  // ---- Live binder: pull values from FZ.data into the Command Center hub ----
+  (function bindCommandCenter () {
+    var data = window.FZ && window.FZ.data;
+    if (!data) return;
+
+    var SO = data.SALES_OVERVIEW || {};
+    var IY = data.INSTALLS_YTD  || {};
+    var RF = data.REVENUE_FORECAST || {};
+    var BL = data.BACKLOG || {};
+
+    function kpi(list, label) {
+      if (!Array.isArray(list)) return null;
+      return list.find(function (k) { return k.label === label; }) || null;
+    }
+    function val(o, dash) { return o && o.value ? o.value : (dash || '—'); }
+    function sub(o, dash) { return o && o.sub ? o.sub : (dash || ''); }
+
+    var soSigned   = kpi(SO.kpis, 'Signed Contracts YTD');
+    var soSold     = kpi(SO.kpis, 'Sold');
+    var soKicked   = kpi(SO.kpis, 'Kicked Back');
+    var soAvg      = kpi(SO.kpis, 'Avg Deal Size');
+
+    var rfFcst     = kpi(RF.kpis, 'Annual Forecast');
+    var rfBudget   = kpi(RF.kpis, 'Annual Budget');
+    var rfGap      = kpi(RF.kpis, 'Forecast vs Budget');
+    var rfPipe     = kpi(RF.kpis, 'Active Pipeline');
+    var rfWeekly   = kpi(RF.kpis, '4-Week Avg Weekly Sales');
+    var rfInvoiced = kpi(RF.kpis, 'Invoiced YTD');
+
+    var iyRev      = kpi(IY.kpis, 'True Revenue');
+    var iyDays     = kpi(IY.kpis, 'Median Days to Complete');
+    var iyMT       = kpi(IY.kpis, 'Multi-Trade Jobs');
+    var iyStart    = kpi(IY.kpis, 'Avg Days to Start');
+
+    var blExec     = BL.kpisExecutive || [];
+    var blOpenWOs  = (BL.headerMeta && BL.headerMeta.totalWOs) ? BL.headerMeta.totalWOs.toLocaleString() : '—';
+    var blValue    = kpi(blExec, 'Total Portfolio Value');
+    var blPartial  = kpi(BL.kpisPartial || [], 'Trapped Value');
+    var blHolds    = kpi(BL.kpisHolds   || [], 'Total Holds');
+    var blHoldAge  = kpi(BL.kpisHolds   || [], 'Avg Hold Age');
+
+    var binds = {
+      // Hero
+      'hero.signed':      val(soSigned),
+      'hero.signedSub':   sub(soSigned, 'across 13 markets'),
+      'hero.invoiced':    val(rfInvoiced),
+      'hero.invoicedSub': iyRev ? (iyRev.sub || '') : (sub(rfInvoiced)),
+      'hero.backlog':     val(blValue),
+      'hero.backlogSub':  blValue ? (blValue.sub || '') : (BL.headerMeta ? (BL.headerMeta.totalJobs + ' active jobs') : ''),
+      // Rollup callout
+      'rollup.weeklyPace':    val(rfWeekly, '$2.6M'),
+      'rollup.annualForecast':val(rfFcst, '$119M'),
+      'rollup.budget':        val(rfBudget, '$125.6M'),
+      'rollup.gap':           val(rfGap, '—'),
+      // Sales tile
+      'tile.sales.signed': val(soSigned),
+      'tile.sales.sold':   val(soSold),
+      'tile.sales.kicked': val(soKicked),
+      'tile.sales.avg':    val(soAvg),
+      // Revenue tile
+      'tile.rev.fcst':   val(rfFcst),
+      'tile.rev.budget': val(rfBudget),
+      'tile.rev.gap':    val(rfGap),
+      'tile.rev.pipe':   val(rfPipe),
+      // Backlog tile
+      'tile.bl.wos':     blOpenWOs,
+      'tile.bl.partial': val(blPartial),
+      'tile.bl.holds':   val(blHolds),
+      'tile.bl.holdAge': val(blHoldAge),
+      // Installs tile
+      'tile.inst.rev':   val(iyRev),
+      'tile.inst.days':  val(iyDays),
+      'tile.inst.mt':    iyMT && iyMT.sub ? iyMT.sub.replace(/ of book.*$/, '') : '—',
+      'tile.inst.start': val(iyStart),
+      // Freshness
+      'freshness.headline': 'As of ' + (window.FZ.formatBuiltAt ? window.FZ.formatBuiltAt({ dateOnly: true }) : '—'),
+      'freshness.stamp':    window.FZ.formatBuiltAt ? window.FZ.formatBuiltAt() : '—'
+    };
+
+    Object.keys(binds).forEach(function (key) {
+      var el = document.querySelector('[data-bind="' + key + '"]');
+      if (el) el.textContent = binds[key];
+    });
+  })();
 </script>
 </body>
 </html>
