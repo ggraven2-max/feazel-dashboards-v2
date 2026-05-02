@@ -46,7 +46,3 @@
   for = "/assets/*"
     [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
-cd "/Users/greggraven/Claude Code/feazel-dashboards-v2"
-# drop today's files into inputs/
-npm run build              # ← this stamps the timestamp
-git add . && git commit -m "Refresh" && git push
