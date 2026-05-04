@@ -17,10 +17,11 @@ Unlike residential V5 (statistical conversion curves over many small jobs), the 
 ## Operating definitions (LOCKED MF-v1)
 
 1. **Revenue trigger.** A job's `Date Moved to Invoiced` is when the contract value hits revenue. Full contract value, completion-billed.
-2. **WIP definition.** A job is "in WIP" at month-end if `Date Moved to In Progress` ≤ month-end AND (`Date Moved to Invoiced` is null OR > month-end).
-3. **Start trigger.** A job is "started this month" if `Date Moved to In Progress` falls in the month (or `Start Date` if In Progress is missing).
-4. **Annual budget.** Sourced from the Commercial Budget XLSX row 6 "Total - 40000 - Revenue". Per-month plan numbers come from the same row (cells 1-12). The annual "Total 2026" cell is the headline. If the explicit total and the sum of months diverge by >10%, calculator warns and uses the summed months.
-5. **Year filter.** Only events in FY 2026 are counted.
+2. **Job-level dedup (parity with residential RULE-403).** The Salesforce export emits one row per Work Order. Multi-WO jobs appear multiple times with the same `Job Number` and the same `Final Contract Amount`. The calculator groups rows by `Job Number`, takes the FIRST Work Order's `Final Contract Amount` as the job-level contract, and coalesces dates from any WO so we don't lose date stamps when one WO's row has blank dates. This avoids 5x-10x revenue inflation from WO duplicates. The calculator logs the dedup count on every run.
+3. **WIP definition.** A job is "in WIP" at month-end if `Date Moved to In Progress` ≤ month-end AND (`Date Moved to Invoiced` is null OR > month-end).
+4. **Start trigger.** A job is "started this month" if `Date Moved to In Progress` falls in the month (or `Start Date` if In Progress is missing).
+5. **Annual budget.** Sourced from the Commercial Budget XLSX row 6 "Total - 40000 - Revenue". Per-month plan numbers come from the same row (cells 1-12). The annual "Total 2026" cell is the headline. If the explicit total and the sum of months diverge by >10%, calculator warns and uses the summed months.
+6. **Year filter.** Only events in FY 2026 are counted.
 
 Changes to any of these require sign-off from Greg + Mahlet, a version bump (MF-v2), and a snapshot test refresh.
 

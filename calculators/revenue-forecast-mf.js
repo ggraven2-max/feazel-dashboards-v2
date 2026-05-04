@@ -322,8 +322,13 @@ function run(opts) {
     return emptyShape('Commercial Forecasting Report is empty.');
   }
 
-  // Per-job parse
-  const jobs = raw.map(r => {
+  // Per-row parse from the Salesforce export. Each row is a Work Order.
+  // Multi-WO jobs appear multiple times with the same Job Number and the
+  // same Final Contract Amount. We dedupe by Job Number to avoid double-
+  // counting contract value (matches the residential Installs YTD methodology,
+  // RULE-403: "group rows to job level, first WO carries the job-level
+  // contract").
+  const rowsParsed = raw.map(r => {
     const inProg = parseDate(getCol(r, ['Date Moved to In Progress']));
     const completed = parseDate(getCol(r, ['Date Moved to Completed']));
     const invoiced = parseDate(getCol(r, ['Date Moved to Invoiced']));
@@ -338,14 +343,39 @@ function run(opts) {
       branch: getCol(r, ['Branch Location to Service']) || '(unassigned)',
       amount: parseNumber(getCol(r, ['Final Contract Amount'])),
       jobStatus: getCol(r, ['Job Status']),
-      // Use the most defensible "start" date: prefer In Progress, fallback to Start Date
       startedOn: inProg || startDate,
       completedOn: completed,
       invoicedOn: invoiced,
       signedOn: signed,
-      createdOn: created
+      createdOn: created,
+      woNumber: getCol(r, ['Work Order Number'])
     };
   });
+
+  // Group by Job Number → take the first WO's contract as the job-level
+  // contract. If different WOs for the same job carry different dates
+  // (e.g., one WO completed earlier than another), prefer non-null dates from
+  // any WO so we don't lose date stamps to the first row's blanks.
+  const byJobNum = {};
+  rowsParsed.forEach(r => {
+    const key = r.jobNumber || '__row_' + Math.random();   // ungrouped if no job number
+    if (!byJobNum[key]) {
+      byJobNum[key] = Object.assign({}, r, { woCount: 1 });
+    } else {
+      const existing = byJobNum[key];
+      existing.woCount++;
+      // Keep the first WO's amount (residential RULE-403 pattern)
+      // but coalesce dates from any WO that has them
+      if (!existing.invoicedOn && r.invoicedOn) existing.invoicedOn = r.invoicedOn;
+      if (!existing.startedOn && r.startedOn)   existing.startedOn = r.startedOn;
+      if (!existing.completedOn && r.completedOn) existing.completedOn = r.completedOn;
+      if (!existing.signedOn && r.signedOn)     existing.signedOn = r.signedOn;
+      if (!existing.createdOn && r.createdOn)   existing.createdOn = r.createdOn;
+    }
+  });
+  const jobs = Object.values(byJobNum);
+  const dedupCount = rowsParsed.length - jobs.length;
+  console.log('  [mf-revenue] Dedup: ' + rowsParsed.length + ' WO rows → ' + jobs.length + ' unique jobs (' + dedupCount + ' duplicates removed)');
 
   // ---- monthly aggregation across FY ----
   const monthly = MONTHS.map((label, idx) => {
