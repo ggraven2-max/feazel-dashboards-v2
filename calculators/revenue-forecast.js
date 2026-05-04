@@ -431,6 +431,32 @@ function applyNetSuiteOverride(out, inputDir) {
       actualMonths.map(m => m.short + ' $' + Math.round(m.invoiced).toLocaleString()).join(', '));
   }
 
+  // Patch the monthly arrays the dashboard charts read from. V5's revModel[]
+  // and revFromKnown[] are the chart sources for "Net Revenue: Budget vs
+  // Forecast" and similar; they need to show NetSuite actuals for closed
+  // months instead of V5's raw forecast (which can run higher than actual).
+  // monthRevenue.{month} also gets patched so the per-month detail panes
+  // surface the locked figure.
+  const MONTH_KEYS = ['january','february','march','april','may','june','july','august','september','october','november','december'];
+  if (Array.isArray(out.revModel) && out.revModel.length === 12) {
+    actualMonths.forEach(m => { out.revModel[m.monthIdx] = m.invoiced; });
+  }
+  if (Array.isArray(out.revFromKnown) && out.revFromKnown.length === 12) {
+    actualMonths.forEach(m => { out.revFromKnown[m.monthIdx] = m.invoiced; });
+  }
+  if (out.monthRevenue && typeof out.monthRevenue === 'object') {
+    actualMonths.forEach(m => {
+      const key = MONTH_KEYS[m.monthIdx];
+      if (out.monthRevenue[key]) {
+        out.monthRevenue[key].invoiced = m.invoiced;
+        // Recompute net revenue for the closed month if WIP change is present
+        if ('wipChange' in out.monthRevenue[key]) {
+          out.monthRevenue[key].netRevenue = m.invoiced + out.monthRevenue[key].wipChange;
+        }
+      }
+    });
+  }
+
   // Stash NetSuite numbers + lock list in a sub-object the dashboard can read
   out.netsuiteInvoiced = {
     source: ns.fileName,
