@@ -507,3 +507,22 @@ small { font-size: 11px; }
 /* Make any inline width:600px etc shrink */
 .page * { max-width: 100% !important; }
 .page canvas { max-width: 100% !important; height: auto; }
+
+/* ============================================================
+   PAGE FOOTER — "View desktop site" override link
+   ============================================================ */
+.page-foot {
+  text-align: center;
+  padding: 18px var(--m-pad) 32px;
+  border-top: 1px solid var(--line);
+  margin-top: 24px;
+  background: var(--surface);
+}
+.page-foot .view-desktop {
+  font-size: 12px;
+  color: var(--feazel-blue);
+  text-decoration: none;
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.04em;
+}
+.page-foot .view-desktop:hover { text-decoration: underline; }

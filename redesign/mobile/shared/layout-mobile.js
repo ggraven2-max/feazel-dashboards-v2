@@ -92,6 +92,20 @@ window.FZ.renderShell = function (opts) {
   }
 
   // ---- COMPOSE INTO #app-host ----
+  // Compute the desktop equivalent of this mobile URL, so the footer can
+  // expose a "View desktop site" link for users who'd rather see the full layout.
+  var desktopHref = (function () {
+    var p = window.location.pathname || '/';
+    if (p.indexOf('/mobile/') === 0) {
+      return p.replace(/^\/mobile/, '') + '?desktop=1';
+    }
+    return '/?desktop=1';
+  })();
+  var footerHTML = ''
+    + '<footer class="page-foot">'
+    +   '<a href="' + desktopHref + '" class="view-desktop">View desktop site →</a>'
+    + '</footer>';
+
   var appHost = document.getElementById('app-host');
   if (appHost) {
     appHost.outerHTML =
@@ -101,6 +115,7 @@ window.FZ.renderShell = function (opts) {
       +   lobSwitchHTML
       +   subnavHTML
       +   '<main class="page" id="page-content"></main>'
+      +   footerHTML
       + '</div>'
       + '</div>';
   }
