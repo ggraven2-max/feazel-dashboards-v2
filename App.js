@@ -24,7 +24,9 @@ import {
 import { useState, useCallback, createContext, useContext } from 'react';
 
 // === EDIT ME WHEN YOU CONFIRM THE LIVE URL =========================
-const SITE = 'https://feazel-command-center.netlify.app';
+// Custom domain (mapped through GoDaddy → Netlify). The original
+// feazel-command-center.netlify.app subdomain still works as a backup.
+const SITE = 'https://feazelcommandcenter.com';
 const MOBILE_BASE = `${SITE}/mobile`;
 // ===================================================================
 
