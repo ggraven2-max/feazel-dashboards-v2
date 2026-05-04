@@ -22,6 +22,16 @@
   function deepClone(o) { return JSON.parse(JSON.stringify(o)); }
   function withOpts(extra) { return Object.assign({}, deepClone(BASE_OPTS), extra || {}); }
 
+  // ============================================================
+  // MULTI-FAMILY BRANCH (data-driven, reads D.kpis directly)
+  // ============================================================
+  var lob = (window.FZ.data && window.FZ.data._meta && window.FZ.data._meta.lob) || 'residential';
+  if (lob === 'multi-family') {
+    window.FZ_PAGE_DEFS = window.FZ_PAGE_DEFS || {};
+    window.FZ_PAGE_DEFS['installs-ytd'] = buildMfInstallsPages(D, pal, fmt, BASE_OPTS, withOpts, moneyAxis);
+    return;
+  }
+
   // Index lookups
   var C = {};
   D.charts.forEach(function (c) { C[c.id] = c; });
@@ -833,6 +843,59 @@
       }
     ]
   };
+
+  // ============================================================
+  // MF page builder: data-driven, reads from D.kpis / D.headerMeta etc
+  // ============================================================
+  function buildMfInstallsPages (D, pal, fmt, BASE_OPTS, withOpts, moneyAxis) {
+    function kpiByLabel (label) {
+      const k = (D.kpis || []).find(function (x) { return x && x.label === label; });
+      return k ? { label: k.label, value: k.value, sub: k.sub || '', tone: 'navy' }
+               : { label: label, value: '—', sub: '' };
+    }
+    var hm = D.headerMeta || {};
+    var mfPages = {};
+
+    var indexPage = {
+      eyebrow: D.subtitle || 'MULTI-FAMILY · INVOICED PRODUCTION',
+      title: 'Multi-Family Installs YTD',
+      intro: 'Commercial and multi-family invoiced jobs YTD, deduplicated at the job level. Same Salesforce Completed Jobs report as residential, filtered to Commercial.',
+      tags: [
+        { kind: 'info', text: (hm.uniqueJobs || 0) + ' jobs · ' + (hm.markets || 0) + ' markets · ' + (hm.pms || 0) + ' PMs' }
+      ],
+      sections: [
+        { kind: 'kpi-row', cols: 4, items: [
+          kpiByLabel('True Revenue'),
+          kpiByLabel('Avg Contract Value'),
+          kpiByLabel('Median Days to Complete'),
+          kpiByLabel('Avg Days to Start')
+        ]},
+        { kind: 'kpi-row', cols: 2, items: [
+          kpiByLabel('Multi-Trade Jobs'),
+          kpiByLabel('Single-Trade Jobs')
+        ]}
+      ]
+    };
+    mfPages.index = indexPage;
+    mfPages.kpis = indexPage;
+
+    // Stub the deeper tabs until we port them to MF
+    var stubSlugs = ['trends', 'multi-trade', 'markets', 'pms', 'work-types', 'creators', 'findings'];
+    stubSlugs.forEach(function (slug) {
+      mfPages[slug] = {
+        eyebrow: 'COMING SOON',
+        title: slug.replace(/-/g, ' ').replace(/\b\w/g, function (c) { return c.toUpperCase(); }),
+        intro: 'This view is built around residential-specific dimensions. The MF-flavored version is on the v2 backlog.',
+        tags: [],
+        sections: [{
+          kind: 'callout', tone: 'info', title: 'Not yet built for multi-family',
+          body: '<p>Use the <strong>Home / KPIs</strong> tab for the MF Installs YTD KPIs.</p>'
+        }]
+      };
+    });
+
+    return mfPages;
+  }
 
   // ============================================================
   window.FZ_PAGE_DEFS = window.FZ_PAGE_DEFS || {};

@@ -32,6 +32,19 @@
   function withOpts(extra) { return Object.assign({}, deepClone(BASE_OPTS), extra || {}); }
 
   // ============================================================
+  // MULTI-FAMILY BRANCH
+  // The residential page-defs below have hardcoded KPI values from the V5
+  // model. When MF data is loaded, build a data-driven page set that reads
+  // KPIs from D.kpis directly instead of hardcoded residential figures.
+  // ============================================================
+  var lob = (window.FZ.data && window.FZ.data._meta && window.FZ.data._meta.lob) || 'residential';
+  if (lob === 'multi-family') {
+    window.FZ_PAGE_DEFS = window.FZ_PAGE_DEFS || {};
+    window.FZ_PAGE_DEFS['sales-overview'] = buildMfSalesPages(D, pal, fmt, BASE_OPTS, withOpts, moneyAxis);
+    return;
+  }
+
+  // ============================================================
   // INDEX (Sales Overview hub)
   // ============================================================
   var pages = {};
@@ -948,6 +961,85 @@
       }
     ].filter(Boolean)
   };
+
+  // ============================================================
+  // MF page builder: data-driven, reads from D.kpis / D.monthly etc
+  // ============================================================
+  function buildMfSalesPages (D, pal, fmt, BASE_OPTS, withOpts, moneyAxis) {
+    function kpiByLabel (label, fallback) {
+      const k = (D.kpis || []).find(function (x) { return x && x.label === label; });
+      return k ? { label: k.label, value: k.value, sub: k.sub || (fallback && fallback.sub) || '', tone: k.trend === 'positive' ? 'success' : (k.trend === 'negative' ? 'danger' : 'navy') }
+               : Object.assign({ label: label, value: '—', sub: '' }, fallback || {});
+    }
+
+    var mfPages = {};
+
+    var indexPage = {
+      eyebrow: 'YTD 2026 · Multi-Family',
+      title: 'Multi-Family Sales Overview',
+      intro: 'Commercial and multi-family contracts signed YTD. Same Salesforce data pipeline as residential, filtered to the Commercial division.',
+      tags: [
+        { kind: 'info', text: (D.rowCount || 0) + ' contracts · ' + (D.lastSigned ? 'last signed ' + D.lastSigned : '') }
+      ],
+      sections: [
+        { kind: 'kpi-row', cols: 4, items: [
+          kpiByLabel('Signed Contracts YTD'),
+          kpiByLabel('Sold'),
+          kpiByLabel('Production Review'),
+          kpiByLabel('Kicked Back')
+        ]},
+        { kind: 'kpi-row', cols: 4, items: [
+          kpiByLabel('Avg Deal Size'),
+          kpiByLabel('Annualized Sales Rate'),
+          kpiByLabel('Install vs Repair'),
+          kpiByLabel('Organization')
+        ]},
+        (D.monthly && D.monthly.length) ? {
+          kind: 'chart-grid', cols: 1,
+          heading: 'Monthly Signed Sales',
+          charts: [{
+            title: 'Signed $ by Month',
+            sub: 'Bars = signed dollars per month',
+            height: 300,
+            config: {
+              type: 'bar',
+              data: {
+                labels: D.monthly.map(function (m) { return m.label; }),
+                datasets: [{ label: 'Signed $', data: D.monthly.map(function (m) { return m.amount; }), backgroundColor: pal.navy, borderRadius: 4 }]
+              },
+              options: withOpts({ scales: { y: moneyAxis() } })
+            }
+          }]
+        } : null,
+        (D.marketScorecard && D.marketScorecard.rows && D.marketScorecard.rows.length) ? {
+          kind: 'table',
+          heading: 'Market Scorecard',
+          headers: D.marketScorecard.headers.map(function (h, i) { return { label: h, num: i > 0 }; }),
+          rows: D.marketScorecard.rows
+        } : null
+      ].filter(Boolean)
+    };
+    mfPages.index = indexPage;
+    mfPages.executive = indexPage;
+
+    // Stub all other slugs (Trends, Markets, People, etc.) with a "coming soon"
+    // panel since they reference residential-specific tables that may not exist for MF.
+    var stubSlugs = ['trends', 'markets', 'people', 'job-mix', 'cycle', 'risks', 'strengths', 'fixes', 'action-plan', 'weekly-targets', 'budget-recovery', 'billing'];
+    stubSlugs.forEach(function (slug) {
+      mfPages[slug] = {
+        eyebrow: 'COMING SOON',
+        title: slug.replace(/-/g, ' ').replace(/\b\w/g, function (c) { return c.toUpperCase(); }),
+        intro: 'This view is built around residential-specific dimensions. The MF-flavored version is on the v2 backlog.',
+        tags: [],
+        sections: [{
+          kind: 'callout', tone: 'info', title: 'Not yet built for multi-family',
+          body: '<p>Use the <strong>Home / Executive</strong> tab for the MF Sales Overview KPIs. The deeper residential tabs (cycle analysis, kick-back deep-dives, market scorecards with residential-specific metrics) need their own MF designs.</p>'
+        }]
+      };
+    });
+
+    return mfPages;
+  }
 
   // ============================================================
   // EXPORT
