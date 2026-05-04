@@ -1,43 +1,108 @@
-# Revenue Forecast, Multi-Family — RULES (TBD)
+# Revenue Forecast, Multi-Family — RULES (MF-v1)
 
-> **Owner:** Greg Graven (COO), Todd Sandler (President Multi-Family & Commercial), Lisa Gibson (VP Commercial Ops)
-> **Status:** METHODOLOGY NOT YET DEFINED
-> **Calculator file:** `calculators/revenue-forecast.js` (currently short-circuits for `lob=multi-family`)
-
----
-
-## Why this is empty
-
-The residential V5 forecast methodology is not portable to multi-family because the operating model differs in ways that affect every step of the model:
-
-- **Cycle times are longer.** Multi-family deals run from RFP to install over many months, often quarters. V5's "M+0 conversion" assumption breaks here.
-- **Billing pattern.** MF projects bill by progress milestones, not all-on-completion. V5's invoicing-equals-revenue assumption does not hold.
-- **Sale path.** MF jobs are GC-driven (general contractors, property managers, REITs), not in-home consumer sales. There is no "Sold Not Processed" lag in the same sense; once a contract is signed it goes straight into project management.
-- **Cost mix.** MF gross margins, material/labor split, and commission structure differ materially from residential.
-- **Job type taxonomy.** V5 buckets jobs into Insurance, Retail-Financing, Retail-No Financing, Repair. Multi-family's natural buckets are different (e.g., New Construction, Re-roof, Restoration, RFP-driven Capital Project).
-
-Until a multi-family-specific forecast methodology is defined, signed off, and locked, the calculator returns the snapshot fallback and the dashboard renders with "no data yet" placeholders.
+> **Owners:** Greg Graven (COO), Todd Sandler (President MF & Commercial), Lisa Gibson (VP Commercial Ops), Mahlet Teshome Mandefro (FP&A)
+> **Methodology version:** MF-v1 (locked 2026-05-04)
+> **Calculator file:** `calculators/revenue-forecast-mf.js`
 
 ---
 
-## What inputs the MF forecast will eventually need
+## What this dashboard answers
 
-When the MF methodology is defined, this folder will hold reports analogous to (but not identical to) the residential set. **Note: Sold Not Processed is NOT applicable to multi-family** and should not be uploaded here.
+How much net invoiced revenue multi-family will book in 2026, by month, against the **$51,673,207** annual budget (sourced from `2026 Commercial Budget.xlsx` row 6, "Total - 40000 - Revenue"). What the gap is, what's in WIP today, and which jobs drove each month.
 
-Expected inputs (subject to revision):
-
-- **Multi-family contracts signed YTD** (Salesforce report filtered to MF division)
-- **Multi-family job-level production status** (in-progress, milestones billed, milestones remaining)
-- **Multi-family budget** (NetSuite export with MF revenue and cost GLs)
-- **Pipeline / RFP register** (open opportunities by stage)
-- **Possibly: backlog of GC contracts with milestone schedules**
+Unlike residential V5 (statistical conversion curves over many small jobs), the MF model is **event-driven and job-by-job**. Each MF job has explicit Salesforce date stamps that define when revenue gets recognized.
 
 ---
 
-## Next steps
+## Operating definitions (LOCKED MF-v1)
 
-1. Define multi-family forecast methodology with Todd + Lisa (cycle times, billing rules, conversion assumptions).
-2. Determine which Salesforce reports feed it (filtered residential reports vs new MF-specific reports).
-3. Spec the calculator behavior in a dedicated MF rules document (analogous to the residential V5 lock notice).
-4. Implement either a parallel `lob === 'multi-family'` code path in `calculators/revenue-forecast.js`, or a separate `calculators/revenue-forecast-mf.js`.
-5. Lock methodology, regenerate snapshot tests, and remove the short-circuit fallback.
+1. **Revenue trigger.** A job's `Date Moved to Invoiced` is when the contract value hits revenue. Full contract value, completion-billed.
+2. **WIP definition.** A job is "in WIP" at month-end if `Date Moved to In Progress` ≤ month-end AND (`Date Moved to Invoiced` is null OR > month-end).
+3. **Start trigger.** A job is "started this month" if `Date Moved to In Progress` falls in the month (or `Start Date` if In Progress is missing).
+4. **Annual budget.** Sourced from the Commercial Budget XLSX row 6 "Total - 40000 - Revenue". Per-month plan numbers come from the same row (cells 1-12). The annual "Total 2026" cell is the headline. If the explicit total and the sum of months diverge by >10%, calculator warns and uses the summed months.
+5. **Year filter.** Only events in FY 2026 are counted.
+
+Changes to any of these require sign-off from Greg + Mahlet, a version bump (MF-v2), and a snapshot test refresh.
+
+---
+
+## Required inputs (drop in this folder)
+
+| File pattern | What it is | Source |
+|---|---|---|
+| `Commercial Forecasting Report*.xlsx` | Per-job export with all date stamps | Salesforce report, filtered to Department = Commercial |
+| `*Commercial Budget*.xlsx` | Monthly plan with 40000/40001/40003 GL rows | NetSuite export from Mahlet |
+
+Optional (improves the dashboard but not required):
+
+| File pattern | What it is | Source |
+|---|---|---|
+| `Contracts Signed YTD - Commercial*.xlsx` | YTD signed pipeline | Salesforce report, currently informational only |
+| `GregProfitabilityMFResults*.csv` | Per-job profitability | Profitability report, parsing TBD in v2 |
+
+**Note:** Multi-family does NOT have a "Sold Not Processed" report. Don't expect one.
+
+---
+
+## What the calculator computes
+
+For each FY 2026 month:
+
+```
+revenue[M]      = Σ Final Contract Amount where Date Moved to Invoiced ∈ month M
+starts[M]       = Σ Final Contract Amount where Date Moved to In Progress ∈ month M
+wip_end[M]      = Σ Final Contract Amount of jobs with In Progress ≤ month-end
+                  AND (Invoiced is null OR Invoiced > month-end)
+plan[M]         = monthly cell from Commercial Budget row 6
+gap[M]          = revenue[M] − plan[M]
+```
+
+Annual:
+
+```
+annual_revenue       = Σ revenue[M] across all months
+ytd_plan             = Σ plan[1..months_elapsed]
+ytd_gap              = annual_revenue − ytd_plan
+plan_rest_forecast   = annual_revenue + Σ plan[months_elapsed+1..12]
+naive_pace           = annual_revenue / months_elapsed × 12
+budget               = "Total 2026" cell (or summed months if discrepancy ≤10%)
+gap_to_budget        = plan_rest_forecast − budget
+```
+
+Both `plan_rest_forecast` and `naive_pace` are surfaced as KPIs because they answer different questions:
+- **Plan-Rest Forecast** assumes the rest of the year hits plan. Conservative, useful when YTD has lumpy outliers.
+- **Naive Pace** annualizes the YTD run-rate. Sensitive to single-month spikes; tells you "if every month from now on looks like the average so far."
+
+---
+
+## Sanity-check guardrails
+
+The calculator surfaces warnings (in build log) for:
+
+- **Budget total discrepancy.** If the "Total 2026" cell and the summed months differ by >10%, falls back to summed months and prints both numbers.
+- **Lumpy revenue months.** If any single month exceeds 3x its plan, flag in the dashboard narrative.
+- **WIP balance growth.** If WIP grows by >20% in one month, the recommendations text calls it out.
+- **Missing in-progress dates.** Jobs with no In Progress date (and no Start Date) are excluded from WIP calculations and logged.
+
+---
+
+## Versioning
+
+This is **MF-v1**. Future versions will likely add:
+
+- **v1.1:** Slice by Job Type (currently aggregated)
+- **v1.2:** Parse the Profitability CSV for cost-of-revenue data
+- **v2:** Pipeline view from Contracts Signed (signed but not yet started)
+- **v2.1:** Progress billing support (currently assumes completion-billed)
+- **v3:** Forward-looking commit signed contracts to expected start/complete months
+
+When the methodology changes, document the diff in this file and bump `MF_VERSION` in the calculator.
+
+---
+
+## Out of scope (intentional)
+
+- Cost mix and gross profit analysis (no per-job cost columns in the current upload)
+- Cycle-time analytics (start-to-complete; possible from existing date columns but not yet implemented)
+- WIP aging (how long has each job been in WIP)
+- Pipeline of contracts signed but not yet started

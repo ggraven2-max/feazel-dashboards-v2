@@ -167,15 +167,12 @@ function run(opts) {
   const snapshotPath = opts.snapshotPath || DEFAULT_SNAPSHOT_PATH;
   const lob = opts.lob || 'residential';
 
-  // V5 is the residential methodology, locked 2026-04-19. Multi-family has a
-  // different operating model (longer cycles, different billing, no SNP-style
-  // sold-not-processed lag, GC contracts vs direct-to-homeowner) and needs its
-  // own forecast model. Until that methodology exists, MF returns the snapshot
-  // fallback so the dashboard renders cleanly with a "no data yet" state.
+  // V5 is the residential methodology, locked 2026-04-19. Multi-family uses
+  // its own job-by-job model (MF-v1) with monthly XLSX uploads. The MF
+  // calculator is a separate file; we just delegate.
   if (lob === 'multi-family') {
-    console.log('  [' + PROJECT_ID + '] V5 is residential-locked. Multi-family revenue methodology is TBD.');
-    console.log('    Drop reports into ' + path.relative(REPO_ROOT, inputDir) + '/ when an MF model is ready.');
-    return readFromExtracted(snapshotPath);
+    const mfCalc = require('./revenue-forecast-mf');
+    return mfCalc.run({ inputDir, snapshotPath, lob });
   }
 
   const inputs = io.listInputs(inputDir);

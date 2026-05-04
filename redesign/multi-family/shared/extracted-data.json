@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "builtAt": "2026-05-04T14:07:03.018Z",
+    "builtAt": "2026-05-04T14:23:49.686Z",
     "pipelineVersion": "2.0.0",
     "lob": "multi-family",
     "lastBuiltProjects": [
@@ -14,25 +14,25 @@
         "id": "sales-overview",
         "version": "1.0-rules-encoded",
         "elapsedMs": 13,
-        "builtAt": "2026-05-04T14:07:03.018Z"
+        "builtAt": "2026-05-04T14:23:49.686Z"
       },
       {
         "id": "revenue-forecast",
         "version": "V5-locked-2026-04-19-shell-1.0",
-        "elapsedMs": 0,
-        "builtAt": "2026-05-04T14:07:03.018Z"
+        "elapsedMs": 120,
+        "builtAt": "2026-05-04T14:23:49.686Z"
       },
       {
         "id": "backlog",
         "version": "1.0-rules-encoded",
-        "elapsedMs": 24,
-        "builtAt": "2026-05-04T14:07:03.018Z"
+        "elapsedMs": 18,
+        "builtAt": "2026-05-04T14:23:49.686Z"
       },
       {
         "id": "installs-ytd",
         "version": "1.0-rules-encoded",
-        "elapsedMs": 19,
-        "builtAt": "2026-05-04T14:07:03.018Z"
+        "elapsedMs": 14,
+        "builtAt": "2026-05-04T14:23:49.686Z"
       }
     ]
   },
@@ -1503,32 +1503,182 @@
     }
   },
   "REVENUE_FORECAST": {
-    "_source": "calculator/revenue-forecast.js V5-locked-2026-04-19-shell-1.0 (stub: no extracted snapshot found)",
-    "title": "Residential Revenue Forecast",
-    "subtitle": "V5 Model with Job Type Analysis",
+    "_source": "calculator/revenue-forecast-mf.js MF-v1-2026-05-04",
+    "title": "Multi-Family Revenue Forecast",
+    "subtitle": "MF-v1 · Job-by-job event model · Data through 2026-05-04",
     "runDate": "2026-05-04",
-    "kpis": [],
-    "tabs": [],
+    "methodologyLock": {
+      "version": "MF-v1-2026-05-04",
+      "lockedOn": "2026-05-04",
+      "items": [
+        "Annual budget $51.67M (sourced from Commercial Budget XLSX)",
+        "Revenue = Date Moved to Invoiced",
+        "Start = Date Moved to In Progress (or Start Date if missing)",
+        "WIP = jobs with start ≤ month-end AND no invoice (or invoice > month-end)"
+      ]
+    },
+    "kpis": [
+      {
+        "label": "Revenue Invoiced YTD",
+        "value": "$52.04M",
+        "sub": "5 months elapsed"
+      },
+      {
+        "label": "YTD vs Plan",
+        "value": "+$38.19M",
+        "sub": "Plan YTD: $13.84M",
+        "trend": "positive"
+      },
+      {
+        "label": "Plan-Rest Forecast",
+        "value": "$87.92M",
+        "sub": "YTD actual + remaining-month plan"
+      },
+      {
+        "label": "Naive Pace (×12)",
+        "value": "$124.89M",
+        "sub": "YTD ÷ months × 12 (sensitive to lumpy months)"
+      },
+      {
+        "label": "Annual Budget",
+        "value": "$51.67M",
+        "sub": "2026 MF target (Total cell)"
+      },
+      {
+        "label": "Forecast vs Budget",
+        "value": "+$36.25M",
+        "sub": "ahead of plan",
+        "trend": "positive"
+      },
+      {
+        "label": "Current WIP",
+        "value": "$65.9M",
+        "sub": "74 jobs in flight today"
+      },
+      {
+        "label": "Last Month Revenue",
+        "value": "$34.57M",
+        "sub": "April 2026"
+      }
+    ],
     "execSummary": {
-      "budget": 125600000,
-      "modelAnnualInvoiced": 0,
-      "gap": 0,
-      "narrative": "No data yet."
+      "budget": 51673207,
+      "modelAnnualInvoiced": 124892448.52800004,
+      "gap": 36250278.60041028,
+      "narrative": "5 months of FY2026 MF activity reported, $52.04M invoiced YTD. Run-rate annualizes to $124.89M against the $51.67M plan, a surplus."
     },
     "monthRevenue": {
-      "april": {
-        "invoiced": 0,
-        "wipChange": 0,
-        "netRevenue": 0
+      "jan": {
+        "invoiced": 993883.87,
+        "wipChange": -686758.1699999999,
+        "netRevenue": 993883.87,
+        "startingCount": 5,
+        "completingCount": 16,
+        "plan": 639122.2851245126,
+        "gap": 354761.5848754874
+      },
+      "feb": {
+        "invoiced": 475065.05,
+        "wipChange": 133945.25999999995,
+        "netRevenue": 475065.05,
+        "startingCount": 13,
+        "completingCount": 13,
+        "plan": 759049.0680259366,
+        "gap": -283984.0180259366
+      },
+      "mar": {
+        "invoiced": 15269815.650000004,
+        "wipChange": 49690243.52999999,
+        "netRevenue": 15269815.650000004,
+        "startingCount": 107,
+        "completingCount": 88,
+        "plan": 2964722.142117475,
+        "gap": 12305093.507882528
+      },
+      "apr": {
+        "invoiced": 34567199.25000002,
+        "wipChange": 13568007.889999986,
+        "netRevenue": 34567199.25000002,
+        "startingCount": 123,
+        "completingCount": 98,
+        "plan": 3111458.0780510968,
+        "gap": 31455741.171948925
       },
       "may": {
+        "invoiced": 732556.4,
+        "wipChange": -579253.78,
+        "netRevenue": 732556.4,
+        "startingCount": 6,
+        "completingCount": 7,
+        "plan": 6369333.738681715,
+        "gap": -5636777.338681715
+      },
+      "jun": {
         "invoiced": 0,
         "wipChange": 0,
-        "netRevenue": 0
+        "netRevenue": 0,
+        "startingCount": 0,
+        "completingCount": 0,
+        "plan": 3526786.1836693906,
+        "gap": -3526786.1836693906
+      },
+      "jul": {
+        "invoiced": 0,
+        "wipChange": 0,
+        "netRevenue": 0,
+        "startingCount": 0,
+        "completingCount": 0,
+        "plan": 5099079.268445946,
+        "gap": -5099079.268445946
+      },
+      "aug": {
+        "invoiced": 0,
+        "wipChange": 0,
+        "netRevenue": 0,
+        "startingCount": 0,
+        "completingCount": 0,
+        "plan": 5134896.622445581,
+        "gap": -5134896.622445581
+      },
+      "sep": {
+        "invoiced": 0,
+        "wipChange": 0,
+        "netRevenue": 0,
+        "startingCount": 0,
+        "completingCount": 0,
+        "plan": 4305784.787290315,
+        "gap": -4305784.787290315
+      },
+      "oct": {
+        "invoiced": 0,
+        "wipChange": 0,
+        "netRevenue": 0,
+        "startingCount": 0,
+        "completingCount": 0,
+        "plan": 7086194.828295313,
+        "gap": -7086194.828295313
+      },
+      "nov": {
+        "invoiced": 0,
+        "wipChange": 0,
+        "netRevenue": 0,
+        "startingCount": 0,
+        "completingCount": 0,
+        "plan": 5651293.5390924625,
+        "gap": -5651293.5390924625
+      },
+      "dec": {
+        "invoiced": 0,
+        "wipChange": 0,
+        "netRevenue": 0,
+        "startingCount": 0,
+        "completingCount": 0,
+        "plan": 5080930.151171241,
+        "gap": -5080930.151171241
       }
     },
     "weeklyTargetsHeader": {
-      "avgWeeklyNeed": 0,
+      "avgWeeklyNeed": 993715.5192307692,
       "recent4WkAvg": 0,
       "gap": 0,
       "productionAvgWeeklyNeed": 0,
@@ -1537,38 +1687,983 @@
       "productionTotalCycle": 0
     },
     "budgetRecoveryHeader": {
-      "fullYearBudget": 125600000,
+      "fullYearBudget": 51673207,
       "gap": 0,
       "upliftPct": 0,
       "aprilGap": 0,
       "q1OriginalBudget": 0,
       "q1Actual": 0,
-      "q1Shortfall": 0
+      "q1Shortfall": 0,
+      "recoveryRatio": 0
     },
     "profitabilitySummary": {
       "combinedGP": 0,
       "combinedGP_pct": 0,
-      "combinedRevenue": 0,
+      "combinedRevenue": 52038520.22000002,
       "y2025_GP_pct": 0,
       "y2026_GP_pct": 0,
       "y2025_revenue": 0,
+      "y2026_revenue": 52038520.22000002,
       "y2025_jobs": 0,
+      "y2026_jobs": 222,
       "materialCost": 0,
       "laborCost": 0,
       "commissions": 0,
       "materialPctContract": 0,
       "laborPctContract": 0,
-      "commissionPctContract": 0
+      "commissionPctContract": 0,
+      "_note": "Cost mix and profitability for MF v1 not parsed yet. Profitability CSV is in folder; v2 will read it."
     },
     "pipelineSnapshot": {
-      "stages": []
+      "stages": [
+        {
+          "stage": "In WIP today",
+          "jobs": 74,
+          "value": 65900402.620000005
+        }
+      ],
+      "totalJobs": 74,
+      "totalValue": 65900402.620000005
     },
     "commentary": {
-      "actionableRecommendations": [],
+      "actionableRecommendations": [
+        "Tracking ahead of plan by $36.25M."
+      ],
       "strategyHighlights": []
     },
-    "tables": [],
-    "charts": []
+    "tables": [
+      {
+        "id": "mf-monthly-rollup",
+        "title": "Monthly Roll-Up",
+        "headers": [
+          "Month",
+          {
+            "label": "Revenue",
+            "num": true
+          },
+          {
+            "label": "Plan",
+            "num": true
+          },
+          {
+            "label": "Gap",
+            "num": true
+          },
+          {
+            "label": "Starts",
+            "num": true
+          },
+          {
+            "label": "WIP End",
+            "num": true
+          },
+          {
+            "label": "# Inv.",
+            "num": true
+          },
+          {
+            "label": "# Start",
+            "num": true
+          }
+        ],
+        "rows": [
+          [
+            "January",
+            "$994K",
+            "$639K",
+            "$355K",
+            "$307K",
+            "$2.94M",
+            16,
+            5
+          ],
+          [
+            "February",
+            "$475K",
+            "$759K",
+            "$-284K",
+            "$609K",
+            "$3.08M",
+            13,
+            13
+          ],
+          [
+            "March",
+            "$15.27M",
+            "$2.96M",
+            "$12.31M",
+            "$64.96M",
+            "$52.78M",
+            88,
+            107
+          ],
+          [
+            "April",
+            "$34.57M",
+            "$3.11M",
+            "$31.46M",
+            "$48.14M",
+            "$66.48M",
+            98,
+            123
+          ],
+          [
+            "May",
+            "$733K",
+            "$6.37M",
+            "$-5.64M",
+            "$153K",
+            "$65.9M",
+            7,
+            6
+          ],
+          [
+            "June",
+            "$0",
+            "$3.53M",
+            "$-3.53M",
+            "$0",
+            "$65.9M",
+            0,
+            0
+          ],
+          [
+            "July",
+            "$0",
+            "$5.1M",
+            "$-5.1M",
+            "$0",
+            "$65.9M",
+            0,
+            0
+          ],
+          [
+            "August",
+            "$0",
+            "$5.13M",
+            "$-5.13M",
+            "$0",
+            "$65.9M",
+            0,
+            0
+          ],
+          [
+            "September",
+            "$0",
+            "$4.31M",
+            "$-4.31M",
+            "$0",
+            "$65.9M",
+            0,
+            0
+          ],
+          [
+            "October",
+            "$0",
+            "$7.09M",
+            "$-7.09M",
+            "$0",
+            "$65.9M",
+            0,
+            0
+          ],
+          [
+            "November",
+            "$0",
+            "$5.65M",
+            "$-5.65M",
+            "$0",
+            "$65.9M",
+            0,
+            0
+          ],
+          [
+            "December",
+            "$0",
+            "$5.08M",
+            "$-5.08M",
+            "$0",
+            "$65.9M",
+            0,
+            0
+          ]
+        ]
+      },
+      {
+        "id": "mf-by-branch",
+        "title": "By Branch (YTD)",
+        "headers": [
+          "Branch",
+          {
+            "label": "Invoiced",
+            "num": true
+          },
+          {
+            "label": "WIP",
+            "num": true
+          },
+          {
+            "label": "# Jobs",
+            "num": true
+          }
+        ],
+        "rows": [
+          [
+            "Columbus",
+            "$32.17M",
+            "$17.12M",
+            83
+          ],
+          [
+            "DC Metro",
+            "$3.44M",
+            "$25.7M",
+            29
+          ],
+          [
+            "Raleigh",
+            "$4.8M",
+            "$11.7M",
+            64
+          ],
+          [
+            "Detroit Metro",
+            "$3.22M",
+            "$9.52M",
+            46
+          ],
+          [
+            "Nashville",
+            "$5.19M",
+            "$352K",
+            26
+          ],
+          [
+            "Cincinnati",
+            "$758K",
+            "$1.51M",
+            22
+          ],
+          [
+            "Cleveland",
+            "$1.39M",
+            "$0",
+            14
+          ],
+          [
+            "Indianapolis",
+            "$571K",
+            "$0",
+            5
+          ],
+          [
+            "Richmond",
+            "$254K",
+            "$0",
+            3
+          ],
+          [
+            "Dayton",
+            "$187K",
+            "$0",
+            2
+          ],
+          [
+            "Knoxville",
+            "$54K",
+            "$0",
+            2
+          ],
+          [
+            "Greenville",
+            "$0",
+            "$0",
+            0
+          ],
+          [
+            "Greensboro",
+            "$0",
+            "$0",
+            0
+          ],
+          [
+            "Winston-Salem",
+            "$0",
+            "$0",
+            0
+          ],
+          [
+            "(unassigned)",
+            "$0",
+            "$0",
+            0
+          ]
+        ]
+      },
+      {
+        "id": "mf-by-jobtype",
+        "title": "Revenue by Job Type (YTD)",
+        "headers": [
+          "Job Type",
+          {
+            "label": "Revenue",
+            "num": true
+          },
+          {
+            "label": "# Jobs",
+            "num": true
+          }
+        ],
+        "rows": [
+          [
+            "Insurance",
+            "$26.94M",
+            27
+          ],
+          [
+            "Retail-No Financing",
+            "$25.04M",
+            194
+          ],
+          [
+            "LowMar",
+            "$59K",
+            1
+          ]
+        ]
+      },
+      {
+        "id": "mf-in-wip",
+        "title": "Currently in WIP",
+        "headers": [
+          "Job",
+          "Account",
+          "Branch",
+          {
+            "label": "Contract",
+            "num": true
+          },
+          "Started"
+        ],
+        "rows": [
+          [
+            "Job-103685",
+            "WPM Real Estate Management",
+            "DC Metro",
+            "$3.21M",
+            "2026-03-27"
+          ],
+          [
+            "Job-103685",
+            "WPM Real Estate Management",
+            "DC Metro",
+            "$3.21M",
+            "2026-03-27"
+          ],
+          [
+            "Job-103685",
+            "WPM Real Estate Management",
+            "DC Metro",
+            "$3.21M",
+            "2026-03-27"
+          ],
+          [
+            "Job-103685",
+            "WPM Real Estate Management",
+            "DC Metro",
+            "$3.21M",
+            "2026-03-27"
+          ],
+          [
+            "Job-103685",
+            "WPM Real Estate Management",
+            "DC Metro",
+            "$3.21M",
+            "2026-03-27"
+          ],
+          [
+            "Job-103685",
+            "WPM Real Estate Management",
+            "DC Metro",
+            "$3.21M",
+            "2026-03-27"
+          ],
+          [
+            "Job-103685",
+            "WPM Real Estate Management",
+            "DC Metro",
+            "$3.21M",
+            "2026-03-27"
+          ],
+          [
+            "Job-103685",
+            "WPM Real Estate Management",
+            "DC Metro",
+            "$3.21M",
+            "2026-03-27"
+          ],
+          [
+            "Job-101476",
+            "Towne Properties - Cincinnati West District Office",
+            "Cincinnati",
+            "$1.33M",
+            "2025-11-17"
+          ],
+          [
+            "Job-108550",
+            "Oakwood Management Company",
+            "Columbus",
+            "$740K",
+            "2026-04-13"
+          ],
+          [
+            "Job-108550",
+            "Oakwood Management Company",
+            "Columbus",
+            "$740K",
+            "2026-04-13"
+          ],
+          [
+            "Job-108550",
+            "Oakwood Management Company",
+            "Columbus",
+            "$740K",
+            "2026-04-13"
+          ],
+          [
+            "Job-108550",
+            "Oakwood Management Company",
+            "Columbus",
+            "$740K",
+            "2026-04-13"
+          ],
+          [
+            "Job-108550",
+            "Oakwood Management Company",
+            "Columbus",
+            "$740K",
+            "2026-04-13"
+          ],
+          [
+            "Job-108550",
+            "Oakwood Management Company",
+            "Columbus",
+            "$740K",
+            "2026-04-13"
+          ],
+          [
+            "Job-108550",
+            "Oakwood Management Company",
+            "Columbus",
+            "$740K",
+            "2026-04-13"
+          ],
+          [
+            "Job-108550",
+            "Oakwood Management Company",
+            "Columbus",
+            "$740K",
+            "2026-04-13"
+          ],
+          [
+            "Job-108550",
+            "Oakwood Management Company",
+            "Columbus",
+            "$740K",
+            "2026-04-13"
+          ],
+          [
+            "Job-108550",
+            "Oakwood Management Company",
+            "Columbus",
+            "$740K",
+            "2026-04-13"
+          ],
+          [
+            "Job-108550",
+            "Oakwood Management Company",
+            "Columbus",
+            "$740K",
+            "2026-04-13"
+          ],
+          [
+            "Job-108550",
+            "Oakwood Management Company",
+            "Columbus",
+            "$740K",
+            "2026-04-13"
+          ],
+          [
+            "Job-108550",
+            "Oakwood Management Company",
+            "Columbus",
+            "$740K",
+            "2026-04-13"
+          ],
+          [
+            "Job-108550",
+            "Oakwood Management Company",
+            "Columbus",
+            "$740K",
+            "2026-04-13"
+          ],
+          [
+            "Job-108550",
+            "Oakwood Management Company",
+            "Columbus",
+            "$740K",
+            "2026-04-13"
+          ],
+          [
+            "Job-108550",
+            "Oakwood Management Company",
+            "Columbus",
+            "$740K",
+            "2026-04-13"
+          ],
+          [
+            "Job-108550",
+            "Oakwood Management Company",
+            "Columbus",
+            "$740K",
+            "2026-04-13"
+          ],
+          [
+            "Job-108550",
+            "Oakwood Management Company",
+            "Columbus",
+            "$740K",
+            "2026-04-13"
+          ],
+          [
+            "Job-108550",
+            "Oakwood Management Company",
+            "Columbus",
+            "$740K",
+            "2026-04-13"
+          ],
+          [
+            "Job-108550",
+            "Oakwood Management Company",
+            "Columbus",
+            "$740K",
+            "2026-04-13"
+          ],
+          [
+            "Job-108550",
+            "Oakwood Management Company",
+            "Columbus",
+            "$740K",
+            "2026-04-13"
+          ],
+          [
+            "Job-108550",
+            "Oakwood Management Company",
+            "Columbus",
+            "$740K",
+            "2026-04-13"
+          ],
+          [
+            "Job-108550",
+            "Oakwood Management Company",
+            "Columbus",
+            "$740K",
+            "2026-04-13"
+          ],
+          [
+            "Job-109026",
+            "Select Management",
+            "Detroit Metro",
+            "$671K",
+            "2026-04-13"
+          ],
+          [
+            "Job-109026",
+            "Select Management",
+            "Detroit Metro",
+            "$671K",
+            "2026-04-13"
+          ],
+          [
+            "Job-109026",
+            "Select Management",
+            "Detroit Metro",
+            "$671K",
+            "2026-04-13"
+          ],
+          [
+            "Job-109026",
+            "Select Management",
+            "Detroit Metro",
+            "$671K",
+            "2026-04-13"
+          ],
+          [
+            "Job-109026",
+            "Select Management",
+            "Detroit Metro",
+            "$671K",
+            "2026-04-13"
+          ],
+          [
+            "Job-109026",
+            "Select Management",
+            "Detroit Metro",
+            "$671K",
+            "2026-04-13"
+          ],
+          [
+            "Job-109026",
+            "Select Management",
+            "Detroit Metro",
+            "$671K",
+            "2026-04-13"
+          ],
+          [
+            "Job-109026",
+            "Select Management",
+            "Detroit Metro",
+            "$671K",
+            "2026-04-13"
+          ],
+          [
+            "Job-109026",
+            "Select Management",
+            "Detroit Metro",
+            "$671K",
+            "2026-04-13"
+          ],
+          [
+            "Job-109026",
+            "Select Management",
+            "Detroit Metro",
+            "$671K",
+            "2026-04-13"
+          ],
+          [
+            "Job-109026",
+            "Select Management",
+            "Detroit Metro",
+            "$671K",
+            "2026-04-13"
+          ],
+          [
+            "Job-109026",
+            "Select Management",
+            "Detroit Metro",
+            "$671K",
+            "2026-04-13"
+          ],
+          [
+            "Job-109026",
+            "Select Management",
+            "Detroit Metro",
+            "$671K",
+            "2026-04-13"
+          ],
+          [
+            "Job-109026",
+            "Select Management",
+            "Detroit Metro",
+            "$671K",
+            "2026-04-13"
+          ],
+          [
+            "Job-109665",
+            "Charleston Management",
+            "Raleigh",
+            "$624K",
+            "2026-04-27"
+          ],
+          [
+            "Job-109665",
+            "Charleston Management",
+            "Raleigh",
+            "$624K",
+            "2026-04-27"
+          ],
+          [
+            "Job-109665",
+            "Charleston Management",
+            "Raleigh",
+            "$624K",
+            "2026-04-27"
+          ],
+          [
+            "Job-109665",
+            "Charleston Management",
+            "Raleigh",
+            "$624K",
+            "2026-04-27"
+          ]
+        ]
+      }
+    ],
+    "charts": [
+      {
+        "id": "mf-rev-vs-plan",
+        "title": "Monthly Revenue vs Plan",
+        "sub": "Invoiced revenue per month against the Commercial Budget",
+        "config": {
+          "type": "bar",
+          "data": {
+            "labels": [
+              "Jan",
+              "Feb",
+              "Mar",
+              "Apr",
+              "May",
+              "Jun",
+              "Jul",
+              "Aug",
+              "Sep",
+              "Oct",
+              "Nov",
+              "Dec"
+            ],
+            "datasets": [
+              {
+                "label": "Invoiced",
+                "data": [
+                  993883.87,
+                  475065.05,
+                  15269815.650000004,
+                  34567199.25000002,
+                  732556.4,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "backgroundColor": "#5e82bc"
+              },
+              {
+                "label": "Plan",
+                "data": [
+                  639122.2851245126,
+                  759049.0680259366,
+                  2964722.142117475,
+                  3111458.0780510968,
+                  6369333.738681715,
+                  3526786.1836693906,
+                  5099079.268445946,
+                  5134896.622445581,
+                  4305784.787290315,
+                  7086194.828295313,
+                  5651293.5390924625,
+                  5080930.151171241
+                ],
+                "type": "line",
+                "borderColor": "#b23a2c",
+                "borderDash": [
+                  6,
+                  4
+                ],
+                "backgroundColor": "transparent",
+                "pointRadius": 2
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "mf-wip-balance",
+        "title": "WIP Balance at Month-End",
+        "sub": "Sum of contract values for jobs in flight (started, not yet invoiced)",
+        "config": {
+          "type": "line",
+          "data": {
+            "labels": [
+              "Jan",
+              "Feb",
+              "Mar",
+              "Apr",
+              "May",
+              "Jun",
+              "Jul",
+              "Aug",
+              "Sep",
+              "Oct",
+              "Nov",
+              "Dec"
+            ],
+            "datasets": [
+              {
+                "label": "WIP Balance",
+                "data": [
+                  2941521.7199999993,
+                  3077941.979999999,
+                  52782515.510000005,
+                  66476533.400000006,
+                  65904902.620000005,
+                  65904902.620000005,
+                  65904902.620000005,
+                  65904902.620000005,
+                  65904902.620000005,
+                  65904902.620000005,
+                  65904902.620000005,
+                  65904902.620000005
+                ],
+                "borderColor": "#1f2d4b",
+                "backgroundColor": "rgba(31,45,75,0.12)",
+                "fill": true,
+                "tension": 0.3
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "mf-starts-vs-completions",
+        "title": "WIP Starts vs Completions per Month",
+        "sub": "Are we adding to WIP faster than we drain it?",
+        "config": {
+          "type": "bar",
+          "data": {
+            "labels": [
+              "Jan",
+              "Feb",
+              "Mar",
+              "Apr",
+              "May",
+              "Jun",
+              "Jul",
+              "Aug",
+              "Sep",
+              "Oct",
+              "Nov",
+              "Dec"
+            ],
+            "datasets": [
+              {
+                "label": "New Starts",
+                "data": [
+                  307125.7,
+                  609010.3099999999,
+                  64960059.17999999,
+                  48135207.14000001,
+                  153302.62,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "backgroundColor": "#c77a1a"
+              },
+              {
+                "label": "Completions",
+                "data": [
+                  993883.87,
+                  475065.05,
+                  15269815.650000004,
+                  34567199.25000002,
+                  732556.4,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "backgroundColor": "#2e7d55"
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "monthsLabel": [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec"
+    ],
+    "budgetInv": [
+      639122.2851245126,
+      759049.0680259366,
+      2964722.142117475,
+      3111458.0780510968,
+      6369333.738681715,
+      3526786.1836693906,
+      5099079.268445946,
+      5134896.622445581,
+      4305784.787290315,
+      7086194.828295313,
+      5651293.5390924625,
+      5080930.151171241
+    ],
+    "revModel": [
+      993883.87,
+      475065.05,
+      15269815.650000004,
+      34567199.25000002,
+      732556.4,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "revFromKnown": [
+      993883.87,
+      475065.05,
+      15269815.650000004,
+      34567199.25000002,
+      732556.4,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "requiredSales": [
+      639122.2851245126,
+      759049.0680259366,
+      2964722.142117475,
+      3111458.0780510968,
+      6369333.738681715,
+      3526786.1836693906,
+      5099079.268445946,
+      5134896.622445581,
+      4305784.787290315,
+      7086194.828295313,
+      5651293.5390924625,
+      5080930.151171241
+    ],
+    "backlogData": [
+      2941521.7199999993,
+      3077941.979999999,
+      52782515.510000005,
+      66476533.400000006,
+      65904902.620000005,
+      65904902.620000005,
+      65904902.620000005,
+      65904902.620000005,
+      65904902.620000005,
+      65904902.620000005,
+      65904902.620000005,
+      65904902.620000005
+    ],
+    "tabs": []
   },
   "BACKLOG": {
     "_source": "calculator/backlog.js v1.0-rules-encoded",
@@ -1579,7 +2674,7 @@
       "totalWOs": 319,
       "portfolioValue": 21227684.31,
       "avgDaysInStatus": 45,
-      "lastBuild": "2026-05-04T14:07:02.998Z"
+      "lastBuild": "2026-05-04T14:23:49.671Z"
     },
     "tabs": [
       {
@@ -2802,7 +3897,7 @@
       "multiTradeJobs": 10,
       "singleTradeJobs": 90,
       "multiTradePct": 10,
-      "lastBuild": "2026-05-04T14:07:03.018Z"
+      "lastBuild": "2026-05-04T14:23:49.686Z"
     },
     "tabs": [
       {
