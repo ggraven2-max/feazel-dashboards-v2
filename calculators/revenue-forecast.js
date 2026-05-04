@@ -29,6 +29,7 @@ const fs = require('fs');
 const os = require('os');
 const { spawnSync } = require('child_process');
 const io = require('./lib/io');
+const netsuite = require('./lib/netsuite-invoices');
 
 const PROJECT_ID = 'revenue-forecast';
 const VERSION = 'V5-locked-2026-04-19-shell-1.0';
@@ -292,6 +293,14 @@ function run(opts) {
     console.log('  [' + PROJECT_ID + '] V5 model output OK. ' +
       'Annual model: $' + Math.round((out.execSummary && out.execSummary.modelAnnualInvoiced) || 0).toLocaleString() +
       ' vs budget $' + Math.round((out.execSummary && out.execSummary.budget) || 0).toLocaleString());
+
+    // ---- NetSuite invoice override ----
+    // V5 derives "Invoiced YTD" from Salesforce stage transitions. NetSuite AR
+    // is the GAAP source of truth (booked invoices, not stage events). When a
+    // NetSuite invoice CSV is present, override the Invoiced YTD KPI value
+    // with the NetSuite total. Other V5 fields stay untouched.
+    applyNetSuiteOverride(out, inputDir);
+
     return out;
 
   } catch (err) {
@@ -327,6 +336,49 @@ function buildStub(reason) {
     commentary: { actionableRecommendations: [], strategyHighlights: [] },
     tables: [],
     charts: []
+  };
+}
+
+// Replace V5's Salesforce-derived Invoiced YTD with NetSuite AR totals when
+// a NetSuite invoice CSV is present in the input folder. Mutates `out`.
+function applyNetSuiteOverride(out, inputDir) {
+  if (!out || !inputDir) return;
+  let ns;
+  try { ns = netsuite.parseInvoices(inputDir); }
+  catch (err) {
+    console.log('  [' + PROJECT_ID + '] NetSuite parse error: ' + err.message);
+    return;
+  }
+  if (!ns) return;
+
+  const fmtShort = function (v) {
+    if (!v) return '$0';
+    if (v >= 1e9) return '$' + (v / 1e9).toFixed(2).replace(/\.?0+$/, '') + 'B';
+    if (v >= 1e6) return '$' + (v / 1e6).toFixed(2).replace(/\.?0+$/, '') + 'M';
+    if (v >= 1e3) return '$' + (v / 1e3).toFixed(0) + 'K';
+    return '$' + Math.round(v).toLocaleString('en-US');
+  };
+
+  console.log('  [' + PROJECT_ID + '] NetSuite override: ' + ns.invoiceCount + ' invoices totaling $' +
+    Math.round(ns.totalInvoiced).toLocaleString() + ' from ' + ns.fileName);
+
+  // Find the "Invoiced YTD" KPI and patch it
+  if (Array.isArray(out.kpis)) {
+    for (const k of out.kpis) {
+      if (k && /invoiced ytd/i.test(k.label || '')) {
+        k.value = fmtShort(ns.totalInvoiced);
+        k.sub = 'NetSuite AR · ' + ns.invoiceCount + ' invoices booked';
+      }
+    }
+  }
+  // Stash NetSuite numbers in a sub-object so any future tabs can read them
+  out.netsuiteInvoiced = {
+    source: ns.fileName,
+    totalInvoiced: ns.totalInvoiced,
+    invoiceCount: ns.invoiceCount,
+    monthly: ns.monthly,
+    byBranch: ns.byBranch,
+    monthsWithData: ns.monthsWithData
   };
 }
 

@@ -16,6 +16,7 @@ const fs = require('fs');
 const path = require('path');
 const io = require('./lib/io');
 const Papa = require('papaparse');
+const netsuite = require('./lib/netsuite-invoices');
 
 const PROJECT_ID = 'revenue-forecast';
 const MF_VERSION = 'MF-v1.1-2026-05-04';   // v1.1 adds monthly-schedule parsing
@@ -407,7 +408,11 @@ function run(opts) {
     };
   });
 
-  // Per-job: classify into the correct month bucket(s)
+  // Per-job: classify into the correct month bucket(s).
+  // Note: Salesforce-derived invoiced amounts get OVERRIDDEN below by the
+  // NetSuite AR file when present (more authoritative for booked revenue).
+  // We still compute the Salesforce numbers for the completingJobs detail
+  // (job-level breakdown still needs Salesforce job names).
   jobs.forEach(j => {
     if (j.invoicedOn && j.invoicedOn.getFullYear() === FY) {
       const slot = monthly[j.invoicedOn.getMonth()];
@@ -422,6 +427,17 @@ function run(opts) {
       slot.startingJobs.push({ name: j.account, jobNumber: j.jobNumber, branch: j.branch, jobType: j.jobType, amount: j.amount, startedOn: j.startedOn });
     }
   });
+
+  // ---- NetSuite override (authoritative source for booked revenue) ----
+  const ns = netsuite.parseInvoices(inputDir);
+  if (ns) {
+    console.log('  [mf-revenue] NetSuite override: ' + ns.invoiceCount + ' invoices totaling $' +
+      Math.round(ns.totalInvoiced).toLocaleString() + ' from ' + ns.fileName);
+    // Replace Salesforce-derived monthly revenue with NetSuite-booked totals
+    monthly.forEach((m, idx) => { m.revenue = ns.monthly[idx]; });
+  } else {
+    console.log('  [mf-revenue] No NetSuite invoice CSV found, using Salesforce-derived revenue.');
+  }
 
   // ---- WIP balance evolution per month ----
   // WIP = jobs that have In Progress date <= month-end AND
@@ -470,18 +486,28 @@ function run(opts) {
   const gapToBudget = planRestForecast - annualBudget;   // how YTD-actual + remaining-plan compares to plan
   const upliftNeeded = (gapToBudget < 0 && annualBudget > 0) ? Math.abs(gapToBudget) / annualBudget : 0;
 
-  // Branch breakdown YTD
+  // Branch breakdown YTD.
+  // Completed/invoiced amount comes from NetSuite if present (authoritative).
+  // WIP amount comes from Salesforce (NetSuite doesn't track in-flight work).
   const branchAgg = {};
   jobs.forEach(j => {
     if (!branchAgg[j.branch]) branchAgg[j.branch] = { branch: j.branch, completed: 0, wip: 0, jobs: 0 };
-    if (j.invoicedOn && j.invoicedOn.getFullYear() === FY) {
-      branchAgg[j.branch].completed += j.amount;
-      branchAgg[j.branch].jobs++;
-    } else if (j.startedOn && j.startedOn <= today && (!j.invoicedOn || j.invoicedOn > today)) {
+    if (j.startedOn && j.startedOn <= today && (!j.invoicedOn || j.invoicedOn > today)) {
       branchAgg[j.branch].wip += j.amount;
+      branchAgg[j.branch].jobs++;
+    } else if (j.invoicedOn && j.invoicedOn.getFullYear() === FY && !ns) {
+      // Only use Salesforce-derived completed amount when NetSuite isn't available
+      branchAgg[j.branch].completed += j.amount;
       branchAgg[j.branch].jobs++;
     }
   });
+  if (ns) {
+    Object.entries(ns.byBranch).forEach(([branch, agg]) => {
+      if (!branchAgg[branch]) branchAgg[branch] = { branch: branch, completed: 0, wip: 0, jobs: 0 };
+      branchAgg[branch].completed = agg.invoiced;
+      branchAgg[branch].jobs = (branchAgg[branch].jobs || 0) + agg.count;
+    });
+  }
   const branchRows = Object.values(branchAgg).sort((a, b) => (b.completed + b.wip) - (a.completed + a.wip));
 
   // Job type breakdown YTD (revenue invoiced)

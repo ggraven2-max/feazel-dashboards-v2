@@ -509,3 +509,22 @@ The full enumeration of table and chart IDs lives in `calculators/lib/v5_to_json
 | 2026-04-19 | V5 | Locked: cycle hierarchy + conversion curves + WIP factor 0.18 + MMU 35/22 split | Greg + Mahlet |
 | 2026-04-19 | V5 | NOVA branch merged into DC Metro | Greg |
 | 2026-05-01 | V5-shell-1.0 | Calculator wired to shell out to Python (`refresh_v5.py` + `v5_to_json.py`); fallback to extracted-data.json preserved | Greg |
+
+---
+
+## NetSuite invoice override
+
+V5 derives Invoiced YTD from Salesforce stage transitions. NetSuite AR is the GAAP source of truth (booked invoices, not stage events). Drop a NetSuite invoice CSV into this folder named like `ResInvoicedYTDResults###.csv` (the digits are the report ID Mahlet exports).
+
+The calculator detects any `*InvoicedYTD*.csv` file, sums all rows where `Type = Invoice`, and uses that to override:
+
+- The "Invoiced YTD" KPI value (sub becomes "NetSuite AR · N invoices booked")
+- The per-month invoiced totals visible in the dashboard (when V5 tabs reference them)
+- A `netsuiteInvoiced` block on the output (totalInvoiced, monthly, byBranch, invoiceCount)
+
+Other V5 fields (forecast model, WIP, conversion curves, weekly targets) stay untouched. NetSuite only knows about invoiced jobs, not in-flight ones, so the Salesforce-derived numbers still drive everything forward-looking.
+
+Expected columns:
+`Internal ID, Order Type, *, Date, Location, Period, Type, Document Number, Name, Account, Memo, Amount`
+
+Branch labels are normalized: `Detroit Metro` → `Detroit`, `NOVA` → `DC Metro`. Add more aliases in `calculators/lib/netsuite-invoices.js` if exports use unexpected branch names.

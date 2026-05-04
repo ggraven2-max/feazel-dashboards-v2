@@ -1,8 +1,8 @@
-/* AUTO-GENERATED — do not edit. Generated 2026-05-04T16:55:08.845Z (multi-family) */
+/* AUTO-GENERATED — do not edit. Generated 2026-05-04T17:32:29.212Z (multi-family) */
 window.FZ = window.FZ || {};
 window.FZ.data = {
   "_meta": {
-    "builtAt": "2026-05-04T16:55:08.845Z",
+    "builtAt": "2026-05-04T17:32:29.212Z",
     "pipelineVersion": "2.0.0",
     "lob": "multi-family",
     "lastBuiltProjects": [
@@ -16,25 +16,25 @@ window.FZ.data = {
         "id": "sales-overview",
         "version": "1.0-rules-encoded",
         "elapsedMs": 13,
-        "builtAt": "2026-05-04T16:55:08.845Z"
+        "builtAt": "2026-05-04T17:32:29.212Z"
       },
       {
         "id": "revenue-forecast",
         "version": "V5-locked-2026-04-19-shell-1.0",
-        "elapsedMs": 127,
-        "builtAt": "2026-05-04T16:55:08.845Z"
+        "elapsedMs": 125,
+        "builtAt": "2026-05-04T17:32:29.212Z"
       },
       {
         "id": "backlog",
         "version": "1.0-rules-encoded",
         "elapsedMs": 19,
-        "builtAt": "2026-05-04T16:55:08.845Z"
+        "builtAt": "2026-05-04T17:32:29.212Z"
       },
       {
         "id": "installs-ytd",
         "version": "1.0-rules-encoded",
-        "elapsedMs": 13,
-        "builtAt": "2026-05-04T16:55:08.845Z"
+        "elapsedMs": 15,
+        "builtAt": "2026-05-04T17:32:29.212Z"
       }
     ]
   },
@@ -1522,24 +1522,24 @@ window.FZ.data = {
     "kpis": [
       {
         "label": "Invoiced YTD",
-        "value": "$9.09M",
+        "value": "$10.23M",
         "sub": "5 months elapsed"
       },
       {
         "label": "YTD vs Plan",
-        "value": "−$4.76M",
+        "value": "−$3.61M",
         "sub": "Plan YTD: $13.84M",
         "trend": "negative"
       },
       {
         "label": "YTD vs Forecast",
-        "value": "−$1.27M",
+        "value": "−$125K",
         "sub": "Lisa's forecast YTD: $10.36M",
         "trend": "negative"
       },
       {
         "label": "Plan-Rest Forecast",
-        "value": "$44.97M",
+        "value": "$46.12M",
         "sub": "YTD actual + remaining-month plan"
       },
       {
@@ -1549,8 +1549,8 @@ window.FZ.data = {
       },
       {
         "label": "Forecast vs Budget",
-        "value": "−$6.7M",
-        "sub": "13.0% uplift needed",
+        "value": "−$5.56M",
+        "sub": "10.8% uplift needed",
         "trend": "negative"
       },
       {
@@ -1560,61 +1560,61 @@ window.FZ.data = {
       },
       {
         "label": "Last Month Revenue",
-        "value": "$3.72M",
+        "value": "$4.82M",
         "sub": "April 2026"
       }
     ],
     "execSummary": {
       "budget": 51673207,
-      "modelAnnualInvoiced": 21808854.672,
-      "gap": -6701218.839589745,
-      "narrative": "5 months of FY2026 MF activity reported, $9.09M invoiced YTD. Run-rate annualizes to $21.81M against the $51.67M plan, a $6.7M shortfall (13.0% uplift needed)."
+      "modelAnnualInvoiced": 24554321.688,
+      "gap": -5557274.249589749,
+      "narrative": "5 months of FY2026 MF activity reported, $10.23M invoiced YTD. Run-rate annualizes to $24.55M against the $51.67M plan, a $5.56M shortfall (10.8% uplift needed)."
     },
     "monthRevenue": {
       "jan": {
-        "invoiced": 959133.87,
-        "wipChange": -652008.1699999999,
-        "netRevenue": 959133.87,
+        "invoiced": 1085061.87,
+        "wipChange": -777936.1700000002,
+        "netRevenue": 1085061.87,
         "startingCount": 5,
         "completingCount": 14,
         "plan": 639122.2851245126,
-        "gap": 320011.5848754874
+        "gap": 445939.5848754875
       },
       "feb": {
-        "invoiced": 270039.05,
-        "wipChange": 133945.26,
-        "netRevenue": 270039.05,
+        "invoiced": 363231.03,
+        "wipChange": 40753.27999999997,
+        "netRevenue": 363231.03,
         "startingCount": 10,
         "completingCount": 10,
         "plan": 759049.0680259366,
-        "gap": -489010.0180259366
+        "gap": -395818.0380259366
       },
       "mar": {
-        "invoiced": 3842367.3299999996,
-        "wipChange": 3806197.2900000005,
-        "netRevenue": 3842367.3299999996,
+        "invoiced": 3966078.4399999995,
+        "wipChange": 3682486.1800000006,
+        "netRevenue": 3966078.4399999995,
         "startingCount": 29,
         "completingCount": 33,
         "plan": 2964722.142117475,
-        "gap": 877645.1878825244
+        "gap": 1001356.2978825243
       },
       "apr": {
-        "invoiced": 3716436.9300000006,
-        "wipChange": 1812876.8899999987,
-        "netRevenue": 3716436.9300000006,
+        "invoiced": 4816596.029999999,
+        "wipChange": 712717.79,
+        "netRevenue": 4816596.029999999,
         "startingCount": 31,
         "completingCount": 37,
         "plan": 3111458.0780510968,
-        "gap": 604978.8519489039
+        "gap": 1705137.9519489026
       },
       "may": {
-        "invoiced": 299045.6,
-        "wipChange": -198865.28999999998,
-        "netRevenue": 299045.6,
+        "invoiced": 0,
+        "wipChange": 100180.31,
+        "netRevenue": 0,
         "startingCount": 5,
         "completingCount": 4,
         "plan": 6369333.738681715,
-        "gap": -6070288.138681715
+        "gap": -6369333.738681715
       },
       "jun": {
         "invoiced": 0,
@@ -1691,8 +1691,8 @@ window.FZ.data = {
     },
     "budgetRecoveryHeader": {
       "fullYearBudget": 51673207,
-      "gap": 6701218.839589745,
-      "upliftPct": 12.968459340233604,
+      "gap": 5557274.249589749,
+      "upliftPct": 10.754653276290261,
       "aprilGap": 0,
       "q1OriginalBudget": 0,
       "q1Actual": 0,
@@ -1702,11 +1702,11 @@ window.FZ.data = {
     "profitabilitySummary": {
       "combinedGP": 0,
       "combinedGP_pct": 0,
-      "combinedRevenue": 9087022.78,
+      "combinedRevenue": 10230967.37,
       "y2025_GP_pct": 0,
       "y2026_GP_pct": 0,
       "y2025_revenue": 0,
-      "y2026_revenue": 9087022.78,
+      "y2026_revenue": 10230967.37,
       "y2025_jobs": 0,
       "y2026_jobs": 98,
       "materialCost": 0,
@@ -1730,7 +1730,7 @@ window.FZ.data = {
     },
     "commentary": {
       "actionableRecommendations": [
-        "Annualized pace is $6.7M short of the $51.67M plan. Push to invoice WIP balance ($7.7M) faster, or accelerate starts."
+        "Annualized pace is $5.56M short of the $51.67M plan. Push to invoice WIP balance ($7.7M) faster, or accelerate starts."
       ],
       "strategyHighlights": []
     },
@@ -1772,9 +1772,9 @@ window.FZ.data = {
         "rows": [
           [
             "January",
-            "$959K",
+            "$1.09M",
             "$639K",
-            "$320K",
+            "$446K",
             "$307K",
             "$2.08M",
             14,
@@ -1782,9 +1782,9 @@ window.FZ.data = {
           ],
           [
             "February",
-            "$270K",
+            "$363K",
             "$759K",
-            "$-489K",
+            "$-396K",
             "$404K",
             "$2.22M",
             10,
@@ -1792,9 +1792,9 @@ window.FZ.data = {
           ],
           [
             "March",
-            "$3.84M",
+            "$3.97M",
             "$2.96M",
-            "$878K",
+            "$1M",
             "$7.65M",
             "$6.04M",
             33,
@@ -1802,9 +1802,9 @@ window.FZ.data = {
           ],
           [
             "April",
-            "$3.72M",
+            "$4.82M",
             "$3.11M",
-            "$605K",
+            "$1.71M",
             "$5.53M",
             "$7.94M",
             37,
@@ -1812,9 +1812,9 @@ window.FZ.data = {
           ],
           [
             "May",
-            "$299K",
+            "$0",
             "$6.37M",
-            "$-6.07M",
+            "$-6.37M",
             "$100K",
             "$7.75M",
             4,
@@ -1918,37 +1918,37 @@ window.FZ.data = {
           [
             "January",
             "—",
-            "$959K",
+            "$1.09M",
             "—",
             "—"
           ],
           [
             "February",
             "—",
-            "$270K",
+            "$363K",
             "—",
             "—"
           ],
           [
             "March",
             "—",
-            "$3.84M",
+            "$3.97M",
             "—",
             "—"
           ],
           [
             "April",
             "$4.93M",
-            "$3.72M",
-            "$-1.22M",
-            "-25%"
+            "$4.82M",
+            "$-115K",
+            "-2%"
           ],
           [
             "May",
             "$5.42M",
-            "$299K",
-            "$-5.13M",
-            "-94%"
+            "$0",
+            "$-5.42M",
+            "-100%"
           ],
           [
             "June",
@@ -2267,26 +2267,26 @@ window.FZ.data = {
         "rows": [
           [
             "Columbus",
-            "$3.56M",
+            "$3.45M",
             "$793K",
             20
           ],
           [
             "DC Metro",
-            "$345K",
+            "$346K",
             "$3.24M",
-            8
+            9
           ],
           [
             "Raleigh",
-            "$1.62M",
+            "$1.79M",
             "$1.08M",
-            27
+            34
           ],
           [
-            "Detroit Metro",
-            "$1.52M",
-            "$800K",
+            "Detroit",
+            "$2.39M",
+            "$0",
             19
           ],
           [
@@ -2297,15 +2297,21 @@ window.FZ.data = {
           ],
           [
             "Nashville",
-            "$469K",
+            "$584K",
             "$352K",
-            8
+            9
+          ],
+          [
+            "Detroit Metro",
+            "$0",
+            "$800K",
+            2
           ],
           [
             "Cleveland",
-            "$602K",
+            "$694K",
             "$0",
-            7
+            9
           ],
           [
             "Dayton",
@@ -2541,11 +2547,11 @@ window.FZ.data = {
               {
                 "label": "Actual",
                 "data": [
-                  959133.87,
-                  270039.05,
-                  3842367.3299999996,
-                  3716436.9300000006,
-                  299045.6,
+                  1085061.87,
+                  363231.03,
+                  3966078.4399999995,
+                  4816596.029999999,
+                  0,
                   0,
                   0,
                   0,
@@ -2613,8 +2619,8 @@ window.FZ.data = {
                   0,
                   0,
                   0,
-                  -1215461.5199999996,
-                  -5125283.710000001,
+                  -115302.42000000086,
+                  -5424329.3100000005,
                   0,
                   0,
                   0,
@@ -2732,11 +2738,11 @@ window.FZ.data = {
               {
                 "label": "Completions",
                 "data": [
-                  959133.87,
-                  270039.05,
-                  3842367.3299999996,
-                  3716436.9300000006,
-                  299045.6,
+                  1085061.87,
+                  363231.03,
+                  3966078.4399999995,
+                  4816596.029999999,
+                  0,
                   0,
                   0,
                   0,
@@ -2781,11 +2787,11 @@ window.FZ.data = {
       5080930.151171241
     ],
     "revModel": [
-      959133.87,
-      270039.05,
-      3842367.3299999996,
-      3716436.9300000006,
-      299045.6,
+      1085061.87,
+      363231.03,
+      3966078.4399999995,
+      4816596.029999999,
+      0,
       0,
       0,
       0,
@@ -2795,11 +2801,11 @@ window.FZ.data = {
       0
     ],
     "revFromKnown": [
-      959133.87,
-      270039.05,
-      3842367.3299999996,
-      3716436.9300000006,
-      299045.6,
+      1085061.87,
+      363231.03,
+      3966078.4399999995,
+      4816596.029999999,
+      0,
       0,
       0,
       0,
@@ -2847,7 +2853,7 @@ window.FZ.data = {
       "totalWOs": 319,
       "portfolioValue": 21227684.31,
       "avgDaysInStatus": 45,
-      "lastBuild": "2026-05-04T16:55:08.831Z"
+      "lastBuild": "2026-05-04T17:32:29.196Z"
     },
     "tabs": [
       {
@@ -4070,7 +4076,7 @@ window.FZ.data = {
       "multiTradeJobs": 10,
       "singleTradeJobs": 90,
       "multiTradePct": 10,
-      "lastBuild": "2026-05-04T16:55:08.845Z"
+      "lastBuild": "2026-05-04T17:32:29.211Z"
     },
     "tabs": [
       {

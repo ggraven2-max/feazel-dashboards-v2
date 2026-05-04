@@ -1,8 +1,8 @@
-/* AUTO-GENERATED — do not edit. Generated 2026-05-04T16:55:08.668Z (residential) */
+/* AUTO-GENERATED — do not edit. Generated 2026-05-04T17:32:29.036Z (residential) */
 window.FZ = window.FZ || {};
 window.FZ.data = {
   "_meta": {
-    "builtAt": "2026-05-04T16:55:08.668Z",
+    "builtAt": "2026-05-04T17:32:29.036Z",
     "pipelineVersion": "2.0.0",
     "lob": "residential",
     "lastBuiltProjects": [
@@ -15,26 +15,26 @@ window.FZ.data = {
       {
         "id": "installs-ytd",
         "version": "1.0-rules-encoded",
-        "elapsedMs": 82,
-        "builtAt": "2026-05-04T16:55:08.668Z"
+        "elapsedMs": 73,
+        "builtAt": "2026-05-04T17:32:29.036Z"
       },
       {
         "id": "sales-overview",
         "version": "1.0-rules-encoded",
-        "elapsedMs": 247,
-        "builtAt": "2026-05-04T16:55:08.668Z"
+        "elapsedMs": 267,
+        "builtAt": "2026-05-04T17:32:29.036Z"
       },
       {
         "id": "revenue-forecast",
         "version": "V5-locked-2026-04-19-shell-1.0",
-        "elapsedMs": 3749,
-        "builtAt": "2026-05-04T16:55:08.668Z"
+        "elapsedMs": 3506,
+        "builtAt": "2026-05-04T17:32:29.036Z"
       },
       {
         "id": "backlog",
         "version": "1.0-rules-encoded",
-        "elapsedMs": 59,
-        "builtAt": "2026-05-04T16:55:08.668Z"
+        "elapsedMs": 62,
+        "builtAt": "2026-05-04T17:32:29.036Z"
       }
     ]
   },
@@ -53,7 +53,7 @@ window.FZ.data = {
       "multiTradeJobs": 301,
       "singleTradeJobs": 775,
       "multiTradePct": 28,
-      "lastBuild": "2026-05-04T16:55:08.668Z"
+      "lastBuild": "2026-05-04T17:32:29.035Z"
     },
     "tabs": [
       {
@@ -4378,8 +4378,8 @@ window.FZ.data = {
       },
       {
         "label": "Invoiced YTD",
-        "value": "$20.1M",
-        "sub": "Based on actual invoice dates"
+        "value": "$20.92M",
+        "sub": "NetSuite AR · 1148 invoices booked"
       },
       {
         "label": "4-Week Avg Weekly Sales",
@@ -4804,7 +4804,7 @@ window.FZ.data = {
           [
             "Jun 2026",
             14956779,
-            8305393.9313,
+            8305394.9313,
             14315330.8748,
             14390579.4592,
             -566199.5408
@@ -4886,7 +4886,7 @@ window.FZ.data = {
           ],
           [
             "Jun 2026",
-            8305393.9313,
+            8305394.9313,
             1732641.2793,
             13101118.7207,
             14315330.8748
@@ -6395,7 +6395,7 @@ window.FZ.data = {
         "budget_rev": 14292330,
         "pipeline_backlog": 15196197.72,
         "new_sales_backlog": 0,
-        "pipe_invoicing": 14491433.86,
+        "pipe_invoicing": 14491432.86,
         "future_invoicing": 3100893.09,
         "rev_from_backlog": 4617934.1797,
         "revenue_gap": 9674395.8203,
@@ -6404,18 +6404,18 @@ window.FZ.data = {
       },
       {
         "month": "Jun 2026",
-        "total_backlog": 8305393.9313,
-        "wip_est": 4983236.3588,
-        "not_started": 3322157.5725,
+        "total_backlog": 8305394.9313,
+        "wip_est": 4983236.9588,
+        "not_started": 3322157.9725,
         "budget_rev": 14833760,
-        "pipeline_backlog": 704763.86,
+        "pipeline_backlog": 704764.86,
         "new_sales_backlog": 7600630.0713,
-        "pipe_invoicing": 643257.06,
+        "pipe_invoicing": 643258.06,
         "future_invoicing": 14033244.89,
         "rev_from_backlog": 1732641.2793,
         "revenue_gap": 13101118.7207,
         "adjusted_required_sales": 14315330.8748,
-        "backlog_surplus": -6009936.9436
+        "backlog_surplus": -6009935.9436
       },
       {
         "month": "Jul 2026",
@@ -6518,7 +6518,87 @@ window.FZ.data = {
         "Material mark-up assumptions (35% material, 22% labor of new IP)"
       ]
     },
-    "_source": "calculator/revenue-forecast.js V5-locked-2026-04-19-shell-1.0"
+    "_source": "calculator/revenue-forecast.js V5-locked-2026-04-19-shell-1.0",
+    "netsuiteInvoiced": {
+      "source": "ResInvoicedYTDResults650.csv",
+      "totalInvoiced": 20921267.059999984,
+      "invoiceCount": 1148,
+      "monthly": [
+        3312733.0599999987,
+        2855781.11,
+        6228299.340000002,
+        8411542.480000002,
+        112911.07,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "byBranch": {
+        "Greenville": {
+          "invoiced": 731703.71,
+          "count": 28
+        },
+        "Richmond": {
+          "invoiced": 1107542.0299999998,
+          "count": 59
+        },
+        "DC Metro": {
+          "invoiced": 2055694.3800000001,
+          "count": 115
+        },
+        "Cleveland": {
+          "invoiced": 742091.9099999999,
+          "count": 59
+        },
+        "Nashville": {
+          "invoiced": 2497005.230000001,
+          "count": 96
+        },
+        "Columbus": {
+          "invoiced": 6181571.15,
+          "count": 369
+        },
+        "Dayton": {
+          "invoiced": 1397115.6700000002,
+          "count": 82
+        },
+        "Cincinnati": {
+          "invoiced": 1385863.8400000003,
+          "count": 75
+        },
+        "Detroit": {
+          "invoiced": 2368922.9999999995,
+          "count": 140
+        },
+        "Raleigh": {
+          "invoiced": 1334562.4800000002,
+          "count": 65
+        },
+        "Knoxville": {
+          "invoiced": 1068071.25,
+          "count": 57
+        },
+        "Charlotte": {
+          "invoiced": 33694.41,
+          "count": 1
+        },
+        "Grand Rapids": {
+          "invoiced": 17428,
+          "count": 2
+        }
+      },
+      "monthsWithData": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ]
+    }
   },
   "BACKLOG": {
     "_source": "calculator/backlog.js v1.0-rules-encoded",
@@ -6529,7 +6609,7 @@ window.FZ.data = {
       "totalWOs": 733,
       "portfolioValue": 10382185.08,
       "avgDaysInStatus": 12,
-      "lastBuild": "2026-05-04T16:55:08.584Z"
+      "lastBuild": "2026-05-04T17:32:28.960Z"
     },
     "tabs": [
       {

@@ -152,3 +152,24 @@ The calculator logs a warning if the spreadsheet's "Total invoice" hand-sum disa
 - Lisa updates the schedule monthly (or as deal status changes mid-month).
 - Greg pulls the export when running the daily refresh.
 - No naming required for the CSV; just make sure the title row in cell A1 says "Jobs to be completed [Month] [Year]" so the parser can identify the month.
+
+---
+
+## NetSuite invoice override (MF-v1.2)
+
+The Salesforce Forecasting Report's `Date Moved to Invoiced` is informative but it can drift from booked revenue (jobs invoiced without a stage update, or with WO duplicates that need dedup logic). NetSuite AR is the GAAP source of truth.
+
+Drop a NetSuite invoice CSV into this folder named like `MFInvoicedYTDResults###.csv` (the digits are the Salesforce-style report ID Mahlet exports).
+
+The calculator detects any `*InvoicedYTD*.csv` file, sums all rows where `Type = Invoice`, and uses the result to override:
+
+- The "Invoiced YTD" KPI value
+- The per-month `revenue` array (replaces Salesforce-derived monthly invoiced)
+- The branch breakdown's "completed" column (jobs by branch)
+
+Salesforce-derived data still drives WIP, starts, in-flight job-level detail (since NetSuite doesn't track in-progress work).
+
+The expected columns:
+`Internal ID, Order Type, *, Date, Location, Period, Type, Document Number, Name, Account, Memo, Amount`
+
+Branch labels are normalized: `Detroit Metro` → `Detroit`, `NOVA` → `DC Metro`. Add more aliases in `calculators/lib/netsuite-invoices.js` if Mahlet's exports use unexpected branch names.
