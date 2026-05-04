@@ -51,35 +51,51 @@ const REQUIRED_PY_FILES = ['refresh_v5.py', 'build_dashboard_v5.py'];
 const OPTIONAL_PY_FILES = ['wip_reference.pkl', 'v4_forecast_detail.pkl'];
 
 // ────────────────────────────────────────────────────────────
-// V5 LOCKED CONSTANTS (mirrored for reference, source of truth = Python)
-// Do not change without explicit sign-off from Greg + Mahlet.
-// Rationale for any change MUST be recorded in RULES.md and the PR.
+// V5 METHODOLOGY REFERENCE (source of truth = Python refresh_v5.py)
+//
+// Lock state per FORECASTING_RULES.md (last revised 2026-05-04):
+//   - Cycle hierarchy:      UNLOCKED 2026-04-30, recomputed each refresh
+//                            (4-stage: Signed → Created → InProgress → Completed → Invoiced)
+//   - Same-month conversion: UNLOCKED 2026-04-30, sales-cohort YTD recomputed each refresh
+//   - MMU (material mark-up): REMOVED ENTIRELY 2026-04-30
+//   - WIP percent-complete:  LOCKED at 0.75 (HTML dashboard proxy)
+//   - Branch consolidation:  LOCKED, NOVA → DC Metro effective 2026-04
+//   - Invoicing source:      NetSuite ResInvoicedYTDResults*.csv (adopted 2026-05-04)
+//   - April invoiced overlay: LOCKED at NetSuite actuals
+//   - wip_reference.pkl:     LOCKED, do not regenerate without approval
+//
+// The constants below are kept only as a reference for downstream consumers
+// that want to know the locked values. Cycle hierarchy and conversion curves
+// shown below are stale defaults from the 2026-04-19 lock; the Python
+// recomputes them on every refresh and is authoritative.
 // ────────────────────────────────────────────────────────────
 const V5_CONSTANTS = {
-  cycleHierarchy: {
+  // STALE defaults from the 2026-04-19 lock. Python recomputes these per refresh.
+  cycleHierarchy_stale_defaults: {
     'Insurance':           { medianDays: 27, meanDays: 76 },
     'Retail-Financing':    { medianDays:  3, meanDays: 20 },
     'Retail-No Financing': { medianDays:  4, meanDays: 20 },
     'Repair':              { medianDays:  2, meanDays: 11 }
   },
-  conversionCurves: {
+  conversionCurves_stale_defaults: {
     'Insurance':           [0.10, 0.30, 0.35, 0.25],
     'Retail-Financing':    [0.45, 0.40, 0.10, 0.05],
     'Retail-No Financing': [0.50, 0.35, 0.10, 0.05],
     'Repair':              [0.85, 0.10, 0.05, 0.00]
   },
   budgetAnnual: 125_600_000,
-  wipFactor: 0.18,
-  // MMU split (cost-of-revenue assumptions, locked)
-  costSplit: {
-    materialPct: 0.35,
-    laborPct: 0.22,
-    pctNew: 0.75,
-    pctPrior: 0.90,
-    margin: 0.40
-  },
+  // WIP percent-complete proxy used in the HTML dashboard's empirical WIP math.
+  // V5 Excel model uses NetSuite 40003 GL movement instead (when available).
+  // PCT_COMPLETE = 0.75 is the locked value from FORECASTING_RULES.md §4.6.
+  pctComplete: 0.75,
   branchRemap: { 'NOVA': 'DC Metro' },
-  lockedOn: '2026-04-19'
+  lockHistory: {
+    'locked':                   '2026-04-19',  // initial V5 lock
+    'unlocked_methodology':     '2026-04-30',  // cycle, conversion, MMU
+    'mmu_removed':              '2026-04-30',
+    'pipeline_ownership_locked':'2026-04-30',  // build_refresh_v2.py canonical
+    'netsuite_invoicing':       '2026-05-04'   // ResInvoicedYTDResults*.csv canonical
+  }
 };
 
 // ────────────────────────────────────────────────────────────
