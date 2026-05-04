@@ -62,7 +62,7 @@ function buildOne(projectId, lob) {
   const start = Date.now();
   let output;
   try {
-    output = calcFresh.run({ inputDir, snapshotPath });
+    output = calcFresh.run({ inputDir, snapshotPath, lob });
   } catch (err) {
     console.error('  ✗ FAILED: ' + err.message);
     if (process.env.DEBUG) console.error(err.stack);
