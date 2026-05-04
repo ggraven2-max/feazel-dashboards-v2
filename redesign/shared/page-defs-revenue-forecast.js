@@ -38,6 +38,19 @@
   var C = {};
   (D.charts || []).forEach(function (c) { if (c && c.id) C[c.id] = c; });
 
+  // ============================================================
+  // MULTI-FAMILY BRANCH
+  // The residential page-defs below assume V5-shaped data (chart IDs like
+  // salesChart, monthlyChart). MF emits a different shape (mf-monthly-rollup,
+  // mf-rev-vs-plan-vs-forecast, etc.). When MF data is loaded, build a
+  // dedicated MF pages object and short-circuit the rest of this file.
+  // ============================================================
+  if (T['mf-monthly-rollup']) {
+    window.FZ_PAGE_DEFS = window.FZ_PAGE_DEFS || {};
+    window.FZ_PAGE_DEFS['revenue-forecast'] = buildMfPages(D, T, C, fmt, pal, BASE_OPTS, moneyAxis, withOpts);
+    return;
+  }
+
   // Convenience: quickly map a table's rows to renderer rows.
   function tableSection(opts) {
     var src = T[opts.id];
@@ -55,7 +68,217 @@
   }
 
   // ============================================================
-  // INDEX (Revenue Forecast hub)
+  // MULTI-FAMILY page builder
+  // Returns a complete pages object for the MF revenue forecast tabs.
+  // Uses MF-specific tables and charts (mf-* IDs).
+  // ============================================================
+  function buildMfPages (D, T, C, fmt, pal, BASE_OPTS, moneyAxis, withOpts) {
+    var es = D.execSummary || {};
+    var bdg = es.budget || 0;
+    var actual = es.modelAnnualInvoiced || 0;
+    var gap = es.gap || 0;
+
+    // Pull KPI values straight from the calculator output (already formatted)
+    function kpisRow (slice, cols) {
+      return { kind: 'kpi-row', cols: cols || 4, items: slice };
+    }
+    function kpiObj (k) {
+      return { label: k.label, value: k.value, sub: k.sub || '', tone: k.trend === 'positive' ? 'good' : (k.trend === 'negative' ? 'crit' : 'navy') };
+    }
+    var allKpis = (D.kpis || []).map(kpiObj);
+
+    // Helper: pluck a chart object by id (returns the renderer-friendly shape)
+    function chartFromId (id, opts) {
+      var c = C[id];
+      if (!c) return null;
+      opts = opts || {};
+      return {
+        title: opts.title || c.title,
+        sub: opts.sub || c.sub,
+        height: opts.height || 300,
+        config: Object.assign({}, c.config, { options: withOpts({ scales: { y: moneyAxis() } }) })
+      };
+    }
+    function tableFromId (id, opts) {
+      var t = T[id];
+      if (!t) return null;
+      opts = opts || {};
+      return {
+        kind: 'table',
+        heading: opts.heading || t.title,
+        caption: opts.caption,
+        maxHeight: opts.maxHeight,
+        compact: opts.compact !== false,
+        headers: t.headers,
+        rows: t.rows
+      };
+    }
+
+    var mfPages = {};
+
+    // ---- INDEX / EXECUTIVE (the hub) ----
+    var indexPage = {
+      eyebrow: D.subtitle || 'MF-v1 · 2026',
+      title: 'Multi-Family Revenue Forecast',
+      intro: es.narrative || 'MF revenue tracking against the Commercial Budget. Reads job-level dates from Salesforce for actuals and Lisa\'s monthly schedules for forward forecast. Variance views show planned vs actual per month.',
+      tags: [
+        { kind: 'info',    text: 'MF-v1 · ' + (D.methodologyLock ? D.methodologyLock.lockedOn : '2026-05-04') },
+        { kind: gap >= 0 ? 'success' : 'warn', text: (gap >= 0 ? '+' : '') + fmt.money(gap, { short: true }) + ' vs plan' },
+        { kind: 'info',    text: 'Budget ' + fmt.money(bdg, { short: true }) }
+      ],
+      sections: [
+        kpisRow(allKpis.slice(0, 4)),
+        kpisRow(allKpis.slice(4, 8)),
+        {
+          kind: 'chart-grid', cols: 1,
+          heading: 'Forecast vs Actual vs Plan',
+          caption: 'Forecast = Lisa\'s monthly schedule. Actual = Salesforce invoiced dates. Plan = Commercial Budget.',
+          charts: [chartFromId('mf-rev-vs-plan-vs-forecast', { height: 320 })].filter(Boolean)
+        },
+        {
+          kind: 'chart-grid', cols: 2,
+          heading: 'WIP and Variance',
+          charts: [
+            chartFromId('mf-wip-balance', { height: 280 }),
+            chartFromId('mf-variance', { height: 280 })
+          ].filter(Boolean)
+        },
+        tableFromId('mf-variance', { heading: 'Forecast vs Actual (per month)', caption: 'Positive variance = actuals beat Lisa\'s pre-month schedule.' })
+      ].filter(Boolean)
+    };
+    mfPages.index = indexPage;
+    mfPages.executive = indexPage;
+
+    // ---- MONTHLY ----
+    mfPages.monthly = {
+      eyebrow: 'MONTHLY DETAIL',
+      title: 'Monthly Roll-Up',
+      intro: 'Per-month revenue, starts, WIP movement, and forecast variance. Drill in for branch-level detail on the Production tab.',
+      tags: [],
+      sections: [
+        {
+          kind: 'chart-grid', cols: 1,
+          heading: 'Monthly Revenue: three views',
+          charts: [chartFromId('mf-rev-vs-plan-vs-forecast', { height: 320 })].filter(Boolean)
+        },
+        tableFromId('mf-monthly-rollup', { heading: 'Monthly Roll-Up' }),
+        tableFromId('mf-variance', { heading: 'Forecast vs Actual (per month)' }),
+        {
+          kind: 'chart-grid', cols: 1,
+          heading: 'WIP Starts vs Completions',
+          charts: [chartFromId('mf-starts-vs-completions', { height: 280 })].filter(Boolean)
+        }
+      ].filter(Boolean)
+    };
+
+    // ---- BUDGET ----
+    mfPages.budget = {
+      eyebrow: 'PLAN',
+      title: 'Annual Budget Detail',
+      intro: 'Per-month plan from the 2026 Commercial Budget XLSX (row 6, "Total - 40000 - Revenue").',
+      tags: [
+        { kind: 'info', text: 'Annual budget ' + fmt.money(bdg, { short: true }) }
+      ],
+      sections: [
+        tableFromId('mf-monthly-rollup', { heading: 'Monthly Plan vs Actual' })
+      ].filter(Boolean)
+    };
+
+    // ---- PIPELINE / WIP ----
+    mfPages.pipeline = {
+      eyebrow: 'PIPELINE',
+      title: 'WIP & Pipeline',
+      intro: 'Jobs currently in WIP (started, not yet invoiced) and the forecasted WIP roll-forward from Lisa\'s monthly schedules.',
+      tags: [],
+      sections: [
+        {
+          kind: 'chart-grid', cols: 1,
+          heading: 'WIP Balance Over Time',
+          charts: [chartFromId('mf-wip-balance', { height: 320 })].filter(Boolean)
+        },
+        tableFromId('mf-wip-schedule', { heading: 'Forecasted WIP Schedule (from Lisa\'s monthly forecasts)' }),
+        tableFromId('mf-in-wip', { heading: 'Currently in WIP (Salesforce-derived)', maxHeight: '480px' })
+      ].filter(Boolean)
+    };
+
+    // ---- PRODUCTION (per branch) ----
+    mfPages.production = {
+      eyebrow: 'BRANCH DETAIL',
+      title: 'Production by Branch',
+      intro: 'Forecasted revenue per branch per month (from Lisa\'s schedules) and YTD invoiced totals per branch (from Salesforce).',
+      tags: [],
+      sections: [
+        tableFromId('mf-branch-forecast', { heading: 'Forecasted Revenue by Branch (per month)' }),
+        tableFromId('mf-by-branch', { heading: 'YTD Invoiced by Branch (Salesforce actuals)' }),
+        tableFromId('mf-by-jobtype', { heading: 'YTD Revenue by Job Type' })
+      ].filter(Boolean)
+    };
+
+    // ---- BUDGET RECOVERY (variance focused) ----
+    mfPages['budget-recovery'] = {
+      eyebrow: 'VARIANCE',
+      title: 'Budget Recovery',
+      intro: 'Per-month variance against plan and against Lisa\'s forecast. Tells you where to intervene.',
+      tags: [],
+      sections: [
+        tableFromId('mf-variance', { heading: 'Forecast vs Actual (per month)' }),
+        tableFromId('mf-monthly-rollup', { heading: 'Monthly Plan vs Actual' })
+      ].filter(Boolean)
+    };
+
+    // ---- RECOMMENDATIONS ----
+    mfPages.recommendations = {
+      eyebrow: 'STRATEGY',
+      title: 'Recommendations',
+      intro: '',
+      tags: [],
+      sections: [
+        {
+          kind: 'prose',
+          cards: [
+            {
+              kind: 'navy',
+              eyebrow: 'EXECUTIVE NARRATIVE',
+              title: 'Where MF Stands',
+              body: '<p>' + (es.narrative || '') + '</p>'
+            },
+            {
+              eyebrow: 'ACTIONS',
+              title: 'Next Moves',
+              list: (D.commentary && D.commentary.actionableRecommendations || []).map(function (r) {
+                return { text: r };
+              })
+            }
+          ]
+        }
+      ]
+    };
+
+    // ---- TABS NOT BUILT YET FOR MF ----
+    var notBuiltSlugs = ['projection', 'job-types', 'cycle', 'weekly-targets', 'profitability'];
+    notBuiltSlugs.forEach(function (slug) {
+      mfPages[slug] = {
+        eyebrow: 'COMING SOON',
+        title: slug.replace(/-/g, ' ').replace(/\b\w/g, function (c) { return c.toUpperCase(); }),
+        intro: 'This view is built for residential and not yet ported to multi-family. The data model differs (no statistical conversion curves, no four-job-type taxonomy, no weekly cadence). Tracking it as a v2 follow-up.',
+        tags: [],
+        sections: [
+          {
+            kind: 'callout',
+            tone: 'info',
+            title: 'Not yet built for MF',
+            body: '<p>The multi-family revenue methodology (MF-v1) is event-driven and monthly. The residential V5 model uses statistical conversion curves over a four-job-type taxonomy with weekly cadence. Several of the residential tabs (Projection, Job Types, Cycle, Weekly Targets, Profitability) don\'t map cleanly to the MF model and need their own v2 designs.</p>' +
+                  '<p>Use the <strong>Index</strong>, <strong>Monthly</strong>, <strong>Pipeline</strong>, <strong>Production</strong>, and <strong>Budget Recovery</strong> tabs for MF-specific views.</p>'
+          }
+        ]
+      };
+    });
+
+    return mfPages;
+  }
+
+  // ============================================================
+  // INDEX (Revenue Forecast hub) — RESIDENTIAL ONLY BELOW
   // ============================================================
   var pages = {};
 
