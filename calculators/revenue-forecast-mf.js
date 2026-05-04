@@ -518,7 +518,7 @@ function run(opts) {
 
   // ---- KPIs ----
   const kpis = [
-    { label: 'Revenue Invoiced YTD', value: fmtMoney(annualRevenue), sub: monthsElapsed + (monthsElapsed === 1 ? ' month elapsed' : ' months elapsed') },
+    { label: 'Invoiced YTD', value: fmtMoney(annualRevenue), sub: monthsElapsed + (monthsElapsed === 1 ? ' month elapsed' : ' months elapsed') },
     { label: 'YTD vs Plan', value: (ytdGap < 0 ? '−' : '+') + fmtMoney(Math.abs(ytdGap)), sub: 'Plan YTD: ' + fmtMoney(ytdPlan), trend: ytdGap < 0 ? 'negative' : 'positive' },
     { label: 'YTD vs Forecast', value: monthsWithSchedule ? ((ytdVarianceVsForecast >= 0 ? '+' : '−') + fmtMoney(Math.abs(ytdVarianceVsForecast))) : '—', sub: monthsWithSchedule ? ('Lisa\'s forecast YTD: ' + fmtMoney(ytdForecast)) : 'No monthly schedules uploaded yet', trend: ytdVarianceVsForecast >= 0 ? 'positive' : 'negative' },
     { label: 'Plan-Rest Forecast', value: fmtMoney(planRestForecast), sub: 'YTD actual + remaining-month plan' },
@@ -810,7 +810,7 @@ function emptyShape(reason) {
     runDate: new Date().toISOString().slice(0, 10),
     methodologyLock: { version: MF_VERSION, lockedOn: '2026-05-04', items: [] },
     kpis: [
-      { label: 'Revenue Invoiced YTD', value: '$0', sub: reason },
+      { label: 'Invoiced YTD', value: '$0', sub: reason },
       { label: 'Annual Budget', value: '$51.67M', sub: '2026 multi-family target' },
       { label: 'Forecast vs Budget', value: '−$51.67M', sub: 'Awaiting first upload' },
       { label: 'WIP Balance', value: '$0', sub: 'No jobs reported yet' }

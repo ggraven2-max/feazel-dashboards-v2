@@ -1,8 +1,8 @@
-/* AUTO-GENERATED — do not edit. Generated 2026-05-04T16:36:30.949Z (multi-family) */
+/* AUTO-GENERATED — do not edit. Generated 2026-05-04T16:55:08.845Z (multi-family) */
 window.FZ = window.FZ || {};
 window.FZ.data = {
   "_meta": {
-    "builtAt": "2026-05-04T16:36:30.949Z",
+    "builtAt": "2026-05-04T16:55:08.845Z",
     "pipelineVersion": "2.0.0",
     "lob": "multi-family",
     "lastBuiltProjects": [
@@ -15,26 +15,26 @@ window.FZ.data = {
       {
         "id": "sales-overview",
         "version": "1.0-rules-encoded",
-        "elapsedMs": 14,
-        "builtAt": "2026-05-04T16:36:30.949Z"
+        "elapsedMs": 13,
+        "builtAt": "2026-05-04T16:55:08.845Z"
       },
       {
         "id": "revenue-forecast",
         "version": "V5-locked-2026-04-19-shell-1.0",
-        "elapsedMs": 117,
-        "builtAt": "2026-05-04T16:36:30.949Z"
+        "elapsedMs": 127,
+        "builtAt": "2026-05-04T16:55:08.845Z"
       },
       {
         "id": "backlog",
         "version": "1.0-rules-encoded",
-        "elapsedMs": 17,
-        "builtAt": "2026-05-04T16:36:30.949Z"
+        "elapsedMs": 19,
+        "builtAt": "2026-05-04T16:55:08.845Z"
       },
       {
         "id": "installs-ytd",
         "version": "1.0-rules-encoded",
         "elapsedMs": 13,
-        "builtAt": "2026-05-04T16:36:30.949Z"
+        "builtAt": "2026-05-04T16:55:08.845Z"
       }
     ]
   },
@@ -1521,7 +1521,7 @@ window.FZ.data = {
     },
     "kpis": [
       {
-        "label": "Revenue Invoiced YTD",
+        "label": "Invoiced YTD",
         "value": "$9.09M",
         "sub": "5 months elapsed"
       },
@@ -2847,7 +2847,7 @@ window.FZ.data = {
       "totalWOs": 319,
       "portfolioValue": 21227684.31,
       "avgDaysInStatus": 45,
-      "lastBuild": "2026-05-04T16:36:30.935Z"
+      "lastBuild": "2026-05-04T16:55:08.831Z"
     },
     "tabs": [
       {
@@ -4070,7 +4070,7 @@ window.FZ.data = {
       "multiTradeJobs": 10,
       "singleTradeJobs": 90,
       "multiTradePct": 10,
-      "lastBuild": "2026-05-04T16:36:30.949Z"
+      "lastBuild": "2026-05-04T16:55:08.845Z"
     },
     "tabs": [
       {
