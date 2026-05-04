@@ -15,12 +15,19 @@
 const fs = require('fs');
 const path = require('path');
 const io = require('./lib/io');
+const Papa = require('papaparse');
 
 const PROJECT_ID = 'revenue-forecast';
-const MF_VERSION = 'MF-v1-2026-05-04';
+const MF_VERSION = 'MF-v1.1-2026-05-04';   // v1.1 adds monthly-schedule parsing
 const FY = 2026;
 const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 const MONTHS_LONG = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+// Branch names that may appear as section headers in the monthly schedule CSVs
+const KNOWN_BRANCHES = new Set([
+  'cincinnati','cleveland','columbus','detroit','dc','dc metro','nashville','raleigh',
+  'indianapolis','knoxville','charlotte','grand rapids','greenville','dayton','richmond','memphis'
+]);
 
 // ---------- formatting helpers ----------
 function fmtMoney(v, opts) {
@@ -99,6 +106,115 @@ function findFiles(inputDir) {
   return out;
 }
 
+// Find every CSV in the monthly-schedules/ subfolder (Lisa's curated forecasts)
+function findScheduleFiles(inputDir) {
+  const dir = path.join(inputDir, 'monthly-schedules');
+  if (!fs.existsSync(dir)) return [];
+  return fs.readdirSync(dir)
+    .filter(f => /\.csv$/i.test(f))
+    .map(name => ({ name: name, fullPath: path.join(dir, name) }));
+}
+
+// Parse one of Lisa's monthly schedule CSVs.
+// Format:
+//   Row 1: "Jobs to be completed [Month] [Year]"
+//   Section 1: branch-grouped list of "Completing" jobs
+//   "Total invoice" row marks the end of section 1
+//   Section 2: "Jobs that will be in progress" — WIP rollover
+//   "New jobs that will be in progress" subsection: newly starting WIP
+//   "Total WIP" row marks the end
+function parseSchedule(filePath) {
+  const csv = fs.readFileSync(filePath, 'utf8');
+  const rows = Papa.parse(csv, { skipEmptyLines: false }).data;
+
+  const titleStr = ((rows[0] || [])[0] || '').toString();
+  const monthMatch = titleStr.match(/(January|February|March|April|May|June|July|August|September|October|November|December)\s+(\d{4})/i);
+  const monthName = monthMatch ? monthMatch[1] : null;
+  const year = monthMatch ? parseInt(monthMatch[2], 10) : null;
+  const monthIdx = monthName ? MONTHS_LONG.findIndex(m => m.toLowerCase() === monthName.toLowerCase()) : -1;
+
+  const completing = [];
+  const wipRollover = [];
+  const wipNew = [];
+  let currentBranch = null;
+  let inSection = 1;   // 1=completing, 2=wip rollover, 3=new wip
+
+  for (let i = 1; i < rows.length; i++) {
+    const row = rows[i] || [];
+    if (row.every(c => !c || !c.toString().trim())) continue;
+    const col0 = (row[0] || '').toString().trim();
+    const col2 = (row[2] || '').toString().trim();
+    const col6 = (row[6] || '').toString().trim();
+    const col7 = (row[7] || '').toString().trim();
+
+    if (col0.toLowerCase().startsWith('jobs that will continue') || col0.toLowerCase() === 'jobs that will be in progress') {
+      inSection = 2; currentBranch = null; continue;
+    }
+    if (col0.toLowerCase().startsWith('new jobs that will be in progress')) {
+      inSection = 3; continue;
+    }
+    if (col0.toLowerCase().startsWith('total invoice') || col0.toLowerCase().startsWith('total wip') || col0.toLowerCase().startsWith('montly average') || col0.toLowerCase().startsWith('monthly average')) {
+      currentBranch = null; continue;
+    }
+    // Skip section 2 column-header row
+    if (col6.toLowerCase() === 'status' && col7.toLowerCase().startsWith('% complete')) continue;
+
+    if (inSection === 1 && col0 && KNOWN_BRANCHES.has(col0.toLowerCase())) {
+      currentBranch = col0;
+      continue;
+    }
+
+    if (inSection === 1 && col0 && col2 && currentBranch) {
+      const amount = parseNumber(col2);
+      if (amount > 0) {
+        completing.push({
+          branch: currentBranch,
+          name: col0,
+          amount: amount,
+          jobNumber: row[3] || null,
+          nsContract: row[4] || null,
+          status: col6 || null,
+          gm: parseFloat(row[7]) || null
+        });
+      }
+      continue;
+    }
+
+    if ((inSection === 2 || inSection === 3) && col0 && col2) {
+      const amount = parseNumber(col2);
+      if (amount > 0) {
+        const target = inSection === 2 ? wipRollover : wipNew;
+        target.push({
+          name: col0,
+          contractAmount: amount,
+          jobNumber: row[3] || null,
+          nsContract: row[4] || null,
+          status: col6 || null,
+          statusDetail: row[7] || null,
+          pctComplete: row[8] || '',
+          anticipated: row[9] || '',
+          gm: parseFloat(row[10]) || null
+        });
+      }
+    }
+  }
+
+  const completingTotal = completing.reduce((s, j) => s + j.amount, 0);
+  const wipRolloverTotal = wipRollover.reduce((s, j) => s + j.contractAmount, 0);
+  const wipNewTotal = wipNew.reduce((s, j) => s + j.contractAmount, 0);
+
+  // Branch breakdown of completing jobs
+  const byBranch = {};
+  completing.forEach(j => { byBranch[j.branch] = (byBranch[j.branch] || 0) + j.amount; });
+
+  return {
+    monthName, year, monthIdx,
+    completing, wipRollover, wipNew,
+    completingTotal, wipRolloverTotal, wipNewTotal,
+    byBranch
+  };
+}
+
 function readSheet(file) {
   const wb = io.readXlsx(file.fullPath);
   if (Array.isArray(wb)) return wb;
@@ -157,15 +273,36 @@ function run(opts) {
   const snapshotPath = opts.snapshotPath;
 
   const files = findFiles(inputDir);
+  const scheduleFiles = findScheduleFiles(inputDir);
   console.log('  [mf-revenue] file scan:');
   console.log('    forecast      : ' + (files.forecast ? files.forecast.name : 'MISSING'));
   console.log('    budget        : ' + (files.budget ? files.budget.name : 'MISSING'));
   console.log('    contracts     : ' + (files.contracts ? files.contracts.name : 'optional, missing'));
   console.log('    profitability : ' + (files.profitability ? files.profitability.name : 'optional, missing'));
+  console.log('    schedules     : ' + scheduleFiles.length + ' (Lisa\'s monthly forecast CSVs)');
+  scheduleFiles.forEach(f => console.log('       · ' + f.name));
 
   if (!files.forecast) {
     return emptyShape('Commercial Forecasting Report missing. Drop it in inputs/multi-family/revenue-forecast/');
   }
+
+  // ---- monthly schedules (forecasted revenue + WIP per month) ----
+  const schedules = {};   // monthIdx → parsed schedule
+  scheduleFiles.forEach(f => {
+    try {
+      const s = parseSchedule(f.fullPath);
+      if (s.monthIdx >= 0 && s.year === FY) {
+        schedules[s.monthIdx] = s;
+        console.log('    parsed ' + f.name + ': ' + s.monthName + ' invoice $' + Math.round(s.completingTotal).toLocaleString() +
+          ', WIP rollover $' + Math.round(s.wipRolloverTotal).toLocaleString() +
+          (s.wipNewTotal ? ', new WIP $' + Math.round(s.wipNewTotal).toLocaleString() : ''));
+      } else {
+        console.log('    skip ' + f.name + ': month=' + s.monthName + ' year=' + s.year + ' (need FY' + FY + ')');
+      }
+    } catch (err) {
+      console.log('    skip ' + f.name + ': parse error ' + err.message);
+    }
+  });
 
   // ---- budget ----
   const budget = files.budget ? parseBudget(files.budget) : null;
@@ -211,21 +348,34 @@ function run(opts) {
   });
 
   // ---- monthly aggregation across FY ----
-  const monthly = MONTHS.map((label, idx) => ({
-    key: FY + '-' + String(idx + 1).padStart(2, '0'),
-    label: label,
-    longLabel: MONTHS_LONG[idx],
-    monthIdx: idx,
-    revenue: 0,
-    starts: 0,
-    wipEnd: 0,           // computed below
-    completedCount: 0,
-    startedCount: 0,
-    invoicedCount: 0,
-    completingJobs: [],
-    startingJobs: [],
-    budget: monthlyBudget[idx]
-  }));
+  const monthly = MONTHS.map((label, idx) => {
+    const sched = schedules[idx];
+    return {
+      key: FY + '-' + String(idx + 1).padStart(2, '0'),
+      label: label,
+      longLabel: MONTHS_LONG[idx],
+      monthIdx: idx,
+      // ACTUAL (from Salesforce dates)
+      revenue: 0,
+      starts: 0,
+      wipEnd: 0,
+      completedCount: 0,
+      startedCount: 0,
+      invoicedCount: 0,
+      completingJobs: [],
+      startingJobs: [],
+      // PLAN (from Commercial Budget XLSX)
+      budget: monthlyBudget[idx],
+      // FORECAST (from Lisa's monthly schedule CSVs)
+      forecastRevenue: sched ? sched.completingTotal : 0,
+      forecastWipRollover: sched ? sched.wipRolloverTotal : 0,
+      forecastWipNew: sched ? sched.wipNewTotal : 0,
+      forecastJobs: sched ? sched.completing.length : 0,
+      forecastByBranch: sched ? sched.byBranch : {},
+      hasSchedule: !!sched,
+      schedule: sched || null
+    };
+  });
 
   // Per-job: classify into the correct month bucket(s)
   jobs.forEach(j => {
@@ -320,12 +470,29 @@ function run(opts) {
   const lastMonthIdx = todayMonthIdx >= 1 ? todayMonthIdx - 1 : (todayMonthIdx === 0 ? 0 : 11);
   const lastMonth = monthly[lastMonthIdx];
 
+  // ---- forecast aggregates (Lisa's schedules) ----
+  const monthsWithSchedule = monthly.filter(m => m.hasSchedule).length;
+  const ytdForecast = monthly.slice(0, monthsElapsed).reduce((s, m) => s + m.forecastRevenue, 0);
+  const annualForecastFromSchedules = monthly.reduce((s, m) => s + m.forecastRevenue, 0);
+  const ytdVarianceVsForecast = annualRevenue - ytdForecast;
+  // Variance per month (only when schedule + actual both exist)
+  const monthlyVariance = monthly.map(m => ({
+    label: m.label,
+    longLabel: m.longLabel,
+    forecast: m.forecastRevenue,
+    actual: m.revenue,
+    variance: m.revenue - m.forecastRevenue,
+    variancePct: m.forecastRevenue > 0 ? ((m.revenue - m.forecastRevenue) / m.forecastRevenue) : null,
+    hasSchedule: m.hasSchedule
+  }));
+
+  // ---- KPIs ----
   const kpis = [
     { label: 'Revenue Invoiced YTD', value: fmtMoney(annualRevenue), sub: monthsElapsed + (monthsElapsed === 1 ? ' month elapsed' : ' months elapsed') },
     { label: 'YTD vs Plan', value: (ytdGap < 0 ? '−' : '+') + fmtMoney(Math.abs(ytdGap)), sub: 'Plan YTD: ' + fmtMoney(ytdPlan), trend: ytdGap < 0 ? 'negative' : 'positive' },
+    { label: 'YTD vs Forecast', value: monthsWithSchedule ? ((ytdVarianceVsForecast >= 0 ? '+' : '−') + fmtMoney(Math.abs(ytdVarianceVsForecast))) : '—', sub: monthsWithSchedule ? ('Lisa\'s forecast YTD: ' + fmtMoney(ytdForecast)) : 'No monthly schedules uploaded yet', trend: ytdVarianceVsForecast >= 0 ? 'positive' : 'negative' },
     { label: 'Plan-Rest Forecast', value: fmtMoney(planRestForecast), sub: 'YTD actual + remaining-month plan' },
-    { label: 'Naive Pace (×12)', value: fmtMoney(annualPace), sub: 'YTD ÷ months × 12 (sensitive to lumpy months)' },
-    { label: 'Annual Budget', value: fmtMoney(annualBudget), sub: '2026 MF target (Total cell)' },
+    { label: 'Annual Budget', value: fmtMoney(annualBudget), sub: '2026 MF target' },
     { label: 'Forecast vs Budget', value: (gapToBudget < 0 ? '−' : '+') + fmtMoney(Math.abs(gapToBudget)), sub: gapToBudget < 0 ? pct(upliftNeeded) + ' uplift needed' : 'ahead of plan', trend: gapToBudget < 0 ? 'negative' : 'positive' },
     { label: 'Current WIP', value: fmtMoney(inWipValue), sub: inWip.length + ' jobs in flight today' },
     { label: 'Last Month Revenue', value: fmtMoney(lastMonth.revenue), sub: lastMonth.longLabel + ' ' + FY }
@@ -335,22 +502,40 @@ function run(opts) {
   const monthsLabel = monthly.map(m => m.label);
   const revData = monthly.map(m => m.revenue);
   const planData = monthly.map(m => m.budget);
+  const forecastData = monthly.map(m => m.forecastRevenue);
   const wipEndData = monthly.map(m => m.wipEnd);
   const startData = monthly.map(m => m.starts);
 
   const charts = [
     {
-      id: 'mf-rev-vs-plan',
-      title: 'Monthly Revenue vs Plan',
-      sub: 'Invoiced revenue per month against the Commercial Budget',
+      id: 'mf-rev-vs-plan-vs-forecast',
+      title: 'Monthly Revenue: Forecast vs Actual vs Plan',
+      sub: 'Forecast = Lisa\'s monthly schedule. Actual = Salesforce invoiced dates. Plan = Commercial Budget.',
       config: {
         type: 'bar',
         data: {
           labels: monthsLabel,
           datasets: [
-            { label: 'Invoiced', data: revData, backgroundColor: '#5e82bc' },
+            { label: 'Forecast', data: forecastData, backgroundColor: '#7895c4' },
+            { label: 'Actual',   data: revData,      backgroundColor: '#1f2d4b' },
             { label: 'Plan',     data: planData, type: 'line', borderColor: '#b23a2c', borderDash: [6, 4], backgroundColor: 'transparent', pointRadius: 2 }
           ]
+        }
+      }
+    },
+    {
+      id: 'mf-variance',
+      title: 'Forecast Variance per Month',
+      sub: 'Actual − Forecast. Positive = overperformed Lisa\'s schedule, negative = underperformed.',
+      config: {
+        type: 'bar',
+        data: {
+          labels: monthsLabel,
+          datasets: [{
+            label: 'Variance',
+            data: monthlyVariance.map(v => v.hasSchedule ? v.variance : 0),
+            backgroundColor: monthlyVariance.map(v => v.hasSchedule ? (v.variance >= 0 ? '#2e7d55' : '#b23a2c') : '#e3e6ec')
+          }]
         }
       }
     },
@@ -428,6 +613,71 @@ function run(opts) {
       .sort((a, b) => b.amount - a.amount)
       .slice(0, 50)
       .map(j => [j.jobNumber || '—', j.account || '—', j.branch, fmtMoney(j.amount), j.startedOn ? (j.startedOn.toISOString().slice(0, 10)) : ''])
+  };
+
+  // Forecast-vs-actual variance table (per month)
+  const varianceTable = {
+    id: 'mf-variance',
+    title: 'Forecast vs Actual (per month)',
+    headers: ['Month',
+      { label: 'Forecast', num: true },
+      { label: 'Actual', num: true },
+      { label: 'Variance', num: true },
+      { label: 'Variance %', num: true }],
+    rows: monthlyVariance.map(v => [
+      v.longLabel,
+      v.hasSchedule ? fmtMoney(v.forecast) : '—',
+      fmtMoney(v.actual),
+      v.hasSchedule ? ((v.variance >= 0 ? '+' : '') + fmtMoney(v.variance)) : '—',
+      v.hasSchedule && v.variancePct !== null ? ((v.variancePct >= 0 ? '+' : '') + (v.variancePct * 100).toFixed(0) + '%') : '—'
+    ])
+  };
+
+  // Forecasted WIP roll-forward (jobs Lisa expects to keep in WIP next month)
+  const wipScheduleRows = [];
+  monthly.forEach(m => {
+    if (!m.schedule) return;
+    m.schedule.wipRollover.forEach(j => {
+      wipScheduleRows.push([m.longLabel, j.name, fmtMoney(j.contractAmount), j.pctComplete || '—', j.anticipated || '—', j.gm ? j.gm + '%' : '—']);
+    });
+    m.schedule.wipNew.forEach(j => {
+      wipScheduleRows.push([m.longLabel + ' (new)', j.name, fmtMoney(j.contractAmount), j.pctComplete || '—', j.anticipated || '—', j.gm ? j.gm + '%' : '—']);
+    });
+  });
+  const wipScheduleTable = {
+    id: 'mf-wip-schedule',
+    title: 'Forecasted WIP Schedule (from Lisa\'s monthly forecasts)',
+    headers: ['Month', 'Job', { label: 'Contract', num: true }, '% Complete by EOM', 'Anticipated Completion', 'Est. GM'],
+    rows: wipScheduleRows
+  };
+
+  // Per-branch forecast detail (jobs scheduled per branch per month)
+  const branchForecastRows = [];
+  monthly.forEach(m => {
+    if (!m.schedule) return;
+    Object.entries(m.schedule.byBranch)
+      .sort((a, b) => b[1] - a[1])
+      .forEach(([branch, total]) => {
+        const jobsForBranch = m.schedule.completing.filter(j => j.branch === branch);
+        const avgGm = (function () {
+          const withGm = jobsForBranch.filter(j => j.gm);
+          if (!withGm.length) return null;
+          return withGm.reduce((s, j) => s + j.gm, 0) / withGm.length;
+        })();
+        branchForecastRows.push([
+          m.longLabel,
+          branch,
+          fmtMoney(total),
+          jobsForBranch.length,
+          avgGm ? avgGm.toFixed(1) + '%' : '—'
+        ]);
+      });
+  });
+  const branchForecastTable = {
+    id: 'mf-branch-forecast',
+    title: 'Forecasted Revenue by Branch (per month)',
+    headers: ['Month', 'Branch', { label: 'Forecast', num: true }, { label: '# Jobs', num: true }, 'Avg GM'],
+    rows: branchForecastRows
   };
 
   // ---- final shape ----
@@ -510,7 +760,7 @@ function run(opts) {
       ],
       strategyHighlights: []
     },
-    tables: [monthlyTable, branchTable, jobTypeTable, wipJobsTable],
+    tables: [monthlyTable, varianceTable, branchForecastTable, wipScheduleTable, branchTable, jobTypeTable, wipJobsTable],
     charts: charts,
     monthsLabel: monthsLabel,
     budgetInv: planData,

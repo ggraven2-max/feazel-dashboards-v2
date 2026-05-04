@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "builtAt": "2026-05-04T14:44:20.857Z",
+    "builtAt": "2026-05-04T15:15:23.747Z",
     "pipelineVersion": "2.0.0",
     "lob": "multi-family",
     "lastBuiltProjects": [
@@ -13,26 +13,26 @@
       {
         "id": "sales-overview",
         "version": "1.0-rules-encoded",
-        "elapsedMs": 14,
-        "builtAt": "2026-05-04T14:44:20.857Z"
+        "elapsedMs": 15,
+        "builtAt": "2026-05-04T15:15:23.747Z"
       },
       {
         "id": "revenue-forecast",
         "version": "V5-locked-2026-04-19-shell-1.0",
-        "elapsedMs": 124,
-        "builtAt": "2026-05-04T14:44:20.857Z"
+        "elapsedMs": 123,
+        "builtAt": "2026-05-04T15:15:23.747Z"
       },
       {
         "id": "backlog",
         "version": "1.0-rules-encoded",
-        "elapsedMs": 20,
-        "builtAt": "2026-05-04T14:44:20.857Z"
+        "elapsedMs": 19,
+        "builtAt": "2026-05-04T15:15:23.747Z"
       },
       {
         "id": "installs-ytd",
         "version": "1.0-rules-encoded",
-        "elapsedMs": 16,
-        "builtAt": "2026-05-04T14:44:20.857Z"
+        "elapsedMs": 14,
+        "builtAt": "2026-05-04T15:15:23.747Z"
       }
     ]
   },
@@ -1503,12 +1503,12 @@
     }
   },
   "REVENUE_FORECAST": {
-    "_source": "calculator/revenue-forecast-mf.js MF-v1-2026-05-04",
+    "_source": "calculator/revenue-forecast-mf.js MF-v1.1-2026-05-04",
     "title": "Multi-Family Revenue Forecast",
     "subtitle": "MF-v1 · Job-by-job event model · Data through 2026-05-04",
     "runDate": "2026-05-04",
     "methodologyLock": {
-      "version": "MF-v1-2026-05-04",
+      "version": "MF-v1.1-2026-05-04",
       "lockedOn": "2026-05-04",
       "items": [
         "Annual budget $51.67M (sourced from Commercial Budget XLSX)",
@@ -1530,19 +1530,20 @@
         "trend": "positive"
       },
       {
+        "label": "YTD vs Forecast",
+        "value": "+$41.68M",
+        "sub": "Lisa's forecast YTD: $10.36M",
+        "trend": "positive"
+      },
+      {
         "label": "Plan-Rest Forecast",
         "value": "$87.92M",
         "sub": "YTD actual + remaining-month plan"
       },
       {
-        "label": "Naive Pace (×12)",
-        "value": "$124.89M",
-        "sub": "YTD ÷ months × 12 (sensitive to lumpy months)"
-      },
-      {
         "label": "Annual Budget",
         "value": "$51.67M",
-        "sub": "2026 MF target (Total cell)"
+        "sub": "2026 MF target"
       },
       {
         "label": "Forecast vs Budget",
@@ -1886,6 +1887,360 @@
             "$65.9M",
             0,
             0
+          ]
+        ]
+      },
+      {
+        "id": "mf-variance",
+        "title": "Forecast vs Actual (per month)",
+        "headers": [
+          "Month",
+          {
+            "label": "Forecast",
+            "num": true
+          },
+          {
+            "label": "Actual",
+            "num": true
+          },
+          {
+            "label": "Variance",
+            "num": true
+          },
+          {
+            "label": "Variance %",
+            "num": true
+          }
+        ],
+        "rows": [
+          [
+            "January",
+            "—",
+            "$994K",
+            "—",
+            "—"
+          ],
+          [
+            "February",
+            "—",
+            "$475K",
+            "—",
+            "—"
+          ],
+          [
+            "March",
+            "—",
+            "$15.27M",
+            "—",
+            "—"
+          ],
+          [
+            "April",
+            "$4.93M",
+            "$34.57M",
+            "+$29.64M",
+            "+601%"
+          ],
+          [
+            "May",
+            "$5.42M",
+            "$733K",
+            "$-4.69M",
+            "-86%"
+          ],
+          [
+            "June",
+            "—",
+            "$0",
+            "—",
+            "—"
+          ],
+          [
+            "July",
+            "—",
+            "$0",
+            "—",
+            "—"
+          ],
+          [
+            "August",
+            "—",
+            "$0",
+            "—",
+            "—"
+          ],
+          [
+            "September",
+            "—",
+            "$0",
+            "—",
+            "—"
+          ],
+          [
+            "October",
+            "—",
+            "$0",
+            "—",
+            "—"
+          ],
+          [
+            "November",
+            "—",
+            "$0",
+            "—",
+            "—"
+          ],
+          [
+            "December",
+            "—",
+            "$0",
+            "—",
+            "—"
+          ]
+        ]
+      },
+      {
+        "id": "mf-branch-forecast",
+        "title": "Forecasted Revenue by Branch (per month)",
+        "headers": [
+          "Month",
+          "Branch",
+          {
+            "label": "Forecast",
+            "num": true
+          },
+          {
+            "label": "# Jobs",
+            "num": true
+          },
+          "Avg GM"
+        ],
+        "rows": [
+          [
+            "April",
+            "Columbus",
+            "$1.77M",
+            5,
+            "33.9%"
+          ],
+          [
+            "April",
+            "Detroit",
+            "$1.4M",
+            6,
+            "27.5%"
+          ],
+          [
+            "April",
+            "Raleigh",
+            "$738K",
+            8,
+            "30.9%"
+          ],
+          [
+            "April",
+            "Cincinnati",
+            "$536K",
+            10,
+            "38.2%"
+          ],
+          [
+            "April",
+            "Cleveland",
+            "$383K",
+            5,
+            "32.6%"
+          ],
+          [
+            "April",
+            "Nashville",
+            "$89K",
+            3,
+            "30.0%"
+          ],
+          [
+            "April",
+            "DC",
+            "$22K",
+            1,
+            "31.0%"
+          ],
+          [
+            "May",
+            "Raleigh",
+            "$1.86M",
+            5,
+            "—"
+          ],
+          [
+            "May",
+            "Detroit",
+            "$1.28M",
+            6,
+            "—"
+          ],
+          [
+            "May",
+            "Columbus",
+            "$969K",
+            7,
+            "—"
+          ],
+          [
+            "May",
+            "Cincinnati",
+            "$657K",
+            10,
+            "—"
+          ],
+          [
+            "May",
+            "Nashville",
+            "$394K",
+            2,
+            "—"
+          ],
+          [
+            "May",
+            "Indianapolis",
+            "$139K",
+            2,
+            "—"
+          ],
+          [
+            "May",
+            "DC",
+            "$93K",
+            4,
+            "—"
+          ],
+          [
+            "May",
+            "Cleveland",
+            "$32K",
+            1,
+            "—"
+          ]
+        ]
+      },
+      {
+        "id": "mf-wip-schedule",
+        "title": "Forecasted WIP Schedule (from Lisa's monthly forecasts)",
+        "headers": [
+          "Month",
+          "Job",
+          {
+            "label": "Contract",
+            "num": true
+          },
+          "% Complete by EOM",
+          "Anticipated Completion",
+          "Est. GM"
+        ],
+        "rows": [
+          [
+            "April",
+            "Woodholme Village",
+            "$3.21M",
+            "25%",
+            "June-26",
+            "32%"
+          ],
+          [
+            "April",
+            "Eagle View",
+            "$1.33M",
+            "20%",
+            "November-26",
+            "32%"
+          ],
+          [
+            "April",
+            "Ashford Place",
+            "$671K",
+            "50%",
+            "May-26",
+            "24%"
+          ],
+          [
+            "April",
+            "Rosebrook Village",
+            "$740K",
+            "90%",
+            "May-26",
+            "28.02%"
+          ],
+          [
+            "April",
+            "One West Fifth",
+            "$527K",
+            "90%",
+            "May-26",
+            "—"
+          ],
+          [
+            "April",
+            "Ivy Hall HOA",
+            "$458K",
+            "33%",
+            "May-26",
+            "25.2%"
+          ],
+          [
+            "April",
+            "Townhomes at Highland Creek",
+            "$624K",
+            "15%",
+            "May-26",
+            "25.7%"
+          ],
+          [
+            "May",
+            "Woodholme Village",
+            "$3.21M",
+            "—",
+            "—",
+            "—"
+          ],
+          [
+            "May",
+            "Eagle View",
+            "$1.33M",
+            "—",
+            "—",
+            "—"
+          ],
+          [
+            "May",
+            "Ashford Place",
+            "$671K",
+            "—",
+            "—",
+            "—"
+          ],
+          [
+            "May",
+            "One West Fifth",
+            "$527K",
+            "—",
+            "—",
+            "—"
+          ],
+          [
+            "May (new)",
+            "Cider Mill Village",
+            "$2.3M",
+            "—",
+            "—",
+            "—"
+          ],
+          [
+            "May (new)",
+            "Northcrest II",
+            "$336K",
+            "—",
+            "—",
+            "—"
           ]
         ]
       },
@@ -2401,9 +2756,9 @@
     ],
     "charts": [
       {
-        "id": "mf-rev-vs-plan",
-        "title": "Monthly Revenue vs Plan",
-        "sub": "Invoiced revenue per month against the Commercial Budget",
+        "id": "mf-rev-vs-plan-vs-forecast",
+        "title": "Monthly Revenue: Forecast vs Actual vs Plan",
+        "sub": "Forecast = Lisa's monthly schedule. Actual = Salesforce invoiced dates. Plan = Commercial Budget.",
         "config": {
           "type": "bar",
           "data": {
@@ -2423,7 +2778,25 @@
             ],
             "datasets": [
               {
-                "label": "Invoiced",
+                "label": "Forecast",
+                "data": [
+                  0,
+                  0,
+                  0,
+                  4931898.45,
+                  5424329.3100000005,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "backgroundColor": "#7895c4"
+              },
+              {
+                "label": "Actual",
                 "data": [
                   993883.87,
                   475065.05,
@@ -2438,7 +2811,7 @@
                   0,
                   0
                 ],
-                "backgroundColor": "#5e82bc"
+                "backgroundColor": "#1f2d4b"
               },
               {
                 "label": "Plan",
@@ -2464,6 +2837,63 @@
                 ],
                 "backgroundColor": "transparent",
                 "pointRadius": 2
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "mf-variance",
+        "title": "Forecast Variance per Month",
+        "sub": "Actual − Forecast. Positive = overperformed Lisa's schedule, negative = underperformed.",
+        "config": {
+          "type": "bar",
+          "data": {
+            "labels": [
+              "Jan",
+              "Feb",
+              "Mar",
+              "Apr",
+              "May",
+              "Jun",
+              "Jul",
+              "Aug",
+              "Sep",
+              "Oct",
+              "Nov",
+              "Dec"
+            ],
+            "datasets": [
+              {
+                "label": "Variance",
+                "data": [
+                  0,
+                  0,
+                  0,
+                  29635300.800000023,
+                  -4691772.91,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                "backgroundColor": [
+                  "#e3e6ec",
+                  "#e3e6ec",
+                  "#e3e6ec",
+                  "#2e7d55",
+                  "#b23a2c",
+                  "#e3e6ec",
+                  "#e3e6ec",
+                  "#e3e6ec",
+                  "#e3e6ec",
+                  "#e3e6ec",
+                  "#e3e6ec",
+                  "#e3e6ec"
+                ]
               }
             ]
           }
@@ -2674,7 +3104,7 @@
       "totalWOs": 319,
       "portfolioValue": 21227684.31,
       "avgDaysInStatus": 45,
-      "lastBuild": "2026-05-04T14:44:20.840Z"
+      "lastBuild": "2026-05-04T15:15:23.732Z"
     },
     "tabs": [
       {
@@ -3897,7 +4327,7 @@
       "multiTradeJobs": 10,
       "singleTradeJobs": 90,
       "multiTradePct": 10,
-      "lastBuild": "2026-05-04T14:44:20.857Z"
+      "lastBuild": "2026-05-04T15:15:23.747Z"
     },
     "tabs": [
       {

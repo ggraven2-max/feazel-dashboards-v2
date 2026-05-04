@@ -106,3 +106,48 @@ When the methodology changes, document the diff in this file and bump `MF_VERSIO
 - Cycle-time analytics (start-to-complete; possible from existing date columns but not yet implemented)
 - WIP aging (how long has each job been in WIP)
 - Pipeline of contracts signed but not yet started
+
+---
+
+## Monthly schedule format (Lisa's job-level forecasts)
+
+In addition to the Salesforce reports above, **Lisa (VP Commercial Ops)** maintains a job-level monthly forecast as a Google Sheet, exported as CSV and dropped into:
+
+```
+inputs/multi-family/revenue-forecast/monthly-schedules/
+```
+
+Filename convention: `[Month] [YYYY].csv` (e.g., `April 2026.csv`, `May 2026.csv`). One file per month. Old months stay in the folder; calculator reads all of them.
+
+### CSV structure
+
+The calculator parses two sections:
+
+**Section 1: "Jobs to be completed [Month] [Year]"**
+Branch-grouped list of every job expected to invoice that month. Branches recognized: Cincinnati, Cleveland, Columbus, Detroit, DC, DC Metro, Nashville, Raleigh, Indianapolis, Knoxville, Charlotte, Grand Rapids, Greenville, Dayton, Richmond, Memphis.
+
+For each branch:
+- Branch name in column 0 (with optional column headers: Contract Amount, Job #, NS Contract, Current Status, Estimated GM, then budget breakdown)
+- One row per job with: Job Name, Contract Amount ($X), Job #, NS Contract, Current Status (Invoiced/In Progress/Not Started/Completed), Estimated GM (%)
+- Branch subtotal row at the end (total $, average GM%)
+
+Section ends with a "Total invoice" row.
+
+**Section 2: "Jobs that will be in progress" (and optionally "New jobs that will be in progress")**
+List of jobs in WIP at month-end with: Job Name, Contract Amount, Job #, NS Contract, Status, Status Detail ("WIP starting in April", "WIP since November 2025", etc.), % Complete by EOM, Anticipated Completion month, Estimated GM.
+
+Section ends with a "Total WIP" row showing both Contract Amount and WIP Amount.
+
+### What the calculator does with these
+
+- **Forecast vs Actual variance** — computes per-month variance between Lisa's schedule (forecast) and Salesforce-derived invoiced revenue (actual). Shown as KPI ("YTD vs Forecast"), as a chart (variance bars), and as a table (per-month).
+- **Forecasted WIP schedule** — surfaces all jobs Lisa flagged as in-WIP-at-month-end with their % complete and anticipated completion month.
+- **Branch-level forecast** — per-month revenue by branch, with average GM% per branch.
+
+The calculator logs a warning if the spreadsheet's "Total invoice" hand-sum disagrees with the calculated branch sum (we caught this in May 2026 — the Total cell forgot to add Indianapolis's $139K).
+
+### Maintenance
+
+- Lisa updates the schedule monthly (or as deal status changes mid-month).
+- Greg pulls the export when running the daily refresh.
+- No naming required for the CSV; just make sure the title row in cell A1 says "Jobs to be completed [Month] [Year]" so the parser can identify the month.
