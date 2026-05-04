@@ -20,7 +20,9 @@ const io = require('./lib/io');
 
 const PROJECT_ID = 'installs-ytd';
 const VERSION = '1.0-rules-encoded';
-const INPUT_DIR = path.join(__dirname, '..', 'inputs', PROJECT_ID);
+// Defaults point at residential. Pipeline overrides via opts.inputDir + opts.snapshotPath per LOB.
+const DEFAULT_INPUT_DIR = path.join(__dirname, '..', 'inputs', 'residential', PROJECT_ID);
+const DEFAULT_SNAPSHOT_PATH = path.join(__dirname, '..', 'redesign', 'residential', 'shared', 'extracted-data.json');
 
 // ────────────────────────────────────────────────────────────
 // Column aliases (RULE-401)
@@ -164,27 +166,30 @@ function groupBy(arr, fn) {
 // ────────────────────────────────────────────────────────────
 // Main entrypoint
 // ────────────────────────────────────────────────────────────
-function run() {
-  const inputs = io.listInputs(INPUT_DIR);
+function run(opts) {
+  opts = opts || {};
+  const inputDir = opts.inputDir || DEFAULT_INPUT_DIR;
+  const snapshotPath = opts.snapshotPath || DEFAULT_SNAPSHOT_PATH;
+  const inputs = io.listInputs(inputDir);
   console.log('  [' + PROJECT_ID + '] inputs found: ' + inputs.length);
   inputs.forEach(f => console.log('    - ' + f.name));
 
   if (inputs.length === 0) {
-    console.log('  [' + PROJECT_ID + '] no inputs, falling back to existing extracted-data.json');
-    return readFromExtracted();
+    console.log('  [' + PROJECT_ID + '] no inputs, falling back to ' + path.relative(path.join(__dirname, '..'), snapshotPath));
+    return readFromExtracted(snapshotPath);
   }
 
   const file = inputs.find(f => /\.(xlsx|xls|csv|tsv)$/i.test(f.name));
   if (!file) {
     console.log('  [' + PROJECT_ID + '] no XLSX/CSV input found, falling back to existing extracted-data.json');
-    return readFromExtracted();
+    return readFromExtracted(snapshotPath);
   }
 
   const raw = readSheet(file);
   if (!raw.length) throw new Error('VAL-401: ' + file.name + ' is empty');
 
   const colMap = resolveColumns(raw[0], file.name);
-  return buildOutput(raw, colMap);
+  return buildOutput(raw, colMap, snapshotPath);
 }
 
 function readSheet(file) {
@@ -212,7 +217,7 @@ function resolveColumns(sampleRow, filename) {
 // ────────────────────────────────────────────────────────────
 // Build the INSTALLS_YTD output shape
 // ────────────────────────────────────────────────────────────
-function buildOutput(raw, c) {
+function buildOutput(raw, c, snapshotPath) {
   // RULE-401 normalize into a uniform row object.
   const rows = raw.map(r => {
     return {
@@ -342,7 +347,7 @@ function buildOutput(raw, c) {
   }
 
   // VAL-404 drift check
-  driftCheck(trueRevenue);
+  driftCheck(trueRevenue, snapshotPath);
 
   // Subtitle (RULE-418)
   const invoiceDates = jobs.map(j => j.invoiced).filter(Boolean).sort((a, b) => a - b);
@@ -956,10 +961,10 @@ function buildCommentary(d) {
 // ────────────────────────────────────────────────────────────
 // Drift check (VAL-404)
 // ────────────────────────────────────────────────────────────
-function driftCheck(currentRev) {
+function driftCheck(currentRev, snapshotPath) {
   if (process.env.FZ_SKIP_DRIFT_CHECK === '1') return;
   try {
-    const prevPath = path.join(__dirname, '..', 'redesign', 'shared', 'extracted-data.json');
+    const prevPath = snapshotPath || DEFAULT_SNAPSHOT_PATH;
     if (!fs.existsSync(prevPath)) return;
     const prev = JSON.parse(fs.readFileSync(prevPath, 'utf8'));
     const prevIY = prev.INSTALLS_YTD;
@@ -980,8 +985,8 @@ function driftCheck(currentRev) {
 // ────────────────────────────────────────────────────────────
 // Fallback when no inputs are dropped (RULE-421)
 // ────────────────────────────────────────────────────────────
-function readFromExtracted() {
-  const extractedPath = path.join(__dirname, '..', 'redesign', 'shared', 'extracted-data.json');
+function readFromExtracted(snapshotPath) {
+  const extractedPath = snapshotPath || DEFAULT_SNAPSHOT_PATH;
   if (!fs.existsSync(extractedPath)) {
     return emptyShape('no extracted-data.json present and no inputs to compute from');
   }

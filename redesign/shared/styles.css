@@ -178,6 +178,35 @@ a:hover { color: var(--feazel-blue-hover); text-decoration: underline; text-unde
   text-transform: uppercase;
   line-height: 1;
 }
+
+/* Line of Business switcher in the sidebar */
+.lob-switch {
+  display: flex;
+  margin: 12px 16px 4px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 8px;
+  padding: 3px;
+  gap: 2px;
+}
+.lob-switch a {
+  flex: 1;
+  text-align: center;
+  padding: 7px 8px;
+  font-size: 11px;
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.04em;
+  color: rgba(255,255,255,0.7);
+  background: transparent;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: all var(--dur-1) var(--ease-out);
+}
+.lob-switch a:hover { color: #fff; background: rgba(255,255,255,0.06); }
+.lob-switch a.is-active {
+  background: var(--feazel-blue);
+  color: #fff;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.16);
+}
 .sidebar-nav { padding: 4px 10px 12px; flex: 1; overflow-y: auto; }
 .sidebar-nav a {
   display: flex;

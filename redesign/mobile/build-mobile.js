@@ -1,56 +1,71 @@
 #!/usr/bin/env node
 /* ============================================================
-   FEAZEL DASHBOARDS — Mobile HTML generator.
-   Walks the page registry (../shared/pages.js) and emits one
-   mobile HTML file per (folder, slug). Each file mirrors the
-   desktop sub-page but loads the mobile shell + CSS instead.
+   FEAZEL DASHBOARDS — Mobile HTML generator (multi-LOB).
+   Walks the page registry and emits one mobile HTML file per
+   (lob, folder, slug). Supports both Residential and Multi-Family
+   line-of-business namespaces.
+
+   Output paths:
+     redesign/mobile/<lob>/index.html               (LOB hub)
+     redesign/mobile/<lob>/<dashboard>/<slug>.html  (sub-pages)
 
    Run from the repo root: node redesign/mobile/build-mobile.js
    ============================================================ */
 const fs = require('fs');
 const path = require('path');
 
-const ROOT = path.resolve(__dirname);                           // redesign/mobile
-const SHARED_REL = '../../shared';                              // → redesign/shared
-const MOBILE_SHARED_REL = '../shared';                          // → redesign/mobile/shared
+const ROOT = path.resolve(__dirname);                       // redesign/mobile
+const LOBS = ['residential', 'multi-family'];
+
+// Path conventions for mobile pages:
+//   - Truly-shared (styles.css, chart-theme.js, page-defs, page-renderer):
+//       sub-page → ../../../shared/<X>     (3 levels up: dashboard → lob → mobile → redesign)
+//       hub     → ../../shared/<X>         (2 levels up: lob → mobile → redesign)
+//   - Mobile-shared (styles-mobile.css, layout-mobile.js):
+//       sub-page → ../../shared/<X>        (2 levels up: dashboard → lob → mobile/shared)
+//       hub     → ../shared/<X>            (1 level up:  lob → mobile/shared)
+//   - LOB data.js (lives at redesign/<lob>/shared/data.js):
+//       sub-page → ../../../<lob>/shared/data.js
+//       hub     → ../../<lob>/shared/data.js
 
 // ---------- Load the page registry by evaling the shared script ----------
 function loadRegistry () {
   const script = fs.readFileSync(path.join(__dirname, '..', 'shared', 'pages.js'), 'utf8');
   const sandbox = { window: {} };
-  // Mimic the browser global so the IIFE inside pages.js attaches to window.FZ
   const fn = new Function('window', script + '\nreturn window.FZ.dashboards;');
   return fn(sandbox.window);
 }
 
 // ---------- HTML template factories ----------
-function subPageHTML (folder, slug, label, dashTitle) {
+
+function subPageHTML (lob, folder, slug, label, dashTitle) {
+  // From redesign/mobile/<lob>/<folder>/<slug>.html
   return `<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>${escape(label)} · ${escape(dashTitle)} · Feazel</title>
-<link rel="stylesheet" href="${SHARED_REL}/styles.css">
-<link rel="stylesheet" href="${MOBILE_SHARED_REL}/styles-mobile.css">
+<link rel="stylesheet" href="../../../shared/styles.css">
+<link rel="stylesheet" href="../../shared/styles-mobile.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='16' fill='%231f2d4b'/><text x='50' y='66' text-anchor='middle' font-family='Arial' font-size='52' font-weight='800' fill='white'>F</text></svg>">
 </head>
-<body>
+<body data-lob="${escape(lob)}">
 
 <div id="app-host"></div>
 <template id="page-tpl"></template>
 
-<!-- Chart.js + shared assets (data, page registry, renderer) + mobile shell -->
+<!-- Chart.js + truly-shared assets + LOB-specific data + mobile shell -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-<script src="${SHARED_REL}/chart-theme.js"></script>
-<script src="${SHARED_REL}/data.js"></script>
-<script src="${SHARED_REL}/pages.js"></script>
-<script src="${MOBILE_SHARED_REL}/layout-mobile.js"></script>
-<script src="${SHARED_REL}/page-renderer.js"></script>
-<script src="${SHARED_REL}/page-defs-${folder}.js"></script>
+<script src="../../../shared/chart-theme.js"></script>
+<script src="../../../${escape(lob)}/shared/data.js"></script>
+<script src="../../../shared/pages.js"></script>
+<script src="../../shared/layout-mobile.js"></script>
+<script src="../../../shared/page-renderer.js"></script>
+<script src="../../../shared/page-defs-${folder}.js"></script>
 
 <script>
-  FZ.renderShell({ folder: ${json(folder)}, slug: ${json(slug)} });
+  FZ.renderShell({ folder: ${json(folder)}, slug: ${json(slug)}, lob: ${json(lob)} });
   if (window.FZ_PAGE_DEFS && window.FZ_PAGE_DEFS[${json(folder)}] && window.FZ_PAGE_DEFS[${json(folder)}][${json(slug)}]) {
     FZ.renderPage(window.FZ_PAGE_DEFS[${json(folder)}][${json(slug)}]);
   } else {
@@ -63,34 +78,51 @@ function subPageHTML (folder, slug, label, dashTitle) {
 `;
 }
 
-// The mobile Command Center hub. Has its own bound layout, mirroring the
-// desktop hub but compressed for phones.
-function commandCenterHTML () {
+// LOB-specific copy for the mobile Command Center hub
+const LOB_COPY = {
+  'residential': {
+    title: 'Command Center',
+    eyebrow: 'FEAZEL ROOFING · COO OFFICE · RESIDENTIAL',
+    intro: 'Where the residential business stands today: signed contracts, the revenue forecast against $125.6M, the open backlog, and what is actually invoicing.',
+    target: '$185M',
+    targetSub: '$125.6M residential'
+  },
+  'multi-family': {
+    title: 'Command Center',
+    eyebrow: 'FEAZEL ROOFING · COO OFFICE · MULTI-FAMILY',
+    intro: 'Where the multi-family and commercial book stands today: signed contracts, revenue projection, open backlog, and invoiced production.',
+    target: '$185M',
+    targetSub: '$59.4M commercial'
+  }
+};
+
+function commandCenterHTML (lob) {
+  const copy = LOB_COPY[lob] || LOB_COPY['residential'];
   return `<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Feazel Command Center · Mobile</title>
-<link rel="stylesheet" href="../shared/styles.css">
-<link rel="stylesheet" href="./shared/styles-mobile.css">
+<title>Feazel ${escape(copy.title)} · ${lob === 'multi-family' ? 'Multi-Family' : 'Residential'} · Mobile</title>
+<link rel="stylesheet" href="../../shared/styles.css">
+<link rel="stylesheet" href="../shared/styles-mobile.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='16' fill='%231f2d4b'/><text x='50' y='66' text-anchor='middle' font-family='Arial' font-size='52' font-weight='800' fill='white'>F</text></svg>">
 </head>
-<body>
+<body data-lob="${escape(lob)}">
 
 <div id="app-host"></div>
 
 <template id="page-tpl">
 
   <section class="hub-hero">
-    <span class="eyebrow">FEAZEL ROOFING · COO OFFICE</span>
-    <h1>Command Center</h1>
-    <p>Where the residential business stands today: signed contracts, the revenue forecast against $125.6M, the open backlog, and what is actually invoicing.</p>
+    <span class="eyebrow">${escape(copy.eyebrow)}</span>
+    <h1>${escape(copy.title)}</h1>
+    <p>${escape(copy.intro)}</p>
     <div class="hub-hero-stats">
       <div class="hub-hero-stat">
         <div class="l">2026 Target</div>
-        <div class="v">$185M</div>
-        <div class="s">$125.6M residential</div>
+        <div class="v">${escape(copy.target)}</div>
+        <div class="s">${escape(copy.targetSub)}</div>
       </div>
       <div class="hub-hero-stat">
         <div class="l">Signed YTD</div>
@@ -138,7 +170,7 @@ function commandCenterHTML () {
       <a class="tile" href="./revenue-forecast/index.html">
         <span class="eyebrow">V5 · 2026 OUTLOOK</span>
         <h2 style="margin-top:2px;">Revenue Forecast</h2>
-        <p>Net invoiced revenue projection vs $125.6M plan.</p>
+        <p>Net invoiced revenue projection vs plan.</p>
         <div class="tile-stats">
           <div class="tile-stat"><div class="l">Forecast</div><div class="v" data-bind="tile.rev.fcst">—</div></div>
           <div class="tile-stat"><div class="l">Budget</div><div class="v" data-bind="tile.rev.budget">—</div></div>
@@ -192,36 +224,15 @@ function commandCenterHTML () {
     </div>
   </section>
 
-  <section class="section">
-    <div class="card">
-      <div class="card-head"><div><h3>Active Markets</h3><span class="caption">13 markets</span></div></div>
-      <div class="grid grid-6" style="gap:6px;">
-        <span class="pill pill-info">Columbus</span>
-        <span class="pill pill-info">Cincinnati</span>
-        <span class="pill pill-info">Cleveland</span>
-        <span class="pill pill-info">Dayton</span>
-        <span class="pill pill-info">Detroit</span>
-        <span class="pill pill-info">Grand Rapids</span>
-        <span class="pill pill-info">Nashville</span>
-        <span class="pill pill-info">Knoxville</span>
-        <span class="pill pill-info">DC Metro</span>
-        <span class="pill pill-info">Richmond</span>
-        <span class="pill pill-info">Raleigh</span>
-        <span class="pill pill-info">Charlotte</span>
-        <span class="pill pill-info">Greenville</span>
-      </div>
-    </div>
-  </section>
-
 </template>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-<script src="../shared/chart-theme.js"></script>
-<script src="../shared/data.js"></script>
-<script src="../shared/pages.js"></script>
-<script src="./shared/layout-mobile.js"></script>
+<script src="../../shared/chart-theme.js"></script>
+<script src="../../${escape(lob)}/shared/data.js"></script>
+<script src="../../shared/pages.js"></script>
+<script src="../shared/layout-mobile.js"></script>
 <script>
-  FZ.renderShell({ atRoot: true });
+  FZ.renderShell({ atRoot: true, lob: ${json(lob)} });
 
   (function bindCommandCenter () {
     var data = window.FZ && window.FZ.data;
@@ -261,9 +272,9 @@ function commandCenterHTML () {
       'hero.invoicedSub': iyRev ? (iyRev.sub || '') : sub(rfInv),
       'hero.backlog':   val(blValue),
       'hero.backlogSub': blValue ? blValue.sub : (BL.headerMeta ? BL.headerMeta.totalJobs + ' jobs' : ''),
-      'rollup.weeklyPace':    val(rfWeekly, '$2.6M'),
-      'rollup.annualForecast':val(rfFcst, '$119M'),
-      'rollup.budget':        val(rfBudget, '$125.6M'),
+      'rollup.weeklyPace':    val(rfWeekly, '—'),
+      'rollup.annualForecast':val(rfFcst, '—'),
+      'rollup.budget':        val(rfBudget, '—'),
       'rollup.gap':           val(rfGap, '—'),
       'tile.sales.signed': val(soSigned),
       'tile.sales.sold':   val(soSold),
@@ -311,33 +322,38 @@ function main () {
     process.exit(1);
   }
 
-  // Ensure mobile/ exists (it should, since this script lives there)
-  const mobileRoot = ROOT;
   let written = 0;
 
-  // 1) Mobile Command Center hub
-  fs.writeFileSync(path.join(mobileRoot, 'index.html'), commandCenterHTML(), 'utf8');
-  written++;
+  LOBS.forEach(function (lob) {
+    const lobRoot = path.join(ROOT, lob);
+    fs.mkdirSync(lobRoot, { recursive: true });
 
-  // 2) Each dashboard's pages
-  dashboards.forEach(function (d) {
-    const folder = d.folder;
-    const dashTitle = d.title;
-    const dashDir = path.join(mobileRoot, folder);
-    fs.mkdirSync(dashDir, { recursive: true });
+    // 1) Mobile Command Center hub for this LOB
+    fs.writeFileSync(path.join(lobRoot, 'index.html'), commandCenterHTML(lob), 'utf8');
+    written++;
 
-    d.pages.forEach(function (p) {
-      const html = subPageHTML(folder, p.slug, p.label, dashTitle);
-      const out = path.join(dashDir, p.slug + '.html');
-      fs.writeFileSync(out, html, 'utf8');
-      written++;
+    // 2) Each dashboard's pages
+    dashboards.forEach(function (d) {
+      const folder = d.folder;
+      const dashTitle = d.title;
+      const dashDir = path.join(lobRoot, folder);
+      fs.mkdirSync(dashDir, { recursive: true });
+
+      d.pages.forEach(function (p) {
+        const html = subPageHTML(lob, folder, p.slug, p.label, dashTitle);
+        const out = path.join(dashDir, p.slug + '.html');
+        fs.writeFileSync(out, html, 'utf8');
+        written++;
+      });
     });
   });
 
-  console.log('✓ Mobile suite generated: ' + written + ' files');
-  console.log('  Hub:        redesign/mobile/index.html');
-  dashboards.forEach(function (d) {
-    console.log('  ' + d.short + ': redesign/mobile/' + d.folder + '/  (' + d.pages.length + ' pages)');
+  console.log('✓ Mobile suite generated: ' + written + ' files (' + LOBS.length + ' LOBs × ~' + (written / LOBS.length) + ' pages)');
+  LOBS.forEach(function (lob) {
+    console.log('  ' + lob + '/');
+    dashboards.forEach(function (d) {
+      console.log('    ' + d.short + ': redesign/mobile/' + lob + '/' + d.folder + '/  (' + d.pages.length + ' pages)');
+    });
   });
 }
 

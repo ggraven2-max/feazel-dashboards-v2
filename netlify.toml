@@ -11,46 +11,151 @@
 [build.environment]
   NODE_VERSION = "20"
 
-# Pretty URLs: /sales-overview/executive instead of /sales-overview/executive.html
+# ---------------------------------------------------------------
+# DEFAULT LANDING: redirect bare URLs to the residential suite.
+# ---------------------------------------------------------------
 [[redirects]]
-  from = "/sales-overview/:slug"
-  to = "/sales-overview/:slug.html"
+  from = "/"
+  to = "/residential/"
+  status = 302
+  force = false
+
+# ---------------------------------------------------------------
+# BACKWARDS COMPATIBILITY: old (pre-LOB) URLs continue to work.
+# Anything that used to be at /sales-overview/ etc now lives under
+# /residential/. The in-flight TestFlight build still references
+# the old paths; these redirects keep it alive until the next iOS build.
+# ---------------------------------------------------------------
+[[redirects]]
+  from = "/sales-overview/*"
+  to = "/residential/sales-overview/:splat"
+  status = 301
+
+[[redirects]]
+  from = "/revenue-forecast/*"
+  to = "/residential/revenue-forecast/:splat"
+  status = 301
+
+[[redirects]]
+  from = "/backlog/*"
+  to = "/residential/backlog/:splat"
+  status = 301
+
+[[redirects]]
+  from = "/installs-ytd/*"
+  to = "/residential/installs-ytd/:splat"
+  status = 301
+
+[[redirects]]
+  from = "/mobile/sales-overview/*"
+  to = "/mobile/residential/sales-overview/:splat"
+  status = 301
+
+[[redirects]]
+  from = "/mobile/revenue-forecast/*"
+  to = "/mobile/residential/revenue-forecast/:splat"
+  status = 301
+
+[[redirects]]
+  from = "/mobile/backlog/*"
+  to = "/mobile/residential/backlog/:splat"
+  status = 301
+
+[[redirects]]
+  from = "/mobile/installs-ytd/*"
+  to = "/mobile/residential/installs-ytd/:splat"
+  status = 301
+
+[[redirects]]
+  from = "/mobile/"
+  to = "/mobile/residential/"
+  status = 302
+  force = false
+
+# ---------------------------------------------------------------
+# DESKTOP suite: pretty URLs per LOB
+# ---------------------------------------------------------------
+[[redirects]]
+  from = "/residential/sales-overview/:slug"
+  to = "/residential/sales-overview/:slug.html"
   status = 200
 
 [[redirects]]
-  from = "/revenue-forecast/:slug"
-  to = "/revenue-forecast/:slug.html"
+  from = "/residential/revenue-forecast/:slug"
+  to = "/residential/revenue-forecast/:slug.html"
   status = 200
 
 [[redirects]]
-  from = "/backlog/:slug"
-  to = "/backlog/:slug.html"
+  from = "/residential/backlog/:slug"
+  to = "/residential/backlog/:slug.html"
   status = 200
 
 [[redirects]]
-  from = "/installs-ytd/:slug"
-  to = "/installs-ytd/:slug.html"
-  status = 200
-
-# Mobile suite pretty URLs (iOS app loads these)
-[[redirects]]
-  from = "/mobile/sales-overview/:slug"
-  to = "/mobile/sales-overview/:slug.html"
+  from = "/residential/installs-ytd/:slug"
+  to = "/residential/installs-ytd/:slug.html"
   status = 200
 
 [[redirects]]
-  from = "/mobile/revenue-forecast/:slug"
-  to = "/mobile/revenue-forecast/:slug.html"
+  from = "/multi-family/sales-overview/:slug"
+  to = "/multi-family/sales-overview/:slug.html"
   status = 200
 
 [[redirects]]
-  from = "/mobile/backlog/:slug"
-  to = "/mobile/backlog/:slug.html"
+  from = "/multi-family/revenue-forecast/:slug"
+  to = "/multi-family/revenue-forecast/:slug.html"
   status = 200
 
 [[redirects]]
-  from = "/mobile/installs-ytd/:slug"
-  to = "/mobile/installs-ytd/:slug.html"
+  from = "/multi-family/backlog/:slug"
+  to = "/multi-family/backlog/:slug.html"
+  status = 200
+
+[[redirects]]
+  from = "/multi-family/installs-ytd/:slug"
+  to = "/multi-family/installs-ytd/:slug.html"
+  status = 200
+
+# ---------------------------------------------------------------
+# MOBILE suite: pretty URLs per LOB
+# ---------------------------------------------------------------
+[[redirects]]
+  from = "/mobile/residential/sales-overview/:slug"
+  to = "/mobile/residential/sales-overview/:slug.html"
+  status = 200
+
+[[redirects]]
+  from = "/mobile/residential/revenue-forecast/:slug"
+  to = "/mobile/residential/revenue-forecast/:slug.html"
+  status = 200
+
+[[redirects]]
+  from = "/mobile/residential/backlog/:slug"
+  to = "/mobile/residential/backlog/:slug.html"
+  status = 200
+
+[[redirects]]
+  from = "/mobile/residential/installs-ytd/:slug"
+  to = "/mobile/residential/installs-ytd/:slug.html"
+  status = 200
+
+[[redirects]]
+  from = "/mobile/multi-family/sales-overview/:slug"
+  to = "/mobile/multi-family/sales-overview/:slug.html"
+  status = 200
+
+[[redirects]]
+  from = "/mobile/multi-family/revenue-forecast/:slug"
+  to = "/mobile/multi-family/revenue-forecast/:slug.html"
+  status = 200
+
+[[redirects]]
+  from = "/mobile/multi-family/backlog/:slug"
+  to = "/mobile/multi-family/backlog/:slug.html"
+  status = 200
+
+[[redirects]]
+  from = "/mobile/multi-family/installs-ytd/:slug"
+  to = "/mobile/multi-family/installs-ytd/:slug.html"
   status = 200
 
 # Security headers

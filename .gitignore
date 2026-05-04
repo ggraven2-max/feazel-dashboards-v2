@@ -43,19 +43,12 @@ yarn-error.*
 # ============================================================
 # Feazel Dashboard pipeline
 # ============================================================
-# Raw uploaded data (DO NOT commit customer data)
-inputs/sales-overview/*.csv
-inputs/sales-overview/*.xlsx
-inputs/sales-overview/*.xls
-inputs/revenue-forecast/*.csv
-inputs/revenue-forecast/*.xlsx
-inputs/revenue-forecast/*.xls
-inputs/backlog/*.csv
-inputs/backlog/*.xlsx
-inputs/backlog/*.xls
-inputs/installs-ytd/*.csv
-inputs/installs-ytd/*.xlsx
-inputs/installs-ytd/*.xls
+# Raw uploaded data (DO NOT commit customer data).
+# Covers LOB-namespaced paths (inputs/residential/<dashboard>/*.xlsx etc).
+inputs/**/*.csv
+inputs/**/*.xlsx
+inputs/**/*.xls
+inputs/**/.DS_Store
 
 # Keep RULES.md and the folder structure
 !inputs/**/RULES.md

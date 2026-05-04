@@ -21,27 +21,48 @@ window.FZ.icons = {
 // Render the entire shell. Call this BEFORE the page's main content script runs.
 window.FZ.renderShell = function (opts) {
   opts = opts || {};
-  var folder = opts.folder || null;     // e.g. 'sales-overview' (null = top hub)
+  var folder = opts.folder || null;     // e.g. 'sales-overview' (null = LOB hub)
   var slug = opts.slug || 'index';      // e.g. 'executive'
-  var atRoot = opts.atRoot === true;    // true if this page is /redesign/index.html
+  var atRoot = opts.atRoot === true;    // true if this page is the LOB hub
+  // Detect Line of Business from URL path. Pages live under /<lob>/<dashboard>/<slug>.html
+  // or /<lob>/index.html. Default to 'residential' for backwards compat.
+  var lob = opts.lob || (function () {
+    var match = window.location.pathname.match(/\/(residential|multi-family)\//);
+    return match ? match[1] : 'residential';
+  })();
   var dashboards = window.FZ.dashboards;
 
-  // Path prefix to /redesign/ root from this page
+  // Path prefix to LOB root from this page
   var prefix = atRoot ? './' : '../';
-  var sharedPrefix = atRoot ? './shared/' : '../shared/';
-  var assetsPrefix = atRoot ? './assets/' : '../assets/';
+  // Truly-shared assets live one level above the LOB root
+  var sharedPrefix = atRoot ? '../shared/' : '../../shared/';
+  var assetsPrefix = atRoot ? '../assets/' : '../../assets/';
+  // Sibling LOB: same path with the other LOB swapped in
+  var otherLob = (lob === 'residential') ? 'multi-family' : 'residential';
+  var lobSwitchPrefix = atRoot ? ('../' + otherLob + '/') : ('../../' + otherLob + '/');
 
   var current = (folder && slug !== 'index') ? window.FZ.findPage(folder, slug) : null;
   var currentDashboard = folder ? window.FZ.findDashboard(folder) : null;
 
   // ---- SIDEBAR ----
+  var lobLabel = (lob === 'multi-family') ? 'Multi-Family' : 'Residential';
+  var otherLobLabel = (lob === 'multi-family') ? 'Residential' : 'Multi-Family';
+  // Compute the other-LOB target URL for the same dashboard + slug
+  var otherLobUrl = lobSwitchPrefix + 'index.html';
+  if (folder) {
+    otherLobUrl = lobSwitchPrefix + folder + '/' + (slug === 'index' ? 'index.html' : slug + '.html');
+  }
   var sidebarHTML = ''
     + '<aside class="sidebar">'
     +   '<div class="sidebar-brand">'
     +     '<img src="' + assetsPrefix + 'feazel-logo-inline-white.svg" alt="Feazel">'
     +     '<div class="sidebar-brand-meta">Executive Dashboards</div>'
     +   '</div>'
-    +   '<div class="sidebar-section">Operations Suite</div>'
+    +   '<div class="lob-switch">'
+    +     '<a href="' + (lob === 'residential' ? '#' : otherLobUrl) + '"' + (lob === 'residential' ? ' class="is-active"' : '') + '>Residential</a>'
+    +     '<a href="' + (lob === 'multi-family' ? '#' : otherLobUrl) + '"' + (lob === 'multi-family' ? ' class="is-active"' : '') + '>Multi-Family</a>'
+    +   '</div>'
+    +   '<div class="sidebar-section">' + lobLabel + ' Suite</div>'
     +   '<nav class="sidebar-nav">'
     +     '<a href="' + prefix + 'index.html"' + (atRoot ? ' class="is-active"' : '') + '>'
     +       '<span class="ic">' + window.FZ.icons['home'] + '</span>'

@@ -33,7 +33,9 @@ const io = require('./lib/io');
 const PROJECT_ID = 'revenue-forecast';
 const VERSION = 'V5-locked-2026-04-19-shell-1.0';
 const REPO_ROOT = path.join(__dirname, '..');
-const INPUT_DIR = path.join(REPO_ROOT, 'inputs', PROJECT_ID);
+// Defaults point at residential. Pipeline overrides via opts.inputDir + opts.snapshotPath per LOB.
+const DEFAULT_INPUT_DIR = path.join(REPO_ROOT, 'inputs', 'residential', PROJECT_ID);
+const DEFAULT_SNAPSHOT_PATH = path.join(REPO_ROOT, 'redesign', 'residential', 'shared', 'extracted-data.json');
 const LIB_DIR = path.join(__dirname, 'lib');
 
 // Python source lives outside the repo (Greg's Forecasting Process folder).
@@ -159,21 +161,24 @@ function runPython(pythonCmd, scriptPath, cwd, extraEnv) {
 // ────────────────────────────────────────────────────────────
 // Main entry
 // ────────────────────────────────────────────────────────────
-function run() {
-  const inputs = io.listInputs(INPUT_DIR);
+function run(opts) {
+  opts = opts || {};
+  const inputDir = opts.inputDir || DEFAULT_INPUT_DIR;
+  const snapshotPath = opts.snapshotPath || DEFAULT_SNAPSHOT_PATH;
+  const inputs = io.listInputs(inputDir);
   console.log('  [' + PROJECT_ID + '] inputs found: ' + inputs.length);
   inputs.forEach(f => console.log('    · ' + f.name));
 
   if (inputs.length === 0) {
-    console.log('  [' + PROJECT_ID + '] no inputs, falling back to existing extracted-data.json');
-    return readFromExtracted();
+    console.log('  [' + PROJECT_ID + '] no inputs, falling back to ' + path.relative(REPO_ROOT, snapshotPath));
+    return readFromExtracted(snapshotPath);
   }
 
   // Classify inputs against the V5 file spec (RULES.md inputs section)
   const cfg = classifyInputs(inputs);
   if (!cfg.forecast_report || !cfg.snp || !cfg.contracts_ytd) {
     console.log('  [' + PROJECT_ID + '] missing one or more required inputs (Forecasting Report, SNP, Contracts Signed). Falling back to extracted-data.json.');
-    return readFromExtracted();
+    return readFromExtracted(snapshotPath);
   }
 
   const sourceDir = findPythonSourceDir();
@@ -184,19 +189,19 @@ function run() {
     console.log('  [' + PROJECT_ID + '] no Residential Budget XLSX uploaded.');
     console.log('    V5 needs a NetSuite Residential Budget export with rows for');
     console.log('    "40001 - Sales", "40003 - Work in Progress", and the 40000 total.');
-    console.log('    Drop one in inputs/revenue-forecast/ and rerun. Falling back to extracted snapshot.');
-    return readFromExtracted();
+    console.log('    Drop one in ' + path.relative(REPO_ROOT, inputDir) + '/ and rerun. Falling back to extracted snapshot.');
+    return readFromExtracted(snapshotPath);
   }
   if (!sourceDir) {
     console.log('  [' + PROJECT_ID + '] V5 Python source folder not reachable. Falling back to extracted-data.json.');
     console.log('    (Set env FEAZEL_FORECAST_SRC to the path containing refresh_v5.py to enable.)');
-    return readFromExtracted();
+    return readFromExtracted(snapshotPath);
   }
 
   const pythonCmd = findPython();
   if (!pythonCmd) {
     console.log('  [' + PROJECT_ID + '] no Python 3 on PATH. Falling back to extracted-data.json.');
-    return readFromExtracted();
+    return readFromExtracted(snapshotPath);
   }
 
   // Stage a work directory: V5 Python source + a forecast_config.json pointing
@@ -282,7 +287,7 @@ function run() {
   } catch (err) {
     console.error('  [' + PROJECT_ID + '] V5 wrapper threw: ' + err.message);
     console.error('    Falling back to extracted-data.json snapshot.');
-    return readFromExtracted();
+    return readFromExtracted(snapshotPath);
   } finally {
     // Cleanup: best-effort, do not block on failures.
     try {
@@ -315,8 +320,8 @@ function buildStub(reason) {
   };
 }
 
-function readFromExtracted() {
-  const extractedPath = path.join(REPO_ROOT, 'redesign', 'shared', 'extracted-data.json');
+function readFromExtracted(snapshotPath) {
+  const extractedPath = snapshotPath || DEFAULT_SNAPSHOT_PATH;
   if (!fs.existsSync(extractedPath)) {
     return buildStub('no extracted snapshot found');
   }

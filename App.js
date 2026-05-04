@@ -1,7 +1,10 @@
 /* ============================================================
-   FEAZEL DASHBOARDS · iOS app
+   FEAZEL DASHBOARDS · iOS app (multi-LOB)
    Lightweight Expo wrapper around the unified web suite.
    Five tabs: Command Center, Sales, Revenue, Backlog, Installs.
+   Top of every screen: segmented control to switch LOB
+   between Residential and Multi-Family.
+
    Each tab renders the matching page from the deployed Netlify
    site inside a WebView with pull-to-refresh and a loading state.
    ============================================================ */
@@ -18,12 +21,9 @@ import {
   Text,
   TouchableOpacity,
 } from 'react-native';
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, createContext, useContext } from 'react';
 
 // === EDIT ME WHEN YOU CONFIRM THE LIVE URL =========================
-// Netlify domain for the unified suite. The iOS app loads the mobile
-// variant at /mobile/, which is built phone-first. The desktop suite
-// remains at root for browser users.
 const SITE = 'https://feazel-command-center.netlify.app';
 const MOBILE_BASE = `${SITE}/mobile`;
 // ===================================================================
@@ -37,6 +37,12 @@ const FG_LIGHT = '#a9b3c8';
 
 const Tab = createBottomTabNavigator();
 
+// Shared LOB state across all tabs. Toggle in any screen, every tab updates.
+const LobContext = createContext({
+  lob: 'residential',
+  setLob: () => {},
+});
+
 // Lightweight inline icons. Unicode glyphs keep the bundle small and remove
 // the need for react-native-svg or vector-icons.
 function Icon({ name, color, size = 22 }) {
@@ -45,7 +51,7 @@ function Icon({ name, color, size = 22 }) {
     home: '⌂',     // house
     sales: '↗',    // up-right arrow
     rev: '▲',      // up triangle
-    backlog: '☰',  // trigram (stacked layers feel)
+    backlog: '☰',  // trigram
     inst: '✓',     // check
   }[name] || '•';
   return (
@@ -55,11 +61,39 @@ function Icon({ name, color, size = 22 }) {
   );
 }
 
+// Segmented control rendered above each WebView. State lifted via context.
+function LobSwitch() {
+  const { lob, setLob } = useContext(LobContext);
+  return (
+    <View style={styles.lobSwitchWrap}>
+      <TouchableOpacity
+        style={[styles.lobBtn, lob === 'residential' && styles.lobBtnActive]}
+        onPress={() => setLob('residential')}
+        activeOpacity={0.7}
+      >
+        <Text style={[styles.lobBtnTxt, lob === 'residential' && styles.lobBtnTxtActive]}>
+          Residential
+        </Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={[styles.lobBtn, lob === 'multi-family' && styles.lobBtnActive]}
+        onPress={() => setLob('multi-family')}
+        activeOpacity={0.7}
+      >
+        <Text style={[styles.lobBtnTxt, lob === 'multi-family' && styles.lobBtnTxtActive]}>
+          Multi-Family
+        </Text>
+      </TouchableOpacity>
+    </View>
+  );
+}
+
 // Cache buster: appended to every WebView URL so iOS WebView doesn't serve
 // stale HTML/CSS while we're iterating. Fresh per app boot.
 const SESSION_TS = Date.now();
 
-function DashboardScreen({ url, label }) {
+function DashboardScreen({ pathSuffix, label }) {
+  const { lob } = useContext(LobContext);
   const [loading, setLoading] = useState(true);
   const [errored, setErrored] = useState(false);
   const [reloadKey, setReloadKey] = useState(Date.now());
@@ -70,16 +104,22 @@ function DashboardScreen({ url, label }) {
     setReloadKey(Date.now());
   }, []);
 
-  // Append a cache-busting query string so each WebView mount gets a fresh page
-  const sep = url.indexOf('?') >= 0 ? '&' : '?';
-  const finalUrl = `${url}${sep}t=${SESSION_TS}_${reloadKey}`;
+  // Build URL: ${MOBILE_BASE}/${lob}/${pathSuffix}/?t=...
+  const baseUrl = pathSuffix
+    ? `${MOBILE_BASE}/${lob}/${pathSuffix}/`
+    : `${MOBILE_BASE}/${lob}/`;
+  const sep = baseUrl.indexOf('?') >= 0 ? '&' : '?';
+  // Include lob in cache key so swapping LOB forces a fresh fetch
+  const finalUrl = `${baseUrl}${sep}t=${SESSION_TS}_${lob}_${reloadKey}`;
 
   return (
     <SafeAreaView style={styles.screen}>
+      <LobSwitch />
       <View style={styles.webHost}>
         {!errored ? (
           <WebView
-            key={reloadKey}
+            // Re-mount when lob changes so the WebView fully reloads
+            key={`${lob}-${reloadKey}`}
             source={{ uri: finalUrl }}
             style={styles.webview}
             pullToRefreshEnabled
@@ -99,8 +139,6 @@ function DashboardScreen({ url, label }) {
                 setErrored(true);
               }
             }}
-            // Keep navigation inside the suite. External links would jump
-            // out to Safari, which is fine but we just block them for now.
             onShouldStartLoadWithRequest={(req) => {
               if (!req.url) return true;
               return req.url.startsWith(SITE);
@@ -147,80 +185,69 @@ const screenOptions = {
 };
 
 export default function App() {
+  const [lob, setLob] = useState('residential');
   return (
-    <NavigationContainer>
-      <StatusBar style="light" />
-      <Tab.Navigator screenOptions={screenOptions}>
-        <Tab.Screen
-          name="Home"
-          options={{
-            title: 'Command Center',
-            tabBarLabel: 'Home',
-            tabBarIcon: ({ color }) => <Icon name="home" color={color} />,
-          }}
-        >
-          {() => <DashboardScreen url={`${MOBILE_BASE}/`} label="Command Center" />}
-        </Tab.Screen>
+    <LobContext.Provider value={{ lob, setLob }}>
+      <NavigationContainer>
+        <StatusBar style="light" />
+        <Tab.Navigator screenOptions={screenOptions}>
+          <Tab.Screen
+            name="Home"
+            options={{
+              title: 'Command Center',
+              tabBarLabel: 'Home',
+              tabBarIcon: ({ color }) => <Icon name="home" color={color} />,
+            }}
+          >
+            {() => <DashboardScreen pathSuffix="" label="Command Center" />}
+          </Tab.Screen>
 
-        <Tab.Screen
-          name="Sales"
-          options={{
-            title: 'Residential Sales Overview',
-            tabBarLabel: 'Sales',
-            tabBarIcon: ({ color }) => <Icon name="sales" color={color} />,
-          }}
-        >
-          {() => (
-            <DashboardScreen
-              url={`${MOBILE_BASE}/sales-overview/`}
-              label="Sales Overview"
-            />
-          )}
-        </Tab.Screen>
+          <Tab.Screen
+            name="Sales"
+            options={{
+              title: 'Sales Overview',
+              tabBarLabel: 'Sales',
+              tabBarIcon: ({ color }) => <Icon name="sales" color={color} />,
+            }}
+          >
+            {() => <DashboardScreen pathSuffix="sales-overview" label="Sales Overview" />}
+          </Tab.Screen>
 
-        <Tab.Screen
-          name="Forecast"
-          options={{
-            title: 'Residential Revenue Forecast',
-            tabBarLabel: 'Forecast',
-            tabBarIcon: ({ color }) => <Icon name="rev" color={color} />,
-          }}
-        >
-          {() => (
-            <DashboardScreen
-              url={`${MOBILE_BASE}/revenue-forecast/`}
-              label="Revenue Forecast"
-            />
-          )}
-        </Tab.Screen>
+          <Tab.Screen
+            name="Forecast"
+            options={{
+              title: 'Revenue Forecast',
+              tabBarLabel: 'Forecast',
+              tabBarIcon: ({ color }) => <Icon name="rev" color={color} />,
+            }}
+          >
+            {() => <DashboardScreen pathSuffix="revenue-forecast" label="Revenue Forecast" />}
+          </Tab.Screen>
 
-        <Tab.Screen
-          name="Backlog"
-          options={{
-            title: 'Job Backlog & Production',
-            tabBarLabel: 'Backlog',
-            tabBarIcon: ({ color }) => <Icon name="backlog" color={color} />,
-          }}
-        >
-          {() => (
-            <DashboardScreen url={`${MOBILE_BASE}/backlog/`} label="Backlog" />
-          )}
-        </Tab.Screen>
+          <Tab.Screen
+            name="Backlog"
+            options={{
+              title: 'Backlog',
+              tabBarLabel: 'Backlog',
+              tabBarIcon: ({ color }) => <Icon name="backlog" color={color} />,
+            }}
+          >
+            {() => <DashboardScreen pathSuffix="backlog" label="Backlog" />}
+          </Tab.Screen>
 
-        <Tab.Screen
-          name="Installs"
-          options={{
-            title: 'Residential Installs YTD',
-            tabBarLabel: 'Installs',
-            tabBarIcon: ({ color }) => <Icon name="inst" color={color} />,
-          }}
-        >
-          {() => (
-            <DashboardScreen url={`${MOBILE_BASE}/installs-ytd/`} label="Installs" />
-          )}
-        </Tab.Screen>
-      </Tab.Navigator>
-    </NavigationContainer>
+          <Tab.Screen
+            name="Installs"
+            options={{
+              title: 'Installs YTD',
+              tabBarLabel: 'Installs',
+              tabBarIcon: ({ color }) => <Icon name="inst" color={color} />,
+            }}
+          >
+            {() => <DashboardScreen pathSuffix="installs-ytd" label="Installs" />}
+          </Tab.Screen>
+        </Tab.Navigator>
+      </NavigationContainer>
+    </LobContext.Provider>
   );
 }
 
@@ -228,6 +255,33 @@ const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: NAVY_DEEP },
   webHost: { flex: 1, backgroundColor: '#fff' },
   webview: { flex: 1, backgroundColor: '#fff' },
+
+  // Top-of-screen LOB segmented control
+  lobSwitchWrap: {
+    flexDirection: 'row',
+    backgroundColor: NAVY_DEEP,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    gap: 4,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(255,255,255,0.05)',
+  },
+  lobBtn: {
+    flex: 1,
+    paddingVertical: 8,
+    borderRadius: 8,
+    backgroundColor: 'rgba(255,255,255,0.04)',
+    alignItems: 'center',
+  },
+  lobBtnActive: { backgroundColor: BLUE },
+  lobBtnTxt: {
+    color: 'rgba(255,255,255,0.62)',
+    fontSize: 12,
+    fontWeight: '600',
+    letterSpacing: 0.4,
+  },
+  lobBtnTxtActive: { color: '#fff' },
+
   loadingOverlay: {
     position: 'absolute',
     top: 0,

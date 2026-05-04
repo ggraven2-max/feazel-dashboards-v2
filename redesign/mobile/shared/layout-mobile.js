@@ -24,10 +24,23 @@ window.FZ.renderShell = function (opts) {
   var folder = opts.folder || null;
   var slug   = opts.slug   || 'index';
   var atRoot = opts.atRoot === true;
+  // Detect Line of Business from URL: /mobile/<lob>/...
+  var lob = opts.lob || (function () {
+    var match = window.location.pathname.match(/\/mobile\/(residential|multi-family)\//);
+    return match ? match[1] : 'residential';
+  })();
+  var otherLob = (lob === 'residential') ? 'multi-family' : 'residential';
   var dashboards = window.FZ.dashboards;
 
   var current          = (folder && slug !== 'index') ? window.FZ.findPage(folder, slug) : null;
   var currentDashboard = folder ? window.FZ.findDashboard(folder) : null;
+
+  // Compute the parallel URL in the other LOB
+  var lobSwitchPrefix = atRoot ? ('../' + otherLob + '/') : ('../../' + otherLob + '/');
+  var otherLobUrl = lobSwitchPrefix + 'index.html';
+  if (folder) {
+    otherLobUrl = lobSwitchPrefix + folder + '/' + (slug === 'index' ? 'index.html' : slug + '.html');
+  }
 
   // ---- TOP BAR ----
   // Crumbs collapse to a single label on mobile via CSS; we still emit the
@@ -58,6 +71,13 @@ window.FZ.renderShell = function (opts) {
     +   '</div>'
     + '</header>';
 
+  // ---- LOB switcher (segmented control just below the topbar) ----
+  var lobSwitchHTML = ''
+    + '<div class="lob-switch">'
+    +   '<a href="' + (lob === 'residential' ? '#' : otherLobUrl) + '"' + (lob === 'residential' ? ' class="is-active"' : '') + '>Residential</a>'
+    +   '<a href="' + (lob === 'multi-family' ? '#' : otherLobUrl) + '"' + (lob === 'multi-family' ? ' class="is-active"' : '') + '>Multi-Family</a>'
+    + '</div>';
+
   // ---- SUB-NAV (only on dashboard pages, not the hub) ----
   var subnavHTML = '';
   if (currentDashboard) {
@@ -78,6 +98,7 @@ window.FZ.renderShell = function (opts) {
       '<div class="app">'
       + '<div class="main">'
       +   topbarHTML
+      +   lobSwitchHTML
       +   subnavHTML
       +   '<main class="page" id="page-content"></main>'
       + '</div>'

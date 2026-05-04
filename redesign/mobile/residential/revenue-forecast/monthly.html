@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Monthly Forecast · Residential Revenue Forecast · Feazel</title>
+<link rel="stylesheet" href="../../../shared/styles.css">
+<link rel="stylesheet" href="../../shared/styles-mobile.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='16' fill='%231f2d4b'/><text x='50' y='66' text-anchor='middle' font-family='Arial' font-size='52' font-weight='800' fill='white'>F</text></svg>">
+</head>
+<body data-lob="residential">
+
+<div id="app-host"></div>
+<template id="page-tpl"></template>
+
+<!-- Chart.js + truly-shared assets + LOB-specific data + mobile shell -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="../../../shared/chart-theme.js"></script>
+<script src="../../../residential/shared/data.js"></script>
+<script src="../../../shared/pages.js"></script>
+<script src="../../shared/layout-mobile.js"></script>
+<script src="../../../shared/page-renderer.js"></script>
+<script src="../../../shared/page-defs-revenue-forecast.js"></script>
+
+<script>
+  FZ.renderShell({ folder: "revenue-forecast", slug: "monthly", lob: "residential" });
+  if (window.FZ_PAGE_DEFS && window.FZ_PAGE_DEFS["revenue-forecast"] && window.FZ_PAGE_DEFS["revenue-forecast"]["monthly"]) {
+    FZ.renderPage(window.FZ_PAGE_DEFS["revenue-forecast"]["monthly"]);
+  } else {
+    document.getElementById('page-content').innerHTML =
+      '<div class="card"><span class="eyebrow">Page</span><h1 style="margin-top:6px;">Monthly Forecast</h1><p style="margin-top:8px;">This page is being built. Open another tab.</p></div>';
+  }
+</script>
+</body>
+</html>

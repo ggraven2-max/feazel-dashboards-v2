@@ -12,7 +12,10 @@ const agg = require('./lib/aggregate');
 
 const PROJECT_ID = 'sales-overview';
 const VERSION = '1.0-rules-encoded';
-const INPUT_DIR = path.join(__dirname, '..', 'inputs', PROJECT_ID);
+// Defaults point at residential. Pipeline overrides via opts.inputDir + opts.snapshotPath
+// when running per-LOB. Direct invocation falls back to residential paths.
+const DEFAULT_INPUT_DIR = path.join(__dirname, '..', 'inputs', 'residential', PROJECT_ID);
+const DEFAULT_SNAPSHOT_PATH = path.join(__dirname, '..', 'redesign', 'residential', 'shared', 'extracted-data.json');
 const FY = 2026;
 
 // RULE-002: Stage to bucket mapping
@@ -270,14 +273,17 @@ function fmtDate(d) {
 // ────────────────────────────────────────────────────────────
 // Main entrypoint
 // ────────────────────────────────────────────────────────────
-function run() {
-  const inputs = io.listInputs(INPUT_DIR);
+function run(opts) {
+  opts = opts || {};
+  const inputDir = opts.inputDir || DEFAULT_INPUT_DIR;
+  const snapshotPath = opts.snapshotPath || DEFAULT_SNAPSHOT_PATH;
+  const inputs = io.listInputs(inputDir);
   console.log('  [' + PROJECT_ID + '] inputs found: ' + inputs.length);
   inputs.forEach(f => console.log('    - ' + f.name));
 
   if (inputs.length === 0) {
-    console.log('  [' + PROJECT_ID + '] no inputs, falling back to existing extracted-data.json');
-    return readFromExtracted();
+    console.log('  [' + PROJECT_ID + '] no inputs, falling back to ' + path.relative(path.join(__dirname, '..'), snapshotPath));
+    return readFromExtracted(snapshotPath);
   }
 
   // Match inputs by leading text (RULE: filename-flexible)
@@ -286,7 +292,7 @@ function run() {
 
   if (!turnedFile) {
     console.log('  [' + PROJECT_ID + '] no Turned-In XLSX found, falling back to existing extracted-data.json');
-    return readFromExtracted();
+    return readFromExtracted(snapshotPath);
   }
 
   const salesRaw = readFirstSheet(turnedFile.fullPath);
@@ -294,7 +300,7 @@ function run() {
 
   const completedRaw = completedFile ? readFirstSheet(completedFile.fullPath) : [];
 
-  return buildOutput(salesRaw, completedRaw);
+  return buildOutput(salesRaw, completedRaw, snapshotPath);
 }
 
 function readFirstSheet(filePath) {
@@ -320,7 +326,7 @@ function validateColumns(rows, required, filename) {
 // ────────────────────────────────────────────────────────────
 // Build the SALES_OVERVIEW output shape
 // ────────────────────────────────────────────────────────────
-function buildOutput(salesRaw, completedRaw) {
+function buildOutput(salesRaw, completedRaw, snapshotPath) {
   // Normalize sales rows (RULE-001)
   const rows = salesRaw.map(r => {
     const market = String(r['Branch Location to Service'] || '').trim();
@@ -465,7 +471,7 @@ function buildOutput(salesRaw, completedRaw) {
   ];
 
   // VAL-005: drift check (warn-only if no prior, fail on > 25 percent drift)
-  driftCheck(total);
+  driftCheck(total, snapshotPath);
 
   return {
     _source: 'calculator/sales-overview.js v' + VERSION,
@@ -1066,10 +1072,10 @@ function buildCommentary(d) {
 // ────────────────────────────────────────────────────────────
 // Drift check (VAL-005)
 // ────────────────────────────────────────────────────────────
-function driftCheck(currentTotal) {
+function driftCheck(currentTotal, snapshotPath) {
   if (process.env.FZ_SKIP_DRIFT_CHECK === '1') return;
   try {
-    const prevPath = path.join(__dirname, '..', 'redesign', 'shared', 'extracted-data.json');
+    const prevPath = snapshotPath || DEFAULT_SNAPSHOT_PATH;
     if (!fs.existsSync(prevPath)) return;
     const prev = JSON.parse(fs.readFileSync(prevPath, 'utf8'));
     const prevSO = prev.SALES_OVERVIEW;
@@ -1097,14 +1103,13 @@ function round(v)  { return Math.round((v || 0) * 100) / 100; }
 function round1(v) { return Math.round((v || 0) * 10) / 10; }
 
 // Fallback to existing snapshot when no inputs are dropped.
-function readFromExtracted() {
+function readFromExtracted(snapshotPath) {
+  const p = snapshotPath || DEFAULT_SNAPSHOT_PATH;
   try {
-    const extracted = JSON.parse(fs.readFileSync(
-      path.join(__dirname, '..', 'redesign', 'shared', 'extracted-data.json'), 'utf8'
-    ));
+    const extracted = JSON.parse(fs.readFileSync(p, 'utf8'));
     if (extracted.SALES_OVERVIEW) return extracted.SALES_OVERVIEW;
   } catch (err) { /* fall through to stub */ }
-  console.log('  [' + PROJECT_ID + '] extracted-data.json has no SALES_OVERVIEW key; returning stub.');
+  console.log('  [' + PROJECT_ID + '] no SALES_OVERVIEW in snapshot ' + p + '; returning stub.');
   return emptyShape();
 }
 

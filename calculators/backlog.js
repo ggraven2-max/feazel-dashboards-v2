@@ -12,7 +12,9 @@ const agg = require('./lib/aggregate');
 
 const PROJECT_ID = 'backlog';
 const VERSION = '1.0-rules-encoded';
-const INPUT_DIR = path.join(__dirname, '..', 'inputs', PROJECT_ID);
+// Defaults point at residential. Pipeline overrides via opts.inputDir + opts.snapshotPath per LOB.
+const DEFAULT_INPUT_DIR = path.join(__dirname, '..', 'inputs', 'residential', PROJECT_ID);
+const DEFAULT_SNAPSHOT_PATH = path.join(__dirname, '..', 'redesign', 'residential', 'shared', 'extracted-data.json');
 
 // RULE-201: required input columns
 const REQUIRED_COLS = [
@@ -88,27 +90,30 @@ function round1(v) { return Math.round((v || 0) * 10) / 10; }
 // ────────────────────────────────────────────────────────────
 // Main entrypoint
 // ────────────────────────────────────────────────────────────
-function run() {
-  const inputs = io.listInputs(INPUT_DIR);
+function run(opts) {
+  opts = opts || {};
+  const inputDir = opts.inputDir || DEFAULT_INPUT_DIR;
+  const snapshotPath = opts.snapshotPath || DEFAULT_SNAPSHOT_PATH;
+  const inputs = io.listInputs(inputDir);
   console.log('  [' + PROJECT_ID + '] inputs found: ' + inputs.length);
   inputs.forEach(function (f) { console.log('    - ' + f.name); });
 
   if (inputs.length === 0) {
-    console.log('  [' + PROJECT_ID + '] no inputs, falling back to existing extracted-data.json');
-    return readFromExtracted();
+    console.log('  [' + PROJECT_ID + '] no inputs, falling back to ' + path.relative(path.join(__dirname, '..'), snapshotPath));
+    return readFromExtracted(snapshotPath);
   }
 
   // Pick the first .xlsx or .csv (RULE: filename-flexible)
   const woFile = inputs.find(function (f) { return /\.(xlsx|xls|csv)$/i.test(f.name); });
   if (!woFile) {
     console.log('  [' + PROJECT_ID + '] no XLSX/CSV input found, falling back to existing extracted-data.json');
-    return readFromExtracted();
+    return readFromExtracted(snapshotPath);
   }
 
   const raw = readSheet(woFile);
   validateColumns(raw, REQUIRED_COLS, woFile.name);
 
-  return buildOutput(raw);
+  return buildOutput(raw, snapshotPath);
 }
 
 function readSheet(file) {
@@ -133,7 +138,7 @@ function validateColumns(rows, required, filename) {
 // ────────────────────────────────────────────────────────────
 // Build the BACKLOG output shape
 // ────────────────────────────────────────────────────────────
-function buildOutput(raw) {
+function buildOutput(raw, snapshotPath) {
   // RULE-201: normalize
   const rows = raw.map(function (r) {
     return {
@@ -539,7 +544,7 @@ function buildOutput(raw) {
   });
 
   // VAL-205: drift check
-  driftCheck(totalWOs);
+  driftCheck(totalWOs, snapshotPath);
 
   return {
     _source: 'calculator/backlog.js v' + VERSION,
@@ -791,10 +796,10 @@ function buildActionPlan(d) {
 // ────────────────────────────────────────────────────────────
 // Drift check (VAL-205)
 // ────────────────────────────────────────────────────────────
-function driftCheck(currentWOs) {
+function driftCheck(currentWOs, snapshotPath) {
   if (process.env.FZ_SKIP_DRIFT_CHECK === '1') return;
   try {
-    const prevPath = path.join(__dirname, '..', 'redesign', 'shared', 'extracted-data.json');
+    const prevPath = snapshotPath || DEFAULT_SNAPSHOT_PATH;
     if (!fs.existsSync(prevPath)) return;
     const prev = JSON.parse(fs.readFileSync(prevPath, 'utf8'));
     const prevBL = prev.BACKLOG;
@@ -835,8 +840,8 @@ function countBy(arr, fn) {
 }
 
 // Fallback to existing snapshot when no inputs are dropped.
-function readFromExtracted() {
-  const extractedPath = path.join(__dirname, '..', 'redesign', 'shared', 'extracted-data.json');
+function readFromExtracted(snapshotPath) {
+  const extractedPath = snapshotPath || DEFAULT_SNAPSHOT_PATH;
   if (!fs.existsSync(extractedPath)) {
     return emptyShape('no extracted-data.json present and no inputs to compute from');
   }
