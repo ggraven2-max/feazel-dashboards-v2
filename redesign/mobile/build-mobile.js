@@ -120,9 +120,9 @@ function commandCenterHTML (lob) {
     <p>${escape(copy.intro)}</p>
     <div class="hub-hero-stats">
       <div class="hub-hero-stat">
-        <div class="l">2026 Target</div>
-        <div class="v">${escape(copy.target)}</div>
-        <div class="s">${escape(copy.targetSub)}</div>
+        <div class="l">${lob === 'multi-family' ? '2026 MF Target' : '2026 Residential Target'}</div>
+        <div class="v" data-bind="hero.target">—</div>
+        <div class="s" data-bind="hero.targetSub">${escape(copy.targetSub)}</div>
       </div>
       <div class="hub-hero-stat">
         <div class="l">Signed YTD</div>
@@ -265,7 +265,18 @@ function commandCenterHTML (lob) {
     var blHoldAge= kpi(BL.kpisHolds     || [], 'Avg Hold Age');
     var blOpenWOs= (BL.headerMeta && BL.headerMeta.totalWOs) ? BL.headerMeta.totalWOs.toLocaleString() : '—';
 
+    var rfBudgetRaw = (RF.execSummary && RF.execSummary.budget) || 0;
+    var fmtBigMoney = function (v) {
+      if (!v || isNaN(v)) return '—';
+      if (v >= 1e9) return '$' + (v / 1e9).toFixed(1).replace(/\.0$/, '') + 'B';
+      if (v >= 1e6) return '$' + (v / 1e6).toFixed(1).replace(/\.0$/, '') + 'M';
+      if (v >= 1e3) return '$' + (v / 1e3).toFixed(0) + 'K';
+      return '$' + Math.round(v).toLocaleString('en-US');
+    };
+
     var binds = {
+      'hero.target':    fmtBigMoney(rfBudgetRaw),
+      'hero.targetSub': '$185M total enterprise plan',
       'hero.signed':   val(soSigned),
       'hero.signedSub': sub(soSigned, '13 markets'),
       'hero.invoiced':  val(rfInv),
