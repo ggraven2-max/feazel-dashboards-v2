@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "builtAt": "2026-05-04T18:10:53.875Z",
+    "builtAt": "2026-05-04T21:20:34.969Z",
     "pipelineVersion": "2.0.0",
     "lob": "residential",
     "lastBuiltProjects": [
@@ -14,25 +14,25 @@
         "id": "installs-ytd",
         "version": "1.0-rules-encoded",
         "elapsedMs": 75,
-        "builtAt": "2026-05-04T18:10:53.875Z"
+        "builtAt": "2026-05-04T21:20:34.969Z"
       },
       {
         "id": "sales-overview",
         "version": "1.0-rules-encoded",
-        "elapsedMs": 272,
-        "builtAt": "2026-05-04T18:10:53.875Z"
+        "elapsedMs": 218,
+        "builtAt": "2026-05-04T21:20:34.969Z"
       },
       {
         "id": "revenue-forecast",
         "version": "V5-locked-2026-04-19-shell-1.0",
-        "elapsedMs": 4384,
-        "builtAt": "2026-05-04T18:10:53.875Z"
+        "elapsedMs": 3815,
+        "builtAt": "2026-05-04T21:20:34.969Z"
       },
       {
         "id": "backlog",
         "version": "1.0-rules-encoded",
-        "elapsedMs": 62,
-        "builtAt": "2026-05-04T18:10:53.875Z"
+        "elapsedMs": 42,
+        "builtAt": "2026-05-04T21:20:34.969Z"
       }
     ]
   },
@@ -51,7 +51,7 @@
       "multiTradeJobs": 301,
       "singleTradeJobs": 775,
       "multiTradePct": 28,
-      "lastBuild": "2026-05-04T18:10:53.875Z"
+      "lastBuild": "2026-05-04T21:20:34.969Z"
     },
     "tabs": [
       {
@@ -4418,15 +4418,15 @@
     },
     "monthRevenue": {
       "april": {
-        "invoiced": 9855392.0977,
-        "wipChange": -425531.2755,
-        "netRevenue": 9429860.8222,
+        "invoiced": 8125926,
+        "wipChange": 813618,
+        "netRevenue": 8939544,
         "beginningWip": 3518328.231,
         "endingWip": 3092796.9555,
         "materialCost": 2748866.2285,
         "laborCost": 1727858.7722,
-        "grossProfit": 4953135.8215,
-        "grossMarginPct": 52.5261
+        "grossProfit": 4462818.9993,
+        "grossMarginPct": 49.9222
       },
       "may": {
         "invoiced": 14023183.1226,
@@ -4788,8 +4788,8 @@
             12078221,
             15196197.72,
             13801318.23,
-            9429860.8222,
-            -2648360.1778
+            10669010.0977,
+            -1409210.9023
           ],
           [
             "May 2026",
@@ -4802,7 +4802,7 @@
           [
             "Jun 2026",
             14956779,
-            8305393.9313,
+            8341195.7713,
             14315330.8748,
             14390579.4592,
             -566199.5408
@@ -4884,7 +4884,7 @@
           ],
           [
             "Jun 2026",
-            8305393.9313,
+            8341195.7713,
             1732641.2793,
             13101118.7207,
             14315330.8748
@@ -6036,7 +6036,7 @@
           {
             "label": "Forecast Net Revenue",
             "data": [
-              9429860.8222,
+              10669010.0977,
               14255708.7996,
               14390579.4592,
               11358376.6874,
@@ -6393,7 +6393,7 @@
         "budget_rev": 14292330,
         "pipeline_backlog": 15196197.72,
         "new_sales_backlog": 0,
-        "pipe_invoicing": 14491433.86,
+        "pipe_invoicing": 14455632.02,
         "future_invoicing": 3100893.09,
         "rev_from_backlog": 4617934.1797,
         "revenue_gap": 9674395.8203,
@@ -6402,18 +6402,18 @@
       },
       {
         "month": "Jun 2026",
-        "total_backlog": 8305393.9313,
-        "wip_est": 4983236.3588,
-        "not_started": 3322157.5725,
+        "total_backlog": 8341195.7713,
+        "wip_est": 5004717.4628,
+        "not_started": 3336478.3085,
         "budget_rev": 14833760,
-        "pipeline_backlog": 704763.86,
+        "pipeline_backlog": 740565.7,
         "new_sales_backlog": 7600630.0713,
-        "pipe_invoicing": 643257.06,
+        "pipe_invoicing": 679058.9,
         "future_invoicing": 14033244.89,
         "rev_from_backlog": 1732641.2793,
         "revenue_gap": 13101118.7207,
         "adjusted_required_sales": 14315330.8748,
-        "backlog_surplus": -6009936.9436
+        "backlog_surplus": -5974135.1036
       },
       {
         "month": "Jul 2026",
@@ -6595,7 +6595,84 @@
         2,
         3,
         4
+      ],
+      "latestInvoiceDate": "2026-05-04",
+      "actualMonths": [
+        {
+          "monthIdx": 0,
+          "short": "Jan 2026",
+          "long": "January 2026",
+          "invoiced": 3312733.0599999987,
+          "source": "NetSuite (locked)",
+          "locked": true
+        },
+        {
+          "monthIdx": 1,
+          "short": "Feb 2026",
+          "long": "February 2026",
+          "invoiced": 2855781.11,
+          "source": "NetSuite (locked)",
+          "locked": true
+        },
+        {
+          "monthIdx": 2,
+          "short": "Mar 2026",
+          "long": "March 2026",
+          "invoiced": 6228299.340000002,
+          "source": "NetSuite (locked)",
+          "locked": true
+        },
+        {
+          "monthIdx": 3,
+          "short": "Apr 2026",
+          "long": "April 2026",
+          "invoiced": 8411542.480000002,
+          "source": "NetSuite (locked)",
+          "locked": true
+        }
       ]
+    },
+    "v5ExcelCheck": {
+      "source": "Revenue Forecast Model.xlsx",
+      "kpis": {
+        "invoicedYTD": 20921267.06,
+        "ytdSalesCreated": 22966615.39,
+        "fourWeekAvgSales": 2592295.12,
+        "weeklyTrend": 162967.2566666667,
+        "aprilNetRevenue": 8207307.73,
+        "mayNetRevenue": 14078388.64948155,
+        "annualBudgetNet": 120519027.5601507,
+        "annualModelNet": 120625271.3144793,
+        "annualVariance": 106243.7543286383
+      },
+      "monthly": {
+        "Apr 2026": 8411542.48,
+        "May 2026": 13845862.97248155,
+        "Jun 2026": 14321425.64390209,
+        "Jul 2026": 13434748.76426967,
+        "Aug 2026": 11733720.08536634,
+        "Sep 2026": 13631707.00448261,
+        "Oct 2026": 13644851.18018833,
+        "Nov 2026": 12539279.44330397,
+        "Dec 2026": 10340883.43761677
+      },
+      "checks": [
+        {
+          "label": "Invoiced YTD",
+          "excel": 20921267.06,
+          "calc": 20921267.059999984,
+          "diff": -1.4901161193847656e-8,
+          "drift": false
+        },
+        {
+          "label": "April Invoiced",
+          "excel": 8411542.48,
+          "calc": 8411542.480000002,
+          "diff": 1.862645149230957e-9,
+          "drift": false
+        }
+      ],
+      "drifted": 0
     }
   },
   "BACKLOG": {
@@ -6607,7 +6684,7 @@
       "totalWOs": 733,
       "portfolioValue": 10382185.08,
       "avgDaysInStatus": 12,
-      "lastBuild": "2026-05-04T18:10:53.798Z"
+      "lastBuild": "2026-05-04T21:20:34.892Z"
     },
     "tabs": [
       {

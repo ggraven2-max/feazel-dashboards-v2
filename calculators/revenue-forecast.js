@@ -30,6 +30,7 @@ const os = require('os');
 const { spawnSync } = require('child_process');
 const io = require('./lib/io');
 const netsuite = require('./lib/netsuite-invoices');
+const v5Crosscheck = require('./lib/v5-excel-crosscheck');
 
 const PROJECT_ID = 'revenue-forecast';
 const VERSION = 'V5-locked-2026-04-19-shell-1.0';
@@ -317,6 +318,17 @@ function run(opts) {
     // with the NetSuite total. Other V5 fields stay untouched.
     applyNetSuiteOverride(out, inputDir);
 
+    // ---- V5 Excel cross-check ----
+    // If Mahlet's "Revenue Forecast Model.xlsx" is in the inputs folder,
+    // compare its headline KPIs against what we're emitting. Logs warnings
+    // on divergence, attaches the report to the output for the dashboard.
+    try {
+      const xc = v5Crosscheck.crossCheck(out, inputDir);
+      if (xc) out.v5ExcelCheck = xc;
+    } catch (err) {
+      console.log('  [' + PROJECT_ID + '] v5-crosscheck error: ' + err.message);
+    }
+
     return out;
 
   } catch (err) {
@@ -357,6 +369,11 @@ function buildStub(reason) {
 
 // Replace V5's Salesforce-derived Invoiced YTD with NetSuite AR totals when
 // a NetSuite invoice CSV is present in the input folder. Mutates `out`.
+//
+// Also computes the "actualMonths" lock list per FORECASTING_RULES.md §4.1
+// (closed-month auto-detection): a month is closed when its month-end date is
+// strictly before max(NetSuite Date). Closed-month invoiced is locked at the
+// NetSuite total, never re-forecasted by V5.
 function applyNetSuiteOverride(out, inputDir) {
   if (!out || !inputDir) return;
   let ns;
@@ -387,14 +404,43 @@ function applyNetSuiteOverride(out, inputDir) {
       }
     }
   }
-  // Stash NetSuite numbers in a sub-object so any future tabs can read them
+
+  // Closed-month auto-detection (FORECASTING_RULES.md §4.1, §7.2)
+  // A month is closed when its month-end is strictly before max(NetSuite Date).
+  const MONTHS_LONG = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const MONTHS_SHORT = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const FY = 2026;
+  const actualMonths = [];
+  if (ns.latestDate) {
+    for (let m = 0; m < 12; m++) {
+      const monthEnd = new Date(FY, m + 1, 0);   // last day of month m
+      if (monthEnd < ns.latestDate && ns.monthly[m] > 0) {
+        actualMonths.push({
+          monthIdx: m,
+          short: MONTHS_SHORT[m] + ' ' + FY,
+          long: MONTHS_LONG[m] + ' ' + FY,
+          invoiced: ns.monthly[m],
+          source: 'NetSuite (locked)',
+          locked: true
+        });
+      }
+    }
+  }
+  if (actualMonths.length) {
+    console.log('  [' + PROJECT_ID + '] Closed months locked at NetSuite actuals: ' +
+      actualMonths.map(m => m.short + ' $' + Math.round(m.invoiced).toLocaleString()).join(', '));
+  }
+
+  // Stash NetSuite numbers + lock list in a sub-object the dashboard can read
   out.netsuiteInvoiced = {
     source: ns.fileName,
     totalInvoiced: ns.totalInvoiced,
     invoiceCount: ns.invoiceCount,
     monthly: ns.monthly,
     byBranch: ns.byBranch,
-    monthsWithData: ns.monthsWithData
+    monthsWithData: ns.monthsWithData,
+    latestInvoiceDate: ns.latestDate ? ns.latestDate.toISOString().slice(0, 10) : null,
+    actualMonths: actualMonths   // each closed month with locked invoiced amount
   };
 }
 
