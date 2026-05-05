@@ -54,17 +54,19 @@
     margin-bottom: 26px;
   }
   .brand { display: flex; align-items: center; gap: 10px; }
-  .brand-mark {
-    width: 34px; height: 34px;
-    background: var(--fg); color: var(--navy);
-    border-radius: 7px;
-    display: grid; place-items: center;
-    font-weight: 800; font-size: 18px; letter-spacing: -0.04em;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.32);
+  .brand-logo {
+    height: 34px; width: auto; display: block;
+    transition: transform 220ms cubic-bezier(0.34, 1.56, 0.64, 1);
   }
-  .brand-text { display: flex; flex-direction: column; line-height: 1.05; }
-  .brand-text .name { font-size: 13px; font-weight: 700; }
-  .brand-text .tag  { font-size: 9px; font-weight: 500; color: var(--fg-quiet); letter-spacing: 0.16em; text-transform: uppercase; margin-top: 1px; }
+  .brand-divider {
+    width: 1px; height: 22px;
+    background: var(--line);
+  }
+  .brand-tag {
+    font-size: 9px; font-weight: 500;
+    color: var(--fg-quiet);
+    letter-spacing: 0.16em; text-transform: uppercase;
+  }
 
   .freshness {
     display: inline-flex; align-items: center; gap: 6px;
@@ -88,12 +90,6 @@
 
   /* HERO */
   .hero { margin-bottom: 22px; }
-  .greeting {
-    font-size: 11px; font-weight: 600;
-    letter-spacing: 0.16em; text-transform: uppercase;
-    color: var(--gold); margin-bottom: 8px;
-    opacity: 0; animation: fadeUp 600ms 100ms ease-out forwards;
-  }
   .hero h1 {
     font-size: 30px; line-height: 1.05; font-weight: 800;
     letter-spacing: -0.02em; margin-bottom: 10px;
@@ -319,11 +315,9 @@
   <!-- TOP STRIP -->
   <div class="top">
     <div class="brand">
-      <div class="brand-mark" id="brand-mark">F</div>
-      <div class="brand-text">
-        <span class="name">Feazel</span>
-        <span class="tag">COO Office</span>
-      </div>
+      <img class="brand-logo" id="brand-mark" src="../assets/feazel-logo-inline-white.svg" alt="Feazel Roofing">
+      <div class="brand-divider"></div>
+      <span class="brand-tag">COO Office</span>
     </div>
     <div class="freshness">
       <span class="dot"></span>
@@ -333,7 +327,6 @@
 
   <!-- HERO -->
   <div class="hero">
-    <div class="greeting" id="greeting">Welcome back</div>
     <h1>One picture<br><span class="accent">across 13 markets.</span></h1>
     <p>Pick a side to dive in. Combined enterprise rollup below.</p>
   </div>
@@ -477,15 +470,6 @@
     hr = hr % 12 || 12;
     return mo + ' ' + day + ' · ' + hr + ':' + mn + ' ' + ampm;
   }
-
-  // Greeting
-  var hr = new Date().getHours();
-  var hello = hr < 5 ? 'Working late' :
-              hr < 12 ? 'Good morning' :
-              hr < 17 ? 'Good afternoon' :
-              hr < 21 ? 'Good evening' :
-              'Working late';
-  document.getElementById('greeting').textContent = hello + ', Greg';
 
   // Pull data
   var R  = window.FZ_RESIDENTIAL || {};
