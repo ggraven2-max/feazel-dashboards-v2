@@ -152,25 +152,21 @@ a:hover { color: var(--feazel-blue-hover); text-decoration: underline; text-unde
   border-right: 1px solid var(--feazel-navy-deep);
 }
 .sidebar-brand {
-  height: var(--header-h);                /* match topbar so the LOB switcher
-                                              and subnav appear on the same row */
-  padding: 0 20px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
+  padding: 22px 20px 18px;
   border-bottom: 1px solid rgba(255,255,255,0.08);
 }
 .sidebar-brand img {
-  height: 22px;
+  height: 26px;
   width: auto;
   display: block;
 }
 .sidebar-brand-meta {
-  font-size: 9.5px;
+  font-size: 10.5px;
   font-weight: var(--fw-semibold);
   color: rgba(255,255,255,0.58);
-  letter-spacing: 0.14em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
+  margin-top: 10px;
   line-height: 1;
 }
 .sidebar-section {
@@ -264,6 +260,27 @@ a:hover { color: var(--feazel-blue-hover); text-decoration: underline; text-unde
 
 /* ---- MAIN COLUMN ---- */
 .main { display: flex; flex-direction: column; min-width: 0; }
+
+/* ---- HEADER STACK (topbar + subnav as one unit) ---- */
+.header-stack {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+}
+/* When inside the header stack, the topbar drops its own sticky/border so
+   the two pieces render as a single header chrome — breadcrumbs above, tabs
+   below — sitting flush together right at the top of the viewport. */
+.header-stack .topbar {
+  position: static;
+  border-bottom: 1px solid var(--line);
+}
+.header-stack .subnav {
+  position: static;
+  top: auto;
+  border-bottom: none;
+}
 
 /* ---- TOP HEADER ---- */
 .topbar {

@@ -190,14 +190,19 @@ window.FZ.renderShell = function (opts) {
   }
 
   // Inject everything before the existing <main> the page provides.
+  // The subnav is wrapped inside .header-stack with the topbar so they
+  // render as a single header chrome unit (breadcrumbs + tabs) rather
+  // than two separate bars stacked vertically.
   var appHost = document.getElementById('app-host');
   if (appHost) {
     appHost.outerHTML =
       '<div class="app">'
       + sidebarHTML
       + '<div class="main">'
-      +   topbarHTML
-      +   subnavHTML
+      +   '<div class="header-stack">'
+      +     topbarHTML
+      +     subnavHTML
+      +   '</div>'
       +   '<main class="page" id="page-content"></main>'
       + '</div>'
       + '</div>';
