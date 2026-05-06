@@ -152,21 +152,25 @@ a:hover { color: var(--feazel-blue-hover); text-decoration: underline; text-unde
   border-right: 1px solid var(--feazel-navy-deep);
 }
 .sidebar-brand {
-  padding: 22px 20px 18px;
+  height: var(--header-h);                /* match topbar so the LOB switcher
+                                              and subnav appear on the same row */
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
   border-bottom: 1px solid rgba(255,255,255,0.08);
 }
 .sidebar-brand img {
-  height: 26px;
+  height: 22px;
   width: auto;
   display: block;
 }
 .sidebar-brand-meta {
-  font-size: 10.5px;
+  font-size: 9.5px;
   font-weight: var(--fw-semibold);
   color: rgba(255,255,255,0.58);
-  letter-spacing: 0.16em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  margin-top: 10px;
   line-height: 1;
 }
 .sidebar-section {
