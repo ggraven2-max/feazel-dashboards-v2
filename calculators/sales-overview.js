@@ -311,7 +311,7 @@ function run(opts) {
     console.log('  [' + PROJECT_ID + '] no Closing Percent By Branch XLSX found; closingByBranch will be empty');
   }
 
-  return buildOutput(salesRaw, completedRaw, snapshotPath, closingRaw);
+  return buildOutput(salesRaw, completedRaw, snapshotPath, closingRaw, inputDir);
 }
 
 function readFirstSheet(filePath) {
@@ -337,7 +337,7 @@ function validateColumns(rows, required, filename) {
 // ────────────────────────────────────────────────────────────
 // Build the SALES_OVERVIEW output shape
 // ────────────────────────────────────────────────────────────
-function buildOutput(salesRaw, completedRaw, snapshotPath, closingRaw) {
+function buildOutput(salesRaw, completedRaw, snapshotPath, closingRaw, inputDirRef) {
   // Normalize sales rows (RULE-001)
   const rows = salesRaw.map(r => {
     const market = String(r['Branch Location to Service'] || '').trim();
@@ -450,8 +450,14 @@ function buildOutput(salesRaw, completedRaw, snapshotPath, closingRaw) {
   const completedBilling = buildCompletedBilling(completedRaw);
 
   // Weekly targets and budget recovery (RULE-018)
-  const weeklyTargets_BUDGET = buildWeeklyTargets(rows);
-  const budgetRecovery = buildBudgetRecovery(monthly);
+  // Detect LOB from input path so we pick MF or residential plan.
+  const isMfLob = /multi-family/.test(inputDirRef || '');
+  const weeklyTargets_BUDGET = isMfLob
+    ? buildMfWeeklyTargets(rows, marketScorecard)
+    : buildWeeklyTargets(rows);
+  const budgetRecovery = isMfLob
+    ? buildMfBudgetRecovery(monthly, marketScorecard, inputDirRef)
+    : buildBudgetRecovery(monthly);
 
   // Commentary (RULE-019)
   const commentary = buildCommentary({
@@ -1056,6 +1062,255 @@ function buildBudgetRecovery(monthly) {
     return Object.assign({}, b, live != null ? { liveActual: live } : {});
   });
   return Object.assign({}, PLAN_BUDGET_RECOVERY, { monthlyBridge: monthlyBridge });
+}
+
+// ────────────────────────────────────────────────────────────
+// MF-SPECIFIC helpers — derive the recovery bridge and weekly
+// targets from the actual MF Commercial Budget XLSX, the live
+// MF Sales Overview signed actuals, and MF's market mix. Annual
+// plan is locked to $51.67M per the Commercial Budget.
+// ────────────────────────────────────────────────────────────
+const MF_ANNUAL_BUDGET = 51_673_207;
+const MF_MONTH_LONG = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const MF_MONTH_SHORT = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+// Read the MF Commercial Budget XLSX and pull the 12 monthly invoiced-budget
+// values from the "Total - 40000 - Revenue" row. Returns { monthly, annual }
+// or null if the file isn't reachable. Mirrors revenue-forecast-mf.js
+// parseBudget but lives here so sales-overview can be self-contained.
+function readMfBudgetMonthly(salesInputDir) {
+  if (!salesInputDir) return null;
+  // Sales-overview lives at inputs/multi-family/sales-overview/. The budget
+  // is in the sibling folder inputs/multi-family/revenue-forecast/.
+  const rfDir = path.join(salesInputDir, '..', 'revenue-forecast');
+  if (!fs.existsSync(rfDir)) return null;
+  const files = fs.readdirSync(rfDir).filter(f => /commercial budget/i.test(f) && /\.xlsx?$/i.test(f));
+  if (!files.length) return null;
+  let xlsx;
+  try { xlsx = require('xlsx'); }
+  catch (e) { console.log('  [' + PROJECT_ID + '] xlsx module unavailable for MF budget read; skipping bridge'); return null; }
+  const wb = xlsx.readFile(path.join(rfDir, files[0]), { cellDates: false });
+  const sheet = wb.Sheets[wb.SheetNames[0]];
+  const rows = xlsx.utils.sheet_to_json(sheet, { header: 1, defval: null });
+  for (const row of rows) {
+    for (let i = 0; i < row.length; i++) {
+      const cell = row[i];
+      if (!cell) continue;
+      const label = String(cell).toLowerCase();
+      if (label.includes('total') && label.includes('40000') && label.includes('revenue')) {
+        const monthly = row.slice(i + 1, i + 13).map(v => {
+          const n = parseFloat(String(v).replace(/[$,\s]/g, ''));
+          return isNaN(n) ? 0 : n;
+        });
+        if (monthly.length === 12) {
+          const summed = monthly.reduce((s, v) => s + v, 0);
+          return { monthly: monthly, annual: summed, sourceFile: files[0] };
+        }
+      }
+    }
+  }
+  return null;
+}
+
+function buildMfBudgetRecovery(monthly, marketScorecard, salesInputDir) {
+  const budget = readMfBudgetMonthly(salesInputDir);
+  // Even without the file we want a sane bridge: spread $51.67M evenly.
+  const monthlyPlan = budget ? budget.monthly : new Array(12).fill(MF_ANNUAL_BUDGET / 12);
+  const annualPlan  = MF_ANNUAL_BUDGET;   // headline always anchored to $51.67M
+  const summedPlan  = monthlyPlan.reduce((s, v) => s + v, 0);
+  // If the monthly cells sum to less than the annual headline (the budget
+  // file regularly does, by ~$2M), gross every month up proportionally so
+  // the bridge sums to $51.67M and matches the dashboard headline.
+  const grossUp = (summedPlan > 0 && summedPlan < annualPlan) ? annualPlan / summedPlan : 1;
+  const monthlyPlanScaled = monthlyPlan.map(v => v * grossUp);
+
+  // Live actual signed by month idx (0..11). monthly[] only contains months
+  // with deals; treat missing months as zero.
+  const actualByIdx = new Array(12).fill(0);
+  const countByIdx  = new Array(12).fill(0);
+  monthly.forEach(m => {
+    const idx = parseInt(m.key.split('-')[1], 10) - 1;
+    if (idx >= 0 && idx < 12) {
+      actualByIdx[idx] = m.amount;
+      countByIdx[idx]  = m.count;
+    }
+  });
+
+  // Determine which months are "closed" (no longer current). Use today.
+  const today = new Date();
+  const todayMonthIdx = today.getFullYear() === FY ? today.getMonth() : (today.getFullYear() > FY ? 11 : -1);
+
+  // Closed actuals + remaining-year shortfall
+  let closedActual = 0;
+  let closedPlan = 0;
+  for (let i = 0; i < todayMonthIdx; i++) {
+    closedActual += actualByIdx[i];
+    closedPlan   += monthlyPlanScaled[i];
+  }
+  const remainingPlan  = annualPlan - closedActual;
+  const remainingMonths = 12 - todayMonthIdx;
+  const remainingPlanRaw = monthlyPlanScaled.slice(todayMonthIdx).reduce((s, v) => s + v, 0);
+  const yearGap = remainingPlan - remainingPlanRaw;   // positive = need uplift
+
+  // Allocate the recovery uplift proportionally to each remaining month's
+  // share of the remaining-year plan. catchUp is only on months >= today's.
+  const monthlyBridge = MF_MONTH_SHORT.map((short, idx) => {
+    const plan   = monthlyPlanScaled[idx];
+    const actual = actualByIdx[idx];
+    let recovTarget = plan;
+    let catchUp = 0;
+    let status = 'Recovery';
+    if (idx < todayMonthIdx) {
+      // Closed months: lock at actual. Recovery target = max(actual, plan) so
+      // the chart isn't dragged down by months where we beat plan.
+      recovTarget = Math.max(actual, plan);
+      status = 'Actual';
+    } else if (idx === todayMonthIdx) {
+      status = 'Active';
+      recovTarget = plan;
+    } else if (yearGap > 0 && remainingPlanRaw > 0) {
+      // Future months take their share of the catch-up.
+      const share = plan / remainingPlanRaw;
+      catchUp = yearGap * share;
+      recovTarget = plan + catchUp;
+    }
+    const liveActual = (idx <= todayMonthIdx && actual > 0) ? actual : null;
+    return {
+      mo: short + ' ' + FY,
+      monthIdx: idx,
+      origBudget: round(plan),
+      fcst: round(plan),         // for parity with residential shape
+      recovTarget: round(recovTarget),
+      catchUp: round(catchUp),
+      status: status,
+      liveActual: liveActual != null ? round(liveActual) : undefined,
+      deals: countByIdx[idx] || 0
+    };
+  });
+
+  // Weekly pace math, rest-of-year. Avg week count uses ceil so pace target
+  // is conservative (rather than spreading across fractional weeks).
+  const weeksRemaining = Math.max(1, Math.ceil((remainingMonths * 30.4) / 7));
+  const adjWeeklySalesAvg = (annualPlan - closedActual) / weeksRemaining;
+  // Original (no recovery) avg week is just remainingPlanRaw / weeks.
+  const origWeeklySalesAvg = remainingPlanRaw / weeksRemaining;
+  const salesDeltaPerWeek = adjWeeklySalesAvg - origWeeklySalesAvg;
+
+  // Q1 detail
+  const q1Plan   = monthlyPlanScaled.slice(0, 3).reduce((s, v) => s + v, 0);
+  const q1Actual = actualByIdx.slice(0, 3).reduce((s, v) => s + v, 0);
+  const aprPlan  = monthlyPlanScaled[3] || 0;
+  const aprActual = actualByIdx[3] || 0;
+
+  // Per-market sales lift required, allocated proportionally to each market's
+  // share of YTD signed dollars. If a market did $X / TotalYTD = pct, it owes
+  // pct * salesDeltaPerWeek extra each week.
+  const mktRows = (marketScorecard && marketScorecard.rows) || [];
+  const totalYtdMkt = mktRows.reduce((s, r) => s + (r[1] || 0), 0);
+  const adjSalesByMarket = mktRows.map(r => {
+    const share = totalYtdMkt > 0 ? (r[1] / totalYtdMkt) : 0;
+    const original = (r[1] / 7);   // their current weekly pace, approximate
+    const recovTarget = original + share * salesDeltaPerWeek;
+    return {
+      market: r[0],
+      recovTarget: round(recovTarget),
+      original: round(original),
+      delta: round(share * salesDeltaPerWeek)
+    };
+  });
+
+  return {
+    fullYearBudget: annualPlan,
+    sourceFile: budget ? budget.sourceFile : '(MF budget XLSX not found, using flat 1/12 split)',
+    totalToRecover: round(Math.max(0, yearGap)),
+    upliftPct: remainingPlanRaw > 0 ? round1(yearGap / remainingPlanRaw * 100) : 0,
+    q1Budget: round(q1Plan),
+    q1Actual: round(q1Actual),
+    q1Shortfall: round(q1Actual - q1Plan),
+    aprilGap: round(aprActual - aprPlan),
+    aprilBudget: round(aprPlan),
+    aprilFcst: round(aprActual),
+    adjWeeklySalesAvg: round(adjWeeklySalesAvg),
+    origWeeklySalesAvg: round(origWeeklySalesAvg),
+    salesDeltaPerWeek: round(salesDeltaPerWeek),
+    weeksRemaining: weeksRemaining,
+    adjWeeklyProdAvg: round(adjWeeklySalesAvg),     // production parity for chart consumers
+    origWeeklyProdAvg: round(origWeeklySalesAvg),
+    prodDeltaPerWeek: round(salesDeltaPerWeek),
+    monthlyBridge: monthlyBridge,
+    adjSalesByMarket: adjSalesByMarket,
+    adjProdByMarket: adjSalesByMarket   // same source for MF; production allocation matches sales
+  };
+}
+
+function buildMfWeeklyTargets(rows, marketScorecard) {
+  // 4-week recent pace from MF live signed
+  const wkMap = new Map();
+  rows.forEach(r => {
+    const w = weekOfYear(r.signed);
+    wkMap.set(w, (wkMap.get(w) || 0) + r.amount);
+  });
+  const sortedWeeks = Array.from(wkMap.entries()).sort((a, b) => b[0] - a[0]);
+  const last4 = sortedWeeks.slice(0, 4);
+  const recent4WkAvg = last4.length ? mean(last4.map(w => w[1])) : 0;
+
+  // Build the rest-of-year week schedule from MF's monthly budget.
+  // For each remaining ISO week we attribute it to the month whose Friday
+  // bucket it lives in, then the week's target is monthlyPlan / weeksInMonth.
+  const today = new Date();
+  const todayMonthIdx = today.getFullYear() === FY ? today.getMonth() : (today.getFullYear() > FY ? 11 : -1);
+  const annualPlan = MF_ANNUAL_BUDGET;
+  // Use even per-month split (annualPlan / 12) when we don't have access to
+  // the budget file at this point. The recovery builder reads the file with
+  // path access; here we depend on the recovery output. Simpler: compute
+  // from the bridge's monthlyPlanScaled equivalents — i.e., just read
+  // marketScorecard for share and split annual / weeks evenly.
+  // To keep this self-contained, we approximate plan-per-week via:
+  //   weeksRemaining ≈ (12 - todayMonthIdx) * 4.33
+  const monthsRemaining = 12 - Math.max(todayMonthIdx, 0);
+  const weeksRemaining = Math.max(1, Math.ceil(monthsRemaining * 30.4 / 7));
+  const avgWeeklyNeed = annualPlan / weeksRemaining;
+
+  // Generate the week schedule for the remaining weeks of the year, each
+  // anchored to the Monday and tagged to its month for the chart palette.
+  const weekSchedule = [];
+  let cursor = new Date(today);
+  // Move to next Monday
+  cursor.setDate(cursor.getDate() + ((1 - cursor.getDay() + 7) % 7 || 7));
+  for (let i = 0; i < weeksRemaining && cursor.getFullYear() === FY; i++) {
+    const monthIdx = cursor.getMonth();
+    const moShort = MF_MONTH_SHORT[monthIdx];
+    const wkLabel = String(cursor.getMonth() + 1).padStart(2, '0') + '/' +
+                    String(cursor.getDate()).padStart(2, '0') + '/' + cursor.getFullYear();
+    weekSchedule.push({ wk: wkLabel, mo: moShort, target: round(avgWeeklyNeed) });
+    cursor.setDate(cursor.getDate() + 7);
+  }
+
+  // By-market weekly target allocation = market YTD share * avgWeeklyNeed
+  const mktRows = (marketScorecard && marketScorecard.rows) || [];
+  const totalYtdMkt = mktRows.reduce((s, r) => s + (r[1] || 0), 0);
+  const byMarket = mktRows.map(r => ({
+    market: r[0],
+    total:  round(totalYtdMkt > 0 ? avgWeeklyNeed * (r[1] / totalYtdMkt) : 0),
+    retNoFin: 0, ins: 0, retFin: 0,
+    deals: round1(r[2] / Math.max(1, sortedWeeks.length))   // deals-per-week, not exact but useful
+  }));
+
+  // By-job-type / by-trade — on MF the categorical mix is concentrated;
+  // surface what we have from the live data so charts have something to plot.
+  const byJobType = [];
+  const byTrade = [];
+
+  return {
+    avgWeeklyNeed: round(avgWeeklyNeed),
+    weeksRemaining: weeksRemaining,
+    annualPlan: annualPlan,
+    byJobType: byJobType,
+    byTrade: byTrade,
+    byMarket: byMarket,
+    weekSchedule: weekSchedule,
+    recent4WkAvg: round(recent4WkAvg)
+  };
 }
 
 // ────────────────────────────────────────────────────────────

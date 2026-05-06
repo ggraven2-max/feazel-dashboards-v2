@@ -1913,39 +1913,49 @@
     // ─────────────────────────────────────────────────────────────
     // WEEKLY SALES TARGETS
     // ─────────────────────────────────────────────────────────────
-    var weeksRemaining = wtSched.length;
+    var weeksRemaining = wt.weeksRemaining || wtSched.length || 1;
+    var annualPlan = wt.annualPlan || 51673207;
     var avgWeeklyTarget = wt.avgWeeklyNeed || 0;
     var pace = wt.recent4WkAvg || 0;
     var paceGap = pace - avgWeeklyTarget;
+    var ytdActualWk = monthly.reduce(function (s, m) { return s + (m.amount || 0); }, 0);
+    var remainingDollarNeed = Math.max(0, annualPlan - ytdActualWk);
 
     mfPages['weekly-targets'] = {
       eyebrow: 'TARGETS · MF WEEKLY',
       title: 'Weekly Sales Targets',
-      intro: 'What MF needs to sign each week to hit the $51.67M Commercial Budget plan, and how the current pace compares.',
+      intro: 'What MF needs to sign each week to land the $51.67M Commercial Budget plan, and how the current 4-week pace compares.',
       tags: [
-        { kind: 'info', text: weeksRemaining + ' weeks remaining in plan' },
-        { kind: paceGap >= 0 ? 'success' : 'warn', text: 'Pace ' + (paceGap >= 0 ? '+' : '') + fmt.money(paceGap, { short: true }) + '/wk vs target' }
+        { kind: 'info', text: weeksRemaining + ' weeks remaining' },
+        { kind: paceGap >= 0 ? 'success' : 'warn', text: 'Pace ' + (paceGap >= 0 ? '+' : '') + fmt.money(paceGap, { short: true }) + '/wk vs target' },
+        { kind: 'info', text: 'Annual plan ' + fmt.money(annualPlan, { short: true }) }
       ],
       sections: [
         { kind: 'kpi-row', cols: 4, items: [
-            { label: 'Avg Weekly Target', value: fmt.money(avgWeeklyTarget, { short: true }), sub: 'rest-of-year', tone: 'navy' },
-            { label: '4-Wk Recent Pace', value: fmt.money(pace, { short: true }), sub: 'rolling', tone: pace >= avgWeeklyTarget ? 'success' : 'warn' },
-            { label: 'Pace Gap', value: (paceGap >= 0 ? '+' : '') + fmt.money(paceGap, { short: true }), sub: paceGap >= 0 ? 'ahead of plan' : 'behind plan', tone: paceGap >= 0 ? 'success' : 'danger' },
-            { label: 'Weeks Remaining', value: weeksRemaining + '', sub: 'until 12/31', tone: 'navy' }
+            { label: 'Avg Weekly Target', value: fmt.money(avgWeeklyTarget, { short: true }),
+              sub: '$' + (annualPlan / 1e6).toFixed(2) + 'M plan / ' + weeksRemaining + ' wks remaining', tone: 'navy' },
+            { label: '4-Wk Recent Pace', value: fmt.money(pace, { short: true }),
+              sub: 'rolling avg of last 4 ISO weeks', tone: pace >= avgWeeklyTarget ? 'success' : 'warn' },
+            { label: 'Pace Gap', value: (paceGap >= 0 ? '+' : '') + fmt.money(paceGap, { short: true }),
+              sub: paceGap >= 0 ? 'ahead of weekly need' : 'behind weekly need',
+              tone: paceGap >= 0 ? 'success' : 'danger' },
+            { label: 'Remaining Need',  value: fmt.money(remainingDollarNeed, { short: true }),
+              sub: 'YTD ' + fmt.money(ytdActualWk, { short: true }) + ' done · ' + fmt.money(annualPlan - ytdActualWk, { short: true }) + ' to go',
+              tone: 'navy' }
         ]},
         wtSched.length ? {
           kind: 'chart-grid', cols: 1,
           charts: [{
             title: 'Weekly targets through year-end',
-            sub: 'Bars colored by month for readability',
+            sub: 'Even split of remaining-year need across remaining ISO weeks · ' + wtSched.length + ' weeks · colored by month',
             height: Math.max(300, wtSched.length * 14),
             config: {
               type: 'bar',
               data: { labels: wtSched.map(function (w) { return w.wk; }),
                 datasets: [{ data: wtSched.map(function (w) { return w.target; }),
-                  backgroundColor: wtSched.map(function (w, i) {
+                  backgroundColor: wtSched.map(function (w) {
                     var months = Array.from(new Set(wtSched.map(function (x) { return x.mo; })));
-                    var palette = [pal.navy, pal.success, pal.warning, pal.danger, '#7d3c98', '#16a085'];
+                    var palette = [pal.navy, pal.success, pal.warning, pal.danger, '#7d3c98', '#16a085', '#2980b9', '#c0392b'];
                     return palette[months.indexOf(w.mo) % palette.length];
                   }) }] },
               options: withOpts({ scales: { y: moneyAxis() }, plugins: { legend: { display: false } } })
@@ -1955,30 +1965,33 @@
         wtMarkets.length ? {
           kind: 'table',
           heading: 'Weekly target by market',
+          caption: 'Each market\'s share of the weekly need, allocated by YTD signed share',
           headers: [
             { label: 'Market', num: false },
-            { label: 'Total / wk', num: true },
-            { label: 'Retail-No Fin', num: true },
-            { label: 'Insurance', num: true },
-            { label: 'Retail-Fin', num: true },
-            { label: 'Deals / wk', num: true }
+            { label: 'Weekly Target', num: true },
+            { label: '% of Weekly', num: true },
+            { label: 'Deals / wk (YTD pace)', num: true }
           ],
           rows: wtMarkets.map(function (m) {
+            var pct = avgWeeklyTarget > 0 ? (m.total / avgWeeklyTarget * 100) : 0;
             return [
               { html: '<strong>' + m.market + '</strong>' },
               fmt.money(m.total),
-              fmt.money(m.retNoFin || 0),
-              fmt.money(m.ins || 0),
-              fmt.money(m.retFin || 0),
+              pct.toFixed(1) + '%',
               (m.deals || 0).toFixed(1)
             ];
-          })
+          }).concat([[
+            { html: '<strong>Total</strong>' },
+            { html: '<strong>' + fmt.money(wtMarkets.reduce(function (s, m) { return s + (m.total || 0); }, 0)) + '</strong>' },
+            '',
+            ''
+          ]])
         } : null,
         { kind: 'callout', tone: paceGap >= 0 ? 'success' : 'warn',
-          title: paceGap >= 0 ? 'On pace' : 'Pace gap',
+          title: paceGap >= 0 ? 'Pace clears the plan' : 'Pace gap',
           body: paceGap >= 0
-            ? 'Current 4-week pace of <strong>' + fmt.money(pace, { short: true }) + '/wk</strong> is running <strong>' + fmt.money(paceGap, { short: true }) + '/wk</strong> ahead of the rest-of-year target. Hold the line and the plan is in reach.'
-            : 'Current pace is <strong>' + fmt.money(Math.abs(paceGap), { short: true }) + '/wk short</strong> of what the rest of the year needs. Either pull-forward in big-deal markets or layer in additional lead volume to the lower-pace markets.'
+            ? 'Current 4-week pace of <strong>' + fmt.money(pace, { short: true }) + '/wk</strong> runs <strong>' + fmt.money(paceGap, { short: true }) + '/wk</strong> ahead of the rest-of-year target. Holding pace lands the $51.67M plan with cushion. Watch for a stall in any of the top-3 markets pulling the average back below ' + fmt.money(avgWeeklyTarget, { short: true }) + '/wk.'
+            : 'Current pace is <strong>' + fmt.money(Math.abs(paceGap), { short: true }) + '/wk short</strong> of what the rest of the year needs. Either pull-forward big-deal opportunities in Detroit or Columbus, or layer in additional lead volume to the lower-pace markets.'
         }
       ].filter(Boolean)
     };
@@ -1988,67 +2001,135 @@
     // ─────────────────────────────────────────────────────────────
     var brBridge = safeArr(br.monthlyBridge);
     var brMkts = safeArr(br.adjSalesByMarket);
+    var planMf = br.fullYearBudget || 51673207;
+    var ytdActualMf = brBridge
+      .filter(function (m) { return m.status === 'Actual'; })
+      .reduce(function (s, m) { return s + (m.liveActual != null ? m.liveActual : m.recovTarget); }, 0);
+    var ytdPlanMf = brBridge
+      .filter(function (m) { return m.status === 'Actual'; })
+      .reduce(function (s, m) { return s + (m.origBudget || 0); }, 0);
+    var ytdVariance = ytdActualMf - ytdPlanMf;
+    var aheadMode = (br.totalToRecover || 0) === 0 && ytdVariance >= 0;
+    var q1Shortfall = br.q1Shortfall || 0;
+    var aprilGap = br.aprilGap || 0;
 
     mfPages['budget-recovery'] = {
       eyebrow: 'RECOVERY · MF',
       title: 'Budget Recovery',
-      intro: 'The path back to the MF $51.67M plan, broken into the per-month bridge and the per-market sales lift required.',
+      intro: aheadMode
+        ? 'MF is currently running ahead of the $51.67M plan. The bridge below tracks each month against the Commercial Budget split and shows the remaining-year pace required to hold the lead.'
+        : 'The path back to the MF $51.67M plan, broken into the per-month bridge and the per-market sales lift required.',
       tags: [
-        { kind: br.q1Shortfall < 0 ? 'danger' : 'success', text: 'Q1 ' + (br.q1Shortfall >= 0 ? '+' : '') + fmt.money(br.q1Shortfall || 0, { short: true }) },
-        { kind: br.aprilGap < 0 ? 'warn' : 'success', text: 'April ' + (br.aprilGap >= 0 ? '+' : '') + fmt.money(br.aprilGap || 0, { short: true }) }
+        { kind: q1Shortfall >= 0 ? 'success' : 'danger', text: 'Q1 ' + (q1Shortfall >= 0 ? '+' : '') + fmt.money(q1Shortfall, { short: true }) + ' vs plan' },
+        { kind: aprilGap >= 0 ? 'success' : 'warn',     text: 'April ' + (aprilGap >= 0 ? '+' : '') + fmt.money(aprilGap, { short: true }) + ' vs plan' },
+        { kind: aheadMode ? 'success' : 'warn',         text: 'YTD ' + (ytdVariance >= 0 ? '+' : '') + fmt.money(ytdVariance, { short: true }) + ' vs plan' }
       ],
       sections: [
         { kind: 'kpi-row', cols: 4, items: [
-            { label: 'Plan',         value: fmt.money(br.fullYearBudget || 0, { short: true }), sub: 'MF Commercial Budget', tone: 'navy' },
-            { label: 'To Recover',   value: fmt.money(br.totalToRecover || 0, { short: true }),  sub: 'gap to plan', tone: (br.totalToRecover || 0) > 0 ? 'warn' : 'success' },
-            { label: 'Uplift Needed', value: ((br.upliftPct || 0) * 100).toFixed(1) + '%',       sub: 'on remaining months', tone: (br.upliftPct || 0) > 0.10 ? 'danger' : (br.upliftPct || 0) > 0 ? 'warn' : 'success' },
-            { label: 'Sales Δ / wk', value: fmt.money(br.salesDeltaPerWeek || 0, { short: true }), sub: 'extra needed weekly', tone: 'warn' }
+            { label: 'Annual Plan',     value: fmt.money(planMf, { short: true }),
+              sub: 'MF Commercial Budget · ' + (br.sourceFile || 'sourced'), tone: 'navy' },
+            { label: 'YTD Actual',      value: fmt.money(ytdActualMf, { short: true }),
+              sub: 'Closed months · ' + (ytdVariance >= 0 ? '+' : '') + fmt.money(ytdVariance, { short: true }) + ' vs plan',
+              tone: ytdVariance >= 0 ? 'success' : 'warn' },
+            { label: aheadMode ? 'Lead vs Plan' : 'To Recover',
+              value: aheadMode ? fmt.money(Math.abs(ytdVariance), { short: true }) : fmt.money(br.totalToRecover || 0, { short: true }),
+              sub: aheadMode ? 'gap closed early' : 'remaining-year shortfall',
+              tone: aheadMode ? 'success' : 'warn' },
+            { label: 'Pace Required / wk',
+              value: fmt.money(br.adjWeeklySalesAvg || 0, { short: true }),
+              sub: (br.weeksRemaining || 0) + ' weeks left · ' + (br.salesDeltaPerWeek >= 0 ? '+' : '') + fmt.money(br.salesDeltaPerWeek || 0, { short: true }) + ' vs flat',
+              tone: 'navy' }
         ]},
+        brBridge.length ? {
+          kind: 'chart-grid', cols: 1,
+          charts: [{
+            title: 'Monthly bridge: plan vs actual / required',
+            sub: 'Blue = original Commercial Budget plan. Green = closed actuals. Gold = required pace for remaining months.',
+            height: 320,
+            config: {
+              type: 'bar',
+              data: {
+                labels: brBridge.map(function (m) { return m.mo; }),
+                datasets: [
+                  { label: 'Plan ($51.67M / 12)', data: brBridge.map(function (m) { return m.origBudget || 0; }), backgroundColor: pal.navy, borderRadius: 4 },
+                  { label: 'Actual / Required',   data: brBridge.map(function (m) {
+                      if (m.status === 'Actual' && m.liveActual != null) return m.liveActual;
+                      return m.recovTarget || 0;
+                    }), backgroundColor: brBridge.map(function (m) {
+                      if (m.status === 'Actual') return pal.success;
+                      if (m.status === 'Active') return pal.warning;
+                      return pal.warning;
+                    }), borderRadius: 4 }
+                ]
+              },
+              options: withOpts({ scales: { y: moneyAxis() } })
+            }
+          }]
+        } : null,
         brBridge.length ? {
           kind: 'table',
           heading: 'Monthly bridge to plan',
-          caption: 'How each remaining month lines up against the budget',
+          caption: 'Plan = Commercial Budget monthly · Actual = MF signed sales (closed months) · Required = pace needed to hold $51.67M annual',
           headers: [
             { label: 'Month', num: false },
             { label: 'Plan', num: true },
-            { label: 'Current Forecast', num: true },
-            { label: 'Gap', num: true }
+            { label: 'Actual / Required', num: true },
+            { label: 'Variance', num: true },
+            { label: 'Status', num: false }
           ],
           rows: brBridge.map(function (m) {
-            var gap = (m.forecast || 0) - (m.plan || 0);
+            var actOrReq = (m.status === 'Actual' && m.liveActual != null) ? m.liveActual : m.recovTarget;
+            var vs = actOrReq - (m.origBudget || 0);
+            var statusPill = m.status === 'Actual'
+              ? '<span class="pill pill-success">Actual</span>'
+              : m.status === 'Active'
+                ? '<span class="pill pill-warn">Active</span>'
+                : '<span class="pill pill-info">Required</span>';
             return [
-              { html: '<strong>' + (m.month || m.label) + '</strong>' },
-              fmt.money(m.plan || 0),
-              fmt.money(m.forecast || 0),
-              { html: gap < 0 ? '<span class="pill pill-danger">' + fmt.money(gap) + '</span>'
-                              : '<span class="pill pill-success">+' + fmt.money(gap) + '</span>' }
+              { html: '<strong>' + m.mo + '</strong>' },
+              fmt.money(m.origBudget || 0),
+              fmt.money(actOrReq),
+              { html: vs >= 0 ? '<span class="pill pill-success">+' + fmt.money(vs) + '</span>'
+                              : '<span class="pill pill-danger">' + fmt.money(vs) + '</span>' },
+              { html: statusPill }
             ];
-          })
+          }).concat([[
+            { html: '<strong>Annual</strong>' },
+            { html: '<strong>' + fmt.money(planMf) + '</strong>' },
+            { html: '<strong>' + fmt.money(brBridge.reduce(function (s, m) {
+              return s + ((m.status === 'Actual' && m.liveActual != null) ? m.liveActual : m.recovTarget);
+            }, 0)) + '</strong>' },
+            '',
+            { html: '<strong>Plan target</strong>' }
+          ]])
         } : null,
         brMkts.length ? {
           kind: 'table',
-          heading: 'Sales lift required by market',
+          heading: 'Per-market weekly contribution to plan',
+          caption: 'Each market\'s share of the rest-of-year weekly need, allocated by their YTD signed share',
           headers: [
             { label: 'Market', num: false },
-            { label: 'Current $/wk', num: true },
-            { label: 'Adjusted $/wk', num: true },
-            { label: 'Lift', num: true }
+            { label: 'Current Pace $/wk', num: true },
+            { label: 'Required $/wk', num: true },
+            { label: 'Δ / wk', num: true }
           ],
           rows: brMkts.map(function (m) {
-            var lift = (m.adjusted || m.adj || 0) - (m.current || m.orig || 0);
+            var lift = m.delta || 0;
             return [
-              { html: '<strong>' + (m.market || m.label) + '</strong>' },
-              fmt.money(m.current || m.orig || 0),
-              fmt.money(m.adjusted || m.adj || 0),
-              { html: '<span class="pill ' + (lift > 0 ? 'pill-warn' : 'pill-success') + '">' + (lift >= 0 ? '+' : '') + fmt.money(lift) + '</span>' }
+              { html: '<strong>' + m.market + '</strong>' },
+              fmt.money(m.original || 0),
+              fmt.money(m.recovTarget || 0),
+              { html: lift > 0
+                  ? '<span class="pill pill-warn">+' + fmt.money(lift) + '</span>'
+                  : '<span class="pill pill-success">' + fmt.money(lift) + '</span>' }
             ];
           })
         } : null,
-        { kind: 'callout', tone: (br.totalToRecover || 0) > 0 ? 'warn' : 'success',
-          title: (br.totalToRecover || 0) > 0 ? 'Path back to plan' : 'On plan',
-          body: (br.totalToRecover || 0) > 0
-            ? 'To close the <strong>' + fmt.money(br.totalToRecover, { short: true }) + '</strong> gap, lift weekly sales by <strong>' + fmt.money(br.salesDeltaPerWeek || 0, { short: true }) + '</strong> across the remaining weeks. The market-by-market lift table above shows where the dollars need to come from.'
-            : 'Current pace clears the plan. Watch for a single insurance contract slip dragging the number back into recovery territory.'
+        { kind: 'callout', tone: aheadMode ? 'success' : 'warn',
+          title: aheadMode ? 'Ahead of plan: hold the pace' : 'Path back to plan',
+          body: aheadMode
+            ? 'YTD signed sales are <strong>' + fmt.money(ytdVariance, { short: true }) + '</strong> ahead of the Commercial Budget plan through April. Holding the current 4-week pace clears $51.67M with room. The biggest risk is a Q3 slip pulling MF back to plan; the per-market table above shows the weekly pace each market needs to maintain.'
+            : 'To close the <strong>' + fmt.money(br.totalToRecover || 0, { short: true }) + '</strong> gap, hold weekly sales at <strong>' + fmt.money(br.adjWeeklySalesAvg || 0, { short: true }) + '/wk</strong> across the remaining ' + (br.weeksRemaining || 0) + ' weeks. The market table above shows where each branch needs to land.'
         }
       ].filter(Boolean)
     };

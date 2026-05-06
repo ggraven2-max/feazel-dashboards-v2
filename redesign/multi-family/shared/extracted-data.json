@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "builtAt": "2026-05-06T15:53:24.285Z",
+    "builtAt": "2026-05-06T16:01:56.672Z",
     "pipelineVersion": "2.0.0",
     "lob": "multi-family",
     "lastBuiltProjects": [
@@ -13,26 +13,26 @@
       {
         "id": "sales-overview",
         "version": "1.0-rules-encoded",
-        "elapsedMs": 18,
-        "builtAt": "2026-05-06T15:53:24.285Z"
+        "elapsedMs": 26,
+        "builtAt": "2026-05-06T16:01:56.672Z"
       },
       {
         "id": "revenue-forecast",
         "version": "V5-locked-2026-04-19-shell-1.0",
-        "elapsedMs": 134,
-        "builtAt": "2026-05-06T15:53:24.285Z"
+        "elapsedMs": 126,
+        "builtAt": "2026-05-06T16:01:56.672Z"
       },
       {
         "id": "backlog",
         "version": "1.0-rules-encoded",
-        "elapsedMs": 22,
-        "builtAt": "2026-05-06T15:53:24.285Z"
+        "elapsedMs": 19,
+        "builtAt": "2026-05-06T16:01:56.672Z"
       },
       {
         "id": "installs-ytd",
         "version": "1.0-rules-encoded",
-        "elapsedMs": 19,
-        "builtAt": "2026-05-06T15:53:24.285Z"
+        "elapsedMs": 14,
+        "builtAt": "2026-05-06T16:01:56.672Z"
       }
     ]
   },
@@ -912,584 +912,554 @@
       "fullJobList": []
     },
     "weeklyTargets_BUDGET": {
-      "avgWeeklyNeed": 2672228,
-      "byJobType": [
-        {
-          "type": "Retail-No Financing",
-          "perWeek": 1148847,
-          "mix": 43
-        },
-        {
-          "type": "Insurance",
-          "perWeek": 1098205,
-          "mix": 41.1
-        },
-        {
-          "type": "Retail-Financing",
-          "perWeek": 425175,
-          "mix": 15.9
-        }
-      ],
-      "byTrade": [
-        {
-          "trade": "Roofing",
-          "perWeek": 1681438,
-          "mix": 62.9
-        },
-        {
-          "trade": "Gutters",
-          "perWeek": 792458,
-          "mix": 29.7
-        },
-        {
-          "trade": "Siding",
-          "perWeek": 60871,
-          "mix": 2.3
-        }
-      ],
+      "avgWeeklyNeed": 1476377.34,
+      "weeksRemaining": 35,
+      "annualPlan": 51673207,
+      "byJobType": [],
+      "byTrade": [],
       "byMarket": [
         {
-          "market": "Columbus",
-          "total": 743805,
-          "retNoFin": 292428,
-          "ins": 352071,
-          "retFin": 99306,
-          "deals": 77.6
-        },
-        {
           "market": "Detroit Metro",
-          "total": 482937,
-          "retNoFin": 331878,
-          "ins": 45067,
-          "retFin": 105992,
-          "deals": 30.9
+          "total": 439705.72,
+          "retNoFin": 0,
+          "ins": 0,
+          "retFin": 0,
+          "deals": 2.3
         },
         {
-          "market": "Nashville",
-          "total": 274827,
-          "retNoFin": 101518,
-          "ins": 89300,
-          "retFin": 84008,
-          "deals": 19.8
-        },
-        {
-          "market": "DC Metro",
-          "total": 249809,
-          "retNoFin": 143958,
-          "ins": 101508,
-          "retFin": 4342,
-          "deals": 16.5
-        },
-        {
-          "market": "Dayton",
-          "total": 177987,
-          "retNoFin": 50851,
-          "ins": 102425,
-          "retFin": 24710,
-          "deals": 10.9
-        },
-        {
-          "market": "Cincinnati",
-          "total": 158777,
-          "retNoFin": 49568,
-          "ins": 89449,
-          "retFin": 19760,
-          "deals": 10.1
-        },
-        {
-          "market": "Richmond",
-          "total": 137413,
-          "retNoFin": 22286,
-          "ins": 108672,
-          "retFin": 6455,
-          "deals": 7.1
-        },
-        {
-          "market": "Cleveland",
-          "total": 121677,
-          "retNoFin": 60088,
-          "ins": 35216,
-          "retFin": 26373,
-          "deals": 16.2
+          "market": "Columbus",
+          "total": 321586.37,
+          "retNoFin": 0,
+          "ins": 0,
+          "retFin": 0,
+          "deals": 1.9
         },
         {
           "market": "Raleigh",
-          "total": 118023,
-          "retNoFin": 13029,
-          "ins": 98208,
-          "retFin": 6786,
-          "deals": 7.7
+          "total": 265831.38,
+          "retNoFin": 0,
+          "ins": 0,
+          "retFin": 0,
+          "deals": 1.7
+        },
+        {
+          "market": "Cleveland",
+          "total": 182695.44,
+          "retNoFin": 0,
+          "ins": 0,
+          "retFin": 0,
+          "deals": 1.2
+        },
+        {
+          "market": "Cincinnati",
+          "total": 77740.78,
+          "retNoFin": 0,
+          "ins": 0,
+          "retFin": 0,
+          "deals": 1.1
+        },
+        {
+          "market": "DC Metro",
+          "total": 67377.3,
+          "retNoFin": 0,
+          "ins": 0,
+          "retFin": 0,
+          "deals": 1.1
+        },
+        {
+          "market": "Nashville",
+          "total": 43418.52,
+          "retNoFin": 0,
+          "ins": 0,
+          "retFin": 0,
+          "deals": 0.5
+        },
+        {
+          "market": "Dayton",
+          "total": 29913.88,
+          "retNoFin": 0,
+          "ins": 0,
+          "retFin": 0,
+          "deals": 0.5
+        },
+        {
+          "market": "Indianapolis",
+          "total": 24052.25,
+          "retNoFin": 0,
+          "ins": 0,
+          "retFin": 0,
+          "deals": 0.2
+        },
+        {
+          "market": "Richmond",
+          "total": 19421.88,
+          "retNoFin": 0,
+          "ins": 0,
+          "retFin": 0,
+          "deals": 0.4
         },
         {
           "market": "Knoxville",
-          "total": 115116,
-          "retNoFin": 59627,
-          "ins": 48658,
-          "retFin": 6831,
-          "deals": 6.5
-        },
-        {
-          "market": "Greenville",
-          "total": 79373,
-          "retNoFin": 21025,
-          "ins": 17738,
-          "retFin": 40611,
-          "deals": 3.3
+          "total": 4633.82,
+          "retNoFin": 0,
+          "ins": 0,
+          "retFin": 0,
+          "deals": 0.2
         }
       ],
       "weekSchedule": [
         {
-          "wk": "04/19/2026",
-          "mo": "Apr",
-          "target": 1959782
-        },
-        {
-          "wk": "04/26/2026",
-          "mo": "Apr",
-          "target": 2619633
-        },
-        {
-          "wk": "05/03/2026",
+          "wk": "05/11/2026",
           "mo": "May",
-          "target": 4269260
+          "target": 1476377.34
         },
         {
-          "wk": "05/10/2026",
+          "wk": "05/18/2026",
           "mo": "May",
-          "target": 4269260
+          "target": 1476377.34
         },
         {
-          "wk": "05/17/2026",
+          "wk": "05/25/2026",
           "mo": "May",
-          "target": 4269260
+          "target": 1476377.34
         },
         {
-          "wk": "05/24/2026",
-          "mo": "May",
-          "target": 4269260
-        },
-        {
-          "wk": "05/31/2026",
-          "mo": "May",
-          "target": 3489371
-        },
-        {
-          "wk": "06/07/2026",
+          "wk": "06/01/2026",
           "mo": "Jun",
-          "target": 3359390
+          "target": 1476377.34
         },
         {
-          "wk": "06/14/2026",
+          "wk": "06/08/2026",
           "mo": "Jun",
-          "target": 3359390
+          "target": 1476377.34
         },
         {
-          "wk": "06/21/2026",
+          "wk": "06/15/2026",
           "mo": "Jun",
-          "target": 3359390
+          "target": 1476377.34
         },
         {
-          "wk": "06/28/2026",
+          "wk": "06/22/2026",
           "mo": "Jun",
-          "target": 2757071
+          "target": 1476377.34
         },
         {
-          "wk": "07/05/2026",
+          "wk": "06/29/2026",
+          "mo": "Jun",
+          "target": 1476377.34
+        },
+        {
+          "wk": "07/06/2026",
           "mo": "Jul",
-          "target": 2305332
+          "target": 1476377.34
         },
         {
-          "wk": "07/12/2026",
+          "wk": "07/13/2026",
           "mo": "Jul",
-          "target": 2305332
+          "target": 1476377.34
         },
         {
-          "wk": "07/19/2026",
+          "wk": "07/20/2026",
           "mo": "Jul",
-          "target": 2305332
+          "target": 1476377.34
         },
         {
-          "wk": "07/26/2026",
+          "wk": "07/27/2026",
           "mo": "Jul",
-          "target": 2465088
+          "target": 1476377.34
         },
         {
-          "wk": "08/02/2026",
+          "wk": "08/03/2026",
           "mo": "Aug",
-          "target": 3423621
+          "target": 1476377.34
         },
         {
-          "wk": "08/09/2026",
+          "wk": "08/10/2026",
           "mo": "Aug",
-          "target": 3423621
+          "target": 1476377.34
         },
         {
-          "wk": "08/16/2026",
+          "wk": "08/17/2026",
           "mo": "Aug",
-          "target": 3423621
+          "target": 1476377.34
         },
         {
-          "wk": "08/23/2026",
+          "wk": "08/24/2026",
           "mo": "Aug",
-          "target": 3423621
+          "target": 1476377.34
         },
         {
-          "wk": "08/30/2026",
+          "wk": "08/31/2026",
           "mo": "Aug",
-          "target": 3007788
+          "target": 1476377.34
         },
         {
-          "wk": "09/06/2026",
+          "wk": "09/07/2026",
           "mo": "Sep",
-          "target": 2841454
+          "target": 1476377.34
         },
         {
-          "wk": "09/13/2026",
+          "wk": "09/14/2026",
           "mo": "Sep",
-          "target": 2841454
+          "target": 1476377.34
         },
         {
-          "wk": "09/20/2026",
+          "wk": "09/21/2026",
           "mo": "Sep",
-          "target": 2841454
+          "target": 1476377.34
         },
         {
-          "wk": "09/27/2026",
+          "wk": "09/28/2026",
           "mo": "Sep",
-          "target": 2918633
+          "target": 1476377.34
         },
         {
-          "wk": "10/04/2026",
+          "wk": "10/05/2026",
           "mo": "Oct",
-          "target": 3021539
+          "target": 1476377.34
         },
         {
-          "wk": "10/11/2026",
+          "wk": "10/12/2026",
           "mo": "Oct",
-          "target": 3021539
+          "target": 1476377.34
         },
         {
-          "wk": "10/18/2026",
+          "wk": "10/19/2026",
           "mo": "Oct",
-          "target": 3021539
+          "target": 1476377.34
         },
         {
-          "wk": "10/25/2026",
+          "wk": "10/26/2026",
           "mo": "Oct",
-          "target": 3021539
+          "target": 1476377.34
         },
         {
-          "wk": "11/01/2026",
+          "wk": "11/02/2026",
           "mo": "Nov",
-          "target": 1925810
+          "target": 1476377.34
         },
         {
-          "wk": "11/08/2026",
+          "wk": "11/09/2026",
           "mo": "Nov",
-          "target": 1925810
+          "target": 1476377.34
         },
         {
-          "wk": "11/15/2026",
+          "wk": "11/16/2026",
           "mo": "Nov",
-          "target": 1925810
+          "target": 1476377.34
         },
         {
-          "wk": "11/22/2026",
+          "wk": "11/23/2026",
           "mo": "Nov",
-          "target": 1925810
+          "target": 1476377.34
         },
         {
-          "wk": "11/29/2026",
+          "wk": "11/30/2026",
           "mo": "Nov",
-          "target": 1038196
+          "target": 1476377.34
         },
         {
-          "wk": "12/06/2026",
+          "wk": "12/07/2026",
           "mo": "Dec",
-          "target": 683150
+          "target": 1476377.34
         },
         {
-          "wk": "12/13/2026",
+          "wk": "12/14/2026",
           "mo": "Dec",
-          "target": 683150
+          "target": 1476377.34
         },
         {
-          "wk": "12/20/2026",
+          "wk": "12/21/2026",
           "mo": "Dec",
-          "target": 683150
+          "target": 1476377.34
         },
         {
-          "wk": "12/27/2026",
+          "wk": "12/28/2026",
           "mo": "Dec",
-          "target": 487965
+          "target": 1476377.34
         }
       ],
       "recent4WkAvg": 1622696.01
     },
     "budgetRecovery": {
-      "fullYearBudget": 126105724,
-      "totalToRecover": 5948966,
-      "upliftPct": 6.9,
-      "q1Budget": 16900198,
-      "q1Actual": 16409511,
-      "q1Shortfall": 490687,
-      "aprilGap": 5458279,
-      "aprilBudget": 12344293,
-      "aprilFcst": 6886014,
-      "adjWeeklySalesAvg": 2849800,
-      "origWeeklySalesAvg": 2672228,
-      "salesDeltaPerWeek": 177572,
-      "adjWeeklyProdAvg": 2853097,
-      "origWeeklyProdAvg": 2751323,
-      "prodDeltaPerWeek": 101774,
+      "fullYearBudget": 51673207,
+      "sourceFile": "2026 Commercial Budget.xlsx",
+      "totalToRecover": 0,
+      "upliftPct": -21,
+      "q1Budget": 4533497.2,
+      "q1Actual": 9284130.45,
+      "q1Shortfall": 4750633.25,
+      "aprilGap": 4475134.86,
+      "aprilBudget": 3233126.48,
+      "aprilFcst": 7708261.34,
+      "adjWeeklySalesAvg": 990880.43,
+      "origWeeklySalesAvg": 1254473.81,
+      "salesDeltaPerWeek": -263593.37,
+      "weeksRemaining": 35,
+      "adjWeeklyProdAvg": 990880.43,
+      "origWeeklyProdAvg": 1254473.81,
+      "prodDeltaPerWeek": -263593.37,
       "monthlyBridge": [
         {
           "mo": "Jan 2026",
-          "origBudget": 4269114,
-          "fcst": 4747192,
-          "recovTarget": 4747192,
+          "monthIdx": 0,
+          "origBudget": 664114.1,
+          "fcst": 664114.1,
+          "recovTarget": 3459924.79,
           "catchUp": 0,
-          "status": "Actual"
+          "status": "Actual",
+          "liveActual": 3459924.79,
+          "deals": 51
         },
         {
           "mo": "Feb 2026",
-          "origBudget": 4505158,
-          "fcst": 3778526,
-          "recovTarget": 3536393,
+          "monthIdx": 1,
+          "origBudget": 788730.42,
+          "fcst": 788730.42,
+          "recovTarget": 2446214.66,
           "catchUp": 0,
-          "status": "Actual"
+          "status": "Actual",
+          "liveActual": 2446214.66,
+          "deals": 35
         },
         {
           "mo": "Mar 2026",
-          "origBudget": 8125926,
-          "fcst": 4932169,
-          "recovTarget": 8125926,
+          "monthIdx": 2,
+          "origBudget": 3080652.68,
+          "fcst": 3080652.68,
+          "recovTarget": 3377991,
           "catchUp": 0,
-          "status": "Actual"
+          "status": "Actual",
+          "liveActual": 3377991,
+          "deals": 49
         },
         {
           "mo": "Apr 2026",
-          "origBudget": 12344293,
-          "fcst": 6886014,
-          "recovTarget": 6886014,
+          "monthIdx": 3,
+          "origBudget": 3233126.48,
+          "fcst": 3233126.48,
+          "recovTarget": 7708261.34,
           "catchUp": 0,
-          "status": "Forecast"
+          "status": "Actual",
+          "liveActual": 7708261.34,
+          "deals": 70
         },
         {
           "mo": "May 2026",
-          "origBudget": 14292330,
-          "fcst": 13455265,
-          "recovTarget": 15170128,
-          "catchUp": 877798,
-          "status": "Recovery",
-          "liveActual": 129342
+          "monthIdx": 4,
+          "origBudget": 6618395.96,
+          "fcst": 6618395.96,
+          "recovTarget": 6618395.96,
+          "catchUp": 0,
+          "status": "Active",
+          "liveActual": 129342,
+          "deals": 5
         },
         {
           "mo": "Jun 2026",
-          "origBudget": 14833760,
-          "fcst": 14345614,
-          "recovTarget": 15744811,
-          "catchUp": 911051,
-          "status": "Recovery"
+          "monthIdx": 5,
+          "origBudget": 3664695.3,
+          "fcst": 3664695.3,
+          "recovTarget": 3664695.3,
+          "catchUp": 0,
+          "status": "Recovery",
+          "deals": 0
         },
         {
           "mo": "Jul 2026",
-          "origBudget": 10752016,
-          "fcst": 12035648,
-          "recovTarget": 11412377,
-          "catchUp": 660361,
-          "status": "Recovery"
+          "monthIdx": 6,
+          "origBudget": 5298470.3,
+          "fcst": 5298470.3,
+          "recovTarget": 5298470.3,
+          "catchUp": 0,
+          "status": "Recovery",
+          "deals": 0
         },
         {
           "mo": "Aug 2026",
-          "origBudget": 14513476,
-          "fcst": 13517193,
-          "recovTarget": 15404856,
-          "catchUp": 891380,
-          "status": "Recovery"
+          "monthIdx": 7,
+          "origBudget": 5335688.23,
+          "fcst": 5335688.23,
+          "recovTarget": 5335688.23,
+          "catchUp": 0,
+          "status": "Recovery",
+          "deals": 0
         },
         {
           "mo": "Sep 2026",
-          "origBudget": 12228745,
-          "fcst": 12920784,
-          "recovTarget": 12979803,
-          "catchUp": 751058,
-          "status": "Recovery"
+          "monthIdx": 8,
+          "origBudget": 4474155.35,
+          "fcst": 4474155.35,
+          "recovTarget": 4474155.35,
+          "catchUp": 0,
+          "status": "Recovery",
+          "deals": 0
         },
         {
           "mo": "Oct 2026",
-          "origBudget": 13652917,
-          "fcst": 13110876,
-          "recovTarget": 14491444,
-          "catchUp": 838527,
-          "status": "Recovery"
+          "monthIdx": 9,
+          "origBudget": 7363288.71,
+          "fcst": 7363288.71,
+          "recovTarget": 7363288.71,
+          "catchUp": 0,
+          "status": "Recovery",
+          "deals": 0
         },
         {
           "mo": "Nov 2026",
-          "origBudget": 10772169,
-          "fcst": 10505376,
-          "recovTarget": 11433768,
-          "catchUp": 661599,
-          "status": "Recovery"
+          "monthIdx": 10,
+          "origBudget": 5872277.99,
+          "fcst": 5872277.99,
+          "recovTarget": 5872277.99,
+          "catchUp": 0,
+          "status": "Recovery",
+          "deals": 0
         },
         {
           "mo": "Dec 2026",
-          "origBudget": 5815820,
-          "fcst": 6302469,
-          "recovTarget": 6173013,
-          "catchUp": 357193,
-          "status": "Recovery"
+          "monthIdx": 11,
+          "origBudget": 5279611.49,
+          "fcst": 5279611.49,
+          "recovTarget": 5279611.49,
+          "catchUp": 0,
+          "status": "Recovery",
+          "deals": 0
         }
       ],
       "adjSalesByMarket": [
         {
-          "market": "Columbus",
-          "recovTarget": 264411,
-          "original": 247935,
-          "delta": 16476
-        },
-        {
           "market": "Detroit Metro",
-          "recovTarget": 171676,
-          "original": 160979,
-          "delta": 10697
+          "recovTarget": 649969.3,
+          "original": 728474.64,
+          "delta": -78505.35
         },
         {
-          "market": "Nashville",
-          "recovTarget": 97696,
-          "original": 91609,
-          "delta": 6088
-        },
-        {
-          "market": "DC Metro",
-          "recovTarget": 88803,
-          "original": 83270,
-          "delta": 5533
-        },
-        {
-          "market": "Dayton",
-          "recovTarget": 63271,
-          "original": 59329,
-          "delta": 3942
-        },
-        {
-          "market": "Cincinnati",
-          "recovTarget": 56442,
-          "original": 52926,
-          "delta": 3517
-        },
-        {
-          "market": "Richmond",
-          "recovTarget": 48848,
-          "original": 45804,
-          "delta": 3044
-        },
-        {
-          "market": "Cleveland",
-          "recovTarget": 43254,
-          "original": 40559,
-          "delta": 2695
+          "market": "Columbus",
+          "recovTarget": 475366.28,
+          "original": 532782.52,
+          "delta": -57416.24
         },
         {
           "market": "Raleigh",
-          "recovTarget": 41955,
-          "original": 39341,
-          "delta": 2614
+          "recovTarget": 392949.72,
+          "original": 440411.43,
+          "delta": -47461.71
+        },
+        {
+          "market": "Cleveland",
+          "recovTarget": 270058.87,
+          "original": 302677.43,
+          "delta": -32618.56
+        },
+        {
+          "market": "Cincinnati",
+          "recovTarget": 114915.78,
+          "original": 128795.67,
+          "delta": -13879.89
+        },
+        {
+          "market": "DC Metro",
+          "recovTarget": 99596.56,
+          "original": 111626.14,
+          "delta": -12029.59
+        },
+        {
+          "market": "Nashville",
+          "recovTarget": 64180.89,
+          "original": 71932.86,
+          "delta": -7751.97
+        },
+        {
+          "market": "Dayton",
+          "recovTarget": 44218.44,
+          "original": 49559.29,
+          "delta": -5340.84
+        },
+        {
+          "market": "Indianapolis",
+          "recovTarget": 35553.84,
+          "original": 39848.14,
+          "delta": -4294.3
+        },
+        {
+          "market": "Richmond",
+          "recovTarget": 28709.26,
+          "original": 32176.86,
+          "delta": -3467.6
         },
         {
           "market": "Knoxville",
-          "recovTarget": 40922,
-          "original": 38372,
-          "delta": 2550
-        },
-        {
-          "market": "Greenville",
-          "recovTarget": 28216,
-          "original": 26458,
-          "delta": 1758
-        },
-        {
-          "market": "Grand Rapids",
-          "recovTarget": 6657,
-          "original": 6242,
-          "delta": 415
+          "recovTarget": 6849.67,
+          "original": 7677,
+          "delta": -827.33
         }
       ],
       "adjProdByMarket": [
         {
-          "market": "Columbus",
-          "recovTarget": 273284,
-          "pct": 29.9
-        },
-        {
-          "market": "DC Metro",
-          "recovTarget": 116716,
-          "pct": 12.8
-        },
-        {
           "market": "Detroit Metro",
-          "recovTarget": 115017,
-          "pct": 12.6
+          "recovTarget": 649969.3,
+          "original": 728474.64,
+          "delta": -78505.35
         },
         {
-          "market": "Nashville",
-          "recovTarget": 96986,
-          "pct": 10.6
-        },
-        {
-          "market": "Cincinnati",
-          "recovTarget": 74119,
-          "pct": 8.1
-        },
-        {
-          "market": "Richmond",
-          "recovTarget": 57007,
-          "pct": 6.2
-        },
-        {
-          "market": "Cleveland",
-          "recovTarget": 42408,
-          "pct": 4.6
-        },
-        {
-          "market": "Dayton",
-          "recovTarget": 40967,
-          "pct": 4.5
+          "market": "Columbus",
+          "recovTarget": 475366.28,
+          "original": 532782.52,
+          "delta": -57416.24
         },
         {
           "market": "Raleigh",
-          "recovTarget": 35135,
-          "pct": 3.8
+          "recovTarget": 392949.72,
+          "original": 440411.43,
+          "delta": -47461.71
         },
         {
-          "market": "Knoxville",
-          "recovTarget": 30491,
-          "pct": 3.3
+          "market": "Cleveland",
+          "recovTarget": 270058.87,
+          "original": 302677.43,
+          "delta": -32618.56
         },
         {
-          "market": "Greenville",
-          "recovTarget": 14251,
-          "pct": 1.6
+          "market": "Cincinnati",
+          "recovTarget": 114915.78,
+          "original": 128795.67,
+          "delta": -13879.89
         },
         {
-          "market": "Grand Rapids",
-          "recovTarget": 10020,
-          "pct": 1.1
+          "market": "DC Metro",
+          "recovTarget": 99596.56,
+          "original": 111626.14,
+          "delta": -12029.59
+        },
+        {
+          "market": "Nashville",
+          "recovTarget": 64180.89,
+          "original": 71932.86,
+          "delta": -7751.97
+        },
+        {
+          "market": "Dayton",
+          "recovTarget": 44218.44,
+          "original": 49559.29,
+          "delta": -5340.84
         },
         {
           "market": "Indianapolis",
-          "recovTarget": 4781,
-          "pct": 0.5
+          "recovTarget": 35553.84,
+          "original": 39848.14,
+          "delta": -4294.3
         },
         {
-          "market": "Greensboro",
-          "recovTarget": 1469,
-          "pct": 0.2
+          "market": "Richmond",
+          "recovTarget": 28709.26,
+          "original": 32176.86,
+          "delta": -3467.6
         },
         {
-          "market": "Winston-Salem",
-          "recovTarget": 63,
-          "pct": 0
+          "market": "Knoxville",
+          "recovTarget": 6849.67,
+          "original": 7677,
+          "delta": -827.33
         }
       ]
     },
@@ -2899,7 +2869,7 @@
       "totalWOs": 322,
       "portfolioValue": 21350727.31,
       "avgDaysInStatus": 40,
-      "lastBuild": "2026-05-06T15:53:24.265Z"
+      "lastBuild": "2026-05-06T16:01:56.657Z"
     },
     "tabs": [
       {
@@ -4122,7 +4092,7 @@
       "multiTradeJobs": 10,
       "singleTradeJobs": 90,
       "multiTradePct": 10,
-      "lastBuild": "2026-05-06T15:53:24.285Z"
+      "lastBuild": "2026-05-06T16:01:56.672Z"
     },
     "tabs": [
       {
