@@ -1,0 +1,39 @@
+# Netlify headers config — keeps the dashboard data fresh.
+# Without this, browsers (and the iOS WebView) cache data.js for hours and
+# users see yesterday's numbers even though the build pushed an hour ago.
+
+# Per-LOB data file: refresh every page load. The file itself is small (~175KB)
+# so the bandwidth cost is trivial; the correctness win is large.
+/*/shared/data.js
+  Cache-Control: public, max-age=0, must-revalidate
+
+# Page definition modules: these change every time we edit a tab layout.
+# Treat them like data — revalidate on every load.
+/shared/page-defs-*.js
+  Cache-Control: public, max-age=0, must-revalidate
+
+# extracted-data.json companion file (used by the iOS app and by any
+# external integration that prefers JSON over the JS wrapper).
+/*/shared/extracted-data.json
+  Cache-Control: public, max-age=0, must-revalidate
+
+# Combined data.json at the root of /data/.
+/data/data.json
+  Cache-Control: public, max-age=0, must-revalidate
+
+# Layout, interactions, and styles change less often but should still revalidate
+# fast so a CSS or interaction tweak doesn't take 24h to reach users.
+/shared/layout.js
+  Cache-Control: public, max-age=300, must-revalidate
+/shared/interactions.js
+  Cache-Control: public, max-age=300, must-revalidate
+/shared/styles.css
+  Cache-Control: public, max-age=300, must-revalidate
+/mobile/shared/layout-mobile.js
+  Cache-Control: public, max-age=300, must-revalidate
+/mobile/shared/styles-mobile.css
+  Cache-Control: public, max-age=300, must-revalidate
+
+# HTML pages: revalidate on every load. They are tiny.
+/*.html
+  Cache-Control: public, max-age=0, must-revalidate

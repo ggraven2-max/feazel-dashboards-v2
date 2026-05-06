@@ -1129,39 +1129,94 @@
   })();
 
   // ============================================================
-  // COMPLETED → BILLING
+  // COMPLETED → BILLING (data-driven)
   // ============================================================
-  var billing = (D.completedBilling && D.completedBilling.rows) ? D.completedBilling : null;
-  pages.billing = {
-    eyebrow: 'BILLING · COMPLETED JOBS',
-    title: 'Completed → Billing',
-    intro: 'Jobs that are done in production but not yet invoiced. Every day of slip here is a day of cash sitting in CWIP instead of AR.',
-    tags: [{ kind: 'warn', text: billing ? billing.rows.length + ' jobs unbilled' : '51 jobs unbilled' }],
-    sections: [
-      {
-        kind: 'kpi-row', cols: 4,
-        items: [
-          { label: 'Unbilled Total',          value: '$1.0M',  sub: '51 completed jobs · 17d avg',    tone: 'warn' },
-          { label: 'Ready to Invoice',        value: '$38.6K', sub: '2 jobs ready today',             tone: 'success' },
-          { label: '60+ Days Aged',           value: '$134K',  sub: '4 jobs · escalation candidates', tone: 'danger' },
-          { label: 'Accounting Kickbacks',    value: '$172K',  sub: '10 jobs blocked',                 tone: 'danger' }
-        ]
-      },
-      billing ? {
-        kind: 'table', heading: 'Completed jobs awaiting invoice',
-        caption: 'Sorted by amount · 51 rows total',
-        headers: (billing.headers || ['Job', 'Customer', 'Branch', 'Amount', 'Days', 'Status']).map(function (h, i) {
-          return { label: h, num: i >= 3 };
-        }),
-        rows: billing.rows.map(function (r) { return r; }),
-        maxHeight: '520px'
-      } : null,
-      {
-        kind: 'callout', title: 'SLA target',
-        body: '100% of completed jobs invoiced within 21 days. Currently exceeding 21d ≈ 12 of 51 (24%). Raleigh is the worst offender at a 45-day average across 6 jobs.'
-      }
-    ].filter(Boolean)
-  };
+  (function () {
+    var cb = D.completedBilling || null;
+    var jobs = (cb && cb.fullJobList) || [];
+    // Field meanings from calculator: [jobNum, customer, salesRep, branch, _, amount, days, leadType]
+    var totalUnbilled = (cb && cb.totalUnbilled) || 0;
+    var totalJobs = (cb && cb.totalJobs) || jobs.length || 0;
+    var avgAge = (cb && cb.avgAge) || 0;
+
+    // Pull breakouts from the by-substatus aggregate (data-driven)
+    var bySub = (cb && cb.bySubStatus) || [];
+    function subAmt (label) {
+      var hit = bySub.find(function (r) { return r.subStatus === label; });
+      return hit ? hit.amount : 0;
+    }
+    function subCnt (label) {
+      var hit = bySub.find(function (r) { return r.subStatus === label; });
+      return hit ? hit.count : 0;
+    }
+    var readyAmt = subAmt('Ready to Invoice'),  readyCnt = subCnt('Ready to Invoice');
+    var kickAmt  = subAmt('Accounting Kickback'), kickCnt = subCnt('Accounting Kickback');
+
+    // 30+ days aged from tiers (Warning bucket = 30-59d) plus anything older if present
+    var tiers = (cb && cb.tiers) || [];
+    var aged30 = tiers.filter(function (t) {
+      return /30|60|90|aged|warning/i.test(t.label || '');
+    }).reduce(function (s, t) { return s + (t.amount || 0); }, 0);
+    var aged30Cnt = tiers.filter(function (t) {
+      return /30|60|90|aged|warning/i.test(t.label || '');
+    }).reduce(function (s, t) { return s + (t.count || 0); }, 0);
+
+    pages.billing = {
+      eyebrow: 'BILLING · COMPLETED JOBS',
+      title: 'Completed → Billing',
+      intro: 'Jobs that are done in production but not yet invoiced. Every day of slip here is a day of cash sitting in CWIP instead of AR.',
+      tags: [{ kind: 'warn', text: totalJobs + ' jobs unbilled · ' + fmt.money(totalUnbilled, { short: true }) }],
+      sections: [
+        {
+          kind: 'kpi-row', cols: 4,
+          items: [
+            { label: 'Unbilled Total',       value: fmt.money(totalUnbilled, { short: true }), sub: totalJobs + ' completed jobs · ' + avgAge.toFixed(1) + 'd avg', tone: 'warn' },
+            { label: 'Ready to Invoice',     value: fmt.money(readyAmt, { short: true }),       sub: readyCnt + ' jobs · no blockers', tone: readyAmt > 0 ? 'success' : 'navy' },
+            { label: '30+ Days Aged',        value: fmt.money(aged30, { short: true }),         sub: aged30Cnt + ' jobs · escalation candidates', tone: aged30Cnt > 0 ? 'danger' : 'success' },
+            { label: 'Accounting Kickbacks', value: fmt.money(kickAmt, { short: true }),        sub: kickCnt + ' jobs blocked', tone: kickCnt > 0 ? 'danger' : 'success' }
+          ]
+        },
+        bySub.length ? {
+          kind: 'table',
+          heading: 'Unbilled by sub-status (action breakdown)',
+          caption: 'Each sub-status has a distinct unblock action',
+          headers: [
+            { label: 'Sub-status', num: false },
+            { label: 'Jobs', num: true },
+            { label: 'Amount', num: true },
+            { label: 'Avg Age (d)', num: true },
+            { label: 'Action', num: false }
+          ],
+          rows: bySub.map(function (r) {
+            return [r.subStatus, r.count, fmt.money(r.amount), r.avgAge, r.action || ''];
+          })
+        } : null,
+        jobs.length ? {
+          kind: 'table',
+          heading: 'Completed jobs awaiting invoice',
+          caption: 'Sorted by amount · ' + jobs.length + ' rows total',
+          headers: [
+            { label: 'Job',       num: false },
+            { label: 'Customer',  num: false },
+            { label: 'Sales Rep', num: false },
+            { label: 'Branch',    num: false },
+            { label: 'Amount',    num: true },
+            { label: 'Days',      num: true },
+            { label: 'Lead Type', num: false }
+          ],
+          // Drop the empty 5th column from the calculator (legacy slot for sub-status)
+          rows: jobs.slice().sort(function (a, b) { return (b[5] || 0) - (a[5] || 0); }).map(function (r) {
+            return [r[0], r[1], r[2], r[3], fmt.money(r[5]), r[6], r[7]];
+          }),
+          maxHeight: '520px'
+        } : null,
+        {
+          kind: 'callout', tone: aged30Cnt > 0 ? 'warn' : 'success', title: 'SLA target',
+          body: '100% of completed jobs invoiced within 21 days. Currently <strong>' + aged30Cnt + ' of ' + totalJobs + '</strong> jobs (' + (totalJobs > 0 ? Math.round(aged30Cnt / totalJobs * 100) : 0) + '%) are aged 30+ days, totaling <strong>' + fmt.money(aged30, { short: true }) + '</strong>. Sub-status table above shows where the friction is.'
+        }
+      ].filter(Boolean)
+    };
+  })();
 
   // ============================================================
   // MF page builder: data-driven, reads from D.kpis / D.monthly etc
