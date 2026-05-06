@@ -709,10 +709,15 @@
   var Mrf = M.REVENUE_FORECAST || {}, Mso = M.SALES_OVERVIEW || {}, Mbl = M.BACKLOG || {};
 
   // Headline numbers (raw, for animated counters)
+  // CRITICAL: Invoiced YTD must come from NetSuite AR only. Never fall back to
+  // V5's full-year forecast (modelAnnualInvoiced) — that conflates a forecast
+  // with year-to-date actuals and inflated combined to ~$129M when NetSuite
+  // returned 0. Falling back to the KPI-string parse is fine because the KPI
+  // itself is sourced from NetSuite by applyNetSuiteOverride.
   var resInvoiced = (Rrf.netsuiteInvoiced && Rrf.netsuiteInvoiced.totalInvoiced) ||
-                    (Rrf.execSummary && Rrf.execSummary.modelAnnualInvoiced) || 0;
+                    parseMoney(findKpi(Rrf.kpis, 'Invoiced YTD') && findKpi(Rrf.kpis, 'Invoiced YTD').value) || 0;
   var mfInvoiced  = (Mrf.netsuiteInvoiced && Mrf.netsuiteInvoiced.totalInvoiced) ||
-                    parseMoney(findKpi(Mrf.kpis, 'Invoiced YTD') && findKpi(Mrf.kpis, 'Invoiced YTD').value);
+                    parseMoney(findKpi(Mrf.kpis, 'Invoiced YTD') && findKpi(Mrf.kpis, 'Invoiced YTD').value) || 0;
   var entInvoiced = resInvoiced + mfInvoiced;
 
   var resSigned = parseMoney(findKpi(Rso.kpis, 'Signed') && findKpi(Rso.kpis, 'Signed').value);

@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "builtAt": "2026-05-06T13:29:00.894Z",
+    "builtAt": "2026-05-06T14:03:49.542Z",
     "pipelineVersion": "2.0.0",
     "lob": "residential",
     "lastBuiltProjects": [
@@ -13,26 +13,26 @@
       {
         "id": "installs-ytd",
         "version": "1.0-rules-encoded",
-        "elapsedMs": 78,
-        "builtAt": "2026-05-06T13:29:00.894Z"
+        "elapsedMs": 73,
+        "builtAt": "2026-05-06T14:03:49.542Z"
       },
       {
         "id": "sales-overview",
         "version": "1.0-rules-encoded",
-        "elapsedMs": 279,
-        "builtAt": "2026-05-06T13:29:00.894Z"
+        "elapsedMs": 288,
+        "builtAt": "2026-05-06T14:03:49.542Z"
       },
       {
         "id": "revenue-forecast",
         "version": "V5-locked-2026-04-19-shell-1.0",
-        "elapsedMs": 4445,
-        "builtAt": "2026-05-06T13:29:00.894Z"
+        "elapsedMs": 3762,
+        "builtAt": "2026-05-06T14:03:49.542Z"
       },
       {
         "id": "backlog",
         "version": "1.0-rules-encoded",
-        "elapsedMs": 38,
-        "builtAt": "2026-05-06T13:29:00.894Z"
+        "elapsedMs": 41,
+        "builtAt": "2026-05-06T14:03:49.542Z"
       }
     ]
   },
@@ -51,7 +51,7 @@
       "multiTradeJobs": 318,
       "singleTradeJobs": 809,
       "multiTradePct": 28.2,
-      "lastBuild": "2026-05-06T13:29:00.894Z"
+      "lastBuild": "2026-05-06T14:03:49.542Z"
     },
     "tabs": [
       {
@@ -4264,8 +4264,8 @@
       },
       {
         "label": "Invoiced YTD",
-        "value": "$0",
-        "sub": "NetSuite AR · 0 invoices booked"
+        "value": "$21.5M",
+        "sub": "NetSuite AR · 1198 invoices booked"
       },
       {
         "label": "4-Week Avg Weekly Sales",
@@ -4306,9 +4306,9 @@
     },
     "monthRevenue": {
       "april": {
-        "invoiced": 8125926,
+        "invoiced": 8411661.160000004,
         "wipChange": 813618,
-        "netRevenue": 8939544,
+        "netRevenue": 9225279.160000004,
         "beginningWip": 3518463.231,
         "endingWip": 3092796.9555,
         "materialCost": 3121266.477,
@@ -6181,10 +6181,10 @@
       5815820
     ],
     "revModel": [
-      4747192,
-      3726314.181,
-      4822097.129,
-      9662592.2868,
+      3312733.0599999987,
+      2855781.11,
+      6228299.340000002,
+      8411661.160000004,
       13991386.3178,
       14274107.8353,
       11941767.9589,
@@ -6195,10 +6195,10 @@
       6291797.7505
     ],
     "revFromKnown": [
-      4747192,
-      3726314.181,
-      4822097.129,
-      9662592.2868,
+      3312733.0599999987,
+      2855781.11,
+      6228299.340000002,
+      8411661.160000004,
       4508755.8355,
       1691390.3258,
       683452.1866,
@@ -6416,15 +6416,17 @@
     },
     "_source": "calculator/revenue-forecast.js V5-locked-2026-04-19-shell-1.0",
     "netsuiteInvoiced": {
-      "source": "ResInvoicedYTDResults788.csv",
-      "totalInvoiced": 0,
-      "invoiceCount": 0,
+      "source": "ResInvoicedYTDResults803.csv",
+      "format": "per-invoice",
+      "aggregatedOnly": false,
+      "totalInvoiced": 21497088.189999983,
+      "invoiceCount": 1198,
       "monthly": [
-        0,
-        0,
-        0,
-        0,
-        0,
+        3312733.0599999987,
+        2855781.11,
+        6228299.340000002,
+        8411661.160000004,
+        688613.5200000001,
         0,
         0,
         0,
@@ -6433,10 +6435,102 @@
         0,
         0
       ],
-      "byBranch": {},
-      "monthsWithData": [],
-      "latestInvoiceDate": null,
-      "actualMonths": []
+      "byBranch": {
+        "Greenville": {
+          "invoiced": 736143.71,
+          "count": 29
+        },
+        "Richmond": {
+          "invoiced": 1156300.3499999999,
+          "count": 64
+        },
+        "DC Metro": {
+          "invoiced": 2141431.48,
+          "count": 119
+        },
+        "Cleveland": {
+          "invoiced": 776359.75,
+          "count": 62
+        },
+        "Nashville": {
+          "invoiced": 2592880.680000001,
+          "count": 102
+        },
+        "Columbus": {
+          "invoiced": 6320324.290000001,
+          "count": 380
+        },
+        "Dayton": {
+          "invoiced": 1427315.9800000002,
+          "count": 86
+        },
+        "Cincinnati": {
+          "invoiced": 1413096.8600000003,
+          "count": 80
+        },
+        "Detroit": {
+          "invoiced": 2462883.9999999995,
+          "count": 149
+        },
+        "Raleigh": {
+          "invoiced": 1351157.4300000002,
+          "count": 67
+        },
+        "Knoxville": {
+          "invoiced": 1068071.25,
+          "count": 57
+        },
+        "Charlotte": {
+          "invoiced": 33694.41,
+          "count": 1
+        },
+        "Grand Rapids": {
+          "invoiced": 17428,
+          "count": 2
+        }
+      },
+      "monthsWithData": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "latestInvoiceDate": "2026-05-06",
+      "actualMonths": [
+        {
+          "monthIdx": 0,
+          "short": "Jan 2026",
+          "long": "January 2026",
+          "invoiced": 3312733.0599999987,
+          "source": "NetSuite (locked)",
+          "locked": true
+        },
+        {
+          "monthIdx": 1,
+          "short": "Feb 2026",
+          "long": "February 2026",
+          "invoiced": 2855781.11,
+          "source": "NetSuite (locked)",
+          "locked": true
+        },
+        {
+          "monthIdx": 2,
+          "short": "Mar 2026",
+          "long": "March 2026",
+          "invoiced": 6228299.340000002,
+          "source": "NetSuite (locked)",
+          "locked": true
+        },
+        {
+          "monthIdx": 3,
+          "short": "Apr 2026",
+          "long": "April 2026",
+          "invoiced": 8411661.160000004,
+          "source": "NetSuite (locked)",
+          "locked": true
+        }
+      ]
     },
     "v5ExcelCheck": {
       "source": "Revenue Forecast Model.xlsx",
@@ -6462,8 +6556,23 @@
         "Nov 2026": 12539279.44330397,
         "Dec 2026": 10340883.43761677
       },
-      "checks": [],
-      "drifted": 0
+      "checks": [
+        {
+          "label": "Invoiced YTD",
+          "excel": 20921267.06,
+          "calc": 21497088.189999983,
+          "diff": 575821.129999984,
+          "drift": true
+        },
+        {
+          "label": "April Invoiced",
+          "excel": 8411542.48,
+          "calc": 8411661.160000004,
+          "diff": 118.68000000342727,
+          "drift": false
+        }
+      ],
+      "drifted": 1
     }
   },
   "BACKLOG": {
@@ -6475,7 +6584,7 @@
       "totalWOs": 749,
       "portfolioValue": 10743756.42,
       "avgDaysInStatus": 12,
-      "lastBuild": "2026-05-06T13:29:00.814Z"
+      "lastBuild": "2026-05-06T14:03:49.467Z"
     },
     "tabs": [
       {

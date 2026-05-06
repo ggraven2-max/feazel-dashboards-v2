@@ -1041,7 +1041,10 @@
     var rf = (window.FZ && window.FZ.data && window.FZ.data.REVENUE_FORECAST) || {};
     var ns = rf.netsuiteInvoiced || {};
     var br = D.budgetRecovery || {};
-    var monthly = (ns.monthly && ns.monthly.length === 12) ? ns.monthly : null;
+    // Aggregated NetSuite rollups (Location + Sum of Amount) have no per-month
+    // detail. Treat Q1 as unavailable rather than reading zeros as actuals.
+    var aggOnly = !!ns.aggregatedOnly;
+    var monthly = (!aggOnly && ns.monthly && ns.monthly.length === 12) ? ns.monthly : null;
     var budgetInv = (rf.budgetInv && rf.budgetInv.length === 12) ? rf.budgetInv : null;
 
     var q1Inv = monthly ? (monthly[0] + monthly[1] + monthly[2]) : null;
@@ -1050,13 +1053,18 @@
     var fullYearBudget = br.fullYearBudget || (rf.execSummary && rf.execSummary.budget) || 125600000;
     var annualForecast = (rf.execSummary && rf.execSummary.modelAnnualInvoiced) || 0;
     var annualGap = annualForecast - fullYearBudget;
+    var ytdActual = ns.totalInvoiced || 0;     // works in both formats
 
     pages['budget-recovery'] = {
       eyebrow: 'BUDGET RECOVERY · Q1 INVOICED BASIS',
       title: 'Budget Recovery',
-      intro: 'The path back to the residential plan, measured against booked invoiced revenue (NetSuite AR) rather than signed sales. Q1 numbers below are the invoices booked through 3/31, not contracts signed.',
+      intro: aggOnly
+        ? 'The path back to the residential plan, measured against booked invoiced revenue (NetSuite AR). The latest NetSuite export is a branch-aggregated rollup, so YTD and per-branch totals are available but Q1 monthly detail is not. See the callout below for how to unlock the per-month view.'
+        : 'The path back to the residential plan, measured against booked invoiced revenue (NetSuite AR) rather than signed sales. Q1 numbers below are the invoices booked through 3/31, not contracts signed.',
       tags: [
-        { kind: q1Shortfall != null && q1Shortfall < 0 ? 'danger' : 'success', text: q1Shortfall != null ? 'Q1 ' + (q1Shortfall >= 0 ? '+' : '') + fmt.money(q1Shortfall, { short: true }) + ' vs plan' : 'Q1 data pending' },
+        aggOnly
+          ? { kind: 'warn', text: 'YTD ' + fmt.money(ytdActual, { short: true }) + ' (branch rollup, no Q1 detail)' }
+          : { kind: q1Shortfall != null && q1Shortfall < 0 ? 'danger' : 'success', text: q1Shortfall != null ? 'Q1 ' + (q1Shortfall >= 0 ? '+' : '') + fmt.money(q1Shortfall, { short: true }) + ' vs plan' : 'Q1 data pending' },
         { kind: annualGap < 0 ? 'warn' : 'success', text: 'Annual ' + (annualGap >= 0 ? '+' : '') + fmt.money(annualGap, { short: true }) }
       ],
       sections: [
@@ -1103,11 +1111,18 @@
           ]])
         } : null,
         {
-          kind: 'callout', tone: q1Shortfall != null && q1Shortfall < 0 ? 'danger' : 'success',
-          title: q1Shortfall != null && q1Shortfall < 0 ? 'Q1 invoiced shortfall' : q1Shortfall != null && q1Shortfall >= 0 ? 'Q1 ahead of plan' : 'Q1 data not yet locked',
-          body: q1Shortfall != null
-            ? 'Q1 booked invoices ' + (q1Shortfall < 0 ? 'underran' : 'exceeded') + ' the plan by <strong>' + fmt.money(Math.abs(q1Shortfall), { short: true }) + '</strong>. The recovery (or excess) flows through to the rest of the year via the V5 monthly bridge. See <strong>Revenue Forecast → Budget Recovery</strong> for the week-by-week schedule and per-market splits.'
-            : 'Q1 invoiced figures will populate once the NetSuite AR export is ingested. Drop the latest <code>ResInvoicedYTDResults*.csv</code> into <code>inputs/residential/revenue-forecast/</code> and rerun the build.'
+          kind: 'callout',
+          tone: q1Shortfall != null && q1Shortfall < 0 ? 'danger' : aggOnly ? 'warn' : 'success',
+          title: aggOnly
+            ? 'Q1 detail unavailable — NetSuite file is a branch rollup'
+            : q1Shortfall != null && q1Shortfall < 0 ? 'Q1 invoiced shortfall'
+            : q1Shortfall != null && q1Shortfall >= 0 ? 'Q1 ahead of plan'
+            : 'Q1 data not yet locked',
+          body: aggOnly
+            ? 'The latest NetSuite export (<code>' + (ns.source || 'ResInvoicedYTDResults*.csv') + '</code>) is the <strong>branch-aggregated</strong> view: Location + Sum of Amount only, with no Date column. YTD total (<strong>' + fmt.money(ytdActual, { short: true }) + '</strong>) and per-branch splits load fine, but Jan/Feb/Mar cannot be separated. To unlock Q1 vs plan and per-month chart locks, re-export the same NetSuite saved search with the per-invoice columns (Internal ID, Date, Period, Type, Location, Amount) and re-drop into <code>inputs/residential/revenue-forecast/</code>.'
+            : q1Shortfall != null
+              ? 'Q1 booked invoices ' + (q1Shortfall < 0 ? 'underran' : 'exceeded') + ' the plan by <strong>' + fmt.money(Math.abs(q1Shortfall), { short: true }) + '</strong>. The recovery (or excess) flows through to the rest of the year via the V5 monthly bridge. See <strong>Revenue Forecast → Budget Recovery</strong> for the week-by-week schedule and per-market splits.'
+              : 'Q1 invoiced figures will populate once the NetSuite AR export is ingested. Drop the latest <code>ResInvoicedYTDResults*.csv</code> into <code>inputs/residential/revenue-forecast/</code> and rerun the build.'
         }
       ].filter(Boolean)
     };

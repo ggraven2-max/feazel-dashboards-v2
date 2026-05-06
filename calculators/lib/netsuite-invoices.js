@@ -98,16 +98,25 @@ function parseCsv(text) {
  * Parse the NetSuite invoice CSV from inputDir, return aggregates.
  * Returns null if file not found.
  *
+ * Supports TWO file formats:
+ *   1. Per-invoice (preferred): columns include Date, Period, Type, Location, Amount.
+ *      Returns full monthly breakdown plus byBranch, byMonth, latestDate.
+ *   2. Branch-aggregated (fallback): columns are Location, Sum of Amount only.
+ *      Returns totalInvoiced + byBranch only. Sets aggregatedOnly: true.
+ *      monthly[] stays zeroed because the rollup has no date column.
+ *
  * Result shape:
  *   {
  *     fileName,
+ *     format: 'per-invoice' | 'aggregated',
+ *     aggregatedOnly: boolean,  // true means no per-month or per-date data
  *     totalInvoiced,            // sum of all Invoice rows (all months YTD)
  *     invoiceCount,
  *     monthly: number[12],      // sum per month for FY (zero for months without invoices)
  *     byBranch: { [branch]: { invoiced: number, count: number } },
  *     byMonth:  { [monthKey]: { invoiced: number, count: number } },
- *     latestDate: Date,
- *     periods: string[]         // e.g. ['Jan 2026', 'Feb 2026', ...]
+ *     latestDate: Date | null,
+ *     monthsWithData: number[]
  *   }
  */
 function parseInvoices(inputDir) {
@@ -126,6 +135,14 @@ function parseInvoices(inputDir) {
   const cPeriod = idx('period');
   const cType = idx('type');
   const cAmount = idx('amount');
+  const cSumAmount = idx('sum of amount');
+
+  // Format detection: aggregated rollups have Location + "Sum of Amount" only,
+  // no Date / Period / Type columns. Per-invoice exports have all the detail.
+  const isAggregated = (cSumAmount >= 0) && (cDate < 0 || cPeriod < 0 || cType < 0);
+  if (isAggregated) {
+    return parseAggregated(file, rows, cLocation, cSumAmount);
+  }
 
   const monthly = new Array(12).fill(0);
   const byBranch = {};
@@ -177,6 +194,8 @@ function parseInvoices(inputDir) {
 
   return {
     fileName: path.basename(file),
+    format: 'per-invoice',
+    aggregatedOnly: false,
     totalInvoiced: totalInvoiced,
     invoiceCount: invoiceCount,
     monthly: monthly,
@@ -184,6 +203,51 @@ function parseInvoices(inputDir) {
     byMonth: byMonth,
     latestDate: latestDate,
     monthsWithData: Array.from(periodsSeen).sort((a, b) => a - b)
+  };
+}
+
+/**
+ * Parse a branch-rollup NetSuite export with only Location + Sum of Amount.
+ * No date / period info, so monthly[] stays zeroed and latestDate is null.
+ */
+function parseAggregated(file, rows, cLocation, cSumAmount) {
+  const byBranch = {};
+  let totalInvoiced = 0;
+  let branchCount = 0;
+
+  for (let r = 1; r < rows.length; r++) {
+    const row = rows[r];
+    if (!row || row.every(c => !c || !c.trim())) continue;
+
+    const loc = (row[cLocation] || '').trim();
+    if (!loc) continue;
+
+    // Skip the "Total" / grand-total summary row to avoid double counting
+    if (/^total$/i.test(loc) || /^grand total$/i.test(loc)) continue;
+
+    const amount = parseAmount(row[cSumAmount]);
+    if (!amount) continue;
+
+    const branch = normalizeBranch(loc);
+    if (!byBranch[branch]) byBranch[branch] = { invoiced: 0, count: 0 };
+    byBranch[branch].invoiced += amount;
+    // count is unknown in aggregated mode; leave at 0 to signal "unknown"
+    totalInvoiced += amount;
+    branchCount++;
+  }
+
+  return {
+    fileName: path.basename(file),
+    format: 'aggregated',
+    aggregatedOnly: true,
+    totalInvoiced: totalInvoiced,
+    invoiceCount: 0,            // unknown in aggregated mode
+    monthly: new Array(12).fill(0),
+    byBranch: byBranch,
+    byMonth: {},
+    latestDate: null,
+    monthsWithData: [],
+    branchCount: branchCount
   };
 }
 

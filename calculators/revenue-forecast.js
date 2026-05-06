@@ -392,15 +392,25 @@ function applyNetSuiteOverride(out, inputDir) {
     return '$' + Math.round(v).toLocaleString('en-US');
   };
 
-  console.log('  [' + PROJECT_ID + '] NetSuite override: ' + ns.invoiceCount + ' invoices totaling $' +
-    Math.round(ns.totalInvoiced).toLocaleString() + ' from ' + ns.fileName);
+  if (ns.aggregatedOnly) {
+    console.log('  [' + PROJECT_ID + '] NetSuite override (BRANCH ROLLUP): $' +
+      Math.round(ns.totalInvoiced).toLocaleString() + ' across ' +
+      Object.keys(ns.byBranch).length + ' branches from ' + ns.fileName);
+    console.log('  [' + PROJECT_ID + '] NOTE: aggregated rollup has no Date column. ' +
+      'Per-month chart locks and Q1 detail will be unavailable until a per-invoice export is provided.');
+  } else {
+    console.log('  [' + PROJECT_ID + '] NetSuite override: ' + ns.invoiceCount + ' invoices totaling $' +
+      Math.round(ns.totalInvoiced).toLocaleString() + ' from ' + ns.fileName);
+  }
 
   // Find the "Invoiced YTD" KPI and patch it
   if (Array.isArray(out.kpis)) {
     for (const k of out.kpis) {
       if (k && /invoiced ytd/i.test(k.label || '')) {
         k.value = fmtShort(ns.totalInvoiced);
-        k.sub = 'NetSuite AR · ' + ns.invoiceCount + ' invoices booked';
+        k.sub = ns.aggregatedOnly
+          ? 'NetSuite AR · branch rollup'
+          : 'NetSuite AR · ' + ns.invoiceCount + ' invoices booked';
       }
     }
   }
@@ -460,6 +470,8 @@ function applyNetSuiteOverride(out, inputDir) {
   // Stash NetSuite numbers + lock list in a sub-object the dashboard can read
   out.netsuiteInvoiced = {
     source: ns.fileName,
+    format: ns.format,
+    aggregatedOnly: !!ns.aggregatedOnly,
     totalInvoiced: ns.totalInvoiced,
     invoiceCount: ns.invoiceCount,
     monthly: ns.monthly,
