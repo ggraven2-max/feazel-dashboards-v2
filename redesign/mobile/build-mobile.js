@@ -346,7 +346,17 @@ function main () {
     // 2) Each dashboard's pages
     dashboards.forEach(function (d) {
       const folder = d.folder;
-      const dashTitle = d.title;
+      // Registry titles are residential-flavored ("Residential Sales Overview",
+      // "Job Backlog & Production"). For MF pages, swap to MF-flavored titles
+      // so the browser tab reads correctly.
+      let dashTitle = d.title;
+      if (lob === 'multi-family') {
+        dashTitle = dashTitle
+          .replace(/Residential Sales Overview/g, 'Multi-Family Sales Overview')
+          .replace(/Residential Revenue Forecast/g, 'Multi-Family Revenue Forecast')
+          .replace(/Residential Installs YTD/g, 'Multi-Family Installs YTD')
+          .replace(/Job Backlog & Production/g, 'Multi-Family Backlog & Production');
+      }
       const dashDir = path.join(lobRoot, folder);
       fs.mkdirSync(dashDir, { recursive: true });
 
