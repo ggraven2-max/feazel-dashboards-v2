@@ -30,10 +30,16 @@ window.FZ.renderShell = function (opts) {
     var match = window.location.pathname.match(/\/(residential|multi-family|service)\//);
     return match ? match[1] : 'residential';
   })();
-  // Filter dashboards by LOB. Service only ships with Revenue Forecast today.
+  // Filter dashboards by LOB. Service ships with Revenue Forecast and
+  // Service Calls YTD; the latter doesn't live in the shared registry,
+  // so we tack on a synthetic entry.
   var dashboards = window.FZ.dashboards;
   if (lob === 'service') {
     dashboards = dashboards.filter(function (d) { return d.folder === 'revenue-forecast'; });
+    dashboards = dashboards.concat([
+      { id: 'service-calls', folder: 'service-calls', short: 'Service Calls',
+        title: 'Service Calls YTD', icon: 'check-circle' }
+    ]);
   }
 
   // Path prefix to LOB root from this page
@@ -47,6 +53,12 @@ window.FZ.renderShell = function (opts) {
 
   var current = (folder && slug !== 'index') ? window.FZ.findPage(folder, slug) : null;
   var currentDashboard = folder ? window.FZ.findDashboard(folder) : null;
+  // Synthetic dashboard for Service Calls (not in shared registry).
+  if (!currentDashboard && lob === 'service' && folder === 'service-calls') {
+    currentDashboard = { id: 'service-calls', folder: 'service-calls',
+                         short: 'Service Calls', title: 'Service Calls YTD',
+                         icon: 'check-circle', pages: [] };
+  }
 
   // ---- SIDEBAR ----
   var lobLabel = (lob === 'service') ? 'Service' : (lob === 'multi-family') ? 'Multi-Family' : 'Residential';
@@ -55,13 +67,18 @@ window.FZ.renderShell = function (opts) {
   // Service hub. Likewise, MF/Residential links from a Service folder also
   // fall through to the LOB hub when the folder doesn't exist there.
   var ALL_LOBS = ['residential', 'multi-family', 'service'];
-  var SERVICE_FOLDERS = { 'revenue-forecast': true };
+  // Folders supported per LOB (for cross-LOB sidebar links to fall through
+  // gracefully to the LOB hub instead of 404ing on a non-existent folder).
+  var SERVICE_FOLDERS = { 'revenue-forecast': true, 'service-calls': true };
+  var RES_MF_FOLDERS  = { 'sales-overview': true, 'revenue-forecast': true, 'backlog': true, 'installs-ytd': true };
   function urlForLob (target) {
     var prefixToTarget = atRoot ? ('../' + target + '/') : ('../../' + target + '/');
     if (target === lob) return '#';
-    // From any LOB → Service: only revenue-forecast is supported, fall through to hub otherwise
-    if (target === 'service' && folder && !SERVICE_FOLDERS[folder]) return prefixToTarget + 'index.html';
-    if (folder) return prefixToTarget + folder + '/' + (slug === 'index' ? 'index.html' : slug + '.html');
+    if (folder) {
+      if (target === 'service' && !SERVICE_FOLDERS[folder]) return prefixToTarget + 'index.html';
+      if ((target === 'residential' || target === 'multi-family') && !RES_MF_FOLDERS[folder]) return prefixToTarget + 'index.html';
+      return prefixToTarget + folder + '/' + (slug === 'index' ? 'index.html' : slug + '.html');
+    }
     return prefixToTarget + 'index.html';
   }
   var sidebarHTML = ''
@@ -146,6 +163,15 @@ window.FZ.renderShell = function (opts) {
       { slug: 'profitability',    label: 'Profitability',        short: 'Profit' },
       { slug: 'budget-recovery',  label: 'Budget Recovery',      short: 'Recovery' },
       { slug: 'recommendations',  label: 'Recommendations',      short: 'Recs' }
+    ],
+    'service-calls': [
+      { slug: 'index',        label: 'Dashboard Home',       short: 'Home' },
+      { slug: 'appointments', label: 'Service Appointments', short: 'Appointments' },
+      { slug: 'techs',        label: 'Techs',                short: 'Techs' },
+      { slug: 'branches',     label: 'Branches',             short: 'Branches' },
+      { slug: 'accounts',     label: 'Accounts',             short: 'Accounts' },
+      { slug: 'aging',        label: 'Aging & Warnings',     short: 'Aging' },
+      { slug: 'findings',     label: 'Findings',             short: 'Findings' }
     ]
   };
   var subnavHTML = '';

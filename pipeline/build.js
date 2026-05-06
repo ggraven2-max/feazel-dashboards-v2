@@ -16,17 +16,18 @@ const fs = require('fs');
 const path = require('path');
 
 const ROOT = path.join(__dirname, '..');
-const PROJECTS = ['sales-overview', 'revenue-forecast', 'backlog', 'installs-ytd'];
+const PROJECTS = ['sales-overview', 'revenue-forecast', 'backlog', 'installs-ytd', 'service-calls'];
 const LOBS = ['residential', 'multi-family', 'service'];
-// Service is a fee-for-service line. It only has Revenue Forecast for now;
-// other projects are skipped via SERVICE_PROJECTS to avoid running calculators
-// that have no Service input data.
-const SERVICE_PROJECTS = new Set(['revenue-forecast']);
+// Service is a fee-for-service line. Allow only the Service-shaped projects.
+const SERVICE_PROJECTS = new Set(['revenue-forecast', 'service-calls']);
+// Conversely, service-calls only runs for Service.
+const SERVICE_ONLY_PROJECTS = new Set(['service-calls']);
 const KEY_MAP = {
   'sales-overview':   'SALES_OVERVIEW',
   'revenue-forecast': 'REVENUE_FORECAST',
   'backlog':          'BACKLOG',
-  'installs-ytd':     'INSTALLS_YTD'
+  'installs-ytd':     'INSTALLS_YTD',
+  'service-calls':    'SERVICE_CALLS'
 };
 
 function parseArgs(argv) {
@@ -141,11 +142,13 @@ function buildLob(lob, projectsToRun) {
     }
   }
 
-  // Service only ships with a subset of projects today (Revenue Forecast).
-  // Skip the rest so the build doesn't fail on missing input directories.
+  // Service only ships with a subset of projects (Revenue Forecast +
+  // Service Calls today). Skip the rest so the build doesn't fail on missing
+  // input directories. Conversely, the Service-only projects are skipped
+  // for residential / MF since they have no input data there.
   const filteredProjects = (lob === 'service')
     ? projectsToRun.filter(function (p) { return SERVICE_PROJECTS.has(p); })
-    : projectsToRun;
+    : projectsToRun.filter(function (p) { return !SERVICE_ONLY_PROJECTS.has(p); });
   if (lob === 'service' && filteredProjects.length === 0) {
     console.log('  [service] no Service-supported projects in this build, skipping LOB.');
     return { lob, ok: true, combined: {} };
