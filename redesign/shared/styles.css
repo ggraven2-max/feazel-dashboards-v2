@@ -1012,3 +1012,259 @@ a:hover { color: var(--feazel-blue-hover); text-decoration: underline; text-unde
   .page { max-width: 100%; padding: 0; }
   .card, .kpi, .chart-card, .tbl-wrap { box-shadow: none; }
 }
+
+/* ============================================================
+   FEAZEL PREMIUM INTERACTIONS LAYER (v2)
+   Animation, micro-interactions, motion. Triggered by
+   shared/interactions.js via class hooks (fz-*).
+   ============================================================ */
+
+/* ----- Top scroll progress bar ----- */
+.fz-scroll-progress {
+  position: fixed;
+  top: 0; left: 0;
+  height: 3px;
+  width: 0%;
+  background: linear-gradient(90deg, var(--feazel-blue) 0%, var(--feazel-blue-press) 50%, #d4a857 100%);
+  box-shadow: 0 0 14px rgba(94,130,188,0.6);
+  z-index: 1000;
+  border-radius: 0 3px 3px 0;
+  transition: width 60ms linear;
+  pointer-events: none;
+}
+
+/* ----- Fade-up reveal ----- */
+.fz-reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 700ms cubic-bezier(0.16, 1, 0.3, 1),
+              transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+.fz-reveal.is-revealed {
+  opacity: 1;
+  transform: none;
+}
+
+/* ----- Card 3D tilt + spotlight ----- */
+.fz-tilt {
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 320ms cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 320ms ease,
+              border-color 320ms ease;
+  --tilt-x: 0deg;
+  --tilt-y: 0deg;
+  --mx: 50%;
+  --my: 50%;
+}
+.fz-tilt:hover {
+  transform: perspective(900px) rotateX(var(--tilt-x)) rotateY(var(--tilt-y)) translateY(-3px);
+  box-shadow: 0 20px 48px -16px rgba(31,45,75,0.28),
+              0 8px 16px -8px rgba(31,45,75,0.12);
+  border-color: rgba(94,130,188,0.35);
+}
+.fz-tilt::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(circle 220px at var(--mx) var(--my), rgba(94,130,188,0.10), transparent 65%);
+  opacity: 0;
+  transition: opacity 240ms ease;
+  pointer-events: none;
+}
+.fz-tilt:hover::after { opacity: 1; }
+
+/* The ripple lives inside .tile / .subnav a — clip overflow so it doesn't bleed */
+.tile, .subnav a { position: relative; overflow: hidden; }
+
+/* ----- Click ripples ----- */
+.fz-ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(94,130,188,0.28);
+  transform: translate(-50%, -50%) scale(0);
+  width: 12px; height: 12px;
+  animation: fz-ripple-anim 700ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  pointer-events: none;
+}
+@keyframes fz-ripple-anim {
+  to { transform: translate(-50%, -50%) scale(28); opacity: 0; }
+}
+
+/* ----- Subnav animated indicator ----- */
+.subnav { position: relative; }
+.fz-subnav-indicator {
+  position: absolute;
+  bottom: 6px;
+  left: 0;
+  height: 3px;
+  width: 0;
+  background: linear-gradient(90deg, var(--feazel-blue) 0%, #d4a857 100%);
+  border-radius: 2px;
+  opacity: 0;
+  transition: left 380ms cubic-bezier(0.16, 1, 0.3, 1),
+              width 380ms cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 220ms ease;
+  pointer-events: none;
+}
+
+/* ----- Sticky topbar glass ----- */
+.topbar {
+  transition: background 280ms ease,
+              backdrop-filter 280ms ease,
+              border-color 280ms ease,
+              box-shadow 280ms ease;
+}
+.topbar.is-scrolled {
+  background: rgba(31,45,75,0.78);
+  backdrop-filter: saturate(140%) blur(14px);
+  -webkit-backdrop-filter: saturate(140%) blur(14px);
+  border-bottom-color: rgba(255,255,255,0.10);
+  box-shadow: 0 4px 24px -8px rgba(0,0,0,0.28);
+}
+
+/* ----- KPI value: click to copy flash ----- */
+.kpi-value { position: relative; }
+.fz-copy-flash {
+  position: absolute;
+  top: -8px; right: -10px;
+  background: var(--success);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  padding: 3px 7px;
+  border-radius: 999px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  animation: fz-flash-pop 1100ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  pointer-events: none;
+}
+@keyframes fz-flash-pop {
+  0%   { opacity: 0; transform: translateY(6px) scale(0.85); }
+  20%  { opacity: 1; transform: translateY(0) scale(1); }
+  80%  { opacity: 1; transform: translateY(0) scale(1); }
+  100% { opacity: 0; transform: translateY(-6px) scale(0.95); }
+}
+
+/* ----- Sub-nav links: subtle underline grow on hover ----- */
+.subnav a {
+  transition: color 200ms ease, background 200ms ease, transform 200ms ease;
+}
+.subnav a:not(.is-active):hover {
+  transform: translateY(-1px);
+}
+
+/* ----- Tile arrow: nudge on hover ----- */
+.tile-cta { transition: transform 320ms cubic-bezier(0.16, 1, 0.3, 1), color 200ms ease; }
+.tile:hover .tile-cta { transform: translateX(4px); }
+.tile-cta svg { transition: transform 320ms cubic-bezier(0.16, 1, 0.3, 1); }
+.tile:hover .tile-cta svg { transform: translateX(2px); }
+
+/* ----- Stamp dot pulse already exists; make it more alive ----- */
+.stamp .dot {
+  animation: fz-dot-pulse 2.4s ease-out infinite;
+}
+@keyframes fz-dot-pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(74,222,128,0.55); }
+  70%  { box-shadow: 0 0 0 9px rgba(74,222,128,0); }
+  100% { box-shadow: 0 0 0 0 rgba(74,222,128,0); }
+}
+
+/* ----- Hub hero: soft floating gradient orbs in the background ----- */
+.hub-hero {
+  position: relative;
+  overflow: hidden;
+}
+.hub-hero::before,
+.hub-hero::after {
+  content: '';
+  position: absolute;
+  width: 320px; height: 320px;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.45;
+  pointer-events: none;
+  z-index: 0;
+}
+.hub-hero::before {
+  background: radial-gradient(circle, rgba(94,130,188,0.55), transparent 70%);
+  top: -120px; right: -80px;
+  animation: fz-orb-a 18s ease-in-out infinite alternate;
+}
+.hub-hero::after {
+  background: radial-gradient(circle, rgba(212,168,87,0.30), transparent 70%);
+  bottom: -140px; left: 30%;
+  animation: fz-orb-b 22s ease-in-out infinite alternate;
+}
+.hub-hero > * { position: relative; z-index: 1; }
+@keyframes fz-orb-a {
+  from { transform: translate(0, 0); }
+  to   { transform: translate(-30px, 20px); }
+}
+@keyframes fz-orb-b {
+  from { transform: translate(0, 0); }
+  to   { transform: translate(40px, -20px); }
+}
+
+/* ----- KPI card: subtle accent bar on hover ----- */
+.kpi {
+  position: relative;
+  transition: transform 320ms cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 320ms ease, box-shadow 320ms ease;
+}
+.kpi::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 14px; bottom: 14px;
+  width: 3px;
+  background: linear-gradient(180deg, var(--feazel-blue) 0%, transparent 100%);
+  border-radius: 0 3px 3px 0;
+  opacity: 0;
+  transition: opacity 280ms ease;
+}
+.kpi:hover::before { opacity: 1; }
+
+/* ----- Table row hover: subtle slide-in tint ----- */
+.tbl tbody tr {
+  transition: background 200ms ease;
+}
+.tbl tbody tr:hover {
+  background: linear-gradient(90deg, var(--feazel-blue-tint) 0%, transparent 100%) !important;
+}
+
+/* ----- Chart card: lift slightly on hover ----- */
+.chart-card { transition: transform 320ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 320ms ease; }
+.chart-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 40px -16px rgba(31,45,75,0.22);
+}
+
+/* ----- Sidebar nav: shimmer on active link ----- */
+.sidebar-nav a.is-active {
+  position: relative;
+  overflow: hidden;
+}
+.sidebar-nav a.is-active::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.10) 50%, transparent 100%);
+  transform: translateX(-100%);
+  animation: fz-shimmer 4s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes fz-shimmer {
+  0%, 100% { transform: translateX(-100%); }
+  60%      { transform: translateX(100%); }
+}
+
+/* ----- Reduced motion: respect user preference ----- */
+@media (prefers-reduced-motion: reduce) {
+  .fz-reveal { opacity: 1; transform: none; transition: none; }
+  .fz-tilt:hover { transform: none; }
+  .fz-ripple, .fz-shimmer, .fz-orb-a, .fz-orb-b, .fz-dot-pulse,
+  .stamp .dot { animation: none; }
+  .hub-hero::before, .hub-hero::after { display: none; }
+}

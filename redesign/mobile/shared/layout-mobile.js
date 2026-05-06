@@ -136,5 +136,19 @@ window.FZ.renderShell = function (opts) {
     }
   }, 0);
 
+  // Auto-load the premium interactions layer (scroll progress, fade-up,
+  // counter animations, ripples, etc). Path resolves up to /redesign/shared/
+  // from any mobile page (sub-pages are 3 levels deep, hubs are 2).
+  if (!document.getElementById('fz-interactions-script')) {
+    var sc = document.createElement('script');
+    sc.id = 'fz-interactions-script';
+    var depth = (window.location.pathname.split('/').filter(Boolean).length);
+    // /mobile/{lob}/index.html → 3 segments → ../../shared/
+    // /mobile/{lob}/{dashboard}/page.html → 4 segments → ../../../shared/
+    sc.src = (depth >= 4 ? '../../../shared/interactions.js' : '../../shared/interactions.js');
+    sc.defer = true;
+    document.head.appendChild(sc);
+  }
+
   document.dispatchEvent(new CustomEvent('fz:shell-ready', { detail: { folder: folder, slug: slug, mobile: true } }));
 };

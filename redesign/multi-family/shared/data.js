@@ -1,8 +1,8 @@
-/* AUTO-GENERATED — do not edit. Generated 2026-05-06T12:45:05.878Z (multi-family) */
+/* AUTO-GENERATED — do not edit. Generated 2026-05-06T13:15:22.921Z (multi-family) */
 window.FZ = window.FZ || {};
 window.FZ.data = {
   "_meta": {
-    "builtAt": "2026-05-06T12:45:05.878Z",
+    "builtAt": "2026-05-06T13:15:22.921Z",
     "pipelineVersion": "2.0.0",
     "lob": "multi-family",
     "lastBuiltProjects": [
@@ -15,26 +15,26 @@ window.FZ.data = {
       {
         "id": "sales-overview",
         "version": "1.0-rules-encoded",
-        "elapsedMs": 8,
-        "builtAt": "2026-05-06T12:45:05.878Z"
+        "elapsedMs": 11,
+        "builtAt": "2026-05-06T13:15:22.921Z"
       },
       {
         "id": "revenue-forecast",
         "version": "V5-locked-2026-04-19-shell-1.0",
-        "elapsedMs": 98,
-        "builtAt": "2026-05-06T12:45:05.878Z"
+        "elapsedMs": 111,
+        "builtAt": "2026-05-06T13:15:22.921Z"
       },
       {
         "id": "backlog",
         "version": "1.0-rules-encoded",
-        "elapsedMs": 12,
-        "builtAt": "2026-05-06T12:45:05.878Z"
+        "elapsedMs": 18,
+        "builtAt": "2026-05-06T13:15:22.921Z"
       },
       {
         "id": "installs-ytd",
         "version": "1.0-rules-encoded",
-        "elapsedMs": 9,
-        "builtAt": "2026-05-06T12:45:05.878Z"
+        "elapsedMs": 14,
+        "builtAt": "2026-05-06T13:15:22.921Z"
       }
     ]
   },
@@ -43,7 +43,7 @@ window.FZ.data = {
     "title": "Residential Sales Overview",
     "subtitle": "YTD 2026",
     "lastSigned": "2026-05-05",
-    "ytdDays": 125,
+    "ytdDays": 126,
     "rowCount": 210,
     "tabs": [
       {
@@ -139,8 +139,8 @@ window.FZ.data = {
       },
       {
         "label": "Annualized Sales Rate",
-        "value": "~$50.00M",
-        "sub": "Based on 125 days YTD"
+        "value": "~$49.60M",
+        "sub": "Based on 126 days YTD"
       },
       {
         "label": "Install vs Repair",
@@ -1491,7 +1491,7 @@ window.FZ.data = {
     },
     "commentary": {
       "whatsWorking": [
-        "Sales Trajectory: Monthly sales moved from January $3.46M to May $129K (-96%). Annualized run rate: $50.00M.",
+        "Sales Trajectory: Monthly sales moved from January $3.46M to May $129K (-96%). Annualized run rate: $49.60M.",
         "Premium Deal Types: Insurance averages $395,406 per deal. Retail-Financing averages $32,200 (highest per-deal value). Retail-No Financing averages $70,899 (the volume engine).",
         "Sold Conversion: 207 of 210 signed contracts (98.6%) have made it to Sold status for $17.12M in confirmed sales."
       ],
@@ -2895,7 +2895,7 @@ window.FZ.data = {
       "totalWOs": 322,
       "portfolioValue": 21350727.31,
       "avgDaysInStatus": 40,
-      "lastBuild": "2026-05-06T12:45:05.869Z"
+      "lastBuild": "2026-05-06T13:15:22.906Z"
     },
     "tabs": [
       {
@@ -4118,7 +4118,7 @@ window.FZ.data = {
       "multiTradeJobs": 10,
       "singleTradeJobs": 90,
       "multiTradePct": 10,
-      "lastBuild": "2026-05-06T12:45:05.878Z"
+      "lastBuild": "2026-05-06T13:15:22.921Z"
     },
     "tabs": [
       {
@@ -4204,7 +4204,7 @@ window.FZ.data = {
       {
         "label": "Completion Time Gap",
         "value": "+15.9d",
-        "sub": "MT 67.4d vs ST 51.5d"
+        "sub": "MT 67.5d vs ST 51.6d"
       }
     ],
     "monthly": [
@@ -4241,7 +4241,7 @@ window.FZ.data = {
         "key": "2026-04",
         "rev": 3716435.93,
         "jobs": 36,
-        "med": 45.9,
+        "med": 46,
         "start": 65.1
       },
       {
@@ -4303,7 +4303,7 @@ window.FZ.data = {
               71.1,
               49.7,
               60.3,
-              45.9,
+              46,
               41.3
             ]
           },
@@ -4414,9 +4414,9 @@ window.FZ.data = {
               0,
               138.4,
               0,
-              67.9,
+              68,
               0,
-              67.4,
+              67.5,
               0,
               0,
               0,
@@ -4429,12 +4429,12 @@ window.FZ.data = {
               66,
               53.9,
               44.3,
-              52.5,
+              52.6,
               108.4,
               36.7,
               0.6,
-              51.4,
-              29.9,
+              51.5,
+              30,
               43.5,
               34.9
             ]
@@ -4494,15 +4494,15 @@ window.FZ.data = {
           {
             "label": "Median Days",
             "data": [
-              61.3,
+              61.4,
               53.9,
               44.4,
-              52.5,
-              88.9,
+              52.6,
+              89,
               36.7,
               48.5,
-              51.4,
-              29.9,
+              51.5,
+              30,
               43.5,
               34.9
             ]
@@ -4569,7 +4569,7 @@ window.FZ.data = {
                 "name": "Bryan Paquin"
               },
               {
-                "x": 51.4,
+                "x": 51.5,
                 "y": 862181.03,
                 "wos": 24,
                 "name": "Jeremy Wolfe"
@@ -4587,7 +4587,7 @@ window.FZ.data = {
                 "name": "Wayne Iles"
               },
               {
-                "x": 73.4,
+                "x": 73.5,
                 "y": 694090.71,
                 "wos": 15,
                 "name": "James Foky"
@@ -4599,7 +4599,7 @@ window.FZ.data = {
                 "name": "Rob Vanderlinden"
               },
               {
-                "x": 35.5,
+                "x": 35.6,
                 "y": 379588.98,
                 "wos": 14,
                 "name": "(Unassigned)"
@@ -4650,7 +4650,7 @@ window.FZ.data = {
             "label": "Median Days",
             "data": [
               55,
-              61.3,
+              61.4,
               197.4,
               180.5,
               18.5
@@ -4693,7 +4693,7 @@ window.FZ.data = {
           {
             "label": "Median Complete",
             "data": [
-              53.8,
+              53.9,
               48.5,
               351.4,
               46.4,
@@ -4738,7 +4738,7 @@ window.FZ.data = {
             "label": "Creators",
             "data": [
               {
-                "x": 53.8,
+                "x": 53.9,
                 "y": 115874.32,
                 "jobs": 66,
                 "name": "Lisa Gibson"
@@ -4793,7 +4793,7 @@ window.FZ.data = {
             17,
             3560699.14,
             209452.89,
-            61.3,
+            61.4,
             58.7,
             17.6,
             56.5,
@@ -4826,21 +4826,21 @@ window.FZ.data = {
             7,
             601530.71,
             85932.96,
-            52.5,
+            52.6,
             90.7,
             0,
             0,
-            52.5
+            52.6
           ],
           [
             "Cincinnati",
             12,
             492309.23,
             41025.77,
-            88.9,
+            89,
             91.3,
             33.3,
-            67.9,
+            68,
             108.4
           ],
           [
@@ -4862,7 +4862,7 @@ window.FZ.data = {
             48.5,
             51.6,
             40,
-            67.4,
+            67.5,
             0.6
           ],
           [
@@ -4870,22 +4870,22 @@ window.FZ.data = {
             2,
             186672,
             93336,
-            51.4,
-            37.6,
+            51.5,
+            37.7,
             0,
             0,
-            51.4
+            51.5
           ],
           [
             "Indianapolis",
             2,
             148724,
             74362,
-            29.9,
-            25,
+            30,
+            25.1,
             0,
             0,
-            29.9
+            30
           ],
           [
             "Richmond",
@@ -4948,8 +4948,8 @@ window.FZ.data = {
             9,
             862181.03,
             35924.21,
-            51.4,
-            70.5
+            51.5,
+            70.6
           ],
           [
             "Ryan Wolf",
@@ -4967,7 +4967,7 @@ window.FZ.data = {
             704992.37,
             32045.11,
             65.4,
-            83.6
+            83.7
           ],
           [
             "James Foky",
@@ -4975,7 +4975,7 @@ window.FZ.data = {
             8,
             694090.71,
             46272.71,
-            73.4,
+            73.5,
             90.5
           ],
           [
@@ -4993,7 +4993,7 @@ window.FZ.data = {
             14,
             379588.98,
             27113.5,
-            35.5,
+            35.6,
             42.3
           ],
           [
@@ -5030,7 +5030,7 @@ window.FZ.data = {
             21,
             717337.56,
             34158.93,
-            61.3
+            61.4
           ],
           [
             "Siding",
@@ -5074,7 +5074,7 @@ window.FZ.data = {
             66,
             7647705.33,
             115874.32,
-            "53.8d",
+            "53.9d",
             "73.8d",
             10.6,
             115874.32
@@ -5085,7 +5085,7 @@ window.FZ.data = {
             1532991.91,
             52861.79,
             "48.5d",
-            "56.2d",
+            "56.3d",
             10.3,
             52861.79
           ],
@@ -5236,7 +5236,7 @@ window.FZ.data = {
     "commentary": {
       "areasOfConcern": [],
       "watchList": [
-        "Gutters-only work runs at 61.3-day median complete versus 55.0 days for roofing, 12% slower cycle on the lowest-priced trade."
+        "Gutters-only work runs at 61.4-day median complete versus 55.0 days for roofing, 12% slower cycle on the lowest-priced trade."
       ],
       "positivesToBuildOn": [
         "March delivered $4.02M across 35 invoiced jobs at 60.3-day median complete, the highest revenue month and one of the fastest cycles of the year.",

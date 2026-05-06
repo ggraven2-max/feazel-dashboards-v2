@@ -147,6 +147,17 @@ window.FZ.renderShell = function (opts) {
     slot.innerHTML = tpl.innerHTML;
   }
 
+  // Auto-load the premium interactions layer (scroll progress, fade-up,
+  // counter animations, card tilt, subnav indicator, ripples, etc).
+  // Only inject once per page load.
+  if (!document.getElementById('fz-interactions-script')) {
+    var sc = document.createElement('script');
+    sc.id = 'fz-interactions-script';
+    sc.src = sharedPrefix + 'interactions.js';
+    sc.defer = true;
+    document.head.appendChild(sc);
+  }
+
   // Fire a custom event so charts can initialize after the DOM is in place.
   document.dispatchEvent(new CustomEvent('fz:shell-ready', { detail: { folder: folder, slug: slug } }));
 };
