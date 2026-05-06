@@ -129,10 +129,23 @@ window.FZ.renderShell = function (opts) {
     + '</header>';
 
   // ---- SUB-NAV ----
+  // Service only ships a subset of Revenue Forecast tabs today. The rest of
+  // the residential 13-tab list (job-types, pipeline, cycle, weekly-targets,
+  // production) doesn't have Service-specific data yet, so the HTML files
+  // don't exist. Filter the sub-nav so Service users don't hit 404s.
+  var SERVICE_SUBNAV_ALLOW = {
+    'revenue-forecast': new Set(['index', 'executive', 'projection', 'monthly', 'budget',
+                                  'profitability', 'budget-recovery', 'recommendations'])
+  };
   var subnavHTML = '';
   if (currentDashboard) {
+    var subnavPages = currentDashboard.pages;
+    if (lob === 'service' && SERVICE_SUBNAV_ALLOW[currentDashboard.folder]) {
+      var allow = SERVICE_SUBNAV_ALLOW[currentDashboard.folder];
+      subnavPages = subnavPages.filter(function (p) { return allow.has(p.slug); });
+    }
     subnavHTML = '<nav class="subnav">';
-    currentDashboard.pages.forEach(function (p) {
+    subnavPages.forEach(function (p) {
       var href = (p.slug === 'index') ? './index.html' : './' + p.slug + '.html';
       // If we're at the dashboard hub, use ./ paths; if we're on a sub-page, also ./ since same folder
       var isActive = (p.slug === slug);
