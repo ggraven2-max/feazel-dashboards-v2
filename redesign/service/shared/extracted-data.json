@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "builtAt": "2026-05-06T18:04:02.586Z",
+    "builtAt": "2026-05-06T18:39:50.765Z",
     "pipelineVersion": "2.0.0",
     "lob": "service",
     "lastBuiltProjects": [
@@ -10,8 +10,8 @@
       {
         "id": "revenue-forecast",
         "version": "V5-locked-2026-04-19-shell-1.0",
-        "elapsedMs": 59,
-        "builtAt": "2026-05-06T18:04:02.586Z"
+        "elapsedMs": 311,
+        "builtAt": "2026-05-06T18:39:50.765Z"
       }
     ]
   },
@@ -1151,6 +1151,710 @@
         }
       },
       "latestInvoiceDate": "2026-05-06"
+    },
+    "installServiceOverlap": {
+      "sourceFile": "Jobs with WOs and SAs-2026-05-06-14-29-54.xlsx",
+      "rowCount": 4940,
+      "totals": {
+        "installJobs": 1553,
+        "installJobsWithSvc": 142,
+        "installAccounts": 1464,
+        "installAccountsWithSvc": 89,
+        "repairWOsAtInstallAccts": 1410,
+        "hoursAtInstallAccts": 2470,
+        "avgHoursPerWO": 1.98,
+        "repairAmtAtInstallAccts": 923508
+      },
+      "buckets": {
+        "<1h": 407,
+        "1-2h": 520,
+        "2-4h": 257,
+        "4-8h": 47,
+        ">8h": 17
+      },
+      "branchRows": [
+        {
+          "branch": "Columbus",
+          "installJobs": 512,
+          "installJobsWithSvc": 41,
+          "repairWOs": 387,
+          "hours": 507.3000000000003,
+          "repairAmt": 213622.26
+        },
+        {
+          "branch": "Raleigh",
+          "installJobs": 85,
+          "installJobsWithSvc": 24,
+          "repairWOs": 376,
+          "hours": 622.4000000000001,
+          "repairAmt": 228309
+        },
+        {
+          "branch": "Cincinnati",
+          "installJobs": 82,
+          "installJobsWithSvc": 18,
+          "repairWOs": 207,
+          "hours": 253.74999999999991,
+          "repairAmt": 89137
+        },
+        {
+          "branch": "Detroit",
+          "installJobs": 251,
+          "installJobsWithSvc": 16,
+          "repairWOs": 221,
+          "hours": 617.6500000000002,
+          "repairAmt": 238085.5
+        },
+        {
+          "branch": "Cleveland",
+          "installJobs": 122,
+          "installJobsWithSvc": 12,
+          "repairWOs": 111,
+          "hours": 214.95000000000007,
+          "repairAmt": 51838
+        },
+        {
+          "branch": "Nashville",
+          "installJobs": 128,
+          "installJobsWithSvc": 11,
+          "repairWOs": 28,
+          "hours": 69.83333333333333,
+          "repairAmt": 19274
+        },
+        {
+          "branch": "DC Metro",
+          "installJobs": 115,
+          "installJobsWithSvc": 10,
+          "repairWOs": 24,
+          "hours": 105.28333333333335,
+          "repairAmt": 49377
+        },
+        {
+          "branch": "Dayton",
+          "installJobs": 96,
+          "installJobsWithSvc": 6,
+          "repairWOs": 38,
+          "hours": 51.41666666666667,
+          "repairAmt": 19790
+        },
+        {
+          "branch": "Indianapolis",
+          "installJobs": 4,
+          "installJobsWithSvc": 3,
+          "repairWOs": 14,
+          "hours": 21.000000000000004,
+          "repairAmt": 10300
+        },
+        {
+          "branch": "Richmond",
+          "installJobs": 67,
+          "installJobsWithSvc": 1,
+          "repairWOs": 2,
+          "hours": 0,
+          "repairAmt": 2175
+        },
+        {
+          "branch": "Greenville",
+          "installJobs": 28,
+          "installJobsWithSvc": 0,
+          "repairWOs": 0,
+          "hours": 0,
+          "repairAmt": 0
+        },
+        {
+          "branch": "Knoxville",
+          "installJobs": 55,
+          "installJobsWithSvc": 0,
+          "repairWOs": 0,
+          "hours": 0,
+          "repairAmt": 0
+        },
+        {
+          "branch": "Grand Rapids",
+          "installJobs": 8,
+          "installJobsWithSvc": 0,
+          "repairWOs": 2,
+          "hours": 6.466666666666667,
+          "repairAmt": 1600
+        }
+      ],
+      "tradeRows": [
+        {
+          "trade": "Roofing",
+          "installJobs": 1346,
+          "installJobsWithSvc": 112,
+          "repairWOs": 1263,
+          "hours": 2259.733333333333,
+          "repairAmt": 782352.7600000001
+        },
+        {
+          "trade": "Gutters",
+          "installJobs": 94,
+          "installJobsWithSvc": 15,
+          "repairWOs": 72,
+          "hours": 126.58333333333333,
+          "repairAmt": 57666
+        },
+        {
+          "trade": "Siding",
+          "installJobs": 86,
+          "installJobsWithSvc": 12,
+          "repairWOs": 61,
+          "hours": 70.80000000000003,
+          "repairAmt": 64362
+        },
+        {
+          "trade": "Windows",
+          "installJobs": 14,
+          "installJobsWithSvc": 2,
+          "repairWOs": 1,
+          "hours": 0.9333333333333333,
+          "repairAmt": 350
+        },
+        {
+          "trade": "Other",
+          "installJobs": 2,
+          "installJobsWithSvc": 1,
+          "repairWOs": 5,
+          "hours": 10.116666666666667,
+          "repairAmt": 8245
+        },
+        {
+          "trade": "Door",
+          "installJobs": 0,
+          "installJobsWithSvc": 0,
+          "repairWOs": 1,
+          "hours": 0,
+          "repairAmt": 1282
+        },
+        {
+          "trade": "Carpentry",
+          "installJobs": 0,
+          "installJobsWithSvc": 0,
+          "repairWOs": 1,
+          "hours": 1,
+          "repairAmt": 350
+        },
+        {
+          "trade": "Masonry",
+          "installJobs": 5,
+          "installJobsWithSvc": 0,
+          "repairWOs": 6,
+          "hours": 0.8833333333333333,
+          "repairAmt": 8900
+        },
+        {
+          "trade": "GAF Solar",
+          "installJobs": 1,
+          "installJobsWithSvc": 0,
+          "repairWOs": 0,
+          "hours": 0,
+          "repairAmt": 0
+        },
+        {
+          "trade": "Flat Roof",
+          "installJobs": 3,
+          "installJobsWithSvc": 0,
+          "repairWOs": 0,
+          "hours": 0,
+          "repairAmt": 0
+        },
+        {
+          "trade": "Metal",
+          "installJobs": 1,
+          "installJobsWithSvc": 0,
+          "repairWOs": 0,
+          "hours": 0,
+          "repairAmt": 0
+        },
+        {
+          "trade": "Rack Mounted Solar",
+          "installJobs": 1,
+          "installJobsWithSvc": 0,
+          "repairWOs": 0,
+          "hours": 0,
+          "repairAmt": 0
+        }
+      ],
+      "accountRows": [
+        {
+          "account": "Singh Management",
+          "installJobs": 2,
+          "installAmt": 2308880,
+          "repairWOs": 70,
+          "hours": 376.75000000000006,
+          "repairAmt": 68834.5
+        },
+        {
+          "account": "Priestley Management Company",
+          "installJobs": 3,
+          "installAmt": 180614.9,
+          "repairWOs": 153,
+          "hours": 293.01666666666654,
+          "repairAmt": 95574
+        },
+        {
+          "account": "Towne Properties - Columbus",
+          "installJobs": 4,
+          "installAmt": 1386864.5299999998,
+          "repairWOs": 159,
+          "hours": 214.63333333333327,
+          "repairAmt": 83177.28
+        },
+        {
+          "account": "Capital Property Solutions",
+          "installJobs": 1,
+          "installAmt": 74242,
+          "repairWOs": 134,
+          "hours": 194.46666666666678,
+          "repairAmt": 75217.56
+        },
+        {
+          "account": "Solomon Organization, LLC",
+          "installJobs": 3,
+          "installAmt": 257794.28,
+          "repairWOs": 86,
+          "hours": 175.2833333333333,
+          "repairAmt": 114182
+        },
+        {
+          "account": "Associated Property Management, LLC",
+          "installJobs": 8,
+          "installAmt": 2043965.2,
+          "repairWOs": 80,
+          "hours": 146.31666666666675,
+          "repairAmt": 33303
+        },
+        {
+          "account": "Towne Properties - East Cincinnati District Office",
+          "installJobs": 3,
+          "installAmt": 183138.3,
+          "repairWOs": 94,
+          "hours": 127.06666666666666,
+          "repairAmt": 42470
+        },
+        {
+          "account": "Charleston Management",
+          "installJobs": 4,
+          "installAmt": 793126.8,
+          "repairWOs": 70,
+          "hours": 100.25000000000001,
+          "repairAmt": 38370
+        },
+        {
+          "account": "Professional Properties Management",
+          "installJobs": 3,
+          "installAmt": 392750,
+          "repairWOs": 54,
+          "hours": 83.95,
+          "repairAmt": 30475
+        },
+        {
+          "account": "Towne Properties - Cincinnati West District Office",
+          "installJobs": 2,
+          "installAmt": 32203,
+          "repairWOs": 73,
+          "hours": 78.35000000000001,
+          "repairAmt": 30285
+        },
+        {
+          "account": "Towne Properties - Raleigh District",
+          "installJobs": 3,
+          "installAmt": 264913,
+          "repairWOs": 47,
+          "hours": 74.7,
+          "repairAmt": 27910
+        },
+        {
+          "account": "KS Management",
+          "installJobs": 3,
+          "installAmt": 412808,
+          "repairWOs": 46,
+          "hours": 55.249999999999986,
+          "repairAmt": 48475
+        },
+        {
+          "account": "Towne Properties - Dayton",
+          "installJobs": 5,
+          "installAmt": 397303,
+          "repairWOs": 33,
+          "hours": 43.933333333333344,
+          "repairAmt": 17915
+        },
+        {
+          "account": "Kare Condominium Management Company",
+          "installJobs": 1,
+          "installAmt": 55539.01,
+          "repairWOs": 22,
+          "hours": 41.91666666666667,
+          "repairAmt": 8850
+        },
+        {
+          "account": "WPM Real Estate Management",
+          "installJobs": 2,
+          "installAmt": 325859,
+          "repairWOs": 10,
+          "hours": 34.21666666666667,
+          "repairAmt": 12072
+        },
+        {
+          "account": "Oakwood Management Company",
+          "installJobs": 3,
+          "installAmt": 1207619,
+          "repairWOs": 13,
+          "hours": 34.083333333333336,
+          "repairAmt": 6925
+        },
+        {
+          "account": "Tidewater Property Management, Inc.",
+          "installJobs": 1,
+          "installAmt": 66493,
+          "repairWOs": 2,
+          "hours": 33.75,
+          "repairAmt": 2350
+        },
+        {
+          "account": "Associa Tennessee",
+          "installJobs": 1,
+          "installAmt": 880,
+          "repairWOs": 14,
+          "hours": 33.00000000000001,
+          "repairAmt": 5350
+        },
+        {
+          "account": "Abaris Realty, Inc.",
+          "installJobs": 1,
+          "installAmt": 4100,
+          "repairWOs": 7,
+          "hours": 27.183333333333334,
+          "repairAmt": 31355
+        },
+        {
+          "account": "Sentry (Charlotte) & CSI Community Management",
+          "installJobs": 1,
+          "installAmt": 122983,
+          "repairWOs": 22,
+          "hours": 24.883333333333333,
+          "repairAmt": 10235
+        },
+        {
+          "account": "Main Street Management Group",
+          "installJobs": 1,
+          "installAmt": 9579,
+          "repairWOs": 15,
+          "hours": 24,
+          "repairAmt": 13785
+        },
+        {
+          "account": "Kirkpatrick Management Company - Indianapolis",
+          "installJobs": 1,
+          "installAmt": 75825,
+          "repairWOs": 11,
+          "hours": 19.350000000000005,
+          "repairAmt": 4050
+        },
+        {
+          "account": "Carlton Equities",
+          "installJobs": 1,
+          "installAmt": 61900,
+          "repairWOs": 18,
+          "hours": 17.049999999999997,
+          "repairAmt": 9500
+        },
+        {
+          "account": "Central Buckeye Management and Construction Services, LLC",
+          "installJobs": 1,
+          "installAmt": 35850,
+          "repairWOs": 15,
+          "hours": 16.866666666666667,
+          "repairAmt": 5500
+        },
+        {
+          "account": "Sentry Management Nashville",
+          "installJobs": 1,
+          "installAmt": 34271.18,
+          "repairWOs": 4,
+          "hours": 14.583333333333332,
+          "repairAmt": 4800
+        }
+      ],
+      "installJobRows": [
+        {
+          "jobNumber": "Job-109156",
+          "account": "Singh Management",
+          "branch": "Detroit",
+          "trade": "Gutters",
+          "salesperson": "Micah Williamson",
+          "installAmt": 8880,
+          "acctRepairWOs": 70,
+          "acctHours": 376.75000000000006,
+          "acctRepairAmt": 68834.5
+        },
+        {
+          "jobNumber": "Job-111827",
+          "account": "Singh Management",
+          "branch": "Detroit",
+          "trade": "Roofing",
+          "salesperson": "Micah Williamson",
+          "installAmt": 2300000,
+          "acctRepairWOs": 70,
+          "acctHours": 376.75000000000006,
+          "acctRepairAmt": 68834.5
+        },
+        {
+          "jobNumber": "Job-106231",
+          "account": "Priestley Management Company",
+          "branch": "Raleigh",
+          "trade": "Roofing",
+          "salesperson": "Evan Hall",
+          "installAmt": 21133.2,
+          "acctRepairWOs": 153,
+          "acctHours": 293.01666666666654,
+          "acctRepairAmt": 95574
+        },
+        {
+          "jobNumber": "Job-106796",
+          "account": "Priestley Management Company",
+          "branch": "Raleigh",
+          "trade": "Roofing",
+          "salesperson": "Evan Hall",
+          "installAmt": 124374.7,
+          "acctRepairWOs": 153,
+          "acctHours": 293.01666666666654,
+          "acctRepairAmt": 95574
+        },
+        {
+          "jobNumber": "Job-112287",
+          "account": "Priestley Management Company",
+          "branch": "Raleigh",
+          "trade": "Roofing",
+          "salesperson": "Evan Hall",
+          "installAmt": 35107,
+          "acctRepairWOs": 153,
+          "acctHours": 293.01666666666654,
+          "acctRepairAmt": 95574
+        },
+        {
+          "jobNumber": "Job-106732",
+          "account": "Towne Properties - Columbus",
+          "branch": "Columbus",
+          "trade": "Roofing",
+          "salesperson": "Christy Osborne",
+          "installAmt": 1206129.41,
+          "acctRepairWOs": 159,
+          "acctHours": 214.63333333333327,
+          "acctRepairAmt": 83177.28
+        },
+        {
+          "jobNumber": "Job-107059",
+          "account": "Towne Properties - Columbus",
+          "branch": "Columbus",
+          "trade": "Roofing",
+          "salesperson": "Ron Saxe",
+          "installAmt": 47310,
+          "acctRepairWOs": 159,
+          "acctHours": 214.63333333333327,
+          "acctRepairAmt": 83177.28
+        },
+        {
+          "jobNumber": "Job-108840",
+          "account": "Towne Properties - Columbus",
+          "branch": "Columbus",
+          "trade": "Siding",
+          "salesperson": "Christy Osborne",
+          "installAmt": 87935.12,
+          "acctRepairWOs": 159,
+          "acctHours": 214.63333333333327,
+          "acctRepairAmt": 83177.28
+        },
+        {
+          "jobNumber": "Job-112288",
+          "account": "Towne Properties - Columbus",
+          "branch": "Columbus",
+          "trade": "Roofing",
+          "salesperson": "Lisa Gibson",
+          "installAmt": 45490,
+          "acctRepairWOs": 159,
+          "acctHours": 214.63333333333327,
+          "acctRepairAmt": 83177.28
+        },
+        {
+          "jobNumber": "Job-111825",
+          "account": "Capital Property Solutions",
+          "branch": "Columbus",
+          "trade": "Siding",
+          "salesperson": "Ron Saxe",
+          "installAmt": 74242,
+          "acctRepairWOs": 134,
+          "acctHours": 194.46666666666678,
+          "acctRepairAmt": 75217.56
+        },
+        {
+          "jobNumber": "Job-108756",
+          "account": "Solomon Organization, LLC",
+          "branch": "Detroit",
+          "trade": "Roofing",
+          "salesperson": "Micah Williamson",
+          "installAmt": 77444.12,
+          "acctRepairWOs": 86,
+          "acctHours": 175.2833333333333,
+          "acctRepairAmt": 114182
+        },
+        {
+          "jobNumber": "Job-108829",
+          "account": "Solomon Organization, LLC",
+          "branch": "Detroit",
+          "trade": "Roofing",
+          "salesperson": "Micah Williamson",
+          "installAmt": 27506.16,
+          "acctRepairWOs": 86,
+          "acctHours": 175.2833333333333,
+          "acctRepairAmt": 114182
+        },
+        {
+          "jobNumber": "Job-112377",
+          "account": "Solomon Organization, LLC",
+          "branch": "Detroit",
+          "trade": "Roofing",
+          "salesperson": "Micah Williamson",
+          "installAmt": 152844,
+          "acctRepairWOs": 86,
+          "acctHours": 175.2833333333333,
+          "acctRepairAmt": 114182
+        },
+        {
+          "jobNumber": "Job-108473",
+          "account": "Associated Property Management, LLC",
+          "branch": "Cleveland",
+          "trade": "Roofing",
+          "salesperson": "Nicholas Andrukat",
+          "installAmt": 243523,
+          "acctRepairWOs": 80,
+          "acctHours": 146.31666666666675,
+          "acctRepairAmt": 33303
+        },
+        {
+          "jobNumber": "Job-108838",
+          "account": "Associated Property Management, LLC",
+          "branch": "Cleveland",
+          "trade": "Roofing",
+          "salesperson": "Nicholas Andrukat",
+          "installAmt": 89221.6,
+          "acctRepairWOs": 80,
+          "acctHours": 146.31666666666675,
+          "acctRepairAmt": 33303
+        },
+        {
+          "jobNumber": "Job-110164",
+          "account": "Associated Property Management, LLC",
+          "branch": "Cleveland",
+          "trade": "Roofing",
+          "salesperson": "Nicholas Andrukat",
+          "installAmt": 144503.6,
+          "acctRepairWOs": 80,
+          "acctHours": 146.31666666666675,
+          "acctRepairAmt": 33303
+        },
+        {
+          "jobNumber": "Job-110170",
+          "account": "Associated Property Management, LLC",
+          "branch": "Cleveland",
+          "trade": "Roofing",
+          "salesperson": "Nicholas Andrukat",
+          "installAmt": 6470,
+          "acctRepairWOs": 80,
+          "acctHours": 146.31666666666675,
+          "acctRepairAmt": 33303
+        },
+        {
+          "jobNumber": "Job-112328",
+          "account": "Associated Property Management, LLC",
+          "branch": "Cleveland",
+          "trade": "Roofing",
+          "salesperson": "Nicholas Andrukat",
+          "installAmt": 1253704,
+          "acctRepairWOs": 80,
+          "acctHours": 146.31666666666675,
+          "acctRepairAmt": 33303
+        },
+        {
+          "jobNumber": "Job-112329",
+          "account": "Associated Property Management, LLC",
+          "branch": "Cleveland",
+          "trade": "Gutters",
+          "salesperson": "Nicholas Andrukat",
+          "installAmt": 256141,
+          "acctRepairWOs": 80,
+          "acctHours": 146.31666666666675,
+          "acctRepairAmt": 33303
+        },
+        {
+          "jobNumber": "Job-112655",
+          "account": "Associated Property Management, LLC",
+          "branch": "Dayton",
+          "trade": "Roofing",
+          "salesperson": "Mark Leedy",
+          "installAmt": 39313,
+          "acctRepairWOs": 80,
+          "acctHours": 146.31666666666675,
+          "acctRepairAmt": 33303
+        },
+        {
+          "jobNumber": "Job-112656",
+          "account": "Associated Property Management, LLC",
+          "branch": "Cincinnati",
+          "trade": "Gutters",
+          "salesperson": "Mark Leedy",
+          "installAmt": 11089,
+          "acctRepairWOs": 80,
+          "acctHours": 146.31666666666675,
+          "acctRepairAmt": 33303
+        },
+        {
+          "jobNumber": "Job-108416",
+          "account": "Towne Properties - East Cincinnati District Office",
+          "branch": "Cincinnati",
+          "trade": "Roofing",
+          "salesperson": "Mark Leedy",
+          "installAmt": 52912.3,
+          "acctRepairWOs": 94,
+          "acctHours": 127.06666666666666,
+          "acctRepairAmt": 42470
+        },
+        {
+          "jobNumber": "Job-108707",
+          "account": "Towne Properties - East Cincinnati District Office",
+          "branch": "Cincinnati",
+          "trade": "Gutters",
+          "salesperson": "Mark Leedy",
+          "installAmt": 7074,
+          "acctRepairWOs": 94,
+          "acctHours": 127.06666666666666,
+          "acctRepairAmt": 42470
+        },
+        {
+          "jobNumber": "Job-112768",
+          "account": "Towne Properties - East Cincinnati District Office",
+          "branch": "Cincinnati",
+          "trade": "Roofing",
+          "salesperson": "Mark Leedy",
+          "installAmt": 123152,
+          "acctRepairWOs": 94,
+          "acctHours": 127.06666666666666,
+          "acctRepairAmt": 42470
+        },
+        {
+          "jobNumber": "Job-106519",
+          "account": "Charleston Management",
+          "branch": "Raleigh",
+          "trade": "Gutters",
+          "salesperson": "Evan Hall",
+          "installAmt": 1481,
+          "acctRepairWOs": 70,
+          "acctHours": 100.25000000000001,
+          "acctRepairAmt": 38370
+        }
+      ]
     },
     "tabs": []
   }

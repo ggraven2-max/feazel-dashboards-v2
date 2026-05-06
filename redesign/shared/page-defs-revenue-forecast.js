@@ -1120,6 +1120,240 @@
       ].filter(Boolean)
     };
 
+    // ─────────────────────────────────────────────────────────────
+    // INSTALL ↔ SERVICE OVERLAP
+    // For each install job whose customer ALSO has repair WOs.
+    // Sourced from the Salesforce "Jobs with WOs and SAs" report.
+    // ─────────────────────────────────────────────────────────────
+    var iso = D.installServiceOverlap;
+    if (iso && iso.totals) {
+      var t = iso.totals;
+      var pctInst = t.installJobs > 0 ? (t.installJobsWithSvc / t.installJobs * 100) : 0;
+      var pctAcct = t.installAccounts > 0 ? (t.installAccountsWithSvc / t.installAccounts * 100) : 0;
+
+      // Top trade in repair-WO volume for the callout
+      var topTradeBySvc = (iso.tradeRows || []).slice().sort(function (a, b) {
+        return b.repairWOs - a.repairWOs;
+      })[0];
+      var topBranchBySvc = (iso.branchRows || []).slice().sort(function (a, b) {
+        return b.installJobsWithSvc - a.installJobsWithSvc;
+      })[0];
+      var stickiestAcct = (iso.accountRows || [])[0];
+
+      svcPages['install-service'] = {
+        eyebrow: 'INSTALL ↔ SERVICE · MF + RES + SVC',
+        title: 'Service on Installs',
+        intro: 'How often a Feazel install pulls follow-up service work at the same property. This view groups WOs by Account Name (since a Salesforce Job Number is scoped to a single service type), then surfaces the install jobs whose customers also generated Repair WOs. Source: <code>' + (iso.sourceFile || '') + '</code> · ' + (iso.rowCount || 0) + ' WO rows.',
+        tags: [
+          { kind: 'info',    text: t.installJobs + ' total install jobs' },
+          { kind: pctInst >= 15 ? 'warn' : 'info', text: t.installJobsWithSvc + ' with service (' + pctInst.toFixed(1) + '%)' },
+          { kind: 'success', text: fmt.money(t.repairAmtAtInstallAccts, { short: true }) + ' service $' }
+        ],
+        sections: [
+          { kind: 'kpi-row', cols: 4, items: [
+              { label: 'Install Jobs',           value: t.installJobs.toLocaleString(),
+                sub: 'with at least one Install WO',                                 tone: 'navy' },
+              { label: 'Installs w/ Service',    value: t.installJobsWithSvc + ' (' + pctInst.toFixed(1) + '%)',
+                sub: 'their account also has Repair WOs',                            tone: 'warn' },
+              { label: 'Service Hours',          value: t.hoursAtInstallAccts.toLocaleString() + ' h',
+                sub: 'sum of SA durations on those accounts',                        tone: 'navy' },
+              { label: 'Avg Hours / Repair WO',  value: t.avgHoursPerWO.toFixed(2) + ' h',
+                sub: t.repairWOsAtInstallAccts.toLocaleString() + ' repair WOs',     tone: 'navy' }
+          ]},
+          { kind: 'kpi-row', cols: 4, items: [
+              { label: 'Repair $',               value: fmt.money(t.repairAmtAtInstallAccts, { short: true }),
+                sub: 'sum of Repair WO contract value',                              tone: 'navy' },
+              { label: 'Install Accounts',       value: t.installAccounts.toLocaleString(),
+                sub: 'unique customer accounts with installs',                       tone: 'navy' },
+              { label: 'Accounts w/ Service',    value: t.installAccountsWithSvc + ' (' + pctAcct.toFixed(1) + '%)',
+                sub: 'install accounts that also bought service',                    tone: pctAcct >= 10 ? 'success' : 'navy' },
+              { label: 'Top Trade (Service)',    value: topTradeBySvc ? topTradeBySvc.trade : '—',
+                sub: topTradeBySvc ? topTradeBySvc.repairWOs + ' repair WOs · ' + topTradeBySvc.hours.toFixed(0) + ' h' : '',
+                tone: 'navy' }
+          ]},
+          (iso.branchRows && iso.branchRows.length) ? {
+            kind: 'chart-grid', cols: 2,
+            charts: [
+              {
+                title: 'Service hours by branch',
+                sub: 'Total SA hours at install accounts',
+                height: 320,
+                config: {
+                  type: 'bar',
+                  data: {
+                    labels: iso.branchRows.map(function (r) { return r.branch; }),
+                    datasets: [{
+                      data: iso.branchRows.map(function (r) { return Math.round(r.hours); }),
+                      backgroundColor: pal.warning,
+                      label: 'Hours'
+                    }]
+                  },
+                  options: withOpts({
+                    indexAxis: 'y',
+                    scales: { x: { ticks: { callback: function (v) { return v + ' h'; } }, beginAtZero: true } },
+                    plugins: { legend: { display: false } }
+                  })
+                }
+              },
+              {
+                title: 'Install jobs with service by branch',
+                sub: 'Count of installs whose account has follow-up repair WOs',
+                height: 320,
+                config: {
+                  type: 'bar',
+                  data: {
+                    labels: iso.branchRows.map(function (r) { return r.branch; }),
+                    datasets: [{
+                      data: iso.branchRows.map(function (r) { return r.installJobsWithSvc; }),
+                      backgroundColor: pal.navy,
+                      label: 'Installs w/ service'
+                    }]
+                  },
+                  options: withOpts({
+                    indexAxis: 'y',
+                    plugins: { legend: { display: false } }
+                  })
+                }
+              }
+            ]
+          } : null,
+          (iso.buckets) ? {
+            kind: 'chart-grid', cols: 1,
+            charts: [{
+              title: 'Hours per repair WO · distribution',
+              sub: 'How long the typical follow-up service appointment runs',
+              height: 280,
+              config: {
+                type: 'bar',
+                data: {
+                  labels: Object.keys(iso.buckets),
+                  datasets: [{
+                    data: Object.values(iso.buckets),
+                    backgroundColor: ['#9aa6b8', pal.navy, pal.warning, pal.danger, '#7d3c98'],
+                    label: 'Repair WOs'
+                  }]
+                },
+                options: withOpts({ plugins: { legend: { display: false } } })
+              }
+            }]
+          } : null,
+          {
+            kind: 'table',
+            heading: 'By branch — install↔service overlap',
+            caption: '% column = installs-with-service / total install jobs at branch',
+            headers: [
+              { label: 'Branch', num: false },
+              { label: 'Install Jobs', num: true },
+              { label: 'w/ Service', num: true },
+              { label: '%', num: true },
+              { label: 'Repair WOs', num: true },
+              { label: 'Service Hours', num: true },
+              { label: 'Repair $', num: true }
+            ],
+            rows: (iso.branchRows || []).map(function (r) {
+              var pct = r.installJobs > 0 ? r.installJobsWithSvc / r.installJobs * 100 : 0;
+              var pctPill = pct >= 20
+                ? '<span class="pill pill-warn">' + pct.toFixed(1) + '%</span>'
+                : pct >= 10
+                  ? '<span class="pill pill-info">' + pct.toFixed(1) + '%</span>'
+                  : pct.toFixed(1) + '%';
+              return [
+                { html: '<strong>' + r.branch + '</strong>' },
+                r.installJobs.toLocaleString(),
+                r.installJobsWithSvc.toLocaleString(),
+                { html: pctPill },
+                r.repairWOs.toLocaleString(),
+                r.hours.toFixed(1) + ' h',
+                fmt.money(r.repairAmt)
+              ];
+            })
+          },
+          (iso.tradeRows && iso.tradeRows.length) ? {
+            kind: 'table',
+            heading: 'By trade',
+            caption: 'Service Object on the install · trailing service WO volume on those accounts',
+            headers: [
+              { label: 'Trade', num: false },
+              { label: 'Install Jobs', num: true },
+              { label: 'w/ Service', num: true },
+              { label: '%', num: true },
+              { label: 'Repair WOs', num: true },
+              { label: 'Service Hours', num: true }
+            ],
+            rows: iso.tradeRows.map(function (r) {
+              var pct = r.installJobs > 0 ? r.installJobsWithSvc / r.installJobs * 100 : 0;
+              return [
+                { html: '<strong>' + r.trade + '</strong>' },
+                r.installJobs.toLocaleString(),
+                r.installJobsWithSvc.toLocaleString(),
+                pct.toFixed(1) + '%',
+                r.repairWOs.toLocaleString(),
+                r.hours.toFixed(1) + ' h'
+              ];
+            })
+          } : null,
+          (iso.accountRows && iso.accountRows.length) ? {
+            kind: 'table',
+            heading: 'Stickiest accounts · top 25 by service hours',
+            caption: 'Accounts where a Feazel install was followed by sustained service work. These are property managers and commercial customers worth nurturing.',
+            maxHeight: '520px',
+            headers: [
+              { label: 'Account', num: false },
+              { label: 'Install Jobs', num: true },
+              { label: 'Install $', num: true },
+              { label: 'Repair WOs', num: true },
+              { label: 'Service Hours', num: true },
+              { label: 'Repair $', num: true }
+            ],
+            rows: iso.accountRows.map(function (r) {
+              return [
+                { html: '<strong>' + r.account + '</strong>' },
+                r.installJobs.toLocaleString(),
+                fmt.money(r.installAmt),
+                r.repairWOs.toLocaleString(),
+                r.hours.toFixed(1) + ' h',
+                fmt.money(r.repairAmt)
+              ];
+            })
+          } : null,
+          (iso.installJobRows && iso.installJobRows.length) ? {
+            kind: 'table',
+            heading: 'Top 25 install jobs whose accounts have the most service work',
+            caption: 'Service hours and repair $ shown are aggregated at the account level — multiple installs at the same account share the same account-level totals.',
+            maxHeight: '520px',
+            headers: [
+              { label: 'Job #', num: false },
+              { label: 'Account', num: false },
+              { label: 'Branch', num: false },
+              { label: 'Trade', num: false },
+              { label: 'Install $', num: true },
+              { label: 'Acct Repair WOs', num: true },
+              { label: 'Acct Service Hours', num: true },
+              { label: 'Acct Repair $', num: true }
+            ],
+            rows: iso.installJobRows.map(function (r) {
+              return [
+                { html: '<strong>' + r.jobNumber + '</strong>' },
+                r.account,
+                r.branch,
+                r.trade,
+                fmt.money(r.installAmt),
+                r.acctRepairWOs.toLocaleString(),
+                r.acctHours.toFixed(1) + ' h',
+                fmt.money(r.acctRepairAmt)
+              ];
+            })
+          } : null,
+          { kind: 'callout', tone: 'info',
+            title: stickiestAcct ? stickiestAcct.account + ' is the stickiest install↔service account' : 'How to read this tab',
+            body: stickiestAcct
+              ? '<strong>' + stickiestAcct.account + '</strong> has <strong>' + stickiestAcct.installJobs + '</strong> install job' + (stickiestAcct.installJobs === 1 ? '' : 's') + ' worth <strong>' + fmt.money(stickiestAcct.installAmt, { short: true }) + '</strong> in contract value, and the same account ran <strong>' + stickiestAcct.repairWOs + '</strong> repair WOs over <strong>' + stickiestAcct.hours.toFixed(0) + ' service hours</strong> for <strong>' + fmt.money(stickiestAcct.repairAmt, { short: true }) + '</strong>. ' + (topBranchBySvc ? topBranchBySvc.branch + ' is the most active install↔service branch with ' + topBranchBySvc.installJobsWithSvc + ' overlap installs and ' + topBranchBySvc.hours.toFixed(0) + ' service hours.' : '')
+              : 'The relationship between install and service is account-level, not job-level. Salesforce Job Numbers are scoped to a single service type, so an install and a follow-up repair at the same property always have different Job Numbers but share the same Account Name. This view groups by account to find that overlap.'
+          }
+        ].filter(Boolean)
+      };
+    }
+
     return svcPages;
   }
 

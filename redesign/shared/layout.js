@@ -129,21 +129,30 @@ window.FZ.renderShell = function (opts) {
     + '</header>';
 
   // ---- SUB-NAV ----
-  // Service only ships a subset of Revenue Forecast tabs today. The rest of
-  // the residential 13-tab list (job-types, pipeline, cycle, weekly-targets,
-  // production) doesn't have Service-specific data yet, so the HTML files
-  // don't exist. Filter the sub-nav so Service users don't hit 404s.
-  var SERVICE_SUBNAV_ALLOW = {
-    'revenue-forecast': new Set(['index', 'executive', 'projection', 'monthly', 'budget',
-                                  'profitability', 'budget-recovery', 'recommendations'])
+  // Service ships a different sub-nav than residential / MF. The shared
+  // registry's 13-tab residential list doesn't all map cleanly (no V5
+  // projection, no weekly targets), and Service has its own tabs that
+  // don't exist for the other LOBs (install ↔ service overlap). For
+  // Service we replace the page list entirely; residential / MF still
+  // use the registry as-is.
+  var SERVICE_TABS = {
+    'revenue-forecast': [
+      { slug: 'index',            label: 'Dashboard Home',       short: 'Home' },
+      { slug: 'executive',        label: 'Executive Summary',    short: 'Executive' },
+      { slug: 'projection',       label: 'Annual Projection',    short: 'Projection' },
+      { slug: 'monthly',          label: 'Monthly Roll-Up',      short: 'Monthly' },
+      { slug: 'budget',           label: 'Annual Budget Detail', short: 'Budget' },
+      { slug: 'install-service',  label: 'Service on Installs',  short: 'Inst↔Svc' },
+      { slug: 'profitability',    label: 'Profitability',        short: 'Profit' },
+      { slug: 'budget-recovery',  label: 'Budget Recovery',      short: 'Recovery' },
+      { slug: 'recommendations',  label: 'Recommendations',      short: 'Recs' }
+    ]
   };
   var subnavHTML = '';
   if (currentDashboard) {
-    var subnavPages = currentDashboard.pages;
-    if (lob === 'service' && SERVICE_SUBNAV_ALLOW[currentDashboard.folder]) {
-      var allow = SERVICE_SUBNAV_ALLOW[currentDashboard.folder];
-      subnavPages = subnavPages.filter(function (p) { return allow.has(p.slug); });
-    }
+    var subnavPages = (lob === 'service' && SERVICE_TABS[currentDashboard.folder])
+      ? SERVICE_TABS[currentDashboard.folder]
+      : currentDashboard.pages;
     subnavHTML = '<nav class="subnav">';
     subnavPages.forEach(function (p) {
       var href = (p.slug === 'index') ? './index.html' : './' + p.slug + '.html';

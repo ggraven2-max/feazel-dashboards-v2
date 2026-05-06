@@ -59,14 +59,289 @@ function round1(v) { return Math.round(v * 10) / 10; }
 // ---------- input discovery ----------
 function findFiles(inputDir) {
   const all = io.listInputs(inputDir);
-  const out = { budget: null, profitability: null };
+  const out = { budget: null, profitability: null, jobsWosSas: null };
   for (const f of all) {
     const lower = f.name.toLowerCase();
     if (lower.includes('budget') && /\.xlsx?$/i.test(lower)) out.budget = f;
     else if (lower.includes('profitability') && /\.csv$/i.test(lower)) out.profitability = f;
+    else if (lower.includes('jobs with wos') && /\.xlsx?$/i.test(lower)) out.jobsWosSas = f;
   }
   return out;
 }
+
+// ---------- Jobs/WOs/SAs parser for the install↔service overlap analysis ----------
+// Parses the Salesforce "Jobs with WOs and SAs" report. Each row is one Work
+// Order + Service Appointment. We group by Account Name to find install jobs
+// whose customer ALSO has Repair WOs (i.e. the install generated follow-up
+// service work). The relationship is account-to-account, not job-to-job, since
+// a single Salesforce Job Number is scoped to a single service type.
+function parseJobsWosSas(file) {
+  if (!file) return null;
+  const xlsx = require('xlsx');
+  const wb = xlsx.readFile(file.fullPath, { cellDates: false });
+  const sheet = wb.Sheets[wb.SheetNames[0]];
+  const rows = xlsx.utils.sheet_to_json(sheet, { header: 1, defval: null });
+  if (!rows.length) return null;
+
+  // Header row + index lookup
+  const headers = rows[0].map(h => String(h || '').trim());
+  const idx = (name) => headers.findIndex(h => h.toLowerCase() === name.toLowerCase());
+  const cAccount = idx('Account: Account Name');
+  const cJobType = idx('Job Type');
+  const cServiceType = idx('Service Type');
+  const cServiceObject = idx('Service Object');
+  const cSalesperson = idx('Salesperson: Full Name');
+  const cAmount = idx('Final Contract Amount');
+  const cWO = idx('Work Order Number');
+  const cSAStart = idx('Service Appointment Start Date/Time');
+  const cSAEnd = idx('Service Appointment End Date/Time');
+  const cBranch = idx('Branch Location to Service');
+  const cJob = idx('Job Number');
+
+  function parseDt(v) {
+    if (!v) return null;
+    if (v instanceof Date) return isNaN(v.getTime()) ? null : v;
+    const s = String(v).trim(); if (!s) return null;
+    // "M/D/YYYY h:MM AM/PM" or "M/D/YYYY HH:MM" or "M/D/YYYY"
+    let m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})(?:\s+(\d{1,2}):(\d{2})(?:\s*(AM|PM))?)?/i);
+    if (!m) return null;
+    const yr = +m[3], mo = +m[1] - 1, da = +m[2];
+    let hr = m[4] ? +m[4] : 0, mi = m[5] ? +m[5] : 0;
+    if (m[6]) {
+      const ap = m[6].toUpperCase();
+      if (ap === 'PM' && hr < 12) hr += 12;
+      if (ap === 'AM' && hr === 12) hr = 0;
+    }
+    const d = new Date(yr, mo, da, hr, mi);
+    return isNaN(d.getTime()) ? null : d;
+  }
+  function hours(s, e) {
+    const ds = parseDt(s), de = parseDt(e);
+    if (!ds || !de) return null;
+    const h = (de - ds) / 3600000;
+    return h > 0 ? h : null;
+  }
+  function num(v) {
+    if (v == null) return 0;
+    const n = parseFloat(String(v).replace(/[$,\s]/g, ''));
+    return isNaN(n) ? 0 : n;
+  }
+
+  // Branch normalization same as everywhere else
+  const BRANCH_REMAP = { 'detroit metro': 'Detroit', 'nova': 'DC Metro' };
+  const normBranch = (loc) => {
+    if (!loc) return '(unassigned)';
+    const k = String(loc).trim().toLowerCase();
+    return BRANCH_REMAP[k] || String(loc).trim();
+  };
+
+  // Walk the rows. Track per-account and per-job state.
+  const accountInstalls = new Map();   // account → Set(jobNumber)
+  const accountRepairs = new Map();    // account → array of repair WO records
+  const jobMeta = new Map();           // jobNumber → { branch, trade, salesperson, account, amount }
+  let totalRows = 0;
+
+  for (let i = 1; i < rows.length; i++) {
+    const r = rows[i];
+    if (!r) continue;
+    totalRows++;
+    const account = String(r[cAccount] || '').trim();
+    const stype = String(r[cServiceType] || '').trim();
+    const trade = String(r[cServiceObject] || '').trim();
+    const branch = normBranch(r[cBranch]);
+    const jn = String(r[cJob] || '').trim();
+    const sp = String(r[cSalesperson] || '').trim();
+    const amt = num(r[cAmount]);
+    if (!account || !jn) continue;
+
+    if (!jobMeta.has(jn)) {
+      jobMeta.set(jn, {
+        jobNumber: jn,
+        account,
+        branch,
+        trade,
+        salesperson: sp,
+        amount: amt,
+        serviceType: stype,
+        jobType: String(r[cJobType] || '').trim()
+      });
+    } else {
+      // Carry the largest contract amount we've seen on this job (job-level rollup)
+      const m = jobMeta.get(jn);
+      if (amt > m.amount) m.amount = amt;
+    }
+
+    if (stype === 'Install') {
+      if (!accountInstalls.has(account)) accountInstalls.set(account, new Set());
+      accountInstalls.get(account).add(jn);
+    } else if (stype === 'Repair') {
+      if (!accountRepairs.has(account)) accountRepairs.set(account, []);
+      const h = hours(r[cSAStart], r[cSAEnd]);
+      accountRepairs.get(account).push({
+        wo: r[cWO], jobNumber: jn, account, branch, trade,
+        amount: amt, hours: h, salesperson: sp
+      });
+    }
+  }
+
+  // Build the headline metrics
+  const allInstallJobs = new Set();
+  accountInstalls.forEach(set => set.forEach(jn => allInstallJobs.add(jn)));
+  const installAccountsSet = new Set(accountInstalls.keys());
+  const repairAccountsSet = new Set(accountRepairs.keys());
+
+  // Install jobs whose ACCOUNT also has repair WOs
+  const overlapInstallJobs = [];
+  installAccountsSet.forEach(acct => {
+    if (repairAccountsSet.has(acct)) {
+      accountInstalls.get(acct).forEach(jn => overlapInstallJobs.push(jn));
+    }
+  });
+
+  // Repair WOs at install accounts
+  const repairsAtInstallAccts = [];
+  installAccountsSet.forEach(acct => {
+    (accountRepairs.get(acct) || []).forEach(w => repairsAtInstallAccts.push(w));
+  });
+
+  const totalRepairWOs = repairsAtInstallAccts.length;
+  const totalRepairAmt = repairsAtInstallAccts.reduce((s, w) => s + (w.amount || 0), 0);
+  const wosWithHours = repairsAtInstallAccts.filter(w => w.hours != null);
+  const totalHours = wosWithHours.reduce((s, w) => s + w.hours, 0);
+
+  // Hours-per-WO distribution buckets
+  const buckets = { '<1h': 0, '1-2h': 0, '2-4h': 0, '4-8h': 0, '>8h': 0 };
+  wosWithHours.forEach(w => {
+    if (w.hours < 1) buckets['<1h']++;
+    else if (w.hours < 2) buckets['1-2h']++;
+    else if (w.hours < 4) buckets['2-4h']++;
+    else if (w.hours < 8) buckets['4-8h']++;
+    else buckets['>8h']++;
+  });
+
+  // Branch breakdown
+  const brAgg = new Map();
+  function brEntry(b) {
+    if (!brAgg.has(b)) brAgg.set(b, { branch: b, installJobs: 0, installJobsWithSvc: 0,
+                                       repairWOs: 0, hours: 0, repairAmt: 0 });
+    return brAgg.get(b);
+  }
+  installAccountsSet.forEach(acct => {
+    const has = repairAccountsSet.has(acct);
+    accountInstalls.get(acct).forEach(jn => {
+      const m = jobMeta.get(jn);
+      if (!m) return;
+      const e = brEntry(m.branch);
+      e.installJobs++;
+      if (has) e.installJobsWithSvc++;
+    });
+    if (has) {
+      (accountRepairs.get(acct) || []).forEach(w => {
+        const e = brEntry(w.branch);
+        e.repairWOs++;
+        if (w.hours != null) e.hours += w.hours;
+        e.repairAmt += (w.amount || 0);
+      });
+    }
+  });
+  const branchRows = Array.from(brAgg.values())
+    .sort((a, b) => b.installJobsWithSvc - a.installJobsWithSvc);
+
+  // Trade breakdown
+  const trAgg = new Map();
+  function trEntry(t) {
+    if (!trAgg.has(t)) trAgg.set(t, { trade: t, installJobs: 0, installJobsWithSvc: 0,
+                                       repairWOs: 0, hours: 0, repairAmt: 0 });
+    return trAgg.get(t);
+  }
+  installAccountsSet.forEach(acct => {
+    const has = repairAccountsSet.has(acct);
+    accountInstalls.get(acct).forEach(jn => {
+      const m = jobMeta.get(jn); if (!m) return;
+      const e = trEntry(m.trade || '(unknown)');
+      e.installJobs++;
+      if (has) e.installJobsWithSvc++;
+    });
+    if (has) {
+      (accountRepairs.get(acct) || []).forEach(w => {
+        const e = trEntry(w.trade || '(unknown)');
+        e.repairWOs++;
+        if (w.hours != null) e.hours += w.hours;
+        e.repairAmt += (w.amount || 0);
+      });
+    }
+  });
+  const tradeRows = Array.from(trAgg.values())
+    .sort((a, b) => b.installJobsWithSvc - a.installJobsWithSvc);
+
+  // Account-level rollup: how many service hours/$ at each account that has installs
+  const acctRows = [];
+  installAccountsSet.forEach(acct => {
+    const installJobs = Array.from(accountInstalls.get(acct));
+    const installAmt = installJobs.reduce((s, jn) => s + (jobMeta.get(jn) ? jobMeta.get(jn).amount : 0), 0);
+    const repairs = accountRepairs.get(acct) || [];
+    const acctHours = repairs.reduce((s, w) => s + (w.hours || 0), 0);
+    const acctRepairAmt = repairs.reduce((s, w) => s + (w.amount || 0), 0);
+    acctRows.push({
+      account: acct,
+      installJobs: installJobs.length,
+      installAmt,
+      repairWOs: repairs.length,
+      hours: acctHours,
+      repairAmt: acctRepairAmt
+    });
+  });
+  acctRows.sort((a, b) => b.hours - a.hours);
+
+  // Top install jobs by accompanying service hours at their account.
+  // Groups the same account's hours across all its install jobs (so the 5 largest
+  // Priestley install jobs each get the same 293h figure attached). Useful for
+  // identifying which install dollars are tied to high-service-volume customers.
+  const topInstallJobRows = [];
+  installAccountsSet.forEach(acct => {
+    const repairs = accountRepairs.get(acct) || [];
+    if (!repairs.length) return;
+    const acctHours = repairs.reduce((s, w) => s + (w.hours || 0), 0);
+    const acctRepairAmt = repairs.reduce((s, w) => s + (w.amount || 0), 0);
+    accountInstalls.get(acct).forEach(jn => {
+      const m = jobMeta.get(jn); if (!m) return;
+      topInstallJobRows.push({
+        jobNumber: jn,
+        account: acct,
+        branch: m.branch,
+        trade: m.trade,
+        salesperson: m.salesperson,
+        installAmt: m.amount,
+        acctRepairWOs: repairs.length,
+        acctHours,
+        acctRepairAmt
+      });
+    });
+  });
+  topInstallJobRows.sort((a, b) => b.acctHours - a.acctHours);
+
+  return {
+    sourceFile: file.name,
+    rowCount: totalRows,
+    totals: {
+      installJobs: allInstallJobs.size,
+      installJobsWithSvc: overlapInstallJobs.length,
+      installAccounts: installAccountsSet.size,
+      installAccountsWithSvc: Array.from(installAccountsSet).filter(a => repairAccountsSet.has(a)).length,
+      repairWOsAtInstallAccts: totalRepairWOs,
+      hoursAtInstallAccts: Math.round(totalHours * 10) / 10,
+      avgHoursPerWO: wosWithHours.length ? Math.round(totalHours / wosWithHours.length * 100) / 100 : 0,
+      repairAmtAtInstallAccts: Math.round(totalRepairAmt)
+    },
+    buckets,
+    branchRows,
+    tradeRows,
+    accountRows: acctRows.slice(0, 25),     // top 25 accounts
+    installJobRows: topInstallJobRows.slice(0, 25)  // top 25 install jobs
+  };
+}
+
+
 
 // ---------- budget parser (mirrors MF parseBudget) ----------
 function parseBudget(file) {
@@ -209,6 +484,16 @@ function run(opts) {
   console.log('  [service-revenue] file scan:');
   console.log('    budget        : ' + (files.budget ? files.budget.name : 'MISSING'));
   console.log('    profitability : ' + (files.profitability ? files.profitability.name : 'optional, missing'));
+
+  // ---- Jobs/WOs/SAs (install ↔ service overlap) ----
+  const wos = files.jobsWosSas ? parseJobsWosSas(files.jobsWosSas) : null;
+  if (wos) {
+    console.log('  [service-revenue] install↔service: ' + wos.totals.installJobsWithSvc + ' of ' +
+      wos.totals.installJobs + ' install jobs (' +
+      (wos.totals.installJobs > 0 ? (wos.totals.installJobsWithSvc / wos.totals.installJobs * 100).toFixed(1) : '0') + '%) tied to repair WOs · ' +
+      wos.totals.repairWOsAtInstallAccts + ' WOs / ' + wos.totals.hoursAtInstallAccts + ' hrs / ' +
+      fmtMoney(wos.totals.repairAmtAtInstallAccts));
+  }
 
   // ---- profitability ----
   const profit = files.profitability ? parseProfitability(files.profitability) : null;
@@ -453,6 +738,7 @@ function run(opts) {
       byBranch: ns.byBranch,
       latestInvoiceDate: ns.latestDate ? ns.latestDate.toISOString().slice(0, 10) : null
     } : null,
+    installServiceOverlap: wos,
     tabs: []
   };
 }
