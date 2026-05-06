@@ -113,13 +113,23 @@
     <div class="grid">
       <div class="card">
         <span class="eyebrow">METHODOLOGY</span>
-        <h3 style="margin-top:6px;">Forecast V5 Locked</h3>
-        <p style="margin-top:8px; font-size:12px;">Locked April 19, 2026. WIP constants and cycle hierarchy not changed without approval.</p>
+        <h3 style="margin-top:6px;">Forecast MF-v1.1 Locked</h3>
+        <p style="margin-top:8px; font-size:12px;">Job-by-job event model locked May 4, 2026. Revenue on Date Moved to Invoiced; NetSuite AR for booked actuals. $51.67M plan from Commercial Budget.</p>
       </div>
       <div class="card">
         <span class="eyebrow">DATA FRESHNESS</span>
         <h3 style="margin-top:6px;" data-bind="freshness.headline">As of —</h3>
         <p style="margin-top:8px; font-size:12px;">Refreshed <strong data-bind="freshness.stamp">—</strong>.</p>
+      </div>
+      <div class="card">
+        <span class="eyebrow">SCOPE</span>
+        <h3 style="margin-top:6px;">Multi-Family &amp; Commercial</h3>
+        <p style="margin-top:8px; font-size:12px;">Todd Sandler (President), Jeremy Wolfe (VP Production), Lisa Gibson (VP Ops). Residential is a separate suite.</p>
+      </div>
+      <div class="card">
+        <span class="eyebrow">ACTIVE MARKETS</span>
+        <h3 style="margin-top:6px;" id="mf-mobile-markets-count">—</h3>
+        <p style="margin-top:8px; font-size:12px;" id="mf-mobile-markets-list">—</p>
       </div>
     </div>
   </section>
@@ -178,7 +188,7 @@
       'hero.target':    fmtBigMoney(rfBudgetRaw),
       'hero.targetSub': '$185M total enterprise plan',
       'hero.signed':   val(soSigned),
-      'hero.signedSub': sub(soSigned, '13 markets'),
+      'hero.signedSub': sub(soSigned, 'multi-family contracts'),
       'hero.invoiced':  val(rfInv),
       'hero.invoicedSub': iyRev ? (iyRev.sub || '') : sub(rfInv),
       'hero.backlog':   val(blValue),
@@ -211,6 +221,19 @@
       var el = document.querySelector('[data-bind="' + key + '"]');
       if (el) el.textContent = binds[key];
     });
+
+    // ---- MF active markets (mobile, compact) ----
+    (function renderMobileMarkets () {
+      var sc = SO && SO.marketScorecard;
+      var rows = (sc && Array.isArray(sc.rows)) ? sc.rows : [];
+      var sorted = rows.slice().filter(function (r) {
+        return r && r[0] && !/unassigned|unknown|^—$/i.test(r[0]);
+      }).sort(function (a, b) { return (b[1] || 0) - (a[1] || 0); });
+      var countEl = document.getElementById('mf-mobile-markets-count');
+      var listEl  = document.getElementById('mf-mobile-markets-list');
+      if (countEl) countEl.textContent = sorted.length + ' markets active';
+      if (listEl)  listEl.textContent = sorted.map(function (r) { return r[0]; }).join(' · ');
+    })();
   })();
 </script>
 </body>
