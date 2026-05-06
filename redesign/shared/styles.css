@@ -1268,3 +1268,17 @@ a:hover { color: var(--feazel-blue-hover); text-decoration: underline; text-unde
   .stamp .dot { animation: none; }
   .hub-hero::before, .hub-hero::after { display: none; }
 }
+
+/* ----- Sidebar brand: clickable logo navigates to landing page ----- */
+.sidebar-brand-link {
+  display: inline-block;
+  text-decoration: none;
+  transition: opacity 200ms ease, transform 320ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.sidebar-brand-link:hover {
+  opacity: 0.85;
+  transform: scale(1.03);
+}
+.sidebar-brand-link:active {
+  transform: scale(0.96);
+}

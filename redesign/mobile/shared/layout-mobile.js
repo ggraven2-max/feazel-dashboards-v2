@@ -63,6 +63,10 @@ window.FZ.renderShell = function (opts) {
 
   var topbarHTML = ''
     + '<header class="topbar">'
+    +   '<a href="/" class="topbar-home" title="Home">'
+    +     '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2h-4v-7H10v7H6a2 2 0 0 1-2-2z"/></svg>'
+    +     '<span class="lbl">Feazel</span>'
+    +   '</a>'
     +   '<div class="topbar-left">'
     +     '<div class="topbar-crumbs">' + crumbsHTML + '</div>'
     +   '</div>'
