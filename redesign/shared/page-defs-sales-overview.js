@@ -882,50 +882,236 @@
 
   // ============================================================
   // WEEKLY SALES TARGETS
+  // Data-driven: shows the week-by-week schedule of $ we need to sign to
+  // close the gap to budget through year-end.
   // ============================================================
-  pages['weekly-targets'] = {
-    eyebrow: 'WEEKLY TARGETS · BUDGET PLAN',
-    title: 'Weekly Sales Targets',
-    intro: 'The locked weekly target schedule that drives the budget plan. Methodology locked April 19, 2026, do not change WIP constants without explicit approval.',
-    tags: [{ kind: 'info', text: 'Locked V5' }],
-    sections: [
-      {
-        kind: 'callout', tone: 'warn',
-        title: 'Methodology locked',
-        body: 'The Weekly Sales Targets schedule and the Budget Recovery monthly bridge are locked as of <strong>2026-04-19</strong>. WIP constants and cycle-time hierarchy are immutable in this view. See the Revenue Forecast → Weekly Targets tab for the formulaic build-up; this tab presents the locked output.'
-      },
-      {
-        kind: 'prose',
-        body: '<div class="prose"><p>The weekly target view answers a simple question: <strong>how much do we need to sign each week to hit the budget?</strong> The locked numbers behind this dashboard come out of the V5 forecast methodology and reflect the cycle-time hierarchy by job type and market.</p><p>If the actual weekly run rate diverges by more than ±15% from the locked target for two consecutive weeks, escalate to the COO and the FP&A Director (Mahlet Teshome Mandefro) for an off-cycle methodology review.</p></div>'
-      }
-    ]
-  };
+  (function () {
+    var wt = D.weeklyTargets_BUDGET || {};
+    var schedule = (wt.weekSchedule || []).slice();          // [{wk, mo, target}]
+    var avgWeekly = wt.avgWeeklyNeed || 0;
+    var recent4Wk = wt.recent4WkAvg || 0;
+    var byJobType = wt.byJobType || [];
+    var byMarket  = wt.byMarket || [];
+    var weeksRemaining = schedule.length;
+    var totalNeeded = schedule.reduce(function (s, w) { return s + (w.target || 0); }, 0);
+    var paceGap = avgWeekly - recent4Wk;
+
+    // Group weekly targets by month for the chart
+    var byMonth = {};
+    schedule.forEach(function (w) {
+      if (!byMonth[w.mo]) byMonth[w.mo] = { mo: w.mo, total: 0, weeks: 0 };
+      byMonth[w.mo].total += w.target || 0;
+      byMonth[w.mo].weeks++;
+    });
+    var monthOrder = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    var monthRows = monthOrder.filter(function (m) { return byMonth[m]; }).map(function (m) { return byMonth[m]; });
+
+    pages['weekly-targets'] = {
+      eyebrow: 'WEEKLY TARGETS · ' + weeksRemaining + ' WEEKS REMAINING',
+      title: 'Weekly Sales Targets',
+      intro: 'The week-by-week sign-up schedule we need to hit the residential plan. Each row is the contract value the team must sign that week to keep us on track.',
+      tags: [
+        { kind: 'info',    text: weeksRemaining + ' weeks · ' + fmt.money(totalNeeded, { short: true }) + ' to sign' },
+        { kind: paceGap > 0 ? 'danger' : 'success', text: 'Pace gap ' + (paceGap >= 0 ? '+' : '') + fmt.money(paceGap, { short: true }) + '/wk' }
+      ],
+      sections: [
+        {
+          kind: 'kpi-row', cols: 4,
+          items: [
+            { label: 'Avg Weekly Target',  value: fmt.money(avgWeekly, { short: true }), sub: 'Required across remaining weeks', tone: 'navy' },
+            { label: 'Recent 4-Wk Avg',    value: fmt.money(recent4Wk, { short: true }), sub: 'What we have actually been signing', tone: paceGap > 0 ? 'warn' : 'good' },
+            { label: 'Pace Gap',           value: (paceGap >= 0 ? '+' : '') + fmt.money(paceGap, { short: true }) + '/wk', sub: paceGap > 0 ? 'Need to lift weekly pace' : 'Currently ahead of pace', tone: paceGap > 0 ? 'danger' : 'good' },
+            { label: 'Weeks Remaining',    value: String(weeksRemaining),                sub: 'In the locked schedule',          tone: 'info' }
+          ]
+        },
+        {
+          kind: 'chart-grid', cols: 1,
+          heading: 'Weekly Sign-Up Schedule',
+          caption: 'Bars = required new contract value per week, line = month-end markers. Hover for week-of date and target dollars.',
+          charts: [{
+            title: 'Required weekly sales · ' + weeksRemaining + ' weeks',
+            sub: 'Total ' + fmt.money(totalNeeded, { short: true }) + ' across ' + monthRows.length + ' months',
+            height: 320,
+            config: {
+              type: 'bar',
+              data: {
+                labels: schedule.map(function (w) { return w.wk; }),
+                datasets: [{
+                  label: 'Required Weekly Sales',
+                  data: schedule.map(function (w) { return w.target || 0; }),
+                  backgroundColor: schedule.map(function (w) {
+                    // Tint by month for visual rhythm
+                    var i = monthOrder.indexOf(w.mo);
+                    var pal2 = [pal.blue, pal.navy, pal.slate, pal.warning, pal.success, pal.danger, pal.blue, pal.navy, pal.slate, pal.warning, pal.success, pal.danger];
+                    return pal2[i] || pal.blue;
+                  }),
+                  borderRadius: 4
+                }]
+              },
+              options: withOpts({
+                scales: { y: moneyAxis(), x: { ticks: { maxRotation: 60, minRotation: 45, font: { size: 10 } } } },
+                plugins: {
+                  legend: { display: false },
+                  tooltip: {
+                    callbacks: {
+                      title: function (ctx) {
+                        var w = schedule[ctx[0].dataIndex];
+                        return w ? (w.mo + ' · week of ' + w.wk) : '';
+                      },
+                      label: function (ctx) { return 'Target: ' + fmt.money(ctx.parsed.y); }
+                    }
+                  }
+                }
+              })
+            }
+          }]
+        },
+        {
+          kind: 'table',
+          heading: 'Monthly roll-up',
+          caption: 'Sum of weekly targets by calendar month',
+          headers: [
+            { label: 'Month', num: false },
+            { label: '# Weeks', num: true },
+            { label: 'Sum of Weekly Targets', num: true },
+            { label: 'Avg / Week', num: true }
+          ],
+          rows: monthRows.map(function (m) {
+            return [m.mo + ' 2026', m.weeks, fmt.money(m.total), fmt.money(m.total / Math.max(1, m.weeks))];
+          })
+        },
+        byJobType.length ? {
+          kind: 'table',
+          heading: 'Allocation by job type',
+          caption: 'Required weekly sales split across the three primary residential job types',
+          headers: [
+            { label: 'Job Type', num: false },
+            { label: 'Weekly Need', num: true },
+            { label: '% of Total', num: true },
+            { label: 'Annual', num: true }
+          ],
+          rows: byJobType.map(function (r) {
+            // Defensive: rows might be {jobType, weeklyNeed, pct, annual} or array
+            if (Array.isArray(r)) return r;
+            return [
+              r.jobType || r.label || '—',
+              fmt.money(r.weeklyNeed || r.weekly || 0),
+              ((r.pct || 0) * (r.pct < 1 ? 100 : 1)).toFixed(1) + '%',
+              fmt.money(r.annual || (r.weeklyNeed || 0) * weeksRemaining)
+            ];
+          })
+        } : null,
+        byMarket.length ? {
+          kind: 'table',
+          heading: 'Allocation by market',
+          caption: 'Top-13 branch market split of the weekly target',
+          maxHeight: '440px',
+          headers: [
+            { label: 'Market', num: false },
+            { label: 'Weekly Need', num: true },
+            { label: '% of Total', num: true }
+          ],
+          rows: byMarket.map(function (r) {
+            if (Array.isArray(r)) return r;
+            return [
+              r.market || r.branch || '—',
+              fmt.money(r.weeklyNeed || r.weekly || 0),
+              ((r.pct || 0) * (r.pct < 1 ? 100 : 1)).toFixed(1) + '%'
+            ];
+          })
+        } : null,
+        {
+          kind: 'callout', tone: paceGap > 0 ? 'danger' : 'success',
+          title: paceGap > 0 ? 'Pace gap to close' : 'Tracking ahead',
+          body: paceGap > 0
+            ? 'The 4-week average sales pace is <strong>' + fmt.money(recent4Wk, { short: true }) + '/wk</strong> against a required <strong>' + fmt.money(avgWeekly, { short: true }) + '/wk</strong>. That is <strong>' + fmt.money(paceGap, { short: true }) + '</strong> short per week. If the actual weekly run rate diverges by more than ±15% for two consecutive weeks, escalate to the COO and the FP&amp;A Director (Mahlet Teshome Mandefro) for an off-cycle review.'
+            : 'The 4-week average sales pace of <strong>' + fmt.money(recent4Wk, { short: true }) + '/wk</strong> is currently above the required <strong>' + fmt.money(avgWeekly, { short: true }) + '/wk</strong>. Keep this momentum.'
+        }
+      ].filter(Boolean)
+    };
+  })();
 
   // ============================================================
-  // BUDGET RECOVERY
+  // BUDGET RECOVERY (Q1 INVOICED basis, NetSuite is canonical)
+  // Switched from Q1 sales to Q1 invoiced 2026-05 per Greg.
+  // Pulls Jan/Feb/Mar invoiced from REVENUE_FORECAST.netsuiteInvoiced.monthly
+  // and compares to the residential budget invoiced for those months.
   // ============================================================
-  pages['budget-recovery'] = {
-    eyebrow: 'BUDGET RECOVERY · LOCKED V5',
-    title: 'Budget Recovery',
-    intro: 'The path back to the $125.6M residential budget, the monthly sales we need to sign to close the gap to plan.',
-    tags: [{ kind: 'danger', text: '$6.3M gap' }],
-    sections: [
-      {
-        kind: 'kpi-row', cols: 4,
-        items: [
-          { label: 'Q1 Original Budget', value: '$24.4M', sub: 'Original residential plan',  tone: 'navy' },
-          { label: 'Q1 Signed Sales',     value: '$14.3M', sub: 'Through end of March',      tone: 'warn' },
-          { label: 'Q1 Shortfall',        value: '$10.1M', sub: 'To recover across Q2-Q4',   tone: 'danger' },
-          { label: 'Annualized Path',     value: '$119.3M', sub: 'Forecast vs $125.6M',      tone: 'warn' }
-        ]
-      },
-      {
-        kind: 'callout', tone: 'danger',
-        title: 'How recovery works',
-        body: 'The Q1 shortfall ($10.1M) is allocated across Q2-Q4 weeks based on the locked V5 schedule. The deeper the slip in any one month, the steeper the implied sales target for the following month. Open Revenue Forecast → Budget Recovery for the week-by-week schedule and per-market splits.'
-      }
-    ]
-  };
+  (function () {
+    var rf = (window.FZ && window.FZ.data && window.FZ.data.REVENUE_FORECAST) || {};
+    var ns = rf.netsuiteInvoiced || {};
+    var br = D.budgetRecovery || {};
+    var monthly = (ns.monthly && ns.monthly.length === 12) ? ns.monthly : null;
+    var budgetInv = (rf.budgetInv && rf.budgetInv.length === 12) ? rf.budgetInv : null;
+
+    var q1Inv = monthly ? (monthly[0] + monthly[1] + monthly[2]) : null;
+    var q1InvBudget = budgetInv ? (budgetInv[0] + budgetInv[1] + budgetInv[2]) : null;
+    var q1Shortfall = (q1Inv != null && q1InvBudget != null) ? (q1Inv - q1InvBudget) : null;
+    var fullYearBudget = br.fullYearBudget || (rf.execSummary && rf.execSummary.budget) || 125600000;
+    var annualForecast = (rf.execSummary && rf.execSummary.modelAnnualInvoiced) || 0;
+    var annualGap = annualForecast - fullYearBudget;
+
+    pages['budget-recovery'] = {
+      eyebrow: 'BUDGET RECOVERY · Q1 INVOICED BASIS',
+      title: 'Budget Recovery',
+      intro: 'The path back to the residential plan, measured against booked invoiced revenue (NetSuite AR) rather than signed sales. Q1 numbers below are the invoices booked through 3/31, not contracts signed.',
+      tags: [
+        { kind: q1Shortfall != null && q1Shortfall < 0 ? 'danger' : 'success', text: q1Shortfall != null ? 'Q1 ' + (q1Shortfall >= 0 ? '+' : '') + fmt.money(q1Shortfall, { short: true }) + ' vs plan' : 'Q1 data pending' },
+        { kind: annualGap < 0 ? 'warn' : 'success', text: 'Annual ' + (annualGap >= 0 ? '+' : '') + fmt.money(annualGap, { short: true }) }
+      ],
+      sections: [
+        {
+          kind: 'kpi-row', cols: 4,
+          items: [
+            { label: 'Q1 Budget (Invoiced)',  value: q1InvBudget != null ? fmt.money(q1InvBudget, { short: true }) : '—', sub: 'Sum Jan + Feb + Mar plan',     tone: 'navy' },
+            { label: 'Q1 Invoiced (Actual)',   value: q1Inv != null      ? fmt.money(q1Inv, { short: true })      : '—', sub: 'NetSuite AR · Jan-Mar booked', tone: 'good' },
+            { label: 'Q1 Variance',            value: q1Shortfall != null ? (q1Shortfall >= 0 ? '+' : '') + fmt.money(q1Shortfall, { short: true }) : '—', sub: q1Shortfall != null && q1Shortfall < 0 ? 'To recover across Q2-Q4' : 'Tracking to plan', tone: q1Shortfall != null && q1Shortfall < 0 ? 'crit' : 'good' },
+            { label: 'Annual Forecast',        value: annualForecast ? fmt.money(annualForecast, { short: true }) : '—', sub: 'Model invoiced · vs ' + fmt.money(fullYearBudget, { short: true }), tone: annualGap < 0 ? 'warn' : 'good' }
+          ]
+        },
+        monthly && budgetInv ? {
+          kind: 'table',
+          heading: 'Q1 invoiced vs plan, by month (NetSuite)',
+          caption: 'NetSuite AR booked invoices (Type = Invoice) per the FORECASTING_RULES.md §5.1 source-of-truth rule',
+          headers: [
+            { label: 'Month', num: false },
+            { label: 'Plan (Invoiced)', num: true },
+            { label: 'Actual (NetSuite)', num: true },
+            { label: 'Variance', num: true },
+            { label: 'Variance %', num: true }
+          ],
+          rows: ['Jan', 'Feb', 'Mar'].map(function (m, i) {
+            var plan = budgetInv[i] || 0;
+            var actual = monthly[i] || 0;
+            var diff = actual - plan;
+            var pct = plan > 0 ? (diff / plan) * 100 : 0;
+            return [
+              m + ' 2026',
+              fmt.money(plan),
+              fmt.money(actual),
+              (diff >= 0 ? '+' : '') + fmt.money(diff),
+              (pct >= 0 ? '+' : '') + pct.toFixed(1) + '%'
+            ];
+          }).concat([[
+            'Q1 Total',
+            q1InvBudget != null ? fmt.money(q1InvBudget) : '—',
+            q1Inv != null ? fmt.money(q1Inv) : '—',
+            q1Shortfall != null ? ((q1Shortfall >= 0 ? '+' : '') + fmt.money(q1Shortfall)) : '—',
+            (q1Inv != null && q1InvBudget != null && q1InvBudget > 0)
+              ? ((q1Shortfall / q1InvBudget * 100 >= 0 ? '+' : '') + (q1Shortfall / q1InvBudget * 100).toFixed(1) + '%')
+              : '—'
+          ]])
+        } : null,
+        {
+          kind: 'callout', tone: q1Shortfall != null && q1Shortfall < 0 ? 'danger' : 'success',
+          title: q1Shortfall != null && q1Shortfall < 0 ? 'Q1 invoiced shortfall' : q1Shortfall != null && q1Shortfall >= 0 ? 'Q1 ahead of plan' : 'Q1 data not yet locked',
+          body: q1Shortfall != null
+            ? 'Q1 booked invoices ' + (q1Shortfall < 0 ? 'underran' : 'exceeded') + ' the plan by <strong>' + fmt.money(Math.abs(q1Shortfall), { short: true }) + '</strong>. The recovery (or excess) flows through to the rest of the year via the V5 monthly bridge. See <strong>Revenue Forecast → Budget Recovery</strong> for the week-by-week schedule and per-market splits.'
+            : 'Q1 invoiced figures will populate once the NetSuite AR export is ingested. Drop the latest <code>ResInvoicedYTDResults*.csv</code> into <code>inputs/residential/revenue-forecast/</code> and rerun the build.'
+        }
+      ].filter(Boolean)
+    };
+  })();
 
   // ============================================================
   // COMPLETED → BILLING

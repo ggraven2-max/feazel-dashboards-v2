@@ -1282,3 +1282,14 @@ a:hover { color: var(--feazel-blue-hover); text-decoration: underline; text-unde
 .sidebar-brand-link:active {
   transform: scale(0.96);
 }
+
+/* ----- Page head: give the eyebrow + title clear breathing room ----- */
+/* The topbar (64px) + subnav (56px) stick to the top. When content scrolls
+   under that 120px band, the page-head needs enough top buffer that the
+   eyebrow doesn't visually touch the bottom of the sticky subnav. */
+html { scroll-padding-top: 132px; }   /* topbar + subnav + 12px buffer */
+.page { padding-top: var(--space-6); }
+.page-head { padding-top: var(--space-3); }   /* 12px extra buffer above eyebrow */
+
+/* Slight separator under the subnav so the sticky band has a clear edge */
+.subnav { box-shadow: 0 1px 0 var(--line); }
