@@ -74,6 +74,75 @@ function findFile(inputDir) {
   return files.find(f => /service appointments/i.test(f.name) && /\.xlsx?$/i.test(f.name)) || null;
 }
 
+// Sibling-folder lookup: the Jobs/WOs/SAs file lives in inputs/service/
+// revenue-forecast/ (same as the install↔service overlap analysis). It has
+// Work Order Status, Sub-Status, and Days in Status — needed for the Aging
+// tab's "in progress 60+ days" and "not started" warnings.
+function findJobsWosFile(inputDir) {
+  const sibling = path.join(inputDir, '..', 'revenue-forecast');
+  if (!fs.existsSync(sibling)) return null;
+  const files = fs.readdirSync(sibling)
+    .filter(n => /jobs with wos/i.test(n) && /\.xlsx?$/i.test(n))
+    .map(n => ({ name: n, fullPath: path.join(sibling, n) }));
+  return files[0] || null;
+}
+
+// Parse the Jobs with WOs and SAs file just enough to pull Repair WO status
+// info. Returns one entry per WO (deduped by Work Order Number).
+function parseWoStatuses(file) {
+  if (!file) return null;
+  const xlsx = require('xlsx');
+  const wb = xlsx.readFile(file.fullPath, { cellDates: false });
+  const sheet = wb.Sheets[wb.SheetNames[0]];
+  const raw = xlsx.utils.sheet_to_json(sheet, { header: 1, defval: null });
+  if (!raw.length) return null;
+  // Header row + index lookup
+  const headers = raw[0].map(h => String(h || '').trim());
+  const idx = (name) => headers.findIndex(h => h.toLowerCase() === name.toLowerCase());
+  const cAccount = idx('Account: Account Name');
+  const cDays = idx('Days in Status');
+  const cStatus = idx('Status');
+  const cSubStatus = idx('Sub-Status');
+  const cServiceType = idx('Service Type');
+  const cTrade = idx('Service Object');
+  const cWO = idx('Work Order Number');
+  const cBranch = idx('Branch Location to Service');
+  const cAmount = idx('Final Contract Amount');
+  const cSAStart = idx('Service Appointment Start Date/Time');
+  const cContractSigned = idx('Contract Signed On Date');
+
+  const woMap = new Map();
+  for (let i = 1; i < raw.length; i++) {
+    const r = raw[i] || [];
+    const stype = String(r[cServiceType] || '').trim();
+    if (stype !== 'Repair') continue;
+    const wo = String(r[cWO] || '').trim();
+    if (!wo) continue;
+    if (!woMap.has(wo)) {
+      woMap.set(wo, {
+        wo,
+        account: String(r[cAccount] || '').trim(),
+        branch: normBranch(r[cBranch]),
+        trade: String(r[cTrade] || '').trim(),
+        status: String(r[cStatus] || '').trim(),
+        subStatus: String(r[cSubStatus] || '').trim(),
+        days: parseNumber(r[cDays]),
+        contract: parseNumber(r[cAmount]),
+        contractSigned: r[cContractSigned] || null,
+        hasSA: !!r[cSAStart]
+      });
+    } else {
+      // Carry the highest Days in Status seen across rows for this WO; mark
+      // hasSA true if any row has an SA start
+      const m = woMap.get(wo);
+      const d = parseNumber(r[cDays]);
+      if (d > m.days) m.days = d;
+      if (r[cSAStart]) m.hasSA = true;
+    }
+  }
+  return Array.from(woMap.values());
+}
+
 function run(opts) {
   opts = opts || {};
   const inputDir = opts.inputDir || path.join(__dirname, '..', 'inputs', 'service', PROJECT_ID);
@@ -262,11 +331,60 @@ function run(opts) {
     };
   });
 
-  // Stuck WOs: 60+ day span across multiple appointments
+  // Stuck WOs: 60+ day span across multiple appointments (legacy proxy)
   const stuckWOs = woStats
     .filter(w => w.appointments >= 2 && w.spanDays >= 60)
     .sort((a, b) => b.spanDays - a.spanDays)
     .slice(0, 25);
+
+  // ─────────────────────────────────────────────────────────────
+  // Pull WO Status info from the sibling Jobs/WOs/SAs file. Use it
+  // for two cleaner Aging warnings: WOs literally In Progress 60+
+  // days, and WOs not yet started but aged in their current status.
+  // ─────────────────────────────────────────────────────────────
+  const woStatusList = parseWoStatuses(findJobsWosFile(inputDir)) || [];
+  const NOT_STARTED_STATUSES = new Set([
+    'New',
+    'Ready to Schedule',
+    'Scheduled',
+    'Pending Estimate Approval',
+    'On Hold',
+    'Pending Insurance Claim',
+    'Pending Sales'
+  ]);
+  // Status tone for the "Not Started" pill
+  function notStartedTone(status) {
+    if (status === 'On Hold' || status === 'Pending Insurance Claim') return 'warn';
+    if (status === 'New' || status === 'Ready to Schedule') return 'info';
+    if (status === 'Scheduled') return 'success';
+    return 'navy';
+  }
+
+  const inProgress60Plus = woStatusList
+    .filter(w => /^in progress$/i.test(w.status) && w.days >= 60)
+    .sort((a, b) => b.days - a.days)
+    .slice(0, 25);
+
+  const notStartedAged = woStatusList
+    .filter(w => NOT_STARTED_STATUSES.has(w.status))
+    .sort((a, b) => b.days - a.days)
+    .slice(0, 25);
+
+  // Quick rollup of not-started by status for KPI summary
+  const notStartedSummary = {};
+  woStatusList.forEach(w => {
+    if (!NOT_STARTED_STATUSES.has(w.status)) return;
+    if (!notStartedSummary[w.status]) notStartedSummary[w.status] = { status: w.status, count: 0, totalDays: 0, maxDays: 0 };
+    const s = notStartedSummary[w.status];
+    s.count++; s.totalDays += w.days;
+    if (w.days > s.maxDays) s.maxDays = w.days;
+  });
+  const notStartedByStatus = Object.values(notStartedSummary)
+    .map(s => ({ status: s.status, count: s.count,
+                 avgDays: round1(s.totalDays / Math.max(1, s.count)),
+                 maxDays: round1(s.maxDays) }))
+    .sort((a, b) => b.count - a.count);
+  const notStartedTotal = notStartedByStatus.reduce((s, r) => s + r.count, 0);
 
   // Multi-touch WOs: 3+ appointments
   const multiTouch = woStats
@@ -336,9 +454,14 @@ function run(opts) {
       findings.concerns.push(t.tech + ' averages ' + t.avgMinPerAppt + 'min per appointment vs network ' + Math.round(avgMinPerAppt) + 'min. Heavy skew on this tech\'s book.');
     }
   });
-  // Watch: stuck WOs
-  if (stuckWOs.length) {
-    findings.watch.push(stuckWOs.length + ' work orders span 60+ days across multiple appointments. Oldest: WO ' + stuckWOs[0].wo + ' (' + stuckWOs[0].spanDays + ' days). Should be closed or escalated.');
+  // Watch: in-progress 60+ day WOs (status-based, replaces multi-appt span proxy)
+  if (inProgress60Plus.length) {
+    findings.watch.push(inProgress60Plus.length + ' work orders are In Progress 60+ days. Oldest: WO ' + inProgress60Plus[0].wo + ' (' + inProgress60Plus[0].days.toFixed(0) + ' days, ' + inProgress60Plus[0].account + '). Should be closed or escalated.');
+  }
+  // Watch: not-started aging (slow scheduling)
+  if (notStartedAged.length) {
+    var oldestNS = notStartedAged[0];
+    findings.watch.push(notStartedTotal + ' Repair WOs are not yet started; the oldest has been in "' + oldestNS.status + '" for ' + oldestNS.days.toFixed(0) + ' days (WO ' + oldestNS.wo + ', ' + oldestNS.account + '). Slow-scheduling backlog.');
   }
   if (disproportionate.length) {
     findings.watch.push(disproportionate.length + ' work orders are eating disproportionate hours vs their contract value. Top offender: WO ' + disproportionate[0].wo + ' (' + disproportionate[0].hours + 'h on $' + disproportionate[0].contract + ' contract).');
@@ -396,7 +519,11 @@ function run(opts) {
     branchRows,
     accountRows: acctRows.slice(0, 25),
     woStats: {
-      stuck: stuckWOs,
+      stuck: stuckWOs,                 // legacy: WOs with multi-appt 60+ day span
+      inProgress60Plus,                // WOs literally Status=In Progress, ≥60 days
+      notStarted: notStartedAged,      // WOs in pre-execution statuses, sorted by Days in Status
+      notStartedByStatus,              // status rollup for the KPI card
+      notStartedTotal,
       multiTouch,
       disproportionate
     },

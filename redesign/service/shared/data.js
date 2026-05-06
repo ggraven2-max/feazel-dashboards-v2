@@ -1,8 +1,8 @@
-/* AUTO-GENERATED — do not edit. Generated 2026-05-06T19:30:38.965Z (service) */
+/* AUTO-GENERATED — do not edit. Generated 2026-05-06T19:38:37.199Z (service) */
 window.FZ = window.FZ || {};
 window.FZ.data = {
   "_meta": {
-    "builtAt": "2026-05-06T19:30:38.965Z",
+    "builtAt": "2026-05-06T19:38:37.199Z",
     "pipelineVersion": "2.0.0",
     "lob": "service",
     "lastBuiltProjects": [
@@ -13,14 +13,14 @@ window.FZ.data = {
       {
         "id": "revenue-forecast",
         "version": "V5-locked-2026-04-19-shell-1.0",
-        "elapsedMs": 256,
-        "builtAt": "2026-05-06T19:30:38.965Z"
+        "elapsedMs": 278,
+        "builtAt": "2026-05-06T19:38:37.199Z"
       },
       {
         "id": "service-calls",
         "version": "Service-Calls-v1.0-2026-05-06",
-        "elapsedMs": 273,
-        "builtAt": "2026-05-06T19:30:38.965Z"
+        "elapsedMs": 459,
+        "builtAt": "2026-05-06T19:38:37.199Z"
       }
     ]
   },
@@ -3422,6 +3422,373 @@ window.FZ.data = {
           "spanDays": 66
         }
       ],
+      "inProgress60Plus": [
+        {
+          "wo": "00202625",
+          "account": "Avenue5",
+          "branch": "DC Metro",
+          "trade": "Roofing",
+          "status": "In Progress",
+          "subStatus": "",
+          "days": 68.03,
+          "contract": 350,
+          "contractSigned": "2/25/2026",
+          "hasSA": true
+        },
+        {
+          "wo": "00201746",
+          "account": "Capital Property Solutions",
+          "branch": "Columbus",
+          "trade": "Roofing",
+          "status": "In Progress",
+          "subStatus": "",
+          "days": 64.2,
+          "contract": 400,
+          "contractSigned": "2/17/2026",
+          "hasSA": true
+        }
+      ],
+      "notStarted": [
+        {
+          "wo": "00198032",
+          "account": "Associa Tennessee",
+          "branch": "Nashville",
+          "trade": "Roofing",
+          "status": "Pending Insurance Claim",
+          "subStatus": "",
+          "days": 119.06,
+          "contract": 350,
+          "contractSigned": "1/5/2026",
+          "hasSA": true
+        },
+        {
+          "wo": "00198750",
+          "account": "Associa Tennessee",
+          "branch": "Nashville",
+          "trade": "Roofing",
+          "status": "Pending Insurance Claim",
+          "subStatus": "",
+          "days": 110.13,
+          "contract": 350,
+          "contractSigned": "1/13/2026",
+          "hasSA": true
+        },
+        {
+          "wo": "00198489",
+          "account": "Associa Tennessee",
+          "branch": "Nashville",
+          "trade": "Roofing",
+          "status": "Pending Insurance Claim",
+          "subStatus": "",
+          "days": 107.01,
+          "contract": 350,
+          "contractSigned": "1/9/2026",
+          "hasSA": true
+        },
+        {
+          "wo": "00199177",
+          "account": "Capital Property Solutions",
+          "branch": "Columbus",
+          "trade": "Roofing",
+          "status": "Pending Estimate Approval",
+          "subStatus": "",
+          "days": 98.18,
+          "contract": 350,
+          "contractSigned": "1/20/2026",
+          "hasSA": true
+        },
+        {
+          "wo": "00199911",
+          "account": "Towne Properties - Columbus",
+          "branch": "Columbus",
+          "trade": "Gutters",
+          "status": "Pending Estimate Approval",
+          "subStatus": "",
+          "days": 92.11,
+          "contract": 350,
+          "contractSigned": "2/2/2026",
+          "hasSA": true
+        },
+        {
+          "wo": "00198653",
+          "account": "Associated Property Management, LLC",
+          "branch": "Cleveland",
+          "trade": "Roofing",
+          "status": "Pending Estimate Approval",
+          "subStatus": "",
+          "days": 89.87,
+          "contract": 500,
+          "contractSigned": "1/13/2026",
+          "hasSA": true
+        },
+        {
+          "wo": "00198212",
+          "account": "Condo Management of Columbus",
+          "branch": "Columbus",
+          "trade": "Roofing",
+          "status": "Pending Estimate Approval",
+          "subStatus": "",
+          "days": 88.98,
+          "contract": 350,
+          "contractSigned": "1/7/2026",
+          "hasSA": true
+        },
+        {
+          "wo": "00198257",
+          "account": "Condo Management of Columbus",
+          "branch": "Columbus",
+          "trade": "Roofing",
+          "status": "Pending Estimate Approval",
+          "subStatus": "",
+          "days": 88.72,
+          "contract": 350,
+          "contractSigned": "1/7/2026",
+          "hasSA": true
+        },
+        {
+          "wo": "00198154",
+          "account": "Capital Property Solutions",
+          "branch": "Columbus",
+          "trade": "Roofing",
+          "status": "Pending Estimate Approval",
+          "subStatus": "",
+          "days": 88.65,
+          "contract": 350,
+          "contractSigned": "1/6/2026",
+          "hasSA": true
+        },
+        {
+          "wo": "00198578",
+          "account": "Singh Management",
+          "branch": "Detroit",
+          "trade": "Roofing",
+          "status": "Pending Estimate Approval",
+          "subStatus": "",
+          "days": 78.91,
+          "contract": 310,
+          "contractSigned": "1/12/2026",
+          "hasSA": true
+        },
+        {
+          "wo": "00199692",
+          "account": "Towne Properties - Columbus",
+          "branch": "Columbus",
+          "trade": "Gutters",
+          "status": "Pending Estimate Approval",
+          "subStatus": "",
+          "days": 78.9,
+          "contract": 350,
+          "contractSigned": "1/28/2026",
+          "hasSA": true
+        },
+        {
+          "wo": "00200070",
+          "account": "Towne Properties - Columbus",
+          "branch": "Columbus",
+          "trade": "Roofing",
+          "status": "Pending Estimate Approval",
+          "subStatus": "",
+          "days": 78.16,
+          "contract": 350,
+          "contractSigned": "2/2/2026",
+          "hasSA": true
+        },
+        {
+          "wo": "00201447",
+          "account": "Aaron Carroll",
+          "branch": "Columbus",
+          "trade": "Gutters",
+          "status": "Pending Estimate Approval",
+          "subStatus": "",
+          "days": 77.17,
+          "contract": 350,
+          "contractSigned": "2/16/2026",
+          "hasSA": true
+        },
+        {
+          "wo": "00198680",
+          "account": "Condo Management of Columbus",
+          "branch": "Columbus",
+          "trade": "Roofing",
+          "status": "Pending Estimate Approval",
+          "subStatus": "",
+          "days": 74.88,
+          "contract": 350,
+          "contractSigned": "1/13/2026",
+          "hasSA": true
+        },
+        {
+          "wo": "00202287",
+          "account": "Sentry Management - Columbus",
+          "branch": "Columbus",
+          "trade": "Roofing",
+          "status": "Pending Estimate Approval",
+          "subStatus": "",
+          "days": 71.17,
+          "contract": 350,
+          "contractSigned": "2/23/2026",
+          "hasSA": true
+        },
+        {
+          "wo": "00200135",
+          "account": "Capital Property Solutions",
+          "branch": "Columbus",
+          "trade": "Roofing",
+          "status": "Pending Estimate Approval",
+          "subStatus": "",
+          "days": 71,
+          "contract": 350,
+          "contractSigned": "2/3/2026",
+          "hasSA": true
+        },
+        {
+          "wo": "00200520",
+          "account": "Korcsmaros, Alex",
+          "branch": "Nashville",
+          "trade": "Roofing",
+          "status": "Scheduled",
+          "subStatus": "",
+          "days": 70.99,
+          "contract": 2480,
+          "contractSigned": "2/2/2026",
+          "hasSA": true
+        },
+        {
+          "wo": "00200329",
+          "account": "Solomon Organization, LLC",
+          "branch": "Detroit",
+          "trade": "Roofing",
+          "status": "Pending Estimate Approval",
+          "subStatus": "",
+          "days": 70.91,
+          "contract": 350,
+          "contractSigned": "2/4/2026",
+          "hasSA": true
+        },
+        {
+          "wo": "00200349",
+          "account": "Condo Management of Columbus",
+          "branch": "Columbus",
+          "trade": "Roofing",
+          "status": "Pending Estimate Approval",
+          "subStatus": "",
+          "days": 69.03,
+          "contract": 350,
+          "contractSigned": "2/4/2026",
+          "hasSA": true
+        },
+        {
+          "wo": "00201376",
+          "account": "Avenue5",
+          "branch": "DC Metro",
+          "trade": "Roofing",
+          "status": "Pending Estimate Approval",
+          "subStatus": "",
+          "days": 69,
+          "contract": 550,
+          "contractSigned": "2/13/2026",
+          "hasSA": true
+        },
+        {
+          "wo": "00200434",
+          "account": "Capital Property Solutions",
+          "branch": "Columbus",
+          "trade": "Roofing",
+          "status": "Pending Estimate Approval",
+          "subStatus": "",
+          "days": 68.97,
+          "contract": 350,
+          "contractSigned": "2/5/2026",
+          "hasSA": true
+        },
+        {
+          "wo": "00201116",
+          "account": "Custom Property Management, Inc.",
+          "branch": "Cleveland",
+          "trade": "Roofing",
+          "status": "Pending Estimate Approval",
+          "subStatus": "",
+          "days": 65.09,
+          "contract": 350,
+          "contractSigned": "2/11/2026",
+          "hasSA": true
+        },
+        {
+          "wo": "00201844",
+          "account": "Kalyan Hospitality",
+          "branch": "DC Metro",
+          "trade": "Roofing",
+          "status": "Pending Estimate Approval",
+          "subStatus": "",
+          "days": 65.01,
+          "contract": 350,
+          "contractSigned": "2/18/2026",
+          "hasSA": true
+        },
+        {
+          "wo": "00200535",
+          "account": "Solomon Organization, LLC",
+          "branch": "Detroit",
+          "trade": "Roofing",
+          "status": "Pending Estimate Approval",
+          "subStatus": "",
+          "days": 63.15,
+          "contract": 350,
+          "contractSigned": "2/6/2026",
+          "hasSA": true
+        },
+        {
+          "wo": "00200550",
+          "account": "Sentry Management - Columbus",
+          "branch": "Columbus",
+          "trade": "Roofing",
+          "status": "Pending Estimate Approval",
+          "subStatus": "",
+          "days": 63.06,
+          "contract": 350,
+          "contractSigned": "2/6/2026",
+          "hasSA": true
+        }
+      ],
+      "notStartedByStatus": [
+        {
+          "status": "Pending Estimate Approval",
+          "count": 110,
+          "avgDays": 38.4,
+          "maxDays": 98.2
+        },
+        {
+          "status": "Scheduled",
+          "count": 87,
+          "avgDays": 8.5,
+          "maxDays": 71
+        },
+        {
+          "status": "Ready to Schedule",
+          "count": 73,
+          "avgDays": 11.4,
+          "maxDays": 44.2
+        },
+        {
+          "status": "On Hold",
+          "count": 24,
+          "avgDays": 16.8,
+          "maxDays": 50.6
+        },
+        {
+          "status": "New",
+          "count": 19,
+          "avgDays": 0.4,
+          "maxDays": 7
+        },
+        {
+          "status": "Pending Insurance Claim",
+          "count": 4,
+          "avgDays": 99.6,
+          "maxDays": 119.1
+        }
+      ],
+      "notStartedTotal": 317,
       "multiTouch": [
         {
           "wo": "00191882",
@@ -4387,7 +4754,8 @@ window.FZ.data = {
         "Ethan Epperson averages 270min per appointment vs network 114min. Heavy skew on this tech's book."
       ],
       "watch": [
-        "25 work orders span 60+ days across multiple appointments. Oldest: WO 00198374 (95 days). Should be closed or escalated.",
+        "2 work orders are In Progress 60+ days. Oldest: WO 00202625 (68 days, Avenue5). Should be closed or escalated.",
+        "317 Repair WOs are not yet started; the oldest has been in \"Pending Insurance Claim\" for 119 days (WO 00198032, Associa Tennessee). Slow-scheduling backlog.",
         "22 work orders are eating disproportionate hours vs their contract value. Top offender: WO 00203680 (142.6h on $350 contract).",
         "1206 appointments have no Actual End — either still in progress or never closed out. Likely a data hygiene problem in Salesforce."
       ],

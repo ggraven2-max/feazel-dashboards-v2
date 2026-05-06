@@ -34,6 +34,10 @@
   var accounts = safeArr(D.accountRows);
   var monthly = safeArr(D.monthly);
   var stuck = safeArr(D.woStats && D.woStats.stuck);
+  var inProgress60 = safeArr(D.woStats && D.woStats.inProgress60Plus);
+  var notStarted = safeArr(D.woStats && D.woStats.notStarted);
+  var notStartedByStatus = safeArr(D.woStats && D.woStats.notStartedByStatus);
+  var notStartedTotal = (D.woStats && D.woStats.notStartedTotal) || 0;
   var multiTouch = safeArr(D.woStats && D.woStats.multiTouch);
   var dispro = safeArr(D.woStats && D.woStats.disproportionate);
   var longAppts = safeArr(D.longAppts);
@@ -503,43 +507,97 @@
   pages.aging = {
     eyebrow: 'AGING · WARNINGS',
     title: 'Aging & Warnings',
-    intro: 'Work orders that need a closer look. Stuck = open for 60+ days across multiple appointments. Multi-touch = 3+ appointments on the same WO (return trips, scope creep). Disproportionate = many hours eating into a small contract — usually scope creep or scope misclassification.',
+    intro: 'Work orders that need a closer look. In Progress 60+ days = open in active work but not closing. Not Started = WOs in pre-execution statuses (estimate, insurance, scheduling) sorted by Days in Status to surface the slow-scheduling backlog. Multi-touch and disproportionate sections cover return trips and scope creep.',
     tags: [
-      { kind: 'warn', text: stuck.length + ' stuck WOs' },
+      { kind: inProgress60.length > 0 ? 'warn' : 'success', text: inProgress60.length + ' in progress 60+d' },
+      { kind: notStartedTotal > 0 ? 'warn' : 'success', text: notStartedTotal + ' not started' },
       { kind: 'warn', text: multiTouch.length + ' multi-touch WOs' },
       { kind: 'danger', text: dispro.length + ' disproportionate WOs' }
     ],
     sections: [
-      stuck.length ? {
+      // ── In Progress Work Orders Open 60+ Days ──────────────
+      {
         kind: 'table',
-        heading: 'Stuck work orders · 60+ day span',
-        caption: 'Sortable; oldest first',
+        heading: 'In Progress work orders open 60+ days',
+        caption: inProgress60.length
+          ? 'Status = "In Progress" with Days in Status ≥ 60 from the Jobs/WOs/SAs source. These should be closing or escalating.'
+          : 'No work orders currently In Progress 60+ days.',
         maxHeight: '520px',
         headers: [
           { label: 'WO', num: false },
           { label: 'Account', num: false },
           { label: 'Branch', num: false },
-          { label: 'Tech', num: false },
-          { label: 'Appts', num: true },
-          { label: 'Hours', num: true },
-          { label: 'Span (days)', num: true },
-          { label: 'Oldest', num: false },
-          { label: 'Newest', num: false }
+          { label: 'Trade', num: false },
+          { label: 'Sub-Status', num: false },
+          { label: 'Days in Status', num: true },
+          { label: 'Contract $', num: true }
         ],
-        rows: stuck.map(function (w) {
-          var pill = w.spanDays >= 90
-            ? '<span class="pill pill-danger">' + w.spanDays + ' d</span>'
-            : '<span class="pill pill-warn">' + w.spanDays + ' d</span>';
+        rows: inProgress60.length ? inProgress60.map(function (w) {
+          var pill = w.days >= 90
+            ? '<span class="pill pill-danger">' + w.days.toFixed(0) + ' d</span>'
+            : '<span class="pill pill-warn">' + w.days.toFixed(0) + ' d</span>';
           return [
             { html: '<strong>' + w.wo + '</strong>' },
             w.account,
             w.branch,
-            w.tech,
-            w.appointments,
-            w.hours + ' h',
+            w.trade,
+            w.subStatus || '—',
             { html: pill },
-            w.oldest,
-            w.newest
+            fmt.money(w.contract)
+          ];
+        }) : [[
+          { html: '<em>No In Progress WOs aged 60+ days right now — clean.</em>' },
+          '', '', '', '', '', ''
+        ]]
+      },
+      // ── Not-Started Work Orders (slow scheduling) ──────────
+      notStartedByStatus.length ? {
+        kind: 'kpi-row', cols: Math.min(notStartedByStatus.length, 6),
+        items: notStartedByStatus.map(function (s) {
+          // Tone scales with avg days in status
+          var tone = s.avgDays >= 30 ? 'danger' : s.avgDays >= 14 ? 'warn' : 'navy';
+          return {
+            label: s.status,
+            value: s.count.toLocaleString(),
+            sub: 'avg ' + s.avgDays + 'd · max ' + s.maxDays + 'd',
+            tone: tone
+          };
+        })
+      } : null,
+      notStarted.length ? {
+        kind: 'table',
+        heading: 'Not-started work orders · slow-scheduling backlog',
+        caption: notStartedTotal + ' Repair WOs total in pre-execution statuses (New / Ready to Schedule / Scheduled / Pending Estimate / Pending Insurance / On Hold). Sorted by Days in Status to surface the oldest-waiting first.',
+        maxHeight: '520px',
+        headers: [
+          { label: 'WO', num: false },
+          { label: 'Account', num: false },
+          { label: 'Branch', num: false },
+          { label: 'Trade', num: false },
+          { label: 'Status', num: false },
+          { label: 'Sub-Status', num: false },
+          { label: 'Days in Status', num: true },
+          { label: 'Contract $', num: true }
+        ],
+        rows: notStarted.map(function (w) {
+          var dPill = w.days >= 60
+            ? '<span class="pill pill-danger">' + w.days.toFixed(0) + ' d</span>'
+            : w.days >= 30
+              ? '<span class="pill pill-warn">' + w.days.toFixed(0) + ' d</span>'
+              : '<span class="pill pill-info">' + w.days.toFixed(0) + ' d</span>';
+          var statusCls = (/insurance|on hold/i.test(w.status)) ? 'pill-warn'
+                        : (/estimate/i.test(w.status))         ? 'pill-info'
+                        : (/scheduled/i.test(w.status) && !/ready/i.test(w.status)) ? 'pill-success'
+                        : 'pill-info';
+          return [
+            { html: '<strong>' + w.wo + '</strong>' },
+            w.account,
+            w.branch,
+            w.trade,
+            { html: '<span class="pill ' + statusCls + '">' + w.status + '</span>' },
+            w.subStatus || '—',
+            { html: dPill },
+            fmt.money(w.contract)
           ];
         })
       } : null,
