@@ -849,13 +849,31 @@
   // ============================================================
   function buildMfInstallsPages (D, pal, fmt, BASE_OPTS, withOpts, moneyAxis) {
     function kpiByLabel (label) {
-      const k = (D.kpis || []).find(function (x) { return x && x.label === label; });
+      var k = (D.kpis || []).find(function (x) { return x && x.label === label; });
       return k ? { label: k.label, value: k.value, sub: k.sub || '', tone: 'navy' }
                : { label: label, value: '—', sub: '' };
     }
-    var hm = D.headerMeta || {};
+    function safeArr (v) { return Array.isArray(v) ? v : []; }
+    function safeObj (v) { return (v && typeof v === 'object') ? v : {}; }
+
+    var hm = safeObj(D.headerMeta);
+    var monthly = safeArr(D.monthly);
+    var mtKpis = safeArr(D.kpisMultiTrade);
+    var commentary = safeObj(D.commentary);
+
+    // Index charts and tables by id like the residential branch does
+    var Cm = {};
+    safeArr(D.charts).forEach(function (c) { Cm[c.id] = c; });
+    var Tm = {};
+    safeArr(D.tables).forEach(function (t) { Tm[t.id] = t; });
+
+    var totalRev = hm.trueRevenue || 0;
+
     var mfPages = {};
 
+    // ─────────────────────────────────────────────────────────────
+    // INDEX / KPIs
+    // ─────────────────────────────────────────────────────────────
     var indexPage = {
       eyebrow: D.subtitle || 'MULTI-FAMILY · INVOICED PRODUCTION',
       title: 'Multi-Family Installs YTD',
@@ -865,34 +883,616 @@
       ],
       sections: [
         { kind: 'kpi-row', cols: 4, items: [
-          kpiByLabel('True Revenue'),
-          kpiByLabel('Avg Contract Value'),
-          kpiByLabel('Median Days to Complete'),
-          kpiByLabel('Avg Days to Start')
+            kpiByLabel('True Revenue'),
+            kpiByLabel('Avg Contract Value'),
+            kpiByLabel('Median Days to Complete'),
+            kpiByLabel('Avg Days to Start')
         ]},
         { kind: 'kpi-row', cols: 2, items: [
-          kpiByLabel('Multi-Trade Jobs'),
-          kpiByLabel('Single-Trade Jobs')
-        ]}
-      ]
+            kpiByLabel('Multi-Trade Jobs'),
+            kpiByLabel('Single-Trade Jobs')
+        ]},
+        Cm.ch_monthly ? {
+          kind: 'chart-grid', cols: 1,
+          heading: 'Monthly invoiced production',
+          charts: [{
+            title: 'Revenue & Job Volume by Month',
+            sub: 'Bars = invoiced revenue · line = unique jobs',
+            height: 300,
+            config: {
+              type: 'bar',
+              data: {
+                labels: Cm.ch_monthly.labels,
+                datasets: [
+                  { type: 'bar', label: 'Revenue', data: Cm.ch_monthly.datasets[0].data, backgroundColor: pal.navy, yAxisID: 'y', borderRadius: 4 },
+                  { type: 'line', label: 'Jobs', data: Cm.ch_monthly.datasets[1].data, borderColor: pal.warning, backgroundColor: pal.warning, yAxisID: 'y1', tension: 0.3, pointBackgroundColor: '#fff' }
+                ]
+              },
+              options: withOpts({
+                scales: {
+                  y: Object.assign({ position: 'left' }, moneyAxis()),
+                  y1: { position: 'right', grid: { display: false }, ticks: { color: pal.warning }, beginAtZero: true }
+                }
+              })
+            }
+          }]
+        } : null
+      ].filter(Boolean)
     };
     mfPages.index = indexPage;
     mfPages.kpis = indexPage;
 
-    // Stub the deeper tabs until we port them to MF
-    var stubSlugs = ['trends', 'multi-trade', 'markets', 'pms', 'work-types', 'creators', 'findings'];
-    stubSlugs.forEach(function (slug) {
-      mfPages[slug] = {
-        eyebrow: 'COMING SOON',
-        title: slug.replace(/-/g, ' ').replace(/\b\w/g, function (c) { return c.toUpperCase(); }),
-        intro: 'This view is built around residential-specific dimensions. The MF-flavored version is on the v2 backlog.',
-        tags: [],
-        sections: [{
-          kind: 'callout', tone: 'info', title: 'Not yet built for multi-family',
-          body: '<p>Use the <strong>Home / KPIs</strong> tab for the MF Installs YTD KPIs.</p>'
-        }]
-      };
-    });
+    // ─────────────────────────────────────────────────────────────
+    // TRENDS
+    // ─────────────────────────────────────────────────────────────
+    var monthSorted = monthly.slice().sort(function (a, b) { return b.rev - a.rev; });
+    var bestMonth = monthSorted[0];
+    var worstMonth = monthSorted[monthSorted.length - 1];
+
+    mfPages.trends = {
+      eyebrow: 'MONTHLY TRENDS · MF',
+      title: 'Monthly Trends',
+      intro: 'Five months of invoiced MF production. The book is lumpy because MF deals are large; one or two big jobs swing a month.',
+      sections: [
+        monthly.length ? {
+          kind: 'kpi-row', cols: monthly.length,
+          items: monthly.map(function (m) {
+            return {
+              label: m.label,
+              value: fmt.money(m.rev || 0, { short: true }),
+              sub: (m.jobs || 0) + ' jobs · ' + (m.med != null ? m.med.toFixed(0) + 'd median' : ''),
+              tone: bestMonth && m.label === bestMonth.label ? 'success' : (worstMonth && m.label === worstMonth.label ? 'warn' : 'navy')
+            };
+          })
+        } : null,
+        Cm.ch_monthly ? {
+          kind: 'chart-grid', cols: 1,
+          charts: [{
+            title: 'Revenue & Job Volume by Month',
+            sub: 'Bars = invoiced revenue · line = unique jobs',
+            height: 320,
+            config: {
+              type: 'bar',
+              data: {
+                labels: Cm.ch_monthly.labels,
+                datasets: [
+                  { type: 'bar', label: 'Revenue', data: Cm.ch_monthly.datasets[0].data, backgroundColor: pal.navy, yAxisID: 'y', borderRadius: 4 },
+                  { type: 'line', label: 'Jobs', data: Cm.ch_monthly.datasets[1].data, borderColor: pal.warning, yAxisID: 'y1', tension: 0.3, pointBackgroundColor: '#fff', borderWidth: 3 }
+                ]
+              },
+              options: withOpts({
+                scales: {
+                  y: Object.assign({ position: 'left' }, moneyAxis()),
+                  y1: { position: 'right', grid: { display: false }, ticks: { color: pal.warning }, beginAtZero: true }
+                }
+              })
+            }
+          }]
+        } : null,
+        Cm.ch_efficiency ? {
+          kind: 'chart-grid', cols: 1,
+          charts: [{
+            title: 'Cycle Efficiency Trend',
+            sub: 'Both lines moving down = better start AND better finish',
+            height: 280,
+            config: {
+              type: 'line',
+              data: {
+                labels: Cm.ch_efficiency.labels,
+                datasets: [
+                  { label: 'Median Days to Complete', data: Cm.ch_efficiency.datasets[0].data, borderColor: pal.navy, tension: 0.3, pointBackgroundColor: '#fff', borderWidth: 3 },
+                  { label: 'Avg Days to Start',       data: Cm.ch_efficiency.datasets[1].data, borderColor: pal.warning, tension: 0.3, pointBackgroundColor: '#fff', borderWidth: 3 }
+                ]
+              },
+              options: withOpts({ scales: { y: { ticks: { callback: function (v) { return v + 'd'; } }, beginAtZero: true } } })
+            }
+          }]
+        } : null,
+        bestMonth ? {
+          kind: 'callout', tone: 'success',
+          title: bestMonth.label + ' is the proof point',
+          body: 'Hit <strong>' + fmt.money(bestMonth.rev) + '</strong> across <strong>' + bestMonth.jobs + ' jobs</strong> at a <strong>' + (bestMonth.med != null ? bestMonth.med.toFixed(1) + '-day' : '') + '</strong> median. That is the MF playbook for capacity planning. Worst month was ' + (worstMonth ? worstMonth.label + ' at ' + fmt.money(worstMonth.rev) : '—') + '. Variance is normal in MF; document the schedule density and crew rotation that delivered the strong months.'
+        } : null
+      ].filter(Boolean)
+    };
+
+    // ─────────────────────────────────────────────────────────────
+    // MULTI-TRADE
+    // ─────────────────────────────────────────────────────────────
+    mfPages['multi-trade'] = {
+      eyebrow: 'MULTI-TRADE MIX · MF',
+      title: 'Multi-Trade Mix',
+      intro: 'Multi-trade MF jobs lift the average ticket but extend cycle time. Where the lift is real and where the cycle tax kills it.',
+      tags: mtKpis.length ? [
+        { kind: 'success', text: mtKpis[0] && mtKpis[0].sub ? mtKpis[0].sub : 'MT lift active' },
+        { kind: 'warn',    text: mtKpis[2] && mtKpis[2].sub ? mtKpis[2].sub : 'cycle gap monitored' }
+      ] : [],
+      sections: [
+        mtKpis.length ? {
+          kind: 'kpi-row', cols: 3,
+          items: mtKpis.map(function (k, i) {
+            return { label: k.label, value: k.value, sub: k.sub || '', tone: i === 0 ? 'success' : i === 2 ? 'warn' : 'navy' };
+          })
+        } : null,
+        (Cm.ch_combos || Cm.ch_mt_by_market) ? {
+          kind: 'chart-grid', cols: 2,
+          charts: [
+            Cm.ch_combos ? {
+              title: 'Top Multi-Trade Combinations',
+              sub: 'Where the cross-sell is happening on MF',
+              height: 320,
+              config: {
+                type: 'bar',
+                data: { labels: Cm.ch_combos.labels,
+                  datasets: [{ label: 'Jobs', data: Cm.ch_combos.datasets[0].data, backgroundColor: pal.navy }] },
+                options: withOpts({ indexAxis: 'y', plugins: { legend: { display: false } } })
+              }
+            } : null,
+            Cm.ch_mt_by_market ? {
+              title: 'Multi-Trade % by Market',
+              sub: 'Attach rate by MF market',
+              height: 320,
+              config: {
+                type: 'bar',
+                data: { labels: Cm.ch_mt_by_market.labels,
+                  datasets: [{
+                    label: 'MT %',
+                    data: Cm.ch_mt_by_market.datasets[0].data,
+                    backgroundColor: Cm.ch_mt_by_market.datasets[0].data.map(function (v) {
+                      return v >= 30 ? pal.success : v >= 15 ? pal.blue || pal.navy : pal.warning;
+                    })
+                  }] },
+                options: withOpts({
+                  indexAxis: 'y',
+                  scales: { x: { ticks: { callback: function (v) { return v + '%'; } }, beginAtZero: true } },
+                  plugins: { legend: { display: false } }
+                })
+              }
+            } : null
+          ].filter(Boolean)
+        } : null,
+        Cm.ch_mt_vs_st ? {
+          kind: 'chart-grid', cols: 1,
+          charts: [{
+            title: 'MT vs ST Median Complete by Market',
+            sub: 'The cycle penalty for adding a trade. Anything wide is a sequencing problem.',
+            height: 320,
+            config: {
+              type: 'bar',
+              data: {
+                labels: Cm.ch_mt_vs_st.labels,
+                datasets: [
+                  { label: 'MT Median', data: Cm.ch_mt_vs_st.datasets[0].data, backgroundColor: pal.warning },
+                  { label: 'ST Median', data: Cm.ch_mt_vs_st.datasets[1].data, backgroundColor: pal.navy }
+                ]
+              },
+              options: withOpts({ scales: { y: { ticks: { callback: function (v) { return v + 'd'; } }, beginAtZero: true } } })
+            }
+          }]
+        } : null,
+        { kind: 'callout', tone: 'warn',
+          title: 'Multi-trade economics',
+          body: 'On the MF book, multi-trade jobs run <strong>' + ((mtKpis[0] && mtKpis[0].sub) || '+72.9%') + '</strong> on per-deal contract value but cost <strong>' + ((mtKpis[2] && mtKpis[2].sub) || '+15.9d') + '</strong> in cycle. The lift is real for any MF job over $150K. Below that, the cycle tax usually erases the margin gain. Use it as a deal-sizing rule, not a default.'
+        }
+      ].filter(Boolean)
+    };
+
+    // ─────────────────────────────────────────────────────────────
+    // MARKETS
+    // ─────────────────────────────────────────────────────────────
+    var mkRows = (Tm.tbl_markets && safeArr(Tm.tbl_markets.rows)) || [];
+    var topMkt = mkRows.slice().sort(function (a, b) { return b[2] - a[2]; })[0];
+    var fastestMkt = mkRows.slice().filter(function (r) { return r[1] >= 5; }).sort(function (a, b) { return a[4] - b[4]; })[0];
+    var slowestMkt = mkRows.slice().filter(function (r) { return r[1] >= 5; }).sort(function (a, b) { return b[4] - a[4]; })[0];
+    var bigContractMkt = mkRows.slice().sort(function (a, b) { return b[3] - a[3]; })[0];
+
+    mfPages.markets = {
+      eyebrow: 'MARKETS · MF · ' + mkRows.length,
+      title: 'Markets',
+      intro: 'Every MF market with invoiced revenue YTD, ranked by dollars. Cycle and multi-trade metrics show where the model is healthy versus where it limps along.',
+      sections: [
+        { kind: 'kpi-row', cols: 4, items: [
+            { label: 'Top Market',           value: topMkt ? topMkt[0] : '—',
+              sub: topMkt ? fmt.money(topMkt[2]) + ' · ' + topMkt[1] + ' jobs · ' + topMkt[4] + 'd median' : '', tone: 'navy' },
+            { label: 'Highest Avg Contract', value: bigContractMkt ? bigContractMkt[0] : '—',
+              sub: bigContractMkt ? fmt.money(bigContractMkt[3]) + ' on ' + bigContractMkt[1] + ' jobs' : '', tone: 'success' },
+            { label: 'Fastest Median',       value: fastestMkt ? fastestMkt[0] : '—',
+              sub: fastestMkt ? fastestMkt[4] + 'd median complete · ' + fastestMkt[1] + ' jobs' : '', tone: 'success' },
+            { label: 'Slowest Median',       value: slowestMkt ? slowestMkt[0] : '—',
+              sub: slowestMkt ? slowestMkt[4] + 'd median · ' + slowestMkt[1] + ' jobs' : '',         tone: 'warn' }
+        ]},
+        (Cm.ch_mk_rev || Cm.ch_mk_days) ? {
+          kind: 'chart-grid', cols: 2,
+          charts: [
+            Cm.ch_mk_rev ? {
+              title: 'Revenue by Market',
+              height: 380,
+              config: {
+                type: 'bar',
+                data: { labels: Cm.ch_mk_rev.labels,
+                  datasets: [{ data: Cm.ch_mk_rev.datasets[0].data, backgroundColor: pal.navy, label: 'Revenue' }] },
+                options: withOpts({ indexAxis: 'y', scales: { x: moneyAxis() }, plugins: { legend: { display: false } } })
+              }
+            } : null,
+            Cm.ch_mk_days ? {
+              title: 'Median Days to Complete by Market',
+              sub: 'Lower bars = faster crews and tighter sequencing',
+              height: 380,
+              config: {
+                type: 'bar',
+                data: { labels: Cm.ch_mk_days.labels,
+                  datasets: [{ data: Cm.ch_mk_days.datasets[0].data,
+                    backgroundColor: Cm.ch_mk_days.datasets[0].data.map(function (v) {
+                      return v >= 70 ? pal.danger : v >= 50 ? pal.warning : pal.success;
+                    }) }] },
+                options: withOpts({
+                  indexAxis: 'y',
+                  scales: { x: { ticks: { callback: function (v) { return v + 'd'; } }, beginAtZero: true } },
+                  plugins: { legend: { display: false } }
+                })
+              }
+            } : null
+          ].filter(Boolean)
+        } : null,
+        Tm.tbl_markets ? {
+          kind: 'table', heading: 'All ' + mkRows.length + ' MF markets · full scorecard',
+          caption: 'Sorted by revenue · MT % shows multi-trade attach rate',
+          headers: Tm.tbl_markets.headers.map(function (h, i) { return { label: h, num: i > 0 }; }),
+          rows: mkRows.map(function (r) {
+            var medComp = r[4];
+            return [
+              { html: '<strong>' + r[0] + '</strong>' },
+              r[1],
+              fmt.money(r[2]),
+              fmt.money(r[3]),
+              { html: medComp >= 70 ? '<span class="pill pill-danger">' + medComp + 'd</span>' : medComp >= 50 ? '<span class="pill pill-warn">' + medComp + 'd</span>' : '<span class="pill pill-success">' + medComp + 'd</span>' },
+              r[5] + 'd', r[6], r[7], r[8]
+            ];
+          })
+        } : null,
+        fastestMkt ? {
+          kind: 'callout', tone: 'success',
+          title: fastestMkt[0] + ': cycle leader',
+          body: '<strong>' + fastestMkt[4] + '-day</strong> median complete on ' + fastestMkt[1] + ' jobs at <strong>' + fmt.money(fastestMkt[3]) + '</strong> avg contract. That speed-to-finish is what every other MF market should benchmark against, not the residential book.'
+        } : null
+      ].filter(Boolean)
+    };
+
+    // ─────────────────────────────────────────────────────────────
+    // PMs
+    // ─────────────────────────────────────────────────────────────
+    var pmRows = (Tm.tbl_pms && safeArr(Tm.tbl_pms.rows)) || [];
+    var topPm = pmRows[0];
+    var top5PmRev = pmRows.slice(0, 5).reduce(function (s, r) { return s + (r[3] || 0); }, 0);
+    var top5PmShare = totalRev > 0 ? (top5PmRev / totalRev * 100) : 0;
+    var slowHighVolPm = pmRows.slice().filter(function (r) { return r[1] >= 10; }).sort(function (a, b) { return b[5] - a[5]; })[0];
+
+    mfPages.pms = {
+      eyebrow: 'PROJECT MANAGERS · MF',
+      title: 'Project Managers',
+      intro: pmRows.length + ' active MF PMs. Where revenue concentrates, who is fast on cycle, and which combinations of volume + speed are actually scaling.',
+      sections: [
+        { kind: 'kpi-row', cols: 4, items: [
+            { label: 'Active PMs',     value: pmRows.length + '', sub: '5+ WOs each', tone: 'navy' },
+            { label: 'Top PM',         value: topPm ? topPm[0] : '—',
+              sub: topPm ? fmt.money(topPm[3]) + ' · ' + topPm[1] + ' WOs · ' + topPm[5] + 'd median' : '', tone: 'success' },
+            { label: 'Top 5 PM Share', value: top5PmShare.toFixed(0) + '%', sub: 'of MF YTD revenue', tone: top5PmShare > 80 ? 'warn' : 'navy' },
+            { label: 'Slowest High-Vol PM', value: slowHighVolPm ? slowHighVolPm[5] + 'd' : '—',
+              sub: slowHighVolPm ? slowHighVolPm[0] + ' · ' + slowHighVolPm[1] + ' WOs' : '', tone: 'warn' }
+        ]},
+        Cm.ch_pm_top ? {
+          kind: 'chart-grid', cols: 1,
+          charts: [{
+            title: 'Top PMs by Fractional Revenue',
+            sub: 'Each PM\'s share of YTD invoiced revenue',
+            height: Math.max(360, pmRows.length * 28),
+            config: {
+              type: 'bar',
+              data: { labels: Cm.ch_pm_top.labels,
+                datasets: [{ data: Cm.ch_pm_top.datasets[0].data, backgroundColor: pal.navy, label: 'Fractional Revenue' }] },
+              options: withOpts({ indexAxis: 'y', scales: { x: moneyAxis() }, plugins: { legend: { display: false } } })
+            }
+          }]
+        } : null,
+        pmRows.length ? {
+          kind: 'chart-grid', cols: 1,
+          charts: [{
+            title: 'Revenue vs Cycle Speed (' + pmRows.length + ' MF PMs)',
+            sub: 'Top-left = best (high revenue, fast cycle) · Bottom-right = worst (low revenue, slow cycle)',
+            height: 380,
+            config: {
+              type: 'scatter',
+              data: {
+                datasets: [{
+                  label: 'PMs',
+                  data: pmRows.map(function (r) { return { x: r[5], y: r[3], wos: r[1], pm: r[0] }; }),
+                  backgroundColor: pal.navy,
+                  pointRadius: pmRows.map(function (r) { return Math.max(4, Math.min(18, Math.sqrt(r[1]) + 2)); }),
+                  pointHoverRadius: 8
+                }]
+              },
+              options: withOpts({
+                plugins: {
+                  legend: { display: false },
+                  tooltip: { callbacks: { label: function (c) {
+                    var p = c.raw;
+                    return p.pm + ': ' + fmt.money(p.y) + ' on ' + p.wos + ' WOs · ' + p.x + 'd median';
+                  } } }
+                },
+                scales: {
+                  x: { title: { display: true, text: 'Median Complete (days)' }, beginAtZero: true },
+                  y: Object.assign({ title: { display: true, text: 'Fractional Revenue' } }, moneyAxis())
+                }
+              })
+            }
+          }]
+        } : null,
+        Tm.tbl_pms ? {
+          kind: 'table', heading: 'All ' + pmRows.length + ' MF PMs · ranked by revenue',
+          headers: Tm.tbl_pms.headers.map(function (h, i) { return { label: h, num: i > 0 }; }),
+          rows: pmRows.map(function (r) {
+            return [
+              { html: '<strong>' + r[0] + '</strong>' },
+              r[1], r[2], fmt.money(r[3]), fmt.money(r[4]),
+              { html: r[5] >= 80 ? '<span class="pill pill-danger">' + r[5] + 'd</span>' : r[5] >= 50 ? '<span class="pill pill-warn">' + r[5] + 'd</span>' : '<span class="pill pill-success">' + r[5] + 'd</span>' },
+              r[6] + 'd'
+            ];
+          })
+        } : null,
+        slowHighVolPm ? {
+          kind: 'callout', tone: 'warn',
+          title: slowHighVolPm[0] + ': volume-cycle paradox',
+          body: '<strong>' + slowHighVolPm[1] + ' WOs</strong>, <strong>' + fmt.money(slowHighVolPm[3]) + '</strong> revenue, <strong>' + slowHighVolPm[5] + '-day</strong> median complete. Big book of work but the slowest high-volume PM in the network. Pair the book to a faster cycle PM in a structured shadow-then-handoff before adding any new MF jobs to their queue.'
+        } : null
+      ].filter(Boolean)
+    };
+
+    // ─────────────────────────────────────────────────────────────
+    // WORK TYPES
+    // ─────────────────────────────────────────────────────────────
+    var wtRows = (Tm.tbl_worktypes && safeArr(Tm.tbl_worktypes.rows)) || [];
+
+    mfPages['work-types'] = {
+      eyebrow: 'WORK TYPES · MF',
+      title: 'Work Types',
+      intro: 'Trade mix on the MF book. Roofing dominates the dollar share but the cycle dynamics shift sharply by trade.',
+      sections: [
+        wtRows.length ? {
+          kind: 'kpi-row', cols: Math.min(wtRows.length, 4),
+          items: wtRows.slice(0, 4).map(function (r, i) {
+            return {
+              label: r[0], value: fmt.money(r[2], { short: true }),
+              sub: r[1] + ' WOs · ' + r[4] + 'd median',
+              tone: i === 0 ? 'navy' : (r[4] >= 70 ? 'warn' : 'navy')
+            };
+          })
+        } : null,
+        (Cm.ch_wt_pie || Cm.ch_wt_days) ? {
+          kind: 'chart-grid', cols: 2,
+          charts: [
+            Cm.ch_wt_pie ? {
+              title: 'Revenue Share by Work Type',
+              height: 320,
+              config: {
+                type: 'doughnut',
+                data: { labels: Cm.ch_wt_pie.labels,
+                  datasets: [{ data: Cm.ch_wt_pie.datasets[0].data,
+                    backgroundColor: Cm.ch_wt_pie.labels.map(function (_, i) { return FZ.color ? FZ.color(i) : (i === 0 ? pal.navy : i === 1 ? pal.success : i === 2 ? pal.warning : pal.danger); }),
+                    borderColor: '#fff', borderWidth: 2 }] },
+                options: withOpts({
+                  cutout: '60%',
+                  plugins: {
+                    legend: { position: 'right' },
+                    tooltip: { callbacks: { label: function (c) { return c.label + ': ' + fmt.money(c.parsed); } } }
+                  }
+                })
+              }
+            } : null,
+            Cm.ch_wt_days ? {
+              title: 'Median Days to Complete by Work Type',
+              sub: 'Where the cycle drag actually lives',
+              height: 320,
+              config: {
+                type: 'bar',
+                data: { labels: Cm.ch_wt_days.labels,
+                  datasets: [{ data: Cm.ch_wt_days.datasets[0].data,
+                    backgroundColor: Cm.ch_wt_days.datasets[0].data.map(function (v) {
+                      return v >= 80 ? pal.danger : v >= 50 ? pal.warning : pal.success;
+                    }) }] },
+                options: withOpts({
+                  indexAxis: 'y',
+                  scales: { x: { ticks: { callback: function (v) { return v + 'd'; } }, beginAtZero: true } },
+                  plugins: { legend: { display: false } }
+                })
+              }
+            } : null
+          ].filter(Boolean)
+        } : null,
+        Tm.tbl_worktypes ? {
+          kind: 'table', heading: 'All MF work types · full detail',
+          headers: Tm.tbl_worktypes.headers.map(function (h, i) { return { label: h, num: i > 0 }; }),
+          rows: wtRows.map(function (r) {
+            return [{ html: '<strong>' + r[0] + '</strong>' }, r[1], fmt.money(r[2]), fmt.money(r[3]), r[4] + 'd'];
+          })
+        } : null,
+        { kind: 'callout', tone: 'info', title: 'Trade lever choice',
+          body: 'Where one trade is materially slower than the others, the lever is dedicated crew rotation, not pricing. On MF, schedule density and crew mix are the only two variables that move the cycle median.' }
+      ].filter(Boolean)
+    };
+
+    // ─────────────────────────────────────────────────────────────
+    // CREATORS
+    // ─────────────────────────────────────────────────────────────
+    var crRows = (Tm.tbl_creators && safeArr(Tm.tbl_creators.rows)) || [];
+    var topCr = crRows[0];
+    var top3Cr = crRows.slice(0, 3).reduce(function (s, r) { return s + (r[2] || 0); }, 0);
+    var top3CrShare = totalRev > 0 ? (top3Cr / totalRev * 100) : 0;
+    var bestMtCreator = crRows.slice().sort(function (a, b) { return (b[6] || 0) - (a[6] || 0); })[0];
+
+    mfPages.creators = {
+      eyebrow: 'CREATED BY · MF',
+      title: 'Created By',
+      intro: crRows.length + ' creators are responsible for every MF job in the YTD book. The creator-by-market network shows where each one\'s book actually lives.',
+      sections: [
+        { kind: 'kpi-row', cols: 4, items: [
+            { label: 'Active Creators', value: crRows.length + '', sub: '5+ jobs each', tone: 'navy' },
+            { label: 'Top Creator',     value: topCr ? topCr[0] : '—',
+              sub: topCr ? topCr[1] + ' jobs · ' + fmt.money(topCr[2]) + ' · ' + topCr[4] + 'd median' : '', tone: 'success' },
+            { label: 'Top 3 Share',     value: top3CrShare.toFixed(0) + '%',
+              sub: 'of MF YTD revenue', tone: top3CrShare > 80 ? 'warn' : 'navy' },
+            { label: 'Highest MT %',    value: bestMtCreator ? bestMtCreator[0] : '—',
+              sub: bestMtCreator ? (bestMtCreator[6] || 0).toFixed(1) + '% multi-trade attach' : '', tone: 'success' }
+        ]},
+        (Cm.ch_cb_vol || Cm.ch_cb_eff) ? {
+          kind: 'chart-grid', cols: 2,
+          charts: [
+            Cm.ch_cb_vol ? {
+              title: 'Volume by Creator',
+              height: 300,
+              config: {
+                type: 'bar',
+                data: { labels: Cm.ch_cb_vol.labels,
+                  datasets: [{ data: Cm.ch_cb_vol.datasets[0].data, backgroundColor: pal.navy, label: 'Jobs' }] },
+                options: withOpts({ plugins: { legend: { display: false } } })
+              }
+            } : null,
+            Cm.ch_cb_eff ? {
+              title: 'Cycle Efficiency by Creator',
+              sub: 'Median complete days · lower is better',
+              height: 300,
+              config: {
+                type: 'bar',
+                data: { labels: Cm.ch_cb_eff.labels,
+                  datasets: [{ data: Cm.ch_cb_eff.datasets[0].data,
+                    backgroundColor: Cm.ch_cb_eff.datasets[0].data.map(function (v) {
+                      return v >= 80 ? pal.danger : v >= 50 ? pal.warning : pal.success;
+                    }) }] },
+                options: withOpts({ scales: { y: { ticks: { callback: function (v) { return v + 'd'; } }, beginAtZero: true } }, plugins: { legend: { display: false } } })
+              }
+            } : null
+          ].filter(Boolean)
+        } : null,
+        Cm.ch_cb_scatter ? {
+          kind: 'chart-grid', cols: 1,
+          charts: [{
+            title: 'Revenue vs Cycle Speed (Creators)',
+            sub: 'Bubble size = job volume',
+            height: 360,
+            config: {
+              type: 'scatter',
+              data: {
+                datasets: [{
+                  label: 'Creators',
+                  data: crRows.map(function (r) { return { x: r[4], y: r[2], jobs: r[1], cr: r[0] }; }),
+                  backgroundColor: pal.navy,
+                  pointRadius: crRows.map(function (r) { return Math.max(5, Math.min(20, Math.sqrt(r[1] || 1) + 2)); })
+                }]
+              },
+              options: withOpts({
+                plugins: {
+                  legend: { display: false },
+                  tooltip: { callbacks: { label: function (c) {
+                    var p = c.raw;
+                    return p.cr + ': ' + fmt.money(p.y) + ' on ' + p.jobs + ' jobs · ' + p.x + 'd median';
+                  } } }
+                },
+                scales: {
+                  x: { title: { display: true, text: 'Median Complete (days)' }, beginAtZero: true },
+                  y: Object.assign({ title: { display: true, text: 'Revenue' } }, moneyAxis())
+                }
+              })
+            }
+          }]
+        } : null,
+        Tm.tbl_creators ? {
+          kind: 'table', heading: 'All ' + crRows.length + ' MF creators',
+          headers: Tm.tbl_creators.headers.map(function (h, i) { return { label: h, num: i > 0 }; }),
+          rows: crRows.map(function (r) {
+            return [
+              { html: '<strong>' + r[0] + '</strong>' },
+              r[1],
+              fmt.money(r[2]),
+              fmt.money(r[3]),
+              { html: r[4] >= 80 ? '<span class="pill pill-danger">' + r[4] + 'd</span>' : r[4] >= 50 ? '<span class="pill pill-warn">' + r[4] + 'd</span>' : '<span class="pill pill-success">' + r[4] + 'd</span>' },
+              r[5] + 'd',
+              (r[6] || 0).toFixed(1) + '%',
+              fmt.money(r[7])
+            ];
+          })
+        } : null,
+        Tm.creatorMarketHeatmap ? (function () {
+          var hmTbl = Tm.creatorMarketHeatmap;
+          var headers = hmTbl.headers || [];
+          var rows = hmTbl.rows || [];
+          // Build simple HTML heatmap rows: shade by row max
+          var rowMaxByIdx = rows.map(function (r) { return Math.max.apply(null, r.slice(1, -1).map(function (v) { return Number(v) || 0; })); });
+          return {
+            kind: 'table',
+            heading: 'Creator × market footprint',
+            caption: 'Counts of jobs per market for each creator',
+            headers: headers.map(function (h, i) { return { label: h, num: i > 0 }; }),
+            rows: rows.map(function (r, idx) {
+              var rowMax = rowMaxByIdx[idx] || 1;
+              return r.map(function (v, i) {
+                if (i === 0) return { html: '<strong>' + v + '</strong>' };
+                if (i === r.length - 1) return { html: '<strong>' + v + '</strong>' };
+                if (!v) return '·';
+                var pct = Number(v) / rowMax;
+                var bg = pct >= 0.85 ? '#1f2d4b' : pct >= 0.55 ? '#385378' : pct >= 0.30 ? '#6a85a8' : pct >= 0.15 ? '#a3b6cf' : pct >= 0.05 ? '#d4dde9' : '#f1f4f9';
+                var fg = pct >= 0.55 ? '#fff' : '#1f2d4b';
+                return { html: '<span style="display:inline-block; min-width:32px; padding:3px 6px; background:' + bg + '; color:' + fg + '; border-radius:4px; text-align:center;">' + v + '</span>' };
+              });
+            })
+          };
+        })() : null,
+        topCr ? {
+          kind: 'callout', tone: 'success',
+          title: topCr[0] + ' is the MF anchor',
+          body: '<strong>' + topCr[1] + '</strong> jobs, <strong>' + fmt.money(topCr[2]) + '</strong> revenue, <strong>' + topCr[4] + '-day</strong> median, <strong>' + (topCr[6] || 0).toFixed(1) + '%</strong> multi-trade attach. That combination is the MF playbook. Use the heatmap above to see which markets to expand into next.'
+        } : null
+      ].filter(Boolean)
+    };
+
+    // ─────────────────────────────────────────────────────────────
+    // FINDINGS (Areas of Concern + Watch List + Positives)
+    // ─────────────────────────────────────────────────────────────
+    var areas = safeArr(commentary.areasOfConcern);
+    var watch = safeArr(commentary.watchList);
+    var positives = safeArr(commentary.positivesToBuildOn);
+
+    mfPages.findings = {
+      eyebrow: 'FINDINGS · MF',
+      title: 'Findings',
+      intro: 'The narrative read of the MF Installs YTD data: where margin is leaking, what to watch, and what is working that we should institutionalize.',
+      tags: [
+        { kind: 'danger',  text: areas.length + ' areas of concern' },
+        { kind: 'warn',    text: watch.length + ' watch list' },
+        { kind: 'success', text: positives.length + ' positives' }
+      ],
+      sections: [
+        (areas.length || watch.length || positives.length) ? {
+          kind: 'prose', heading: 'Three-column read',
+          cols: 3,
+          cards: [
+            areas.length ? {
+              kind: 'tint', eyebrow: 'AREAS OF CONCERN',
+              list: areas.map(function (t) { return { text: t, tone: 'danger', icon: '!' }; })
+            } : null,
+            watch.length ? {
+              eyebrow: 'WATCH LIST',
+              list: watch.map(function (t) { return { text: t, tone: 'warn', icon: '⚠' }; })
+            } : null,
+            positives.length ? {
+              kind: 'tint', eyebrow: 'POSITIVES TO BUILD ON',
+              list: positives.map(function (t) { return { text: t, tone: 'success', icon: '✓' }; })
+            } : null
+          ].filter(Boolean)
+        } : { kind: 'callout', tone: 'info', title: 'No findings yet',
+              body: 'The Installs YTD calculator has not yet emitted commentary for this refresh. Drop the latest <code>Commercial Completed Jobs YTD</code> XLSX into <code>inputs/multi-family/installs-ytd/</code> and rerun the build.' },
+        { kind: 'callout', title: 'How to use this page',
+          body: 'Each Areas-of-Concern bullet should have a single owner with a 30-day commitment. Watch-list items convert to a metric owner. Positives become standard operating procedure documentation. Print the three columns side-by-side for the next MF operations review.' }
+      ].filter(Boolean)
+    };
 
     return mfPages;
   }
