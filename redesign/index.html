@@ -229,7 +229,7 @@
      ============================================================ */
   .lobs {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 20px;
     margin-bottom: 56px;
   }
@@ -251,6 +251,7 @@
   }
   .lob-card.res { animation-delay: 560ms; }
   .lob-card.mf  { animation-delay: 680ms; }
+  .lob-card.svc { animation-delay: 800ms; }
   .lob-card::before {
     content: '';
     position: absolute;
@@ -344,12 +345,13 @@
   /* Per-LOB accents */
   .lob-card.res .eyebrow { color: var(--blue-soft); }
   .lob-card.mf  .eyebrow { color: var(--gold); }
-  .lob-card.mf::after {
+  .lob-card.svc .eyebrow { color: #6ee7d7; }   /* teal accent for Service */
+  .lob-card.svc::after {
     content: 'NEW';
     position: absolute;
     top: 18px;
     right: 78px;
-    background: var(--gold);
+    background: #6ee7d7;
     color: var(--navy);
     font-size: 9px;
     font-weight: 800;
@@ -376,6 +378,9 @@
   }
   .lob-card.mf .lob-progress .fill {
     background: linear-gradient(90deg, var(--gold) 0%, #ecc88c 100%);
+  }
+  .lob-card.svc .lob-progress .fill {
+    background: linear-gradient(90deg, #6ee7d7 0%, #16a085 100%);
   }
   .lob-progress-label {
     display: flex;
@@ -507,11 +512,15 @@
   /* ============================================================
      RESPONSIVE
      ============================================================ */
+  @media (max-width: 1180px) {
+    .lobs { grid-template-columns: 1fr; }
+  }
   @media (max-width: 880px) {
     .ent-strip { grid-template-columns: 1fr 1fr; }
     .ent-strip .stat.headline { grid-column: 1 / -1; }
     .lobs { grid-template-columns: 1fr; }
-    .lob-card.mf::after { right: 90px; }
+    .lob-card.mf::after,
+    .lob-card.svc::after { right: 90px; }
   }
   @media (max-width: 520px) {
     .page { padding: 20px 16px 40px; }
@@ -618,6 +627,29 @@
         <span class="pct" data-bind="mf.pacePct">—</span>
       </div>
     </a>
+
+    <a class="lob-card svc" href="./service/" id="card-svc">
+      <div class="head">
+        <div>
+          <span class="eyebrow">Service · Fee-for-service</span>
+          <h2>Service Suite</h2>
+          <p class="desc">Service-v1 model: budget-anchored projection from NetSuite invoiced revenue, plus full cost-mix profitability and the install↔service overlap analysis.</p>
+        </div>
+        <div class="arrow">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+        </div>
+      </div>
+      <div class="lob-stats">
+        <div class="stat"><div class="l">Invoiced YTD</div><div class="v" data-bind="svc.invoiced">—</div></div>
+        <div class="stat"><div class="l">Annual Pace</div><div class="v" data-bind="svc.pace">—</div></div>
+        <div class="stat"><div class="l">Combined GM</div><div class="v" data-bind="svc.gm">—</div></div>
+      </div>
+      <div class="lob-progress"><div class="fill" id="prog-svc"></div></div>
+      <div class="lob-progress-label">
+        <span>Pace to plan</span>
+        <span class="pct" data-bind="svc.pacePct">—</span>
+      </div>
+    </a>
   </div>
 
   <!-- MARKETS GRID -->
@@ -651,7 +683,7 @@
   </footer>
 </div>
 
-<!-- Load both LOBs' data, namespaced so they don't collide -->
+<!-- Load all three LOBs' data, namespaced so they don't collide -->
 <script src="./residential/shared/data.js"></script>
 <script>
   window.FZ_RESIDENTIAL = window.FZ && window.FZ.data;
@@ -660,6 +692,11 @@
 <script src="./multi-family/shared/data.js"></script>
 <script>
   window.FZ_MF = window.FZ && window.FZ.data;
+  if (window.FZ) window.FZ.data = null;
+</script>
+<script src="./service/shared/data.js"></script>
+<script>
+  window.FZ_SERVICE = window.FZ && window.FZ.data;
 </script>
 
 <script>
@@ -702,11 +739,13 @@
     return mo + ' ' + day + ', ' + yr + ' · ' + hr + ':' + mn + ' ' + ampm;
   }
 
-  // -------- Pull data from both LOBs --------
+  // -------- Pull data from all three LOBs --------
   var R  = window.FZ_RESIDENTIAL || {};
   var M  = window.FZ_MF || {};
+  var S  = window.FZ_SERVICE || {};
   var Rrf = R.REVENUE_FORECAST || {}, Rso = R.SALES_OVERVIEW || {}, Rbl = R.BACKLOG || {};
   var Mrf = M.REVENUE_FORECAST || {}, Mso = M.SALES_OVERVIEW || {}, Mbl = M.BACKLOG || {};
+  var Srf = S.REVENUE_FORECAST || {};
 
   // Headline numbers (raw, for animated counters)
   // CRITICAL: Invoiced YTD must come from NetSuite AR only. Never fall back to
@@ -718,11 +757,13 @@
                     parseMoney(findKpi(Rrf.kpis, 'Invoiced YTD') && findKpi(Rrf.kpis, 'Invoiced YTD').value) || 0;
   var mfInvoiced  = (Mrf.netsuiteInvoiced && Mrf.netsuiteInvoiced.totalInvoiced) ||
                     parseMoney(findKpi(Mrf.kpis, 'Invoiced YTD') && findKpi(Mrf.kpis, 'Invoiced YTD').value) || 0;
-  var entInvoiced = resInvoiced + mfInvoiced;
+  var svcInvoiced = (Srf.netsuiteInvoiced && Srf.netsuiteInvoiced.totalInvoiced) ||
+                    parseMoney(findKpi(Srf.kpis, 'Invoiced YTD') && findKpi(Srf.kpis, 'Invoiced YTD').value) || 0;
+  var entInvoiced = resInvoiced + mfInvoiced + svcInvoiced;
 
   var resSigned = parseMoney(findKpi(Rso.kpis, 'Signed') && findKpi(Rso.kpis, 'Signed').value);
   var mfSigned  = parseMoney(findKpi(Mso.kpis, 'Signed') && findKpi(Mso.kpis, 'Signed').value);
-  var entSigned = resSigned + mfSigned;
+  var entSigned = resSigned + mfSigned;   // Service has no signed contracts (fee-for-service)
 
   var resBacklog = (Rbl.headerMeta && Rbl.headerMeta.portfolioValue) || 0;
   var mfBacklog  = (Mbl.headerMeta && Mbl.headerMeta.portfolioValue) || 0;
@@ -730,6 +771,9 @@
 
   var resBudget = (Rrf.execSummary && Rrf.execSummary.budget) || 125615037;
   var mfBudget  = (Mrf.execSummary && Mrf.execSummary.budget) || 51673207;
+  var svcBudget = (Srf.execSummary && Srf.execSummary.budget) || 6800179;
+  var svcPace   = (Srf.execSummary && Srf.execSummary.modelAnnualInvoiced) || 0;
+  var svcGmPct  = (Srf.profitabilitySummary && Srf.profitabilitySummary.combinedGP_pct) || 0;
 
   // -------- Bind static labels --------
   function setBind (key, value) {
@@ -742,21 +786,28 @@
   setBind('mf.invoiced',  fmtMoney(mfInvoiced));
   setBind('mf.signed',    fmtMoney(mfSigned));
   setBind('mf.wip',       fmtMoney((Mrf.pipelineSnapshot && Mrf.pipelineSnapshot.totalValue) || 0));
+  setBind('svc.invoiced', fmtMoney(svcInvoiced));
+  setBind('svc.pace',     fmtMoney(svcPace));
+  setBind('svc.gm',       svcGmPct ? svcGmPct.toFixed(1) + '%' : '—');
 
   var resPace = resBudget > 0 ? (resInvoiced / resBudget) : 0;
-  var mfPace  = mfBudget > 0 ? (mfInvoiced / mfBudget) : 0;
+  var mfPace  = mfBudget  > 0 ? (mfInvoiced  / mfBudget)  : 0;
+  var svcPaceRatio = svcBudget > 0 ? (svcInvoiced / svcBudget) : 0;
   setBind('res.pacePct', (resPace * 100).toFixed(1) + '% of $' + (resBudget / 1e6).toFixed(0) + 'M');
   setBind('mf.pacePct',  (mfPace  * 100).toFixed(1) + '% of $' + (mfBudget  / 1e6).toFixed(1) + 'M');
+  setBind('svc.pacePct', (svcPaceRatio * 100).toFixed(1) + '% of $' + (svcBudget / 1e6).toFixed(2) + 'M');
 
   // Bar fills
   setTimeout(function () {
     document.getElementById('prog-res').style.width = Math.min(100, resPace * 100).toFixed(1) + '%';
     document.getElementById('prog-mf').style.width  = Math.min(100, mfPace  * 100).toFixed(1) + '%';
+    var svcEl = document.getElementById('prog-svc');
+    if (svcEl) svcEl.style.width = Math.min(100, svcPaceRatio * 100).toFixed(1) + '%';
   }, 240);
 
   // Sub-text
   document.getElementById('ent-invoiced-sub').textContent =
-    'Residential ' + fmtMoney(resInvoiced) + ' + Multi-Family ' + fmtMoney(mfInvoiced);
+    'Residential ' + fmtMoney(resInvoiced) + ' + MF ' + fmtMoney(mfInvoiced) + ' + Service ' + fmtMoney(svcInvoiced);
   document.getElementById('ent-signed-sub').textContent =
     'Residential ' + fmtMoney(resSigned) + ' + Multi-Family ' + fmtMoney(mfSigned);
   document.getElementById('ent-backlog-sub').textContent =

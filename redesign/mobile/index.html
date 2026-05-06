@@ -162,6 +162,7 @@
   }
   .lob-card.res { animation-delay: 460ms; }
   .lob-card.mf  { animation-delay: 540ms; }
+  .lob-card.svc { animation-delay: 620ms; }
   .lob-card:active { transform: scale(0.98); transition: transform 120ms ease; }
 
   .lob-card .head {
@@ -174,6 +175,7 @@
     color: var(--blue-soft);
   }
   .lob-card.mf .eyebrow { color: var(--gold); }
+  .lob-card.svc .eyebrow { color: #6ee7d7; }
   .lob-card h2 {
     font-size: 20px; font-weight: 800;
     letter-spacing: -0.02em; line-height: 1.1;
@@ -230,6 +232,9 @@
     border-radius: 999px;
     width: 0;
     transition: width 1.6s cubic-bezier(0.16, 1, 0.3, 1) 600ms;
+  }
+  .lob-card.svc .lob-progress .fill {
+    background: linear-gradient(90deg, #6ee7d7 0%, #16a085 100%);
   }
   .lob-card.mf .lob-progress .fill {
     background: linear-gradient(90deg, var(--gold) 0%, #ecc88c 100%);
@@ -391,6 +396,30 @@
         <span class="pct" data-bind="mf.pacePct">—</span>
       </div>
     </a>
+
+    <a class="lob-card svc" href="./service/">
+      <span class="new-tag">NEW</span>
+      <div class="head">
+        <div>
+          <span class="eyebrow">Service · Fee-for-service</span>
+          <h2>Service</h2>
+          <p class="desc">Budget-anchored forecast plus install↔service overlap.</p>
+        </div>
+        <div class="arrow">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+        </div>
+      </div>
+      <div class="lob-stats">
+        <div class="stat"><div class="l">Inv YTD</div><div class="v" data-bind="svc.invoiced">—</div></div>
+        <div class="stat"><div class="l">Pace</div><div class="v" data-bind="svc.pace">—</div></div>
+        <div class="stat"><div class="l">GM</div><div class="v" data-bind="svc.gm">—</div></div>
+      </div>
+      <div class="lob-progress"><div class="fill" id="prog-svc"></div></div>
+      <div class="lob-progress-label">
+        <span>Pace to plan</span>
+        <span class="pct" data-bind="svc.pacePct">—</span>
+      </div>
+    </a>
   </div>
 
   <!-- MARKETS -->
@@ -424,7 +453,7 @@
   </footer>
 </div>
 
-<!-- Load both LOBs' data, namespaced -->
+<!-- Load all three LOBs' data, namespaced -->
 <script src="../residential/shared/data.js"></script>
 <script>
   window.FZ_RESIDENTIAL = window.FZ && window.FZ.data;
@@ -433,6 +462,11 @@
 <script src="../multi-family/shared/data.js"></script>
 <script>
   window.FZ_MF = window.FZ && window.FZ.data;
+  if (window.FZ) window.FZ.data = null;
+</script>
+<script src="../service/shared/data.js"></script>
+<script>
+  window.FZ_SERVICE = window.FZ && window.FZ.data;
 </script>
 
 <script>
@@ -474,8 +508,10 @@
   // Pull data
   var R  = window.FZ_RESIDENTIAL || {};
   var M  = window.FZ_MF || {};
+  var S  = window.FZ_SERVICE || {};
   var Rrf = R.REVENUE_FORECAST || {}, Rso = R.SALES_OVERVIEW || {}, Rbl = R.BACKLOG || {};
   var Mrf = M.REVENUE_FORECAST || {}, Mso = M.SALES_OVERVIEW || {}, Mbl = M.BACKLOG || {};
+  var Srf = S.REVENUE_FORECAST || {};
 
   // Invoiced YTD must come from NetSuite AR only — never fall back to V5's
   // full-year forecast (modelAnnualInvoiced), which is a forecast not a YTD.
@@ -483,7 +519,9 @@
                     parseMoney(findKpi(Rrf.kpis, 'Invoiced YTD') && findKpi(Rrf.kpis, 'Invoiced YTD').value) || 0;
   var mfInvoiced  = (Mrf.netsuiteInvoiced && Mrf.netsuiteInvoiced.totalInvoiced) ||
                     parseMoney(findKpi(Mrf.kpis, 'Invoiced YTD') && findKpi(Mrf.kpis, 'Invoiced YTD').value) || 0;
-  var entInvoiced = resInvoiced + mfInvoiced;
+  var svcInvoiced = (Srf.netsuiteInvoiced && Srf.netsuiteInvoiced.totalInvoiced) ||
+                    parseMoney(findKpi(Srf.kpis, 'Invoiced YTD') && findKpi(Srf.kpis, 'Invoiced YTD').value) || 0;
+  var entInvoiced = resInvoiced + mfInvoiced + svcInvoiced;
 
   var resSigned = parseMoney(findKpi(Rso.kpis, 'Signed') && findKpi(Rso.kpis, 'Signed').value);
   var mfSigned  = parseMoney(findKpi(Mso.kpis, 'Signed') && findKpi(Mso.kpis, 'Signed').value);
@@ -495,6 +533,9 @@
 
   var resBudget = (Rrf.execSummary && Rrf.execSummary.budget) || 125615037;
   var mfBudget  = (Mrf.execSummary && Mrf.execSummary.budget) || 51673207;
+  var svcBudget = (Srf.execSummary && Srf.execSummary.budget) || 6800179;
+  var svcPace   = (Srf.execSummary && Srf.execSummary.modelAnnualInvoiced) || 0;
+  var svcGmPct  = (Srf.profitabilitySummary && Srf.profitabilitySummary.combinedGP_pct) || 0;
 
   function setBind (key, value) {
     var el = document.querySelector('[data-bind="' + key + '"]');
@@ -506,20 +547,27 @@
   setBind('mf.invoiced',  fmtMoney(mfInvoiced));
   setBind('mf.signed',    fmtMoney(mfSigned));
   setBind('mf.wip',       fmtMoney((Mrf.pipelineSnapshot && Mrf.pipelineSnapshot.totalValue) || 0));
+  setBind('svc.invoiced', fmtMoney(svcInvoiced));
+  setBind('svc.pace',     fmtMoney(svcPace));
+  setBind('svc.gm',       svcGmPct ? svcGmPct.toFixed(1) + '%' : '—');
 
   var resPace = resBudget > 0 ? (resInvoiced / resBudget) : 0;
   var mfPace  = mfBudget  > 0 ? (mfInvoiced  / mfBudget)  : 0;
+  var svcPaceRatio = svcBudget > 0 ? (svcInvoiced / svcBudget) : 0;
   setBind('res.pacePct', (resPace * 100).toFixed(1) + '% of $' + (resBudget / 1e6).toFixed(0) + 'M');
   setBind('mf.pacePct',  (mfPace  * 100).toFixed(1) + '% of $' + (mfBudget  / 1e6).toFixed(1) + 'M');
+  setBind('svc.pacePct', (svcPaceRatio * 100).toFixed(1) + '% of $' + (svcBudget / 1e6).toFixed(2) + 'M');
 
   setTimeout(function () {
     document.getElementById('prog-res').style.width = Math.min(100, resPace * 100).toFixed(1) + '%';
     document.getElementById('prog-mf').style.width  = Math.min(100, mfPace  * 100).toFixed(1) + '%';
+    var svcEl = document.getElementById('prog-svc');
+    if (svcEl) svcEl.style.width = Math.min(100, svcPaceRatio * 100).toFixed(1) + '%';
   }, 240);
 
   // Sub-text on enterprise strip
   document.getElementById('ent-invoiced-sub').textContent =
-    'Res ' + fmtMoney(resInvoiced) + ' + MF ' + fmtMoney(mfInvoiced);
+    'Res ' + fmtMoney(resInvoiced) + ' + MF ' + fmtMoney(mfInvoiced) + ' + Svc ' + fmtMoney(svcInvoiced);
 
   // Animated counters
   function animateNumber (el, target, duration) {
