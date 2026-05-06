@@ -1363,77 +1363,757 @@
   // MF page builder: data-driven, reads from D.kpis / D.monthly etc
   // ============================================================
   function buildMfSalesPages (D, pal, fmt, BASE_OPTS, withOpts, moneyAxis) {
+    // ── helpers ─────────────────────────────────────────────────
     function kpiByLabel (label, fallback) {
-      const k = (D.kpis || []).find(function (x) { return x && x.label === label; });
+      var k = (D.kpis || []).find(function (x) { return x && x.label === label; });
       return k ? { label: k.label, value: k.value, sub: k.sub || (fallback && fallback.sub) || '', tone: k.trend === 'positive' ? 'success' : (k.trend === 'negative' ? 'danger' : 'navy') }
                : Object.assign({ label: label, value: '—', sub: '' }, fallback || {});
     }
+    function safeArr (v) { return Array.isArray(v) ? v : []; }
+    function safeObj (v) { return (v && typeof v === 'object') ? v : {}; }
+
+    var monthly = safeArr(D.monthly);
+    var weekly  = safeArr(D.weeklyTrend);
+    var jtTot   = safeArr(D.jobTypeTotals);
+    var people  = safeArr(D.topPeople);
+    var msc     = safeObj(D.marketScorecard);
+    var mscRows = safeArr(msc.rows);
+    var cycle   = safeObj(D.salesCycle);
+    var cb      = safeObj(D.completedBilling);
+    var br      = safeObj(D.budgetRecovery);
+    var wt      = safeObj(D.weeklyTargets_BUDGET);
+    var cmnt    = safeObj(D.commentary);
+    var wtMarkets = safeArr(wt.byMarket);
+    var wtSched   = safeArr(wt.weekSchedule);
+
+    var totalSold = (D.kpis || []).reduce(function (s, k) { return s + 0; }, 0);
+    var soldRow   = (D.kpis || []).find(function (k) { return k.label === 'Sold'; });
+    var signedRow = (D.kpis || []).find(function (k) { return k.label === 'Signed Contracts YTD'; });
+    var ytdAmt = monthly.reduce(function (s, m) { return s + (m.amount || 0); }, 0);
 
     var mfPages = {};
 
+    // ─────────────────────────────────────────────────────────────
+    // EXECUTIVE OVERVIEW (index/executive)
+    // ─────────────────────────────────────────────────────────────
     var indexPage = {
-      eyebrow: 'YTD 2026 · Multi-Family',
+      eyebrow: 'YTD 2026 · MULTI-FAMILY',
       title: 'Multi-Family Sales Overview',
-      intro: 'Commercial and multi-family contracts signed YTD. Same Salesforce data pipeline as residential, filtered to the Commercial division.',
+      intro: 'Commercial and multi-family contracts signed YTD. Same Salesforce pipeline as residential, scoped to the Commercial book under Todd Sandler.',
       tags: [
-        { kind: 'info', text: (D.rowCount || 0) + ' contracts · ' + (D.lastSigned ? 'last signed ' + D.lastSigned : '') }
+        { kind: 'info', text: (D.rowCount || 0) + ' contracts' + (D.lastSigned ? ' · last signed ' + D.lastSigned : '') }
       ],
       sections: [
         { kind: 'kpi-row', cols: 4, items: [
-          kpiByLabel('Signed Contracts YTD'),
-          kpiByLabel('Sold'),
-          kpiByLabel('Production Review'),
-          kpiByLabel('Kicked Back')
+            kpiByLabel('Signed Contracts YTD'),
+            kpiByLabel('Sold'),
+            kpiByLabel('Avg Deal Size'),
+            kpiByLabel('Annualized Sales Rate')
         ]},
         { kind: 'kpi-row', cols: 4, items: [
-          kpiByLabel('Avg Deal Size'),
-          kpiByLabel('Annualized Sales Rate'),
-          kpiByLabel('Install vs Repair'),
-          kpiByLabel('Organization')
+            kpiByLabel('Production Review'),
+            kpiByLabel('Kicked Back'),
+            kpiByLabel('Install vs Repair'),
+            kpiByLabel('Organization')
         ]},
-        (D.monthly && D.monthly.length) ? {
+        monthly.length ? {
           kind: 'chart-grid', cols: 1,
-          heading: 'Monthly Signed Sales',
+          heading: 'Signed dollars by month',
           charts: [{
-            title: 'Signed $ by Month',
-            sub: 'Bars = signed dollars per month',
+            title: 'Monthly Signed $',
+            sub: 'YTD trend, MF book',
             height: 300,
             config: {
               type: 'bar',
-              data: {
-                labels: D.monthly.map(function (m) { return m.label; }),
-                datasets: [{ label: 'Signed $', data: D.monthly.map(function (m) { return m.amount; }), backgroundColor: pal.navy, borderRadius: 4 }]
-              },
+              data: { labels: monthly.map(function (m) { return m.label; }),
+                datasets: [{ label: 'Signed $', data: monthly.map(function (m) { return m.amount; }), backgroundColor: pal.navy, borderRadius: 4 }] },
               options: withOpts({ scales: { y: moneyAxis() } })
             }
           }]
         } : null,
-        (D.marketScorecard && D.marketScorecard.rows && D.marketScorecard.rows.length) ? {
+        mscRows.length ? {
           kind: 'table',
-          heading: 'Market Scorecard',
-          headers: D.marketScorecard.headers.map(function (h, i) { return { label: h, num: i > 0 }; }),
-          rows: D.marketScorecard.rows
+          heading: 'Market scorecard',
+          caption: 'Sorted by signed $ · ' + mscRows.length + ' active MF markets',
+          headers: msc.headers.map(function (h, i) { return { label: h, num: i > 0 }; }),
+          rows: mscRows
         } : null
       ].filter(Boolean)
     };
     mfPages.index = indexPage;
     mfPages.executive = indexPage;
 
-    // Stub all other slugs (Trends, Markets, People, etc.) with a "coming soon"
-    // panel since they reference residential-specific tables that may not exist for MF.
-    var stubSlugs = ['trends', 'markets', 'people', 'job-mix', 'cycle', 'risks', 'strengths', 'fixes', 'action-plan', 'weekly-targets', 'budget-recovery', 'billing'];
-    stubSlugs.forEach(function (slug) {
-      mfPages[slug] = {
-        eyebrow: 'COMING SOON',
-        title: slug.replace(/-/g, ' ').replace(/\b\w/g, function (c) { return c.toUpperCase(); }),
-        intro: 'This view is built around residential-specific dimensions. The MF-flavored version is on the v2 backlog.',
-        tags: [],
-        sections: [{
-          kind: 'callout', tone: 'info', title: 'Not yet built for multi-family',
-          body: '<p>Use the <strong>Home / Executive</strong> tab for the MF Sales Overview KPIs. The deeper residential tabs (cycle analysis, kick-back deep-dives, market scorecards with residential-specific metrics) need their own MF designs.</p>'
-        }]
-      };
-    });
+    // ─────────────────────────────────────────────────────────────
+    // TRENDS & MOMENTUM
+    // ─────────────────────────────────────────────────────────────
+    var weeklyAvg = weekly.length ? weekly.reduce(function (s, w) { return s + w.amount; }, 0) / weekly.length : 0;
+    var lastWeek = weekly[weekly.length - 1];
+    var prevWeek = weekly[weekly.length - 2];
+    var weekDelta = (lastWeek && prevWeek) ? (lastWeek.amount - prevWeek.amount) : 0;
+    var bestMonth = monthly.slice().sort(function (a, b) { return b.amount - a.amount; })[0];
+    var worstMonth = monthly.slice().sort(function (a, b) { return a.amount - b.amount; })[0];
+
+    mfPages.trends = {
+      eyebrow: 'TRENDS · MULTI-FAMILY',
+      title: 'Trends & Momentum',
+      intro: 'Where the MF signed-dollar trend is heading. Weekly cadence is lumpy because MF deals are large; one or two big jobs can move a week dramatically.',
+      tags: [
+        { kind: weekDelta >= 0 ? 'success' : 'danger', text: 'Last week ' + (weekDelta >= 0 ? '+' : '') + fmt.money(weekDelta, { short: true }) + ' vs prior' },
+        { kind: 'info', text: 'Avg ' + fmt.money(weeklyAvg, { short: true }) + '/wk over ' + weekly.length + ' weeks' }
+      ],
+      sections: [
+        { kind: 'kpi-row', cols: 4, items: [
+            { label: 'Best Month',  value: bestMonth ? bestMonth.label : '—', sub: bestMonth ? fmt.money(bestMonth.amount) + ' · ' + bestMonth.count + ' deals' : '', tone: 'success' },
+            { label: 'Slowest Month', value: worstMonth ? worstMonth.label : '—', sub: worstMonth ? fmt.money(worstMonth.amount) + ' · ' + worstMonth.count + ' deals' : '', tone: 'warn' },
+            { label: '4-Wk Weekly Avg', value: fmt.money(wt.recent4WkAvg || 0, { short: true }), sub: 'rolling, MF only', tone: 'navy' },
+            { label: 'Latest Week',  value: lastWeek ? fmt.money(lastWeek.amount, { short: true }) : '—', sub: lastWeek ? lastWeek.count + ' contracts' : '', tone: 'navy' }
+        ]},
+        weekly.length ? {
+          kind: 'chart-grid', cols: 1,
+          heading: 'Weekly signed dollars',
+          charts: [{
+            title: 'Weekly Trend',
+            sub: 'Bars = signed $ per week-of-year',
+            height: 320,
+            config: {
+              type: 'bar',
+              data: { labels: weekly.map(function (w) { return 'W' + w.w; }),
+                datasets: [{ label: 'Signed $', data: weekly.map(function (w) { return w.amount; }), backgroundColor: pal.navy, borderRadius: 4 }] },
+              options: withOpts({ scales: { y: moneyAxis() } })
+            }
+          }]
+        } : null,
+        monthly.length ? {
+          kind: 'table',
+          heading: 'Monthly detail',
+          headers: [
+            { label: 'Month', num: false },
+            { label: 'Deals', num: true },
+            { label: 'Signed $', num: true },
+            { label: 'Avg Deal', num: true },
+            { label: 'Installs', num: true },
+            { label: 'Repairs', num: true },
+            { label: 'Repair %', num: true }
+          ],
+          rows: monthly.map(function (m) {
+            return [m.label, m.count, fmt.money(m.amount), fmt.money(m.avgDeal || 0), m.installs, m.repairs, (m.repairPct != null ? m.repairPct.toFixed(1) + '%' : '—')];
+          })
+        } : null,
+        { kind: 'callout', tone: 'info', title: 'How to read MF momentum',
+          body: 'MF deal sizes range from a few thousand (repairs) to several hundred thousand (insurance jobs). Week-over-week swings are normal; a single $400K insurance contract can flip a week from red to green. The 4-week rolling average and monthly view smooth that out.' }
+      ].filter(Boolean)
+    };
+
+    // ─────────────────────────────────────────────────────────────
+    // MARKET DEEP DIVE
+    // ─────────────────────────────────────────────────────────────
+    var topMkt = mscRows[0];
+    var secondMkt = mscRows[1];
+    var bestRepair = mscRows.slice().sort(function (a, b) { return a[6] - b[6]; })[0];
+    var bigDeal = mscRows.slice().sort(function (a, b) { return b[3] - a[3]; })[0];
+
+    mfPages.markets = {
+      eyebrow: 'MARKETS · MULTI-FAMILY',
+      title: 'Market Deep Dive',
+      intro: 'How each MF market is contributing to the YTD number. Coverage is concentrated: the top three markets carry the majority of the book.',
+      tags: [{ kind: 'info', text: mscRows.length + ' active markets · top 3 ' + (mscRows.slice(0,3).reduce(function(s,r){return s+r[1];},0) / Math.max(ytdAmt,1) * 100).toFixed(0) + '% of $' }],
+      sections: [
+        { kind: 'kpi-row', cols: 4, items: [
+            { label: 'Top Market',     value: topMkt ? topMkt[0] : '—',     sub: topMkt ? fmt.money(topMkt[1]) + ' · ' + topMkt[2] + ' deals' : '', tone: 'success' },
+            { label: '#2 Market',      value: secondMkt ? secondMkt[0] : '—', sub: secondMkt ? fmt.money(secondMkt[1]) + ' · ' + secondMkt[2] + ' deals' : '', tone: 'navy' },
+            { label: 'Highest Avg Deal', value: bigDeal ? bigDeal[0] : '—',  sub: bigDeal ? fmt.money(bigDeal[3]) + ' avg' : '',                tone: 'success' },
+            { label: 'Cleanest Mix',   value: bestRepair ? bestRepair[0] : '—', sub: bestRepair ? bestRepair[6].toFixed(1) + '% repair share' : '', tone: 'success' }
+        ]},
+        mscRows.length ? {
+          kind: 'chart-grid', cols: 2,
+          charts: [
+            {
+              title: 'Signed $ by Market',
+              sub: 'YTD',
+              height: 360,
+              config: {
+                type: 'bar',
+                data: { labels: mscRows.map(function (r) { return r[0]; }),
+                  datasets: [{ data: mscRows.map(function (r) { return r[1]; }), backgroundColor: pal.navy, label: 'Signed $' }] },
+                options: withOpts({ indexAxis: 'y', scales: { x: moneyAxis() }, plugins: { legend: { display: false } } })
+              }
+            },
+            {
+              title: 'Avg Deal by Market',
+              sub: 'Insurance jobs skew this on smaller markets',
+              height: 360,
+              config: {
+                type: 'bar',
+                data: { labels: mscRows.map(function (r) { return r[0]; }),
+                  datasets: [{ data: mscRows.map(function (r) { return r[3]; }), backgroundColor: pal.navy, label: 'Avg Deal $' }] },
+                options: withOpts({ indexAxis: 'y', scales: { x: moneyAxis() }, plugins: { legend: { display: false } } })
+              }
+            }
+          ]
+        } : null,
+        mscRows.length ? {
+          kind: 'table',
+          heading: 'All ' + mscRows.length + ' MF markets, full scorecard',
+          headers: msc.headers.map(function (h, i) { return { label: h, num: i > 0 }; }),
+          rows: mscRows.map(function (r) {
+            return [
+              { html: '<strong>' + r[0] + '</strong>' },
+              fmt.money(r[1]), r[2], fmt.money(r[3]), r[4], r[5],
+              { html: r[6] >= 35 ? '<span class="pill pill-danger">' + r[6].toFixed(1) + '%</span>'
+                    : r[6] >= 20 ? '<span class="pill pill-warn">' + r[6].toFixed(1) + '%</span>'
+                    : '<span class="pill pill-success">' + r[6].toFixed(1) + '%</span>' },
+              r[7] + 'd'
+            ];
+          })
+        } : null,
+        topMkt ? {
+          kind: 'callout', tone: 'success', title: topMkt[0] + ': anchor market',
+          body: '<strong>' + fmt.money(topMkt[1]) + '</strong> on ' + topMkt[2] + ' deals at <strong>' + fmt.money(topMkt[3]) + '</strong> avg. Median close ' + topMkt[7] + ' days. The other markets need a path to ' + (topMkt[2] >= 30 ? 'this volume' : 'this avg-deal size') + ' before MF doubles.'
+        } : null
+      ].filter(Boolean)
+    };
+
+    // ─────────────────────────────────────────────────────────────
+    // PEOPLE & PRODUCTIVITY
+    // ─────────────────────────────────────────────────────────────
+    var top10 = people.slice(0, 10);
+    var top10Sum = top10.reduce(function (s, p) { return s + p.amount; }, 0);
+    var top10Pct = ytdAmt > 0 ? (top10Sum / ytdAmt * 100) : 0;
+    var topPerson = people[0];
+    var fastest = people.slice().filter(function (p) { return p.medDays != null; }).sort(function (a, b) { return a.medDays - b.medDays; })[0];
+
+    mfPages.people = {
+      eyebrow: 'PEOPLE · MF PRODUCERS',
+      title: 'People & Productivity',
+      intro: 'Who is driving the MF number. The roster is small (~21 reps), so concentration risk is real: a single rep going cold meaningfully moves the month.',
+      tags: [
+        { kind: 'info', text: people.length + ' active reps tracked' },
+        { kind: 'warn', text: 'Top 10 = ' + top10Pct.toFixed(0) + '% of YTD $' }
+      ],
+      sections: [
+        { kind: 'kpi-row', cols: 4, items: [
+            { label: 'Active Reps',    value: people.length + '', sub: 'with at least one signed deal', tone: 'navy' },
+            { label: 'Top Producer',   value: topPerson ? topPerson.name : '—', sub: topPerson ? fmt.money(topPerson.amount) + ' · ' + topPerson.count + ' deals' : '', tone: 'success' },
+            { label: 'Top 10 Share',   value: top10Pct.toFixed(0) + '%', sub: fmt.money(top10Sum, { short: true }) + ' of YTD', tone: top10Pct > 80 ? 'danger' : 'warn' },
+            { label: 'Fastest Closer', value: fastest ? fastest.name : '—', sub: fastest ? fastest.medDays + ' day median · ' + fastest.count + ' deals' : '', tone: 'success' }
+        ]},
+        people.length ? {
+          kind: 'chart-grid', cols: 1,
+          charts: [{
+            title: 'Top 20 producers by signed $',
+            sub: 'Concentration map for the MF book',
+            height: Math.max(300, people.length * 22),
+            config: {
+              type: 'bar',
+              data: { labels: people.map(function (p) { return p.name; }),
+                datasets: [{ data: people.map(function (p) { return p.amount; }), backgroundColor: pal.navy, label: 'Signed $' }] },
+              options: withOpts({ indexAxis: 'y', scales: { x: moneyAxis() }, plugins: { legend: { display: false } } })
+            }
+          }]
+        } : null,
+        people.length ? {
+          kind: 'table',
+          heading: 'All tracked reps',
+          headers: [
+            { label: 'Rep', num: false },
+            { label: 'Deals', num: true },
+            { label: 'Signed $', num: true },
+            { label: 'Avg Deal', num: true },
+            { label: 'Median Days', num: true },
+            { label: 'Installs', num: true },
+            { label: 'Repairs', num: true }
+          ],
+          rows: people.map(function (p) {
+            return [
+              { html: '<strong>' + p.name + '</strong>' },
+              p.count,
+              fmt.money(p.amount),
+              fmt.money(p.avg || 0),
+              p.medDays != null ? p.medDays + 'd' : '—',
+              p.installs || 0,
+              p.repairs || 0
+            ];
+          })
+        } : null,
+        { kind: 'callout', tone: top10Pct > 80 ? 'warn' : 'info', title: top10Pct > 80 ? 'Concentration risk flag' : 'Roster shape',
+          body: 'Top 10 reps account for <strong>' + top10Pct.toFixed(0) + '%</strong> of MF signed dollars. ' + (top10Pct > 80 ? 'That is a single-point-of-failure risk: a rep transition or a slow month from any of them shows up in the company number.' : 'That is a healthy distribution by sales-org standards.') }
+      ].filter(Boolean)
+    };
+
+    // ─────────────────────────────────────────────────────────────
+    // JOB TYPE & SERVICE MIX
+    // ─────────────────────────────────────────────────────────────
+    var jtTotal = jtTot.reduce(function (s, j) { return s + j.amount; }, 0);
+    var insRow = jtTot.find(function (j) { return j.jobType === 'Insurance'; });
+    var retRow = jtTot.find(function (j) { return /Retail-No/i.test(j.jobType); });
+    var finRow = jtTot.find(function (j) { return /Retail-Financing/i.test(j.jobType); });
+
+    mfPages['job-mix'] = {
+      eyebrow: 'JOB MIX · MF',
+      title: 'Job Type & Service Mix',
+      intro: 'Where the MF dollars come from by sale type. Insurance is small in count but very large in average deal — the only category that consistently produces $300K+ contracts.',
+      tags: [{ kind: 'info', text: jtTot.length + ' job types · ' + fmt.money(jtTotal, { short: true }) + ' YTD' }],
+      sections: [
+        { kind: 'kpi-row', cols: 3, items: [
+            retRow ? { label: 'Retail-No Financing', value: fmt.money(retRow.amount, { short: true }), sub: retRow.count + ' deals · ' + fmt.money(retRow.avg) + ' avg', tone: 'navy' } : null,
+            insRow ? { label: 'Insurance', value: fmt.money(insRow.amount, { short: true }), sub: insRow.count + ' deals · ' + fmt.money(insRow.avg) + ' avg', tone: 'success' } : null,
+            finRow ? { label: 'Retail-Financing', value: fmt.money(finRow.amount, { short: true }), sub: finRow.count + ' deals · ' + fmt.money(finRow.avg) + ' avg', tone: 'navy' } : null
+        ].filter(Boolean) },
+        jtTot.length ? {
+          kind: 'chart-grid', cols: 2,
+          charts: [
+            {
+              title: 'Signed $ by Job Type',
+              height: 320,
+              config: {
+                type: 'doughnut',
+                data: { labels: jtTot.map(function (j) { return j.jobType; }),
+                  datasets: [{ data: jtTot.map(function (j) { return j.amount; }), backgroundColor: [pal.navy, pal.success, pal.warning, pal.danger] }] },
+                options: withOpts({ plugins: { legend: { position: 'bottom' } } })
+              }
+            },
+            {
+              title: 'Average deal by Job Type',
+              sub: 'Insurance dwarfs retail on per-deal basis',
+              height: 320,
+              config: {
+                type: 'bar',
+                data: { labels: jtTot.map(function (j) { return j.jobType; }),
+                  datasets: [{ data: jtTot.map(function (j) { return j.avg; }), backgroundColor: pal.navy, label: 'Avg Deal $' }] },
+                options: withOpts({ scales: { y: moneyAxis() }, plugins: { legend: { display: false } } })
+              }
+            }
+          ]
+        } : null,
+        jtTot.length ? {
+          kind: 'table',
+          heading: 'Job type totals',
+          headers: [
+            { label: 'Job Type', num: false },
+            { label: 'Deals', num: true },
+            { label: 'Signed $', num: true },
+            { label: 'Avg Deal', num: true },
+            { label: '% of YTD $', num: true }
+          ],
+          rows: jtTot.map(function (j) {
+            var pct = jtTotal > 0 ? (j.amount / jtTotal * 100) : 0;
+            return [{ html: '<strong>' + j.jobType + '</strong>' }, j.count, fmt.money(j.amount), fmt.money(j.avg), pct.toFixed(1) + '%'];
+          })
+        } : null,
+        { kind: 'callout', tone: 'info', title: 'Mix takeaway',
+          body: 'Retail-No Financing is the volume engine (' + (retRow ? retRow.count : 0) + ' of ' + (D.rowCount || 0) + ' deals), but Insurance is the dollar engine. Pulling forward two more insurance contracts in a quarter materially lifts the number; pulling forward two retail jobs barely moves it.' }
+      ].filter(Boolean)
+    };
+
+    // ─────────────────────────────────────────────────────────────
+    // SALES CYCLE ANALYSIS
+    // ─────────────────────────────────────────────────────────────
+    var cycleKpis = safeArr(cycle.kpis);
+    var cycleByMkt = safeArr(cycle.byMarket);
+    var cycleByJt = safeArr(cycle.byJobType);
+
+    mfPages.cycle = {
+      eyebrow: 'SALES CYCLE · MF',
+      title: 'Sales Cycle Analysis',
+      intro: 'How long MF deals take from creation to contract. Insurance is the long tail; retail closes in days. The mean is misleading because of insurance skew, so use medians.',
+      tags: [{ kind: 'info', text: 'Days = lead-create to contract-signed' }],
+      sections: [
+        cycleKpis.length ? { kind: 'kpi-row', cols: cycleKpis.length, items: cycleKpis.map(function (k) {
+          return { label: k.label, value: k.value, sub: k.sub || '', tone: 'navy' };
+        }) } : null,
+        cycleByMkt.length ? {
+          kind: 'chart-grid', cols: 1,
+          charts: [{
+            title: 'Median days to close by market',
+            sub: 'Lower = faster',
+            height: Math.max(280, cycleByMkt.length * 26),
+            config: {
+              type: 'bar',
+              data: { labels: cycleByMkt.map(function (r) { return r.label; }),
+                datasets: [{ data: cycleByMkt.map(function (r) { return r.median; }), backgroundColor: cycleByMkt.map(function (r) {
+                  return r.median >= 60 ? pal.danger : r.median >= 30 ? pal.warning : pal.success;
+                }), label: 'Median days' }] },
+              options: withOpts({ indexAxis: 'y', plugins: { legend: { display: false } } })
+            }
+          }]
+        } : null,
+        cycleByJt.length ? {
+          kind: 'table',
+          heading: 'Cycle by job type',
+          headers: [
+            { label: 'Job Type', num: false },
+            { label: 'Median Days', num: true },
+            { label: 'Mean Days', num: true },
+            { label: 'Deals', num: true }
+          ],
+          rows: cycleByJt.map(function (r) {
+            return [{ html: '<strong>' + r.label + '</strong>' }, r.median + 'd', r.mean + 'd', r.count];
+          })
+        } : null,
+        cycleByMkt.length ? {
+          kind: 'table',
+          heading: 'Cycle by market',
+          headers: [
+            { label: 'Market', num: false },
+            { label: 'Median Days', num: true },
+            { label: 'Mean Days', num: true },
+            { label: 'Deals', num: true }
+          ],
+          rows: cycleByMkt.map(function (r) {
+            var pill = r.median >= 60 ? '<span class="pill pill-danger">' + r.median + 'd</span>'
+                     : r.median >= 30 ? '<span class="pill pill-warn">' + r.median + 'd</span>'
+                     : '<span class="pill pill-success">' + r.median + 'd</span>';
+            return [{ html: '<strong>' + r.label + '</strong>' }, { html: pill }, r.mean + 'd', r.count];
+          })
+        } : null,
+        { kind: 'callout', tone: 'info', title: 'Cycle interpretation',
+          body: 'Long insurance medians (90+ days) reflect carrier supplement timing, not Feazel performance. Watch for retail-only branches creeping past 30 days, which usually signals lead-handoff or estimating bottlenecks.' }
+      ].filter(Boolean)
+    };
+
+    // ─────────────────────────────────────────────────────────────
+    // RISKS & RED FLAGS
+    // ─────────────────────────────────────────────────────────────
+    var critical = safeArr(cmnt.criticalRisks);
+    var attention = safeArr(cmnt.whatNeedsAttention);
+    var concentrationFlag = top10Pct > 80;
+
+    mfPages.risks = {
+      eyebrow: 'RISKS · MF TOP OF MIND',
+      title: 'Risks & Red Flags',
+      intro: 'The dollar exposures and structural risks specific to the MF book that need an owner and a 7-day commitment.',
+      tags: [{ kind: 'danger', text: critical.length + ' critical' }],
+      sections: [
+        { kind: 'kpi-row', cols: 3, items: [
+            { label: 'Top 10 Rep Concentration', value: top10Pct.toFixed(0) + '%', sub: 'of YTD $ from 10 reps', tone: concentrationFlag ? 'danger' : 'warn' },
+            { label: 'Insurance Pipeline', value: insRow ? insRow.count + ' deals' : '—', sub: insRow ? fmt.money(insRow.amount, { short: true }) + ' · 90+ day cycle typical' : '', tone: 'warn' },
+            { label: 'Slowest Market', value: (function () {
+                var slow = cycleByMkt.slice().sort(function (a, b) { return b.median - a.median; })[0];
+                return slow ? slow.label : '—';
+              })(), sub: (function () {
+                var slow = cycleByMkt.slice().sort(function (a, b) { return b.median - a.median; })[0];
+                return slow ? slow.median + ' day median' : '';
+              })(), tone: 'warn' }
+        ]},
+        (critical.length || attention.length) ? {
+          kind: 'prose', heading: 'Critical risks and what needs attention',
+          cards: [
+            critical.length ? {
+              kind: 'tint', eyebrow: 'TOP RISKS',
+              list: critical.map(function (t) { return { text: t, tone: 'danger', icon: '!' }; })
+            } : null,
+            attention.length ? {
+              eyebrow: 'WHAT NEEDS ATTENTION',
+              list: attention.map(function (t) { return { text: t, tone: 'warn', icon: '⚠' }; })
+            } : null
+          ].filter(Boolean),
+          cols: 2
+        } : null,
+        { kind: 'callout', tone: 'danger', title: 'Owner check',
+          body: 'Each item above needs a single owner and a 7-day commitment. Concentration risk → <strong>Todd Sandler / Jeremy Wolfe</strong>; insurance cycle drag → <strong>Lisa Gibson</strong>; market-specific slowdowns → <strong>regional production lead</strong>.' }
+      ].filter(Boolean)
+    };
+
+    // ─────────────────────────────────────────────────────────────
+    // BUILD ON THE GOOD
+    // ─────────────────────────────────────────────────────────────
+    var strengths = safeArr(cmnt.strengthsToAmplify);
+    var working = safeArr(cmnt.whatsWorking);
+
+    mfPages.strengths = {
+      eyebrow: 'WINS · MF',
+      title: 'Build on the Good',
+      intro: 'Where the MF model is already working. These are practices to institutionalize, not just celebrate.',
+      tags: [{ kind: 'success', text: strengths.length + ' strengths' }],
+      sections: [
+        topMkt ? { kind: 'kpi-row', cols: 4, items: [
+            { label: 'Top Market',  value: topMkt[0], sub: fmt.money(topMkt[1]) + ' · ' + topMkt[2] + ' deals', tone: 'success' },
+            { label: 'Top Producer', value: topPerson ? topPerson.name : '—', sub: topPerson ? fmt.money(topPerson.amount) + ' · ' + topPerson.count + ' deals' : '', tone: 'success' },
+            { label: 'Best Avg Deal', value: bigDeal ? bigDeal[0] : '—', sub: bigDeal ? fmt.money(bigDeal[3]) + ' avg' : '', tone: 'success' },
+            { label: 'Cleanest Mix', value: bestRepair ? bestRepair[0] : '—', sub: bestRepair ? bestRepair[6].toFixed(1) + '% repair' : '', tone: 'success' }
+        ]} : null,
+        (strengths.length || working.length) ? {
+          kind: 'prose', heading: 'What is working and what to amplify',
+          cards: [
+            working.length ? {
+              kind: 'tint', eyebrow: 'WORKING',
+              list: working.map(function (t) { return { text: t, tone: 'success', icon: '✓' }; })
+            } : null,
+            strengths.length ? {
+              eyebrow: 'AMPLIFY',
+              list: strengths.map(function (t) { return { text: t, tone: 'success', icon: '★' }; })
+            } : null
+          ].filter(Boolean),
+          cols: 2
+        } : null,
+        { kind: 'callout', tone: 'success', title: 'Compound what works',
+          body: 'The fastest path to a bigger MF book is not new hires, it is replicating ' + (topMkt ? topMkt[0] : 'the top market') + '\'s template across the next two markets and getting top producers to mentor mid-pack reps.' }
+      ].filter(Boolean)
+    };
+
+    // ─────────────────────────────────────────────────────────────
+    // FIX THE WEAK AREAS
+    // ─────────────────────────────────────────────────────────────
+    var fixList = safeArr(cmnt.fixList);
+    var weakMkts = mscRows.slice(-3).reverse();   // bottom three by sales
+
+    mfPages.fixes = {
+      eyebrow: 'FIXES · MF WEAK AREAS',
+      title: 'Fix the Weak Areas',
+      intro: 'The opposite of the Build-on-the-Good tab: where the MF book is leaking dollars or losing time, with the specific lever to pull.',
+      tags: [{ kind: 'warn', text: fixList.length + ' fixes queued' }],
+      sections: [
+        weakMkts.length ? { kind: 'kpi-row', cols: weakMkts.length, items: weakMkts.map(function (r) {
+          return { label: r[0], value: fmt.money(r[1], { short: true }), sub: r[2] + ' deals · ' + r[6].toFixed(1) + '% repair', tone: 'warn' };
+        }) } : null,
+        fixList.length ? {
+          kind: 'prose', heading: 'Fix list',
+          cards: [{
+            kind: 'tint', eyebrow: 'TO FIX',
+            list: fixList.map(function (t) { return { text: t, tone: 'warn', icon: '!' }; })
+          }],
+          cols: 1
+        } : null,
+        weakMkts.length ? {
+          kind: 'table', heading: 'Bottom-tier markets',
+          headers: msc.headers.map(function (h, i) { return { label: h, num: i > 0 }; }),
+          rows: weakMkts.map(function (r) {
+            return [{ html: '<strong>' + r[0] + '</strong>' }, fmt.money(r[1]), r[2], fmt.money(r[3]), r[4], r[5], r[6].toFixed(1) + '%', r[7] + 'd'];
+          })
+        } : null,
+        { kind: 'callout', tone: 'warn', title: 'Lever choice',
+          body: 'For low-volume markets, the lever is lead generation, not closing rate. For low-avg-deal markets, the lever is rep coaching on commercial scoping (especially insurance opportunities). For long-cycle markets, it is process: estimating throughput and carrier follow-up cadence.' }
+      ].filter(Boolean)
+    };
+
+    // ─────────────────────────────────────────────────────────────
+    // ACTION PLAN
+    // ─────────────────────────────────────────────────────────────
+    var actions = safeArr(cmnt.actionPlan);
+    mfPages['action-plan'] = {
+      eyebrow: 'ACTIONS · MF NEXT 30 DAYS',
+      title: 'Action Plan',
+      intro: 'The discrete moves that close the MF gap to plan in the next four weeks. Owner and deadline on each.',
+      tags: [{ kind: 'info', text: actions.length + ' actions' }],
+      sections: [
+        actions.length ? {
+          kind: 'prose', heading: 'Next 30-day actions',
+          cards: [{
+            kind: 'tint', eyebrow: 'COMMIT',
+            list: actions.map(function (a) { return { text: a, tone: 'navy', icon: '→' }; })
+          }],
+          cols: 1
+        } : { kind: 'callout', tone: 'info', title: 'Action plan empty',
+              body: 'No critical actions queued for this refresh. Use the Risks tab to identify the next one to commit.' },
+        { kind: 'callout', tone: 'info', title: 'Cadence',
+          body: 'Review weekly with Todd Sandler and Jeremy Wolfe. Any item not advanced in 7 days gets escalated or killed; the list should not grow.' }
+      ].filter(Boolean)
+    };
+
+    // ─────────────────────────────────────────────────────────────
+    // WEEKLY SALES TARGETS
+    // ─────────────────────────────────────────────────────────────
+    var weeksRemaining = wtSched.length;
+    var avgWeeklyTarget = wt.avgWeeklyNeed || 0;
+    var pace = wt.recent4WkAvg || 0;
+    var paceGap = pace - avgWeeklyTarget;
+
+    mfPages['weekly-targets'] = {
+      eyebrow: 'TARGETS · MF WEEKLY',
+      title: 'Weekly Sales Targets',
+      intro: 'What MF needs to sign each week to hit the $51.67M Commercial Budget plan, and how the current pace compares.',
+      tags: [
+        { kind: 'info', text: weeksRemaining + ' weeks remaining in plan' },
+        { kind: paceGap >= 0 ? 'success' : 'warn', text: 'Pace ' + (paceGap >= 0 ? '+' : '') + fmt.money(paceGap, { short: true }) + '/wk vs target' }
+      ],
+      sections: [
+        { kind: 'kpi-row', cols: 4, items: [
+            { label: 'Avg Weekly Target', value: fmt.money(avgWeeklyTarget, { short: true }), sub: 'rest-of-year', tone: 'navy' },
+            { label: '4-Wk Recent Pace', value: fmt.money(pace, { short: true }), sub: 'rolling', tone: pace >= avgWeeklyTarget ? 'success' : 'warn' },
+            { label: 'Pace Gap', value: (paceGap >= 0 ? '+' : '') + fmt.money(paceGap, { short: true }), sub: paceGap >= 0 ? 'ahead of plan' : 'behind plan', tone: paceGap >= 0 ? 'success' : 'danger' },
+            { label: 'Weeks Remaining', value: weeksRemaining + '', sub: 'until 12/31', tone: 'navy' }
+        ]},
+        wtSched.length ? {
+          kind: 'chart-grid', cols: 1,
+          charts: [{
+            title: 'Weekly targets through year-end',
+            sub: 'Bars colored by month for readability',
+            height: Math.max(300, wtSched.length * 14),
+            config: {
+              type: 'bar',
+              data: { labels: wtSched.map(function (w) { return w.wk; }),
+                datasets: [{ data: wtSched.map(function (w) { return w.target; }),
+                  backgroundColor: wtSched.map(function (w, i) {
+                    var months = Array.from(new Set(wtSched.map(function (x) { return x.mo; })));
+                    var palette = [pal.navy, pal.success, pal.warning, pal.danger, '#7d3c98', '#16a085'];
+                    return palette[months.indexOf(w.mo) % palette.length];
+                  }) }] },
+              options: withOpts({ scales: { y: moneyAxis() }, plugins: { legend: { display: false } } })
+            }
+          }]
+        } : null,
+        wtMarkets.length ? {
+          kind: 'table',
+          heading: 'Weekly target by market',
+          headers: [
+            { label: 'Market', num: false },
+            { label: 'Total / wk', num: true },
+            { label: 'Retail-No Fin', num: true },
+            { label: 'Insurance', num: true },
+            { label: 'Retail-Fin', num: true },
+            { label: 'Deals / wk', num: true }
+          ],
+          rows: wtMarkets.map(function (m) {
+            return [
+              { html: '<strong>' + m.market + '</strong>' },
+              fmt.money(m.total),
+              fmt.money(m.retNoFin || 0),
+              fmt.money(m.ins || 0),
+              fmt.money(m.retFin || 0),
+              (m.deals || 0).toFixed(1)
+            ];
+          })
+        } : null,
+        { kind: 'callout', tone: paceGap >= 0 ? 'success' : 'warn',
+          title: paceGap >= 0 ? 'On pace' : 'Pace gap',
+          body: paceGap >= 0
+            ? 'Current 4-week pace of <strong>' + fmt.money(pace, { short: true }) + '/wk</strong> is running <strong>' + fmt.money(paceGap, { short: true }) + '/wk</strong> ahead of the rest-of-year target. Hold the line and the plan is in reach.'
+            : 'Current pace is <strong>' + fmt.money(Math.abs(paceGap), { short: true }) + '/wk short</strong> of what the rest of the year needs. Either pull-forward in big-deal markets or layer in additional lead volume to the lower-pace markets.'
+        }
+      ].filter(Boolean)
+    };
+
+    // ─────────────────────────────────────────────────────────────
+    // BUDGET RECOVERY
+    // ─────────────────────────────────────────────────────────────
+    var brBridge = safeArr(br.monthlyBridge);
+    var brMkts = safeArr(br.adjSalesByMarket);
+
+    mfPages['budget-recovery'] = {
+      eyebrow: 'RECOVERY · MF',
+      title: 'Budget Recovery',
+      intro: 'The path back to the MF $51.67M plan, broken into the per-month bridge and the per-market sales lift required.',
+      tags: [
+        { kind: br.q1Shortfall < 0 ? 'danger' : 'success', text: 'Q1 ' + (br.q1Shortfall >= 0 ? '+' : '') + fmt.money(br.q1Shortfall || 0, { short: true }) },
+        { kind: br.aprilGap < 0 ? 'warn' : 'success', text: 'April ' + (br.aprilGap >= 0 ? '+' : '') + fmt.money(br.aprilGap || 0, { short: true }) }
+      ],
+      sections: [
+        { kind: 'kpi-row', cols: 4, items: [
+            { label: 'Plan',         value: fmt.money(br.fullYearBudget || 0, { short: true }), sub: 'MF Commercial Budget', tone: 'navy' },
+            { label: 'To Recover',   value: fmt.money(br.totalToRecover || 0, { short: true }),  sub: 'gap to plan', tone: (br.totalToRecover || 0) > 0 ? 'warn' : 'success' },
+            { label: 'Uplift Needed', value: ((br.upliftPct || 0) * 100).toFixed(1) + '%',       sub: 'on remaining months', tone: (br.upliftPct || 0) > 0.10 ? 'danger' : (br.upliftPct || 0) > 0 ? 'warn' : 'success' },
+            { label: 'Sales Δ / wk', value: fmt.money(br.salesDeltaPerWeek || 0, { short: true }), sub: 'extra needed weekly', tone: 'warn' }
+        ]},
+        brBridge.length ? {
+          kind: 'table',
+          heading: 'Monthly bridge to plan',
+          caption: 'How each remaining month lines up against the budget',
+          headers: [
+            { label: 'Month', num: false },
+            { label: 'Plan', num: true },
+            { label: 'Current Forecast', num: true },
+            { label: 'Gap', num: true }
+          ],
+          rows: brBridge.map(function (m) {
+            var gap = (m.forecast || 0) - (m.plan || 0);
+            return [
+              { html: '<strong>' + (m.month || m.label) + '</strong>' },
+              fmt.money(m.plan || 0),
+              fmt.money(m.forecast || 0),
+              { html: gap < 0 ? '<span class="pill pill-danger">' + fmt.money(gap) + '</span>'
+                              : '<span class="pill pill-success">+' + fmt.money(gap) + '</span>' }
+            ];
+          })
+        } : null,
+        brMkts.length ? {
+          kind: 'table',
+          heading: 'Sales lift required by market',
+          headers: [
+            { label: 'Market', num: false },
+            { label: 'Current $/wk', num: true },
+            { label: 'Adjusted $/wk', num: true },
+            { label: 'Lift', num: true }
+          ],
+          rows: brMkts.map(function (m) {
+            var lift = (m.adjusted || m.adj || 0) - (m.current || m.orig || 0);
+            return [
+              { html: '<strong>' + (m.market || m.label) + '</strong>' },
+              fmt.money(m.current || m.orig || 0),
+              fmt.money(m.adjusted || m.adj || 0),
+              { html: '<span class="pill ' + (lift > 0 ? 'pill-warn' : 'pill-success') + '">' + (lift >= 0 ? '+' : '') + fmt.money(lift) + '</span>' }
+            ];
+          })
+        } : null,
+        { kind: 'callout', tone: (br.totalToRecover || 0) > 0 ? 'warn' : 'success',
+          title: (br.totalToRecover || 0) > 0 ? 'Path back to plan' : 'On plan',
+          body: (br.totalToRecover || 0) > 0
+            ? 'To close the <strong>' + fmt.money(br.totalToRecover, { short: true }) + '</strong> gap, lift weekly sales by <strong>' + fmt.money(br.salesDeltaPerWeek || 0, { short: true }) + '</strong> across the remaining weeks. The market-by-market lift table above shows where the dollars need to come from.'
+            : 'Current pace clears the plan. Watch for a single insurance contract slip dragging the number back into recovery territory.'
+        }
+      ].filter(Boolean)
+    };
+
+    // ─────────────────────────────────────────────────────────────
+    // COMPLETED → BILLING
+    // ─────────────────────────────────────────────────────────────
+    var cbHas = (cb.totalUnbilled || 0) > 0 || (cb.totalJobs || 0) > 0;
+    var cbBySub = safeArr(cb.bySubStatus);
+    var cbTiers = safeArr(cb.tiers);
+    var cbJobs = safeArr(cb.fullJobList);
+
+    mfPages.billing = {
+      eyebrow: 'BILLING · MF COMPLETED JOBS',
+      title: 'Completed → Billing',
+      intro: 'MF jobs that are done in production but not yet invoiced. Same pattern as residential: every day of slip is cash sitting in CWIP instead of AR.',
+      tags: cbHas
+        ? [{ kind: 'warn', text: cb.totalJobs + ' jobs unbilled · ' + fmt.money(cb.totalUnbilled, { short: true }) }]
+        : [{ kind: 'success', text: 'No completed-but-unbilled MF jobs' }],
+      sections: cbHas ? [
+        { kind: 'kpi-row', cols: 4, items: [
+            { label: 'Unbilled Total', value: fmt.money(cb.totalUnbilled || 0, { short: true }), sub: cb.totalJobs + ' jobs · ' + (cb.avgAge || 0).toFixed(1) + 'd avg', tone: 'warn' },
+            { label: 'Median Age',     value: (cb.medAge || 0) + 'd', sub: 'days since completion', tone: 'navy' },
+            { label: 'Buckets',        value: cbTiers.length + '', sub: 'fresh / watch / warning', tone: 'navy' },
+            { label: 'Sub-statuses',   value: cbBySub.length + '', sub: 'distinct unblock paths', tone: 'navy' }
+        ]},
+        cbBySub.length ? {
+          kind: 'table',
+          heading: 'Unbilled by sub-status',
+          headers: [
+            { label: 'Sub-status', num: false },
+            { label: 'Jobs', num: true },
+            { label: 'Amount', num: true },
+            { label: 'Avg Age (d)', num: true },
+            { label: 'Action', num: false }
+          ],
+          rows: cbBySub.map(function (r) {
+            return [r.subStatus, r.count, fmt.money(r.amount), r.avgAge, r.action || ''];
+          })
+        } : null,
+        cbJobs.length ? {
+          kind: 'table',
+          heading: 'Completed MF jobs awaiting invoice',
+          caption: 'Sorted by amount · ' + cbJobs.length + ' rows total',
+          headers: [
+            { label: 'Job', num: false },
+            { label: 'Customer', num: false },
+            { label: 'PM / Rep', num: false },
+            { label: 'Branch', num: false },
+            { label: 'Amount', num: true },
+            { label: 'Days', num: true }
+          ],
+          rows: cbJobs.slice().sort(function (a, b) { return (b[5] || 0) - (a[5] || 0); }).map(function (r) {
+            return [r[0], r[1], r[2], r[3], fmt.money(r[5] || 0), r[6]];
+          }),
+          maxHeight: '520px'
+        } : null,
+        { kind: 'callout', tone: 'warn', title: 'SLA target',
+          body: '100% of completed jobs invoiced within 21 days. Sub-status table above shows where the friction is and the action to take.' }
+      ].filter(Boolean) : [{
+        kind: 'callout', tone: 'success',
+        title: 'No unbilled MF backlog',
+        body: 'Either there are zero completed-but-unbilled MF jobs in the latest export, or the MF Completed Jobs YTD file has not been routed in yet. If you expect data here, drop the latest <code>Commercial Completed Jobs YTD</code> XLSX into <code>inputs/multi-family/sales-overview/</code> and rerun the build.'
+      }]
+    };
 
     return mfPages;
   }
