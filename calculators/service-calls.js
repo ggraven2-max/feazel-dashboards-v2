@@ -360,10 +360,12 @@ function run(opts) {
     return 'navy';
   }
 
+  // Aging threshold: 14 days. Service work moves fast; anything in 'In
+  // Progress' status more than two weeks is past the normal cycle.
+  const IN_PROGRESS_DAY_THRESHOLD = 14;
   const inProgress60Plus = woStatusList
-    .filter(w => /^in progress$/i.test(w.status) && w.days >= 60)
-    .sort((a, b) => b.days - a.days)
-    .slice(0, 25);
+    .filter(w => /^in progress$/i.test(w.status) && w.days >= IN_PROGRESS_DAY_THRESHOLD)
+    .sort((a, b) => b.days - a.days);
 
   const notStartedAged = woStatusList
     .filter(w => NOT_STARTED_STATUSES.has(w.status))
@@ -454,9 +456,9 @@ function run(opts) {
       findings.concerns.push(t.tech + ' averages ' + t.avgMinPerAppt + 'min per appointment vs network ' + Math.round(avgMinPerAppt) + 'min. Heavy skew on this tech\'s book.');
     }
   });
-  // Watch: in-progress 60+ day WOs (status-based, replaces multi-appt span proxy)
+  // Watch: in-progress 14+ day WOs (status-based aging warning)
   if (inProgress60Plus.length) {
-    findings.watch.push(inProgress60Plus.length + ' work orders are In Progress 60+ days. Oldest: WO ' + inProgress60Plus[0].wo + ' (' + inProgress60Plus[0].days.toFixed(0) + ' days, ' + inProgress60Plus[0].account + '). Should be closed or escalated.');
+    findings.watch.push(inProgress60Plus.length + ' work orders are In Progress 14+ days. Oldest: WO ' + inProgress60Plus[0].wo + ' (' + inProgress60Plus[0].days.toFixed(0) + ' days, ' + inProgress60Plus[0].account + '). Should be closed or escalated.');
   }
   // Watch: not-started aging (slow scheduling)
   if (notStartedAged.length) {

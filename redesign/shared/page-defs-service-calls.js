@@ -507,21 +507,21 @@
   pages.aging = {
     eyebrow: 'AGING · WARNINGS',
     title: 'Aging & Warnings',
-    intro: 'Work orders that need a closer look. In Progress 60+ days = open in active work but not closing. Not Started = WOs in pre-execution statuses (estimate, insurance, scheduling) sorted by Days in Status to surface the slow-scheduling backlog. Multi-touch and disproportionate sections cover return trips and scope creep.',
+    intro: 'Work orders that need a closer look. In Progress 14+ days = past the normal service cycle and not closing. Not Started = WOs in pre-execution statuses (estimate, insurance, scheduling) sorted by Days in Status to surface the slow-scheduling backlog. Multi-touch and disproportionate sections cover return trips and scope creep.',
     tags: [
-      { kind: inProgress60.length > 0 ? 'warn' : 'success', text: inProgress60.length + ' in progress 60+d' },
+      { kind: inProgress60.length > 0 ? 'warn' : 'success', text: inProgress60.length + ' in progress 14+d' },
       { kind: notStartedTotal > 0 ? 'warn' : 'success', text: notStartedTotal + ' not started' },
       { kind: 'warn', text: multiTouch.length + ' multi-touch WOs' },
       { kind: 'danger', text: dispro.length + ' disproportionate WOs' }
     ],
     sections: [
-      // ── In Progress Work Orders Open 60+ Days ──────────────
+      // ── In Progress Work Orders Open 14+ Days ──────────────
       {
         kind: 'table',
-        heading: 'In Progress work orders open 60+ days',
+        heading: 'In Progress work orders open 14+ days',
         caption: inProgress60.length
-          ? 'Status = "In Progress" with Days in Status ≥ 60 from the Jobs/WOs/SAs source. These should be closing or escalating.'
-          : 'No work orders currently In Progress 60+ days.',
+          ? 'Status = "In Progress" with Days in Status ≥ 14 from the Jobs/WOs/SAs source. Service cycle is short; anything past two weeks should be closing or escalating.'
+          : 'No work orders currently In Progress 14+ days.',
         maxHeight: '520px',
         headers: [
           { label: 'WO', num: false },
@@ -533,9 +533,11 @@
           { label: 'Contract $', num: true }
         ],
         rows: inProgress60.length ? inProgress60.map(function (w) {
-          var pill = w.days >= 90
+          var pill = w.days >= 60
             ? '<span class="pill pill-danger">' + w.days.toFixed(0) + ' d</span>'
-            : '<span class="pill pill-warn">' + w.days.toFixed(0) + ' d</span>';
+            : w.days >= 30
+              ? '<span class="pill pill-warn">' + w.days.toFixed(0) + ' d</span>'
+              : '<span class="pill pill-info">' + w.days.toFixed(0) + ' d</span>';
           return [
             { html: '<strong>' + w.wo + '</strong>' },
             w.account,
@@ -546,7 +548,7 @@
             fmt.money(w.contract)
           ];
         }) : [[
-          { html: '<em>No In Progress WOs aged 60+ days right now — clean.</em>' },
+          { html: '<em>No In Progress WOs aged 14+ days right now — clean.</em>' },
           '', '', '', '', '', ''
         ]]
       },
