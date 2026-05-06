@@ -1911,93 +1911,169 @@
     };
 
     // ─────────────────────────────────────────────────────────────
-    // WEEKLY SALES TARGETS
+    // MONTHLY TARGETS (MF builds against monthly cadence, not weekly)
+    // Reuses the same plan + bridge that drives Budget Recovery.
     // ─────────────────────────────────────────────────────────────
-    var weeksRemaining = wt.weeksRemaining || wtSched.length || 1;
-    var annualPlan = wt.annualPlan || 51673207;
-    var avgWeeklyTarget = wt.avgWeeklyNeed || 0;
-    var pace = wt.recent4WkAvg || 0;
-    var paceGap = pace - avgWeeklyTarget;
-    var ytdActualWk = monthly.reduce(function (s, m) { return s + (m.amount || 0); }, 0);
-    var remainingDollarNeed = Math.max(0, annualPlan - ytdActualWk);
+    var brBridgeT = safeArr(br.monthlyBridge);
+    var planMfT = br.fullYearBudget || 51673207;
+    var closedMonths = brBridgeT.filter(function (m) { return m.status === 'Actual'; });
+    var futureMonths = brBridgeT.filter(function (m) { return m.status !== 'Actual'; });
+    var ytdRev = closedMonths.reduce(function (s, m) {
+      return s + (m.liveActual != null ? m.liveActual : (m.origBudget || 0));
+    }, 0);
+    var ytdPlanT = closedMonths.reduce(function (s, m) { return s + (m.origBudget || 0); }, 0);
+    var monthsRemaining = futureMonths.length;
+    var remainingNeed = Math.max(0, planMfT - ytdRev);
+    var avgMonthlyTarget = monthsRemaining > 0 ? remainingNeed / monthsRemaining : 0;
+
+    var lastClosed = closedMonths[closedMonths.length - 1];
+    var lastClosedActual = lastClosed && (lastClosed.liveActual != null ? lastClosed.liveActual : 0);
+    var lastClosedPlan = lastClosed && (lastClosed.origBudget || 0);
+    var lastClosedDelta = lastClosedActual - lastClosedPlan;
+
+    // Per-market monthly target = market's share of YTD revenue × avg monthly need.
+    // This uses YTD revenue as the share basis since plan and actuals are revenue.
+    var mscRowsT = mscRows;
+    var totalYtdMkt = mscRowsT.reduce(function (s, r) { return s + (r[1] || 0); }, 0);
+    var byMarketMonthly = mscRowsT.map(function (r) {
+      var share = totalYtdMkt > 0 ? (r[1] / totalYtdMkt) : 0;
+      return {
+        market: r[0],
+        monthlyTarget: share * avgMonthlyTarget,
+        share: share * 100,
+        ytdSigned: r[1] || 0
+      };
+    });
 
     mfPages['weekly-targets'] = {
-      eyebrow: 'TARGETS · MF WEEKLY',
-      title: 'Weekly Sales Targets',
-      intro: 'What MF needs to sign each week to land the $51.67M Commercial Budget plan, and how the current 4-week pace compares.',
+      eyebrow: 'TARGETS · MF MONTHLY · REVENUE BASIS',
+      title: 'Monthly Targets',
+      intro: 'Monthly invoiced-revenue targets to land the $51.67M Commercial Budget plan. Closed months come from NetSuite AR; remaining months show what each month needs to deliver.',
       tags: [
-        { kind: 'info', text: weeksRemaining + ' weeks remaining' },
-        { kind: paceGap >= 0 ? 'success' : 'warn', text: 'Pace ' + (paceGap >= 0 ? '+' : '') + fmt.money(paceGap, { short: true }) + '/wk vs target' },
-        { kind: 'info', text: 'Annual plan ' + fmt.money(annualPlan, { short: true }) }
+        { kind: 'info', text: monthsRemaining + ' months remaining' },
+        { kind: lastClosedDelta >= 0 ? 'success' : 'warn',
+          text: lastClosed ? lastClosed.mo + ' ' + (lastClosedDelta >= 0 ? '+' : '') + fmt.money(lastClosedDelta, { short: true }) + ' vs plan' : 'no closed months yet' },
+        { kind: 'info', text: 'Annual plan ' + fmt.money(planMfT, { short: true }) }
       ],
       sections: [
         { kind: 'kpi-row', cols: 4, items: [
-            { label: 'Avg Weekly Target', value: fmt.money(avgWeeklyTarget, { short: true }),
-              sub: '$' + (annualPlan / 1e6).toFixed(2) + 'M plan / ' + weeksRemaining + ' wks remaining', tone: 'navy' },
-            { label: '4-Wk Recent Pace', value: fmt.money(pace, { short: true }),
-              sub: 'rolling avg of last 4 ISO weeks', tone: pace >= avgWeeklyTarget ? 'success' : 'warn' },
-            { label: 'Pace Gap', value: (paceGap >= 0 ? '+' : '') + fmt.money(paceGap, { short: true }),
-              sub: paceGap >= 0 ? 'ahead of weekly need' : 'behind weekly need',
-              tone: paceGap >= 0 ? 'success' : 'danger' },
-            { label: 'Remaining Need',  value: fmt.money(remainingDollarNeed, { short: true }),
-              sub: 'YTD ' + fmt.money(ytdActualWk, { short: true }) + ' done · ' + fmt.money(annualPlan - ytdActualWk, { short: true }) + ' to go',
+            { label: 'Avg Monthly Target',
+              value: fmt.money(avgMonthlyTarget, { short: true }),
+              sub: fmt.money(remainingNeed, { short: true }) + ' / ' + monthsRemaining + ' months',
+              tone: 'navy' },
+            { label: 'Last Closed Month',
+              value: lastClosed ? lastClosed.mo : '—',
+              sub: lastClosed ? fmt.money(lastClosedActual, { short: true }) + ' actual · plan ' + fmt.money(lastClosedPlan, { short: true }) : '',
+              tone: lastClosedDelta >= 0 ? 'success' : 'warn' },
+            { label: 'YTD Revenue',
+              value: fmt.money(ytdRev, { short: true }),
+              sub: closedMonths.length + ' months closed · ' + (ytdRev - ytdPlanT >= 0 ? '+' : '') + fmt.money(ytdRev - ytdPlanT, { short: true }) + ' vs plan',
+              tone: ytdRev >= ytdPlanT ? 'success' : 'warn' },
+            { label: 'Remaining Need',
+              value: fmt.money(remainingNeed, { short: true }),
+              sub: 'to land $51.67M annual',
               tone: 'navy' }
         ]},
-        wtSched.length ? {
+        brBridgeT.length ? {
           kind: 'chart-grid', cols: 1,
           charts: [{
-            title: 'Weekly targets through year-end',
-            sub: 'Even split of remaining-year need across remaining ISO weeks · ' + wtSched.length + ' weeks · colored by month',
-            height: Math.max(300, wtSched.length * 14),
+            title: 'Monthly targets through year-end',
+            sub: 'Closed-month bars are NetSuite invoiced actuals; future-month bars are required revenue to hold $51.67M',
+            height: 320,
             config: {
               type: 'bar',
-              data: { labels: wtSched.map(function (w) { return w.wk; }),
-                datasets: [{ data: wtSched.map(function (w) { return w.target; }),
-                  backgroundColor: wtSched.map(function (w) {
-                    var months = Array.from(new Set(wtSched.map(function (x) { return x.mo; })));
-                    var palette = [pal.navy, pal.success, pal.warning, pal.danger, '#7d3c98', '#16a085', '#2980b9', '#c0392b'];
-                    return palette[months.indexOf(w.mo) % palette.length];
-                  }) }] },
-              options: withOpts({ scales: { y: moneyAxis() }, plugins: { legend: { display: false } } })
+              data: { labels: brBridgeT.map(function (m) { return m.mo; }),
+                datasets: [{
+                  label: 'Monthly target',
+                  data: brBridgeT.map(function (m) {
+                    if (m.status === 'Actual' && m.liveActual != null) return m.liveActual;
+                    return m.recovTarget || 0;
+                  }),
+                  backgroundColor: brBridgeT.map(function (m) {
+                    if (m.status === 'Actual') return pal.success;
+                    if (m.status === 'Active') return pal.warning;
+                    return pal.navy;
+                  }),
+                  borderRadius: 4
+                }, {
+                  label: 'Plan',
+                  data: brBridgeT.map(function (m) { return m.origBudget || 0; }),
+                  type: 'line',
+                  borderColor: '#7d3c98',
+                  backgroundColor: '#7d3c98',
+                  borderWidth: 2,
+                  pointRadius: 4,
+                  fill: false,
+                  tension: 0.2
+                }] },
+              options: withOpts({ scales: { y: moneyAxis() } })
             }
           }]
         } : null,
-        wtMarkets.length ? {
+        brBridgeT.length ? {
           kind: 'table',
-          heading: 'Weekly target by market',
-          caption: 'Each market\'s share of the weekly need, allocated by YTD signed share',
+          heading: 'Monthly target schedule',
+          caption: 'Plan = Commercial Budget · Target = closed-month revenue (Actual) or required revenue (Required) · Variance = Target − Plan',
+          headers: [
+            { label: 'Month', num: false },
+            { label: 'Plan', num: true },
+            { label: 'Target', num: true },
+            { label: 'Variance', num: true },
+            { label: 'Status', num: false }
+          ],
+          rows: brBridgeT.map(function (m) {
+            var target = (m.status === 'Actual' && m.liveActual != null) ? m.liveActual : m.recovTarget;
+            var vs = target - (m.origBudget || 0);
+            var statusPill = m.status === 'Actual'
+              ? '<span class="pill pill-success">Actual</span>'
+              : m.status === 'Active'
+                ? '<span class="pill pill-warn">Active</span>'
+                : '<span class="pill pill-info">Required</span>';
+            return [
+              { html: '<strong>' + m.mo + '</strong>' },
+              fmt.money(m.origBudget || 0),
+              fmt.money(target || 0),
+              { html: vs >= 0 ? '<span class="pill pill-success">+' + fmt.money(vs) + '</span>'
+                              : '<span class="pill pill-danger">' + fmt.money(vs) + '</span>' },
+              { html: statusPill }
+            ];
+          })
+        } : null,
+        byMarketMonthly.length ? {
+          kind: 'table',
+          heading: 'Per-market monthly target',
+          caption: 'Each market\'s share of the average monthly need, allocated by YTD signed-sales share',
           headers: [
             { label: 'Market', num: false },
-            { label: 'Weekly Target', num: true },
-            { label: '% of Weekly', num: true },
-            { label: 'Deals / wk (YTD pace)', num: true }
+            { label: 'Monthly Target', num: true },
+            { label: '% of Monthly', num: true },
+            { label: 'YTD Signed', num: true }
           ],
-          rows: wtMarkets.map(function (m) {
-            var pct = avgWeeklyTarget > 0 ? (m.total / avgWeeklyTarget * 100) : 0;
+          rows: byMarketMonthly.map(function (m) {
             return [
               { html: '<strong>' + m.market + '</strong>' },
-              fmt.money(m.total),
-              pct.toFixed(1) + '%',
-              (m.deals || 0).toFixed(1)
+              fmt.money(m.monthlyTarget),
+              m.share.toFixed(1) + '%',
+              fmt.money(m.ytdSigned)
             ];
           }).concat([[
             { html: '<strong>Total</strong>' },
-            { html: '<strong>' + fmt.money(wtMarkets.reduce(function (s, m) { return s + (m.total || 0); }, 0)) + '</strong>' },
-            '',
-            ''
+            { html: '<strong>' + fmt.money(byMarketMonthly.reduce(function (s, m) { return s + (m.monthlyTarget || 0); }, 0)) + '</strong>' },
+            { html: '<strong>100.0%</strong>' },
+            { html: '<strong>' + fmt.money(byMarketMonthly.reduce(function (s, m) { return s + (m.ytdSigned || 0); }, 0)) + '</strong>' }
           ]])
         } : null,
-        { kind: 'callout', tone: paceGap >= 0 ? 'success' : 'warn',
-          title: paceGap >= 0 ? 'Pace clears the plan' : 'Pace gap',
-          body: paceGap >= 0
-            ? 'Current 4-week pace of <strong>' + fmt.money(pace, { short: true }) + '/wk</strong> runs <strong>' + fmt.money(paceGap, { short: true }) + '/wk</strong> ahead of the rest-of-year target. Holding pace lands the $51.67M plan with cushion. Watch for a stall in any of the top-3 markets pulling the average back below ' + fmt.money(avgWeeklyTarget, { short: true }) + '/wk.'
-            : 'Current pace is <strong>' + fmt.money(Math.abs(paceGap), { short: true }) + '/wk short</strong> of what the rest of the year needs. Either pull-forward big-deal opportunities in Detroit or Columbus, or layer in additional lead volume to the lower-pace markets.'
+        { kind: 'callout', tone: ytdRev >= ytdPlanT ? 'success' : 'warn',
+          title: ytdRev >= ytdPlanT ? 'On pace through closed months' : 'Below plan through closed months',
+          body: ytdRev >= ytdPlanT
+            ? 'Closed-month invoiced revenue is <strong>' + fmt.money(ytdRev, { short: true }) + '</strong> against a <strong>' + fmt.money(ytdPlanT, { short: true }) + '</strong> plan, a <strong>+' + fmt.money(ytdRev - ytdPlanT, { short: true }) + '</strong> lead. The remaining ' + monthsRemaining + ' months need to average <strong>' + fmt.money(avgMonthlyTarget, { short: true }) + '/mo</strong> to land $51.67M. The market table above shows each branch\'s share of that monthly need.'
+            : 'Closed-month invoiced revenue is <strong>' + fmt.money(ytdPlanT - ytdRev, { short: true }) + ' below plan</strong>. The remaining ' + monthsRemaining + ' months need to average <strong>' + fmt.money(avgMonthlyTarget, { short: true }) + '/mo</strong> to recover and land $51.67M. The market table shows where each branch needs to land.'
         }
       ].filter(Boolean)
     };
 
     // ─────────────────────────────────────────────────────────────
-    // BUDGET RECOVERY
+    // BUDGET RECOVERY (revenue / NetSuite invoiced basis)
     // ─────────────────────────────────────────────────────────────
     var brBridge = safeArr(br.monthlyBridge);
     var brMkts = safeArr(br.adjSalesByMarket);
@@ -2012,13 +2088,16 @@
     var aheadMode = (br.totalToRecover || 0) === 0 && ytdVariance >= 0;
     var q1Shortfall = br.q1Shortfall || 0;
     var aprilGap = br.aprilGap || 0;
+    var nsTotal = br.netsuiteTotal || 0;
+    var nsCount = br.netsuiteInvoiceCount || 0;
+    var nsSrc   = br.actualSource || 'NetSuite AR';
 
     mfPages['budget-recovery'] = {
-      eyebrow: 'RECOVERY · MF',
+      eyebrow: 'RECOVERY · MF · REVENUE BASIS',
       title: 'Budget Recovery',
       intro: aheadMode
-        ? 'MF is currently running ahead of the $51.67M plan. The bridge below tracks each month against the Commercial Budget split and shows the remaining-year pace required to hold the lead.'
-        : 'The path back to the MF $51.67M plan, broken into the per-month bridge and the per-market sales lift required.',
+        ? 'MF invoiced revenue is currently running ahead of the $51.67M plan. The bridge below tracks NetSuite booked revenue for each closed month against the Commercial Budget split and shows the remaining-year pace required to hold the lead.'
+        : 'The path back to the MF $51.67M plan, measured in NetSuite invoiced revenue (apples-to-apples with the Commercial Budget) rather than signed contracts.',
       tags: [
         { kind: q1Shortfall >= 0 ? 'success' : 'danger', text: 'Q1 ' + (q1Shortfall >= 0 ? '+' : '') + fmt.money(q1Shortfall, { short: true }) + ' vs plan' },
         { kind: aprilGap >= 0 ? 'success' : 'warn',     text: 'April ' + (aprilGap >= 0 ? '+' : '') + fmt.money(aprilGap, { short: true }) + ' vs plan' },
@@ -2027,35 +2106,36 @@
       sections: [
         { kind: 'kpi-row', cols: 4, items: [
             { label: 'Annual Plan',     value: fmt.money(planMf, { short: true }),
-              sub: 'MF Commercial Budget · ' + (br.sourceFile || 'sourced'), tone: 'navy' },
-            { label: 'YTD Actual',      value: fmt.money(ytdActualMf, { short: true }),
-              sub: 'Closed months · ' + (ytdVariance >= 0 ? '+' : '') + fmt.money(ytdVariance, { short: true }) + ' vs plan',
+              sub: 'MF Commercial Budget · invoiced revenue', tone: 'navy' },
+            { label: 'YTD Revenue',     value: fmt.money(ytdActualMf, { short: true }),
+              sub: nsCount + ' invoices · ' + nsSrc,
               tone: ytdVariance >= 0 ? 'success' : 'warn' },
             { label: aheadMode ? 'Lead vs Plan' : 'To Recover',
               value: aheadMode ? fmt.money(Math.abs(ytdVariance), { short: true }) : fmt.money(br.totalToRecover || 0, { short: true }),
-              sub: aheadMode ? 'gap closed early' : 'remaining-year shortfall',
+              sub: aheadMode ? 'YTD ahead of budget' : 'remaining-year shortfall',
               tone: aheadMode ? 'success' : 'warn' },
-            { label: 'Pace Required / wk',
-              value: fmt.money(br.adjWeeklySalesAvg || 0, { short: true }),
-              sub: (br.weeksRemaining || 0) + ' weeks left · ' + (br.salesDeltaPerWeek >= 0 ? '+' : '') + fmt.money(br.salesDeltaPerWeek || 0, { short: true }) + ' vs flat',
+            { label: 'Required Pace / mo',
+              value: fmt.money(((planMf - ytdActualMf) / Math.max(1, 12 - brBridge.filter(function (m) { return m.status === 'Actual'; }).length)) , { short: true }),
+              sub: (12 - brBridge.filter(function (m) { return m.status === 'Actual'; }).length) + ' months left to land $51.67M',
               tone: 'navy' }
         ]},
         brBridge.length ? {
           kind: 'chart-grid', cols: 1,
           charts: [{
-            title: 'Monthly bridge: plan vs actual / required',
-            sub: 'Blue = original Commercial Budget plan. Green = closed actuals. Gold = required pace for remaining months.',
+            title: 'Monthly bridge: plan vs revenue / required',
+            sub: 'Blue = Commercial Budget monthly plan. Green = closed-month NetSuite invoiced revenue. Gold = required revenue for remaining months.',
             height: 320,
             config: {
               type: 'bar',
               data: {
                 labels: brBridge.map(function (m) { return m.mo; }),
                 datasets: [
-                  { label: 'Plan ($51.67M / 12)', data: brBridge.map(function (m) { return m.origBudget || 0; }), backgroundColor: pal.navy, borderRadius: 4 },
-                  { label: 'Actual / Required',   data: brBridge.map(function (m) {
+                  { label: 'Plan', data: brBridge.map(function (m) { return m.origBudget || 0; }), backgroundColor: pal.navy, borderRadius: 4 },
+                  { label: 'Revenue / Required', data: brBridge.map(function (m) {
                       if (m.status === 'Actual' && m.liveActual != null) return m.liveActual;
                       return m.recovTarget || 0;
-                    }), backgroundColor: brBridge.map(function (m) {
+                    }),
+                    backgroundColor: brBridge.map(function (m) {
                       if (m.status === 'Actual') return pal.success;
                       if (m.status === 'Active') return pal.warning;
                       return pal.warning;
@@ -2069,11 +2149,11 @@
         brBridge.length ? {
           kind: 'table',
           heading: 'Monthly bridge to plan',
-          caption: 'Plan = Commercial Budget monthly · Actual = MF signed sales (closed months) · Required = pace needed to hold $51.67M annual',
+          caption: 'Plan = Commercial Budget monthly · Revenue = NetSuite booked invoiced revenue (closed months) · Required = revenue needed to hold $51.67M annual',
           headers: [
             { label: 'Month', num: false },
             { label: 'Plan', num: true },
-            { label: 'Actual / Required', num: true },
+            { label: 'Revenue / Required', num: true },
             { label: 'Variance', num: true },
             { label: 'Status', num: false }
           ],
@@ -2103,33 +2183,11 @@
             { html: '<strong>Plan target</strong>' }
           ]])
         } : null,
-        brMkts.length ? {
-          kind: 'table',
-          heading: 'Per-market weekly contribution to plan',
-          caption: 'Each market\'s share of the rest-of-year weekly need, allocated by their YTD signed share',
-          headers: [
-            { label: 'Market', num: false },
-            { label: 'Current Pace $/wk', num: true },
-            { label: 'Required $/wk', num: true },
-            { label: 'Δ / wk', num: true }
-          ],
-          rows: brMkts.map(function (m) {
-            var lift = m.delta || 0;
-            return [
-              { html: '<strong>' + m.market + '</strong>' },
-              fmt.money(m.original || 0),
-              fmt.money(m.recovTarget || 0),
-              { html: lift > 0
-                  ? '<span class="pill pill-warn">+' + fmt.money(lift) + '</span>'
-                  : '<span class="pill pill-success">' + fmt.money(lift) + '</span>' }
-            ];
-          })
-        } : null,
         { kind: 'callout', tone: aheadMode ? 'success' : 'warn',
           title: aheadMode ? 'Ahead of plan: hold the pace' : 'Path back to plan',
           body: aheadMode
-            ? 'YTD signed sales are <strong>' + fmt.money(ytdVariance, { short: true }) + '</strong> ahead of the Commercial Budget plan through April. Holding the current 4-week pace clears $51.67M with room. The biggest risk is a Q3 slip pulling MF back to plan; the per-market table above shows the weekly pace each market needs to maintain.'
-            : 'To close the <strong>' + fmt.money(br.totalToRecover || 0, { short: true }) + '</strong> gap, hold weekly sales at <strong>' + fmt.money(br.adjWeeklySalesAvg || 0, { short: true }) + '/wk</strong> across the remaining ' + (br.weeksRemaining || 0) + ' weeks. The market table above shows where each branch needs to land.'
+            ? 'YTD invoiced revenue is <strong>' + fmt.money(ytdVariance, { short: true }) + '</strong> ahead of the Commercial Budget plan through ' + (brBridge.filter(function (m) { return m.status === 'Actual'; }).length ? brBridge.filter(function (m) { return m.status === 'Actual'; }).slice(-1)[0].mo : 'YTD') + '. Plan is invoiced revenue, so this is an apples-to-apples read against the Commercial Budget. The biggest risk is a Q3 invoicing slowdown pulling MF back to plan; the bridge above shows the monthly revenue each remaining month needs to deliver.'
+            : 'To close the <strong>' + fmt.money(br.totalToRecover || 0, { short: true }) + '</strong> gap, hold monthly invoiced revenue at the gold-bar level shown in the bridge across the remaining months. The bridge tracks NetSuite invoiced revenue, the same basis as the $51.67M Commercial Budget plan.'
         }
       ].filter(Boolean)
     };

@@ -1124,16 +1124,48 @@ function buildMfBudgetRecovery(monthly, marketScorecard, salesInputDir) {
   const grossUp = (summedPlan > 0 && summedPlan < annualPlan) ? annualPlan / summedPlan : 1;
   const monthlyPlanScaled = monthlyPlan.map(v => v * grossUp);
 
-  // Live actual signed by month idx (0..11). monthly[] only contains months
-  // with deals; treat missing months as zero.
-  const actualByIdx = new Array(12).fill(0);
-  const countByIdx  = new Array(12).fill(0);
+  // Actuals come from NetSuite AR (invoiced revenue) for true budget-vs-actual.
+  // Plan in the Commercial Budget is invoiced revenue, so the apples-to-apples
+  // comparison is also invoiced. Falls back to signed sales monthly if the
+  // NetSuite file is unreadable for some reason.
+  let actualByIdx = new Array(12).fill(0);
+  const countByIdx = new Array(12).fill(0);
+  let actualSource = 'NetSuite AR · invoiced revenue';
+  let nsTotal = 0;
+  let nsInvoiceCount = 0;
+  let nsLatestDate = null;
+  try {
+    const netsuite = require('./lib/netsuite-invoices');
+    if (salesInputDir) {
+      const rfDir = path.join(salesInputDir, '..', 'revenue-forecast');
+      const ns = netsuite.parseInvoices(rfDir);
+      if (ns && Array.isArray(ns.monthly)) {
+        actualByIdx = ns.monthly.slice(0, 12);
+        nsTotal = ns.totalInvoiced || 0;
+        nsInvoiceCount = ns.invoiceCount || 0;
+        nsLatestDate = ns.latestDate || null;
+      } else {
+        // Fall through to signed-sales fallback
+        actualSource = 'signed sales (NetSuite invoiced unavailable)';
+        monthly.forEach(m => {
+          const idx = parseInt(m.key.split('-')[1], 10) - 1;
+          if (idx >= 0 && idx < 12) actualByIdx[idx] = m.amount;
+        });
+      }
+    }
+  } catch (err) {
+    console.log('  [' + PROJECT_ID + '] MF NetSuite read failed, using signed-sales fallback: ' + err.message);
+    actualSource = 'signed sales (NetSuite read error)';
+    monthly.forEach(m => {
+      const idx = parseInt(m.key.split('-')[1], 10) - 1;
+      if (idx >= 0 && idx < 12) actualByIdx[idx] = m.amount;
+    });
+  }
+  // Keep deal counts from signed sales (NetSuite doesn't have a "deal count"
+  // in the same sense; it's invoice count). Used in the Targets tab tables.
   monthly.forEach(m => {
     const idx = parseInt(m.key.split('-')[1], 10) - 1;
-    if (idx >= 0 && idx < 12) {
-      actualByIdx[idx] = m.amount;
-      countByIdx[idx]  = m.count;
-    }
+    if (idx >= 0 && idx < 12) countByIdx[idx] = m.count;
   });
 
   // Determine which months are "closed" (no longer current). Use today.
@@ -1239,7 +1271,11 @@ function buildMfBudgetRecovery(monthly, marketScorecard, salesInputDir) {
     prodDeltaPerWeek: round(salesDeltaPerWeek),
     monthlyBridge: monthlyBridge,
     adjSalesByMarket: adjSalesByMarket,
-    adjProdByMarket: adjSalesByMarket   // same source for MF; production allocation matches sales
+    adjProdByMarket: adjSalesByMarket,   // same source for MF; production allocation matches sales
+    actualSource: actualSource,
+    netsuiteTotal: round(nsTotal),
+    netsuiteInvoiceCount: nsInvoiceCount,
+    netsuiteLatestDate: nsLatestDate ? nsLatestDate.toISOString().slice(0, 10) : null
   };
 }
 
