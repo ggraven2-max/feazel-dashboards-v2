@@ -1,8 +1,8 @@
-/* AUTO-GENERATED — do not edit. Generated 2026-05-06T12:43:39.388Z (residential) */
+/* AUTO-GENERATED — do not edit. Generated 2026-05-06T12:45:05.749Z (residential) */
 window.FZ = window.FZ || {};
 window.FZ.data = {
   "_meta": {
-    "builtAt": "2026-05-06T12:43:39.388Z",
+    "builtAt": "2026-05-06T12:45:05.749Z",
     "pipelineVersion": "2.0.0",
     "lob": "residential",
     "lastBuiltProjects": [
@@ -16,25 +16,25 @@ window.FZ.data = {
         "id": "installs-ytd",
         "version": "1.0-rules-encoded",
         "elapsedMs": 56,
-        "builtAt": "2026-05-06T12:43:39.388Z"
+        "builtAt": "2026-05-06T12:45:05.749Z"
       },
       {
         "id": "sales-overview",
         "version": "1.0-rules-encoded",
-        "elapsedMs": 145,
-        "builtAt": "2026-05-06T12:43:39.388Z"
+        "elapsedMs": 151,
+        "builtAt": "2026-05-06T12:45:05.749Z"
       },
       {
         "id": "revenue-forecast",
         "version": "V5-locked-2026-04-19-shell-1.0",
-        "elapsedMs": 40,
-        "builtAt": "2026-05-06T12:43:39.388Z"
+        "elapsedMs": 13,
+        "builtAt": "2026-05-06T12:45:05.749Z"
       },
       {
         "id": "backlog",
         "version": "1.0-rules-encoded",
         "elapsedMs": 60,
-        "builtAt": "2026-05-06T12:43:39.388Z"
+        "builtAt": "2026-05-06T12:45:05.749Z"
       }
     ]
   },
@@ -53,7 +53,7 @@ window.FZ.data = {
       "multiTradeJobs": 318,
       "singleTradeJobs": 809,
       "multiTradePct": 28.2,
-      "lastBuild": "2026-05-06T12:43:39.387Z"
+      "lastBuild": "2026-05-06T12:45:05.749Z"
     },
     "tabs": [
       {
@@ -6574,7 +6574,7 @@ window.FZ.data = {
       "totalWOs": 749,
       "portfolioValue": 10743756.42,
       "avgDaysInStatus": 12,
-      "lastBuild": "2026-05-06T12:43:39.331Z"
+      "lastBuild": "2026-05-06T12:45:05.692Z"
     },
     "tabs": [
       {
