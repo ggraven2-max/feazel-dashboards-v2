@@ -455,38 +455,166 @@
     };
 
     // ─────────────────────────────────────────────────────────────
-    // PROFITABILITY
+    // PROFITABILITY (parses GregProfitabilityMFResults*.csv)
     // ─────────────────────────────────────────────────────────────
     var profParsed = (ps.combinedGP || 0) > 0 || (ps.materialCost || 0) > 0;
-    mfPages.profitability = {
+    var jtProf = (D.profitabilityByJobType || []);
+    var mkProf = (D.profitabilityByMarket || []);
+    var jtProf25 = (D.profitabilityByJobType2025 || []);
+    var mkProf25 = (D.profitabilityByMarket2025 || []);
+    var ytdGmDelta = (ps.y2026_GP_pct || 0) - (ps.y2025_GP_pct || 0);   // YoY margin change
+    var bestMktGm = mkProf.slice().filter(function (r) { return r.jobs >= 3; }).sort(function (a, b) { return b.gp_pct - a.gp_pct; })[0];
+    var worstMktGm = mkProf.slice().filter(function (r) { return r.jobs >= 3; }).sort(function (a, b) { return a.gp_pct - b.gp_pct; })[0];
+
+    function profRow(r, year) {
+      // Render a profitability row: key, jobs, revenue, GP, GP%, material%, labor%
+      var rev = r.revenue || 0;
+      return [
+        { html: '<strong>' + r.key + '</strong>' },
+        r.jobs,
+        fmt.money(r.revenue || 0),
+        fmt.money(r.gross_profit || 0),
+        { html: r.gp_pct >= 35
+            ? '<span class="pill pill-success">' + r.gp_pct.toFixed(1) + '%</span>'
+            : r.gp_pct >= 25
+              ? '<span class="pill pill-warn">' + r.gp_pct.toFixed(1) + '%</span>'
+              : '<span class="pill pill-danger">' + r.gp_pct.toFixed(1) + '%</span>' },
+        rev > 0 ? (r.material / rev * 100).toFixed(1) + '%' : '—',
+        rev > 0 ? (r.labor / rev * 100).toFixed(1) + '%' : '—'
+      ];
+    }
+    var profHeaders = [
+      'Segment',
+      { label: 'Jobs', num: true },
+      { label: 'Revenue', num: true },
+      { label: 'Gross Profit', num: true },
+      { label: 'GM %', num: true },
+      { label: 'Material %', num: true },
+      { label: 'Labor %', num: true }
+    ];
+
+    mfPages.profitability = profParsed ? {
       eyebrow: 'PROFITABILITY · MF',
       title: 'Profitability',
-      intro: profParsed
-        ? 'Margin and cost mix on the MF book. GM and cost ratios sourced from the MF profitability export.'
-        : 'MF profitability detail is not parsed in v1. The summary below is what we have today; full cost-mix analysis is on the v2 backlog.',
+      intro: 'Gross margin and cost mix on the MF book, sourced from <code>' + (ps.sourceFile || 'GregProfitabilityMFResults*.csv') + '</code>. Includes <strong>' + (ps.jobsParsed || 0) + '</strong> jobs marked Invoiced or Closed-and-Capped-Out across 2025 and YTD 2026. Combined GM is the all-jobs blended margin; year-split tables underneath show the YoY trajectory and the per-segment view.',
       tags: [
-        { kind: profParsed ? 'success' : 'info', text: profParsed ? 'GM ' + (ps.combinedGP_pct || 0).toFixed(1) + '%' : 'Revenue-only view' }
-      ],
+        { kind: 'success', text: 'Combined GM ' + (ps.combinedGP_pct || 0).toFixed(1) + '%' },
+        { kind: ytdGmDelta >= 0 ? 'success' : 'warn',
+          text: 'YoY ' + (ytdGmDelta >= 0 ? '+' : '') + ytdGmDelta.toFixed(1) + ' pts vs 2025' },
+        bestMktGm ? { kind: 'info', text: 'Top margin: ' + bestMktGm.key + ' (' + bestMktGm.gp_pct.toFixed(1) + '%)' } : null
+      ].filter(Boolean),
       sections: [
         kpisRow([
-          { label: 'YTD Revenue',  value: fmt.money(ps.combinedRevenue || 0, { short: true }),  sub: (ps.y2026_jobs || 0) + ' jobs invoiced FY2026', tone: 'navy' },
-          { label: 'YTD Jobs',     value: (ps.y2026_jobs || 0) + '',                            sub: 'unique completed jobs',                        tone: 'navy' },
-          { label: 'GM (combined)', value: profParsed ? (ps.combinedGP_pct || 0).toFixed(1) + '%' : '—', sub: profParsed ? fmt.money(ps.combinedGP || 0, { short: true }) + ' GP' : 'not parsed yet', tone: profParsed ? 'success' : 'navy' },
-          { label: 'FY2025 Comp',  value: ps.y2025_jobs ? (ps.y2025_jobs + ' jobs') : '—',      sub: ps.y2025_revenue ? fmt.money(ps.y2025_revenue, { short: true }) + ' revenue' : 'no FY2025 data in this export', tone: 'navy' }
+          { label: 'Combined Revenue', value: fmt.money(ps.combinedRevenue || 0, { short: true }), sub: (ps.jobsParsed || 0) + ' invoiced/capped jobs in source', tone: 'navy' },
+          { label: 'Combined GM',      value: (ps.combinedGP_pct || 0).toFixed(1) + '%',           sub: fmt.money(ps.combinedGP || 0, { short: true }) + ' gross profit', tone: 'success' },
+          { label: 'FY2026 GM',        value: (ps.y2026_GP_pct || 0).toFixed(1) + '%',
+            sub: (ps.y2026_jobs || 0) + ' jobs · ' + fmt.money(ps.y2026_revenue || 0, { short: true }) + ' revenue',
+            tone: ytdGmDelta >= 0 ? 'success' : 'warn' },
+          { label: 'FY2025 GM',        value: (ps.y2025_GP_pct || 0).toFixed(1) + '%',
+            sub: (ps.y2025_jobs || 0) + ' jobs · ' + fmt.money(ps.y2025_revenue || 0, { short: true }) + ' revenue',
+            tone: 'navy' }
         ]),
-        !profParsed ? {
-          kind: 'callout', tone: 'info', title: 'Profitability v2 backlog',
-          body: 'The MF profitability CSV is in the inputs folder but the full cost-mix parser (material, labor, commissions, MMU) is not built yet. v1 surfaces revenue and job counts; v2 will add GM by branch, cost variance vs budget, and the residential-equivalent MMU read.'
+        kpisRow([
+          { label: 'Material Cost',  value: fmt.money(ps.materialCost || 0, { short: true }),   sub: (ps.materialPctContract || 0).toFixed(1) + '% of revenue',   tone: (ps.materialPctContract || 0) > 35 ? 'warn' : 'navy' },
+          { label: 'Labor Cost',     value: fmt.money(ps.laborCost || 0, { short: true }),      sub: (ps.laborPctContract || 0).toFixed(1) + '% of revenue',      tone: (ps.laborPctContract || 0) > 32 ? 'warn' : 'navy' },
+          { label: 'Other Cost',     value: fmt.money(ps.otherCost || 0, { short: true }),      sub: (ps.otherPctContract || 0).toFixed(1) + '% of revenue',      tone: 'navy' },
+          { label: 'Commissions',    value: fmt.money(ps.commissions || 0, { short: true }),    sub: (ps.commissionPctContract || 0).toFixed(1) + '% of revenue', tone: 'navy' }
+        ], 4),
+        {
+          kind: 'chart-grid', cols: 2,
+          charts: [
+            jtProf.length ? {
+              title: 'FY2026 Revenue by job type',
+              sub: 'Mix of cost-tracked jobs YTD',
+              height: 300,
+              config: {
+                type: 'doughnut',
+                data: {
+                  labels: jtProf.map(function (r) { return r.key; }),
+                  datasets: [{
+                    data: jtProf.map(function (r) { return r.revenue; }),
+                    backgroundColor: [pal.navy, pal.success, pal.warning, pal.danger, '#7d3c98', '#16a085'],
+                    borderColor: '#fff', borderWidth: 2
+                  }]
+                },
+                options: withOpts({ cutout: '60%', plugins: { legend: { position: 'right' } } })
+              }
+            } : null,
+            mkProf.length ? {
+              title: 'FY2026 GM% by market',
+              sub: '≥35% green · ≥25% amber · <25% red',
+              height: 300,
+              config: {
+                type: 'bar',
+                data: {
+                  labels: mkProf.map(function (r) { return r.key; }),
+                  datasets: [{
+                    data: mkProf.map(function (r) { return r.gp_pct; }),
+                    backgroundColor: mkProf.map(function (r) {
+                      return r.gp_pct >= 35 ? pal.success : r.gp_pct >= 25 ? pal.warning : pal.danger;
+                    }),
+                    label: 'GM %'
+                  }]
+                },
+                options: withOpts({
+                  indexAxis: 'y',
+                  scales: { x: { ticks: { callback: function (v) { return v + '%'; } }, beginAtZero: true } },
+                  plugins: { legend: { display: false } }
+                })
+              }
+            } : null
+          ].filter(Boolean)
+        },
+        jtProf.length ? {
+          kind: 'table',
+          heading: 'FY2026 profitability by job type',
+          caption: 'GM% pill: green ≥35%, amber ≥25%, red <25%',
+          headers: profHeaders,
+          rows: jtProf.map(function (r) { return profRow(r, 2026); })
         } : null,
-        profParsed ? {
-          kind: 'kpi-row', cols: 3,
-          items: [
-            { label: 'Material Cost',   value: fmt.money(ps.materialCost || 0, { short: true }),   sub: (ps.materialPctContract || 0).toFixed(1) + '% of contract',  tone: 'navy' },
-            { label: 'Labor Cost',      value: fmt.money(ps.laborCost || 0, { short: true }),      sub: (ps.laborPctContract || 0).toFixed(1) + '% of contract',     tone: 'navy' },
-            { label: 'Commissions',     value: fmt.money(ps.commissions || 0, { short: true }),    sub: (ps.commissionPctContract || 0).toFixed(1) + '% of contract', tone: 'navy' }
-          ]
+        mkProf.length ? {
+          kind: 'table',
+          heading: 'FY2026 profitability by market',
+          caption: 'Branches with at least one cost-tracked job in 2026',
+          headers: profHeaders,
+          rows: mkProf.map(function (r) { return profRow(r, 2026); })
+        } : null,
+        jtProf25.length ? {
+          kind: 'table',
+          heading: 'FY2025 profitability by job type (comparison)',
+          caption: 'Year-over-year baseline — does this match what you expected?',
+          headers: profHeaders,
+          rows: jtProf25.map(function (r) { return profRow(r, 2025); })
+        } : null,
+        {
+          kind: 'callout',
+          tone: ytdGmDelta >= 0 ? 'success' : 'warn',
+          title: ytdGmDelta >= 0 ? 'Margin trending up' : 'Margin trending down',
+          body: ytdGmDelta >= 0
+            ? 'FY2026 YTD GM is <strong>' + ytdGmDelta.toFixed(1) + ' points higher</strong> than FY2025 (' + ps.y2026_GP_pct.toFixed(1) + '% vs ' + ps.y2025_GP_pct.toFixed(1) + '%). The lift is consistent with the mix shift toward Insurance jobs and the smaller share of low-ticket retail. Worth interrogating: whether material costs trended down because of MMU credits or because of project mix.'
+            : 'FY2026 YTD GM is <strong>' + Math.abs(ytdGmDelta).toFixed(1) + ' points lower</strong> than FY2025 (' + ps.y2026_GP_pct.toFixed(1) + '% vs ' + ps.y2025_GP_pct.toFixed(1) + '%). Drill into the per-market table above; concentrated weakness in 1-2 markets usually means a single under-priced job is dragging the average. Check material % first — if material crept above 35%, that is the lever to pull.'
+        },
+        bestMktGm && worstMktGm && bestMktGm.key !== worstMktGm.key ? {
+          kind: 'callout', tone: 'info', title: 'Margin spread',
+          body: '<strong>' + bestMktGm.key + '</strong> leads with <strong>' + bestMktGm.gp_pct.toFixed(1) + '%</strong> GM on ' + bestMktGm.jobs + ' jobs (' + fmt.money(bestMktGm.revenue, { short: true }) + ' revenue). <strong>' + worstMktGm.key + '</strong> trails at <strong>' + worstMktGm.gp_pct.toFixed(1) + '%</strong> on ' + worstMktGm.jobs + ' jobs. The spread is ' + (bestMktGm.gp_pct - worstMktGm.gp_pct).toFixed(1) + ' points; if it persists three months in a row, it is a structural issue (estimating, scope discipline, or material sourcing) not noise.'
         } : null
       ].filter(Boolean)
+    } : {
+      // Fallback: profitability CSV not present this refresh
+      eyebrow: 'PROFITABILITY · MF',
+      title: 'Profitability',
+      intro: 'MF profitability CSV not parsed this refresh. Drop the latest <code>GregProfitabilityMFResults*.csv</code> into <code>inputs/multi-family/revenue-forecast/</code> and rerun the build.',
+      tags: [{ kind: 'info', text: 'Awaiting cost data' }],
+      sections: [
+        kpisRow([
+          { label: 'YTD Revenue', value: fmt.money(ps.combinedRevenue || 0, { short: true }), sub: (ps.y2026_jobs || 0) + ' jobs · revenue-only view', tone: 'navy' },
+          { label: 'YTD Jobs',    value: (ps.y2026_jobs || 0) + '', sub: 'invoiced or closed YTD', tone: 'navy' },
+          { label: 'GM (combined)', value: '—', sub: 'no cost data parsed', tone: 'navy' },
+          { label: 'FY2025 Comp', value: ps.y2025_jobs ? (ps.y2025_jobs + ' jobs') : '—', sub: ps.y2025_revenue ? fmt.money(ps.y2025_revenue, { short: true }) + ' revenue' : '', tone: 'navy' }
+        ]),
+        { kind: 'callout', tone: 'info', title: 'Profitability source',
+          body: 'The MF profitability view reads <code>GregProfitabilityMFResults*.csv</code> exported from NetSuite. Each row carries Revenue (Stored), Total Expenses (Stored), Material Expenses, Labor Expenses, Other Expenses, and Commission columns. The calculator filters to <code>Feazel Status = Invoiced</code> or <code>Closed and Capped Out</code> and aggregates GM, cost mix, and per-market splits.' }
+      ]
     };
 
     // ─────────────────────────────────────────────────────────────

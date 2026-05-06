@@ -223,6 +223,151 @@ function readSheet(file) {
   return names.length ? wb[names[0]] || [] : [];
 }
 
+// ---------- profitability parser ----------
+// Parses the MF profitability CSV (GregProfitabilityMFResults*.csv) into
+// the same shape as the residential V5 emits, so the dashboard page-def
+// can render the full cost-mix view without further branching.
+//
+// CSV columns of interest (header row, exact spelling):
+//   Feazel Status, Date, Class, Location, Trade, Type, Primary Sales Rep,
+//   Contract Amount, Revenue (Stored), Total Expenses (Stored),
+//   Material Expenses (stored), Labor Expenses (stored),
+//   Other Expenses (stored), Commission (Rep 1), Commission (Rep 2)
+//
+// Filter: Feazel Status in {Invoiced, Closed and Capped Out}.
+// Year split: by Date column.
+// GP = Revenue (Stored) − Total Expenses (Stored).
+// Commission = Commission (Rep 1) + Commission (Rep 2). Commissions are
+// already part of "Other Expenses (stored)"; we surface them separately.
+function parseProfitability(file) {
+  if (!file) return null;
+  const text = fs.readFileSync(file.fullPath, 'utf8').replace(/^﻿/, '');
+  const lines = text.split(/\r?\n/);
+  if (!lines.length) return null;
+  // Tiny CSV parser tolerant of quoted fields with embedded commas
+  function splitCsv(line) {
+    const out = []; let cur = ''; let q = false;
+    for (let i = 0; i < line.length; i++) {
+      const ch = line[i];
+      if (q) {
+        if (ch === '"') {
+          if (line[i + 1] === '"') { cur += '"'; i++; } else q = false;
+        } else cur += ch;
+      } else {
+        if (ch === '"') q = true;
+        else if (ch === ',') { out.push(cur); cur = ''; }
+        else cur += ch;
+      }
+    }
+    out.push(cur);
+    return out;
+  }
+  const headers = splitCsv(lines[0]).map(h => h.trim());
+  const idx = (n) => headers.findIndex(h => h.toLowerCase() === n.toLowerCase());
+
+  const cStatus = idx('Feazel Status');
+  const cDate   = idx('Date');
+  const cClass  = idx('Class');
+  const cLoc    = idx('Location');
+  const cTrade  = idx('Trade');
+  const cRep    = idx('Primary Sales Rep');
+  const cContract = idx('Contract Amount');
+  const cRev    = idx('Revenue (Stored)');
+  const cExp    = idx('Total Expenses (Stored)');
+  const cMat    = idx('Material Expenses (stored)');
+  const cLab    = idx('Labor Expenses (stored)');
+  const cOth    = idx('Other Expenses (stored)');
+  const cCom1   = idx('Commission (Rep 1)');
+  const cCom2   = idx('Commission (Rep 2)');
+
+  function num(v) {
+    if (v == null) return 0;
+    const s = String(v).replace(/[$,\s"]/g, '');
+    const n = parseFloat(s);
+    return isNaN(n) ? 0 : n;
+  }
+
+  const VALID_STATUS = new Set(['invoiced', 'closed and capped out']);
+  const jobs = [];
+  for (let i = 1; i < lines.length; i++) {
+    const line = lines[i];
+    if (!line || !line.trim()) continue;
+    const cells = splitCsv(line);
+    const status = (cells[cStatus] || '').trim().toLowerCase();
+    if (!VALID_STATUS.has(status)) continue;
+    const dt = parseDate(cells[cDate]);
+    const year = dt ? dt.getFullYear() : null;
+    const cls  = String(cells[cClass] || '').trim();
+    // Job-type derived from "Multi-Family : Retail" or "Multi-Family : Insurance"
+    const jobType = cls.includes(':')
+      ? cls.split(':').slice(1).join(':').trim()
+      : (cls || '(unclassified)');
+    const branch = String(cells[cLoc] || '(unassigned)').trim();
+    const revenue   = num(cells[cRev]);
+    const expenses  = num(cells[cExp]);
+    const material  = num(cells[cMat]);
+    const labor     = num(cells[cLab]);
+    const other     = num(cells[cOth]);
+    const commission = num(cells[cCom1]) + num(cells[cCom2]);
+    const contract  = num(cells[cContract]);
+    if (revenue <= 0) continue;   // skip rows with no revenue (drafts etc)
+    jobs.push({
+      year: year,
+      jobType: jobType,
+      branch: branch,
+      contract: contract,
+      revenue: revenue,
+      expenses: expenses,
+      material: material,
+      labor: labor,
+      other: other,
+      commission: commission,
+      grossProfit: revenue - expenses
+    });
+  }
+
+  function aggregate(set) {
+    const out = { jobs: set.length, revenue: 0, expenses: 0, gross_profit: 0,
+                  material: 0, labor: 0, other: 0, commission: 0, contract: 0 };
+    set.forEach(j => {
+      out.revenue += j.revenue; out.expenses += j.expenses;
+      out.gross_profit += j.grossProfit;
+      out.material += j.material; out.labor += j.labor;
+      out.other += j.other; out.commission += j.commission;
+      out.contract += j.contract;
+    });
+    out.gp_pct = out.revenue > 0 ? (out.gross_profit / out.revenue * 100) : 0;
+    return out;
+  }
+
+  const overall = aggregate(jobs);
+  const y2025 = aggregate(jobs.filter(j => j.year === 2025));
+  const y2026 = aggregate(jobs.filter(j => j.year === FY));
+
+  // Group by job type (Retail / Insurance) per year
+  function byKey(set, key) {
+    const map = new Map();
+    set.forEach(j => {
+      const k = j[key] || '(unassigned)';
+      if (!map.has(k)) map.set(k, []);
+      map.get(k).push(j);
+    });
+    return Array.from(map.entries()).map(([k, set]) => Object.assign({ key: k }, aggregate(set)));
+  }
+
+  return {
+    sourceFile: file.name,
+    jobsParsed: jobs.length,
+    invoiced: overall,
+    invoiced_2025: y2025,
+    invoiced_2026: y2026,
+    byJobType_2026: byKey(jobs.filter(j => j.year === FY), 'jobType').sort((a, b) => b.revenue - a.revenue),
+    byJobType_2025: byKey(jobs.filter(j => j.year === 2025), 'jobType').sort((a, b) => b.revenue - a.revenue),
+    byMarket_2026:  byKey(jobs.filter(j => j.year === FY), 'branch').sort((a, b) => b.revenue - a.revenue),
+    byMarket_2025:  byKey(jobs.filter(j => j.year === 2025), 'branch').sort((a, b) => b.revenue - a.revenue)
+  };
+}
+
 // ---------- budget parser ----------
 // 2026 Commercial Budget format:
 //   Row 2: header row "Multi Family", "Jan 2026", "Feb 2026", ..., "Dec 2026", "Total 2026"
@@ -304,6 +449,15 @@ function run(opts) {
       console.log('    skip ' + f.name + ': parse error ' + err.message);
     }
   });
+
+  // ---- profitability ----
+  const profit = files.profitability ? parseProfitability(files.profitability) : null;
+  if (profit) {
+    console.log('  [mf-revenue] profitability: ' + profit.jobsParsed + ' invoiced/closed jobs · ' +
+      'overall GM ' + profit.invoiced.gp_pct.toFixed(1) + '% · ' +
+      '2026 GM ' + profit.invoiced_2026.gp_pct.toFixed(1) + '% (' + profit.invoiced_2026.jobs + ' jobs, $' +
+      Math.round(profit.invoiced_2026.revenue / 1e6 * 100) / 100 + 'M revenue)');
+  }
 
   // ---- budget ----
   const budget = files.budget ? parseBudget(files.budget) : null;
@@ -792,14 +946,38 @@ function run(opts) {
       upliftPct: upliftNeeded * 100,
       aprilGap: 0, q1OriginalBudget: 0, q1Actual: 0, q1Shortfall: 0, recoveryRatio: 0
     },
-    profitabilitySummary: {
+    profitabilitySummary: profit ? {
+      combinedGP: profit.invoiced.gross_profit,
+      combinedGP_pct: profit.invoiced.gp_pct,
+      combinedRevenue: profit.invoiced.revenue,
+      y2025_GP_pct: profit.invoiced_2025.gp_pct,
+      y2025_revenue: profit.invoiced_2025.revenue,
+      y2025_jobs: profit.invoiced_2025.jobs,
+      y2026_GP_pct: profit.invoiced_2026.gp_pct,
+      y2026_revenue: profit.invoiced_2026.revenue,
+      y2026_jobs: profit.invoiced_2026.jobs,
+      materialCost: profit.invoiced.material,
+      laborCost: profit.invoiced.labor,
+      otherCost: profit.invoiced.other,
+      commissions: profit.invoiced.commission,
+      materialPctContract: profit.invoiced.revenue > 0 ? (profit.invoiced.material / profit.invoiced.revenue * 100) : 0,
+      laborPctContract: profit.invoiced.revenue > 0 ? (profit.invoiced.labor / profit.invoiced.revenue * 100) : 0,
+      otherPctContract: profit.invoiced.revenue > 0 ? (profit.invoiced.other / profit.invoiced.revenue * 100) : 0,
+      commissionPctContract: profit.invoiced.revenue > 0 ? (profit.invoiced.commission / profit.invoiced.revenue * 100) : 0,
+      sourceFile: profit.sourceFile,
+      jobsParsed: profit.jobsParsed
+    } : {
       combinedGP: 0, combinedGP_pct: 0, combinedRevenue: annualRevenue,
       y2025_GP_pct: 0, y2026_GP_pct: 0, y2025_revenue: 0, y2026_revenue: annualRevenue, y2025_jobs: 0,
       y2026_jobs: jobs.filter(j => j.invoicedOn && j.invoicedOn.getFullYear() === FY).length,
-      materialCost: 0, laborCost: 0, commissions: 0,
-      materialPctContract: 0, laborPctContract: 0, commissionPctContract: 0,
-      _note: 'Cost mix and profitability for MF v1 not parsed yet. Profitability CSV is in folder; v2 will read it.'
+      materialCost: 0, laborCost: 0, otherCost: 0, commissions: 0,
+      materialPctContract: 0, laborPctContract: 0, otherPctContract: 0, commissionPctContract: 0,
+      _note: 'MF profitability CSV not provided this refresh.'
     },
+    profitabilityByJobType: profit ? profit.byJobType_2026 : [],
+    profitabilityByMarket:  profit ? profit.byMarket_2026 : [],
+    profitabilityByJobType2025: profit ? profit.byJobType_2025 : [],
+    profitabilityByMarket2025:  profit ? profit.byMarket_2025 : [],
     pipelineSnapshot: {
       stages: [
         { stage: 'In WIP today', jobs: inWip.length, value: inWipValue }

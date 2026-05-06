@@ -1,8 +1,8 @@
-/* AUTO-GENERATED — do not edit. Generated 2026-05-06T16:52:08.779Z (multi-family) */
+/* AUTO-GENERATED — do not edit. Generated 2026-05-06T16:58:25.859Z (multi-family) */
 window.FZ = window.FZ || {};
 window.FZ.data = {
   "_meta": {
-    "builtAt": "2026-05-06T16:52:08.779Z",
+    "builtAt": "2026-05-06T16:58:25.859Z",
     "pipelineVersion": "2.0.0",
     "lob": "multi-family",
     "lastBuiltProjects": [
@@ -15,26 +15,26 @@ window.FZ.data = {
       {
         "id": "sales-overview",
         "version": "1.0-rules-encoded",
-        "elapsedMs": 28,
-        "builtAt": "2026-05-06T16:52:08.779Z"
+        "elapsedMs": 27,
+        "builtAt": "2026-05-06T16:58:25.859Z"
       },
       {
         "id": "revenue-forecast",
         "version": "V5-locked-2026-04-19-shell-1.0",
-        "elapsedMs": 135,
-        "builtAt": "2026-05-06T16:52:08.779Z"
+        "elapsedMs": 145,
+        "builtAt": "2026-05-06T16:58:25.859Z"
       },
       {
         "id": "backlog",
         "version": "1.0-rules-encoded",
-        "elapsedMs": 20,
-        "builtAt": "2026-05-06T16:52:08.779Z"
+        "elapsedMs": 21,
+        "builtAt": "2026-05-06T16:58:25.859Z"
       },
       {
         "id": "installs-ytd",
         "version": "1.0-rules-encoded",
-        "elapsedMs": 15,
-        "builtAt": "2026-05-06T16:52:08.779Z"
+        "elapsedMs": 14,
+        "builtAt": "2026-05-06T16:58:25.859Z"
       }
     ]
   },
@@ -1700,23 +1700,489 @@ window.FZ.data = {
       "recoveryRatio": 0
     },
     "profitabilitySummary": {
-      "combinedGP": 0,
-      "combinedGP_pct": 0,
-      "combinedRevenue": 10230967.37,
-      "y2025_GP_pct": 0,
-      "y2026_GP_pct": 0,
-      "y2025_revenue": 0,
-      "y2026_revenue": 10230967.37,
-      "y2025_jobs": 0,
-      "y2026_jobs": 98,
-      "materialCost": 0,
-      "laborCost": 0,
-      "commissions": 0,
-      "materialPctContract": 0,
-      "laborPctContract": 0,
-      "commissionPctContract": 0,
-      "_note": "Cost mix and profitability for MF v1 not parsed yet. Profitability CSV is in folder; v2 will read it."
+      "combinedGP": 17096147.32000002,
+      "combinedGP_pct": 34.40212193357269,
+      "combinedRevenue": 49695037.280000046,
+      "y2025_GP_pct": 33.80341586652133,
+      "y2025_revenue": 44029980.99000004,
+      "y2025_jobs": 921,
+      "y2026_GP_pct": 39.05538845051794,
+      "y2026_revenue": 5665056.290000002,
+      "y2026_jobs": 191,
+      "materialCost": 16804085.710000016,
+      "laborCost": 15269210.580000006,
+      "otherCost": 485298.44999999995,
+      "commissions": 104461.51000000001,
+      "materialPctContract": 33.81441413419139,
+      "laborPctContract": 30.72582578813188,
+      "otherPctContract": 0.9765531460730188,
+      "commissionPctContract": 0.2102051144693294,
+      "sourceFile": "GregProfitabilityMFResults151.csv",
+      "jobsParsed": 1112
     },
+    "profitabilityByJobType": [
+      {
+        "key": "Retail",
+        "jobs": 50,
+        "revenue": 4235585.260000001,
+        "expenses": 2809487.24,
+        "gross_profit": 1426098.020000001,
+        "material": 1441556.1699999995,
+        "labor": 1341929.9800000002,
+        "other": 21460.92,
+        "commission": 0,
+        "contract": 4231619.16,
+        "gp_pct": 33.66944430248586
+      },
+      {
+        "key": "Insurance",
+        "jobs": 2,
+        "revenue": 1259041.71,
+        "expenses": 545818.22,
+        "gross_profit": 713223.49,
+        "material": 299663.44,
+        "labor": 241238.54,
+        "other": 4578.1,
+        "commission": 0,
+        "contract": 1259041.71,
+        "gp_pct": 56.648122483567285
+      },
+      {
+        "key": "T&M",
+        "jobs": 121,
+        "revenue": 99626.32,
+        "expenses": 50893.66999999997,
+        "gross_profit": 48732.65000000003,
+        "material": 9795.770000000008,
+        "labor": 41363.9,
+        "other": 0,
+        "commission": 0,
+        "contract": 96626.32,
+        "gp_pct": 48.91543720575048
+      },
+      {
+        "key": "Repair",
+        "jobs": 17,
+        "revenue": 70453,
+        "expenses": 46303.829999999994,
+        "gross_profit": 24149.169999999995,
+        "material": 2738.88,
+        "labor": 43741.5,
+        "other": 0,
+        "commission": 0,
+        "contract": 80060,
+        "gp_pct": 34.276993172753464
+      },
+      {
+        "key": "Warranty",
+        "jobs": 1,
+        "revenue": 350,
+        "expenses": 43.59,
+        "gross_profit": 306.40999999999997,
+        "material": 43.59,
+        "labor": 0,
+        "other": 0,
+        "commission": 0,
+        "contract": 0,
+        "gp_pct": 87.54571428571427
+      }
+    ],
+    "profitabilityByMarket": [
+      {
+        "key": "Columbus",
+        "jobs": 21,
+        "revenue": 2207032.3499999996,
+        "expenses": 1153463.23,
+        "gross_profit": 1053569.12,
+        "material": 555486.2499999999,
+        "labor": 578689.8799999999,
+        "other": 16212.130000000003,
+        "commission": 0,
+        "contract": 2204772.3499999996,
+        "gp_pct": 47.736913326168526
+      },
+      {
+        "key": "Raleigh",
+        "jobs": 59,
+        "revenue": 1227997.9,
+        "expenses": 801724.2500000001,
+        "gross_profit": 426273.65,
+        "material": 407009.18999999994,
+        "labor": 394593.83999999997,
+        "other": 122,
+        "commission": 0,
+        "contract": 1226580.2,
+        "gp_pct": 34.71289731032928
+      },
+      {
+        "key": "Detroit Metro",
+        "jobs": 18,
+        "revenue": 509157.54,
+        "expenses": 347701.12999999995,
+        "gross_profit": 161456.41000000003,
+        "material": 167727.24000000002,
+        "labor": 177089.41999999998,
+        "other": 2880,
+        "commission": 0,
+        "contract": 516524.13999999996,
+        "gp_pct": 31.710501625881854
+      },
+      {
+        "key": "Nashville",
+        "jobs": 14,
+        "revenue": 476393.37,
+        "expenses": 338363.7000000001,
+        "gross_profit": 138029.67000000004,
+        "material": 191015.28,
+        "labor": 142432,
+        "other": 4843.98,
+        "commission": 0,
+        "contract": 476393.37,
+        "gp_pct": 28.973885593747884
+      },
+      {
+        "key": "DC Metro",
+        "jobs": 4,
+        "revenue": 324587,
+        "expenses": 204136.81,
+        "gross_profit": 120450.18999999999,
+        "material": 101739.33,
+        "labor": 102218.98999999999,
+        "other": 0,
+        "commission": 0,
+        "contract": 324587,
+        "gp_pct": 37.108753585325346
+      },
+      {
+        "key": "Cleveland",
+        "jobs": 4,
+        "revenue": 296880.71,
+        "expenses": 191175.13,
+        "gross_profit": 105705.58000000002,
+        "material": 107896.98000000001,
+        "labor": 80513.07,
+        "other": 1980.91,
+        "commission": 0,
+        "contract": 296880.71,
+        "gp_pct": 35.605405282141774
+      },
+      {
+        "key": "Dayton",
+        "jobs": 7,
+        "revenue": 191012,
+        "expenses": 138128.02,
+        "gross_profit": 52883.98,
+        "material": 72900.43000000001,
+        "labor": 64660,
+        "other": 0,
+        "commission": 0,
+        "contract": 191012,
+        "gp_pct": 27.686208196343685
+      },
+      {
+        "key": "Cincinnati",
+        "jobs": 56,
+        "revenue": 147821.3,
+        "expenses": 80157.05999999998,
+        "gross_profit": 67664.24000000005,
+        "material": 41047.029999999984,
+        "labor": 39281.72,
+        "other": 0,
+        "commission": 0,
+        "contract": 146423.3,
+        "gp_pct": 45.77435051646823
+      },
+      {
+        "key": "Indianapolis",
+        "jobs": 2,
+        "revenue": 141144,
+        "expenses": 96464.19,
+        "gross_profit": 44679.81,
+        "material": 56022.39,
+        "labor": 40485,
+        "other": 0,
+        "commission": 0,
+        "contract": 141144,
+        "gp_pct": 31.655479510287364
+      },
+      {
+        "key": "Richmond",
+        "jobs": 4,
+        "revenue": 88779.44,
+        "expenses": 62725.30999999999,
+        "gross_profit": 26054.130000000005,
+        "material": 34599.969999999994,
+        "labor": 28139,
+        "other": 0,
+        "commission": 0,
+        "contract": 88779.44,
+        "gp_pct": 29.34703124957761
+      },
+      {
+        "key": "Knoxville",
+        "jobs": 2,
+        "revenue": 54250.68,
+        "expenses": 38507.72,
+        "gross_profit": 15742.96,
+        "material": 18353.76,
+        "labor": 20171,
+        "other": 0,
+        "commission": 0,
+        "contract": 54250.68,
+        "gp_pct": 29.018917366565727
+      }
+    ],
+    "profitabilityByJobType2025": [
+      {
+        "key": "Retail",
+        "jobs": 331,
+        "revenue": 35583734.96000001,
+        "expenses": 24604970.64,
+        "gross_profit": 10978764.320000008,
+        "material": 12780138.049999997,
+        "labor": 11450520.37,
+        "other": 363742.6699999999,
+        "commission": 89990.93000000001,
+        "contract": 35666317.00000002,
+        "gp_pct": 30.85332198079076
+      },
+      {
+        "key": "Insurance",
+        "jobs": 19,
+        "revenue": 7398184.92,
+        "expenses": 4139385.9200000004,
+        "gross_profit": 3258798.9999999995,
+        "material": 2123205.4899999998,
+        "labor": 1903048.54,
+        "other": 83297.51,
+        "commission": 13527.19,
+        "contract": 7330994.92,
+        "gp_pct": 44.04862861957227
+      },
+      {
+        "key": "Repair",
+        "jobs": 370,
+        "revenue": 786194.4299999999,
+        "expenses": 288300.28999999975,
+        "gross_profit": 497894.14000000013,
+        "material": 101895.42000000004,
+        "labor": 180974.12000000002,
+        "other": 10913.939999999999,
+        "commission": 943.3899999999999,
+        "contract": 747775.5800000001,
+        "gp_pct": 63.32964480554768
+      },
+      {
+        "key": "T&M",
+        "jobs": 189,
+        "revenue": 193791.98,
+        "expenses": 68151.36999999995,
+        "gross_profit": 125640.60999999997,
+        "material": 18497.529999999995,
+        "labor": 46607.63,
+        "other": 1305.31,
+        "commission": 0,
+        "contract": 190833.25000000006,
+        "gp_pct": 64.8327190836277
+      },
+      {
+        "key": "LowMar",
+        "jobs": 1,
+        "revenue": 58509.2,
+        "expenses": 44009.26,
+        "gross_profit": 14499.939999999995,
+        "material": 25329.66,
+        "labor": 19570,
+        "other": 0,
+        "commission": 0,
+        "contract": 58509.2,
+        "gp_pct": 24.782324830966747
+      },
+      {
+        "key": "Warranty",
+        "jobs": 11,
+        "revenue": 9565.5,
+        "expenses": 1525.9299999999998,
+        "gross_profit": 8039.57,
+        "material": 1221.71,
+        "labor": 216,
+        "other": 0,
+        "commission": 0,
+        "contract": 9565.5,
+        "gp_pct": 84.04756677643614
+      }
+    ],
+    "profitabilityByMarket2025": [
+      {
+        "key": "Detroit Metro",
+        "jobs": 241,
+        "revenue": 11184685.609999996,
+        "expenses": 7732084.440000004,
+        "gross_profit": 3452601.169999997,
+        "material": 3893258.4300000006,
+        "labor": 3716794.0900000003,
+        "other": 134373.25,
+        "commission": 15631.079999999998,
+        "contract": 11172752.249999996,
+        "gp_pct": 30.869005087752292
+      },
+      {
+        "key": "Raleigh",
+        "jobs": 114,
+        "revenue": 10434686.79,
+        "expenses": 7277608.349999998,
+        "gross_profit": 3157078.4399999995,
+        "material": 3928087.1599999997,
+        "labor": 3276805.4800000004,
+        "other": 64469.729999999996,
+        "commission": 21236.58,
+        "contract": 10443161.830000006,
+        "gp_pct": 30.25561287594718
+      },
+      {
+        "key": "Columbus",
+        "jobs": 176,
+        "revenue": 8194534.39,
+        "expenses": 5532649.939999999,
+        "gross_profit": 2661884.45,
+        "material": 2828882.16,
+        "labor": 2509753.63,
+        "other": 156494.95000000004,
+        "commission": 0,
+        "contract": 8220541.39,
+        "gp_pct": 32.483657073284924
+      },
+      {
+        "key": "Cleveland",
+        "jobs": 55,
+        "revenue": 4891856.71,
+        "expenses": 2828019.0099999993,
+        "gross_profit": 2063837.7000000004,
+        "material": 1426203.1900000002,
+        "labor": 1350530.4999999998,
+        "other": 51401.07999999999,
+        "commission": 25652.63,
+        "contract": 4887890.89,
+        "gp_pct": 42.189250878527886
+      },
+      {
+        "key": "Cincinnati",
+        "jobs": 205,
+        "revenue": 2703171.4200000004,
+        "expenses": 1699170.1,
+        "gross_profit": 1004001.3200000002,
+        "material": 869041.5999999997,
+        "labor": 818299.7400000001,
+        "other": 9778.43,
+        "commission": 12201.27,
+        "contract": 2684632.75,
+        "gp_pct": 37.141607541855414
+      },
+      {
+        "key": "Nashville",
+        "jobs": 17,
+        "revenue": 1852435.6199999999,
+        "expenses": 996103.1099999998,
+        "gross_profit": 856332.5100000002,
+        "material": 501978.78,
+        "labor": 474823.49,
+        "other": 16461.7,
+        "commission": 1266.48,
+        "contract": 1734385.6199999999,
+        "gp_pct": 46.22738306014653
+      },
+      {
+        "key": "DC Metro",
+        "jobs": 37,
+        "revenue": 1827631.77,
+        "expenses": 1160063.4699999993,
+        "gross_profit": 667568.3,
+        "material": 542761.1,
+        "labor": 610915.39,
+        "other": 6645.08,
+        "commission": 9177.069999999998,
+        "contract": 1921745.53,
+        "gp_pct": 36.526411444467286
+      },
+      {
+        "key": "Winston-Salem",
+        "jobs": 9,
+        "revenue": 1615493.2,
+        "expenses": 964796.26,
+        "gross_profit": 650696.94,
+        "material": 538220.36,
+        "labor": 419200.53,
+        "other": 9383.93,
+        "commission": 15793.47,
+        "contract": 1612280.7699999998,
+        "gp_pct": 40.27853165831958
+      },
+      {
+        "key": "Indianapolis",
+        "jobs": 29,
+        "revenue": 416250.46,
+        "expenses": 328027.1899999998,
+        "gross_profit": 88223.27000000003,
+        "material": 186593.35,
+        "labor": 137058.81000000003,
+        "other": 4550.43,
+        "commission": 13,
+        "contract": 416455.4,
+        "gp_pct": 21.194756157146355
+      },
+      {
+        "key": "Dayton",
+        "jobs": 16,
+        "revenue": 363547.7,
+        "expenses": 231991.65999999995,
+        "gross_profit": 131556.03999999998,
+        "material": 126303.73000000001,
+        "labor": 101417,
+        "other": 3861.7,
+        "commission": 3147.15,
+        "contract": 363547.7,
+        "gp_pct": 36.18673423047374
+      },
+      {
+        "key": "Richmond",
+        "jobs": 9,
+        "revenue": 256794.91999999998,
+        "expenses": 177927.6,
+        "gross_profit": 78867.32000000002,
+        "material": 96603.86000000002,
+        "labor": 81396,
+        "other": 0,
+        "commission": 0,
+        "contract": 257708.91999999998,
+        "gp_pct": 30.712180754977563
+      },
+      {
+        "key": "Knoxville",
+        "jobs": 12,
+        "revenue": 238499.4,
+        "expenses": 179535.6,
+        "gross_profit": 58963.79999999999,
+        "material": 90615.73000000001,
+        "labor": 87086,
+        "other": 1839.15,
+        "commission": 342.78,
+        "contract": 238499.4,
+        "gp_pct": 24.722829491394943
+      },
+      {
+        "key": "Greenville",
+        "jobs": 1,
+        "revenue": 50393,
+        "expenses": 38366.68,
+        "gross_profit": 12026.32,
+        "material": 21738.41,
+        "labor": 16856,
+        "other": 0,
+        "commission": 0,
+        "contract": 50393,
+        "gp_pct": 23.865060623499296
+      }
+    ],
     "pipelineSnapshot": {
       "stages": [
         {
@@ -2874,7 +3340,7 @@ window.FZ.data = {
       "totalWOs": 322,
       "portfolioValue": 21350727.31,
       "avgDaysInStatus": 40,
-      "lastBuild": "2026-05-06T16:52:08.763Z"
+      "lastBuild": "2026-05-06T16:58:25.844Z"
     },
     "tabs": [
       {
@@ -4097,7 +4563,7 @@ window.FZ.data = {
       "multiTradeJobs": 10,
       "singleTradeJobs": 90,
       "multiTradePct": 10,
-      "lastBuild": "2026-05-06T16:52:08.779Z"
+      "lastBuild": "2026-05-06T16:58:25.859Z"
     },
     "tabs": [
       {
