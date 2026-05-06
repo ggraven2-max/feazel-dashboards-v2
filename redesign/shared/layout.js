@@ -27,10 +27,14 @@ window.FZ.renderShell = function (opts) {
   // Detect Line of Business from URL path. Pages live under /<lob>/<dashboard>/<slug>.html
   // or /<lob>/index.html. Default to 'residential' for backwards compat.
   var lob = opts.lob || (function () {
-    var match = window.location.pathname.match(/\/(residential|multi-family)\//);
+    var match = window.location.pathname.match(/\/(residential|multi-family|service)\//);
     return match ? match[1] : 'residential';
   })();
+  // Filter dashboards by LOB. Service only ships with Revenue Forecast today.
   var dashboards = window.FZ.dashboards;
+  if (lob === 'service') {
+    dashboards = dashboards.filter(function (d) { return d.folder === 'revenue-forecast'; });
+  }
 
   // Path prefix to LOB root from this page
   var prefix = atRoot ? './' : '../';
@@ -45,12 +49,20 @@ window.FZ.renderShell = function (opts) {
   var currentDashboard = folder ? window.FZ.findDashboard(folder) : null;
 
   // ---- SIDEBAR ----
-  var lobLabel = (lob === 'multi-family') ? 'Multi-Family' : 'Residential';
-  var otherLobLabel = (lob === 'multi-family') ? 'Residential' : 'Multi-Family';
-  // Compute the other-LOB target URL for the same dashboard + slug
-  var otherLobUrl = lobSwitchPrefix + 'index.html';
-  if (folder) {
-    otherLobUrl = lobSwitchPrefix + folder + '/' + (slug === 'index' ? 'index.html' : slug + '.html');
+  var lobLabel = (lob === 'service') ? 'Service' : (lob === 'multi-family') ? 'Multi-Family' : 'Residential';
+  // Build switcher URLs for all three LOBs. Service only ships with Revenue
+  // Forecast today, so cross-LOB links to non-Service folders just hit the
+  // Service hub. Likewise, MF/Residential links from a Service folder also
+  // fall through to the LOB hub when the folder doesn't exist there.
+  var ALL_LOBS = ['residential', 'multi-family', 'service'];
+  var SERVICE_FOLDERS = { 'revenue-forecast': true };
+  function urlForLob (target) {
+    var prefixToTarget = atRoot ? ('../' + target + '/') : ('../../' + target + '/');
+    if (target === lob) return '#';
+    // From any LOB → Service: only revenue-forecast is supported, fall through to hub otherwise
+    if (target === 'service' && folder && !SERVICE_FOLDERS[folder]) return prefixToTarget + 'index.html';
+    if (folder) return prefixToTarget + folder + '/' + (slug === 'index' ? 'index.html' : slug + '.html');
+    return prefixToTarget + 'index.html';
   }
   var sidebarHTML = ''
     + '<aside class="sidebar">'
@@ -60,9 +72,10 @@ window.FZ.renderShell = function (opts) {
     +     '</a>'
     +     '<div class="sidebar-brand-meta">Executive Dashboards</div>'
     +   '</div>'
-    +   '<div class="lob-switch">'
-    +     '<a href="' + (lob === 'residential' ? '#' : otherLobUrl) + '"' + (lob === 'residential' ? ' class="is-active"' : '') + '>Residential</a>'
-    +     '<a href="' + (lob === 'multi-family' ? '#' : otherLobUrl) + '"' + (lob === 'multi-family' ? ' class="is-active"' : '') + '>Multi-Family</a>'
+    +   '<div class="lob-switch lob-switch-3">'
+    +     '<a href="' + urlForLob('residential') + '"' + (lob === 'residential' ? ' class="is-active"' : '') + '>Residential</a>'
+    +     '<a href="' + urlForLob('multi-family') + '"' + (lob === 'multi-family' ? ' class="is-active"' : '') + '>Multi-Family</a>'
+    +     '<a href="' + urlForLob('service') + '"' + (lob === 'service' ? ' class="is-active"' : '') + '>Service</a>'
     +   '</div>'
     +   '<div class="sidebar-section">' + lobLabel + ' Suite</div>'
     +   '<nav class="sidebar-nav">'

@@ -17,7 +17,11 @@ const path = require('path');
 
 const ROOT = path.join(__dirname, '..');
 const PROJECTS = ['sales-overview', 'revenue-forecast', 'backlog', 'installs-ytd'];
-const LOBS = ['residential', 'multi-family'];
+const LOBS = ['residential', 'multi-family', 'service'];
+// Service is a fee-for-service line. It only has Revenue Forecast for now;
+// other projects are skipped via SERVICE_PROJECTS to avoid running calculators
+// that have no Service input data.
+const SERVICE_PROJECTS = new Set(['revenue-forecast']);
 const KEY_MAP = {
   'sales-overview':   'SALES_OVERVIEW',
   'revenue-forecast': 'REVENUE_FORECAST',
@@ -137,7 +141,16 @@ function buildLob(lob, projectsToRun) {
     }
   }
 
-  const results = projectsToRun.map(function (p) { return buildOne(p, lob); });
+  // Service only ships with a subset of projects today (Revenue Forecast).
+  // Skip the rest so the build doesn't fail on missing input directories.
+  const filteredProjects = (lob === 'service')
+    ? projectsToRun.filter(function (p) { return SERVICE_PROJECTS.has(p); })
+    : projectsToRun;
+  if (lob === 'service' && filteredProjects.length === 0) {
+    console.log('  [service] no Service-supported projects in this build, skipping LOB.');
+    return { lob, ok: true, combined: {} };
+  }
+  const results = filteredProjects.map(function (p) { return buildOne(p, lob); });
   const failed = results.filter(function (r) { return !r.ok; });
   if (failed.length) {
     return { lob, ok: false, failed, combined: null };

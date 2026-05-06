@@ -51,6 +51,21 @@
     return;
   }
 
+  // ============================================================
+  // SERVICE BRANCH
+  // Service Revenue Forecast is a fee-for-service line. Same data
+  // shape as MF (KPIs, monthly rollup table, profitability) but
+  // copy and benchmarks are Service-flavored. Build a dedicated
+  // pages object that reads service data and short-circuits the
+  // rest of this file.
+  // ============================================================
+  var lob = (window.FZ.data && window.FZ.data._meta && window.FZ.data._meta.lob) || 'residential';
+  if (lob === 'service' || T['sv-monthly-rollup']) {
+    window.FZ_PAGE_DEFS = window.FZ_PAGE_DEFS || {};
+    window.FZ_PAGE_DEFS['revenue-forecast'] = buildServicePages(D, T, C, fmt, pal, BASE_OPTS, moneyAxis, withOpts);
+    return;
+  }
+
   // Convenience: quickly map a table's rows to renderer rows.
   function tableSection(opts) {
     var src = T[opts.id];
@@ -696,6 +711,416 @@
     };
 
     return mfPages;
+  }
+
+  // ============================================================
+  // SERVICE page builder
+  // Same shape as MF (KPIs, monthRevenue, profitabilitySummary,
+  // tables, charts) so most rendering carries through. Service-
+  // specific copy: fee-for-service line, no Lisa schedules, no
+  // multi-trade lift; the model is annualized run-rate vs the
+  // 2026 Service Budget.
+  // ============================================================
+  function buildServicePages (D, T, C, fmt, pal, BASE_OPTS, moneyAxis, withOpts) {
+    var es = D.execSummary || {};
+    var bdg = es.budget || 0;
+    var actual = es.modelAnnualInvoiced || 0;
+    var gap = es.gap || 0;
+    var ps = D.profitabilitySummary || {};
+    var brH = D.budgetRecoveryHeader || {};
+    var commentary = D.commentary || {};
+    var ns = D.netsuiteInvoiced || {};
+
+    function kpisRow (slice, cols) {
+      return { kind: 'kpi-row', cols: cols || 4, items: slice };
+    }
+    function kpiObj (k) {
+      return {
+        label: k.label, value: k.value, sub: k.sub || '',
+        tone: k.trend === 'positive' ? 'success' : (k.trend === 'negative' ? 'danger' : 'navy')
+      };
+    }
+    var allKpis = (D.kpis || []).map(kpiObj);
+    function chartFromId (id, opts) {
+      var c = C[id]; if (!c) return null;
+      opts = opts || {};
+      return {
+        title: opts.title || c.title,
+        sub: opts.sub || c.sub,
+        height: opts.height || 300,
+        config: c.config ? Object.assign({}, c.config, {
+          options: withOpts(Object.assign({ scales: { y: moneyAxis() } }, opts.options || {}))
+        }) : null
+      };
+    }
+    function tableFromId (id, opts) {
+      var t = T[id]; if (!t) return null;
+      opts = opts || {};
+      return {
+        kind: 'table',
+        heading: opts.heading || t.title,
+        caption: opts.caption,
+        maxHeight: opts.maxHeight,
+        compact: opts.compact !== false,
+        headers: t.headers,
+        rows: t.rows
+      };
+    }
+
+    var svcPages = {};
+
+    var lastClosedKpi = allKpis.find(function (k) { return /last month revenue/i.test(k.label); });
+    var lastVsPlanKpi = allKpis.find(function (k) { return /last month vs plan/i.test(k.label); });
+    var ytdVsPlanKpi  = allKpis.find(function (k) { return /ytd vs plan/i.test(k.label); });
+    var paceKpi       = allKpis.find(function (k) { return /annualized pace/i.test(k.label); });
+    var planRestKpi   = allKpis.find(function (k) { return /plan-rest/i.test(k.label); });
+
+    // ─────────────────────────────────────────────────────────────
+    // INDEX / EXECUTIVE
+    // ─────────────────────────────────────────────────────────────
+    var indexPage = {
+      eyebrow: D.subtitle || 'SERVICE-V1 · 2026',
+      title: 'Service Revenue Forecast',
+      intro: es.narrative || 'Service revenue tracking against the 2026 Service Budget. Actuals come from NetSuite invoiced revenue (per-invoice export, all 2026 dates). The forecast is the annualized run-rate compared against the budget plan; the Service book is fee-for-service, so cycle is short and projections lean heavily on the YTD pace.',
+      tags: [
+        { kind: 'info',    text: 'Service-v1 · locked ' + (D.methodologyLock ? D.methodologyLock.lockedOn : '2026-05-06') },
+        { kind: gap >= 0 ? 'success' : 'warn', text: (gap >= 0 ? '+' : '') + fmt.money(gap, { short: true }) + ' vs plan' },
+        { kind: 'info',    text: 'Plan ' + fmt.money(bdg, { short: true }) }
+      ],
+      sections: [
+        kpisRow(allKpis.slice(0, 4)),
+        kpisRow(allKpis.slice(4, 8)),
+        chartFromId('sv-rev-vs-plan') ? {
+          kind: 'chart-grid', cols: 1,
+          heading: 'Monthly revenue vs plan',
+          caption: 'Green bars = NetSuite invoiced revenue per closed month. Navy bars = Service Budget plan.',
+          charts: [chartFromId('sv-rev-vs-plan', { height: 320 })].filter(Boolean)
+        } : null,
+        tableFromId('sv-monthly-rollup', {
+          heading: 'Monthly roll-up',
+          caption: 'Plan = monthly cells from the 2026 Service Budget · Revenue = NetSuite booked invoices'
+        }),
+        tableFromId('sv-by-branch', {
+          heading: 'YTD invoiced by branch',
+          caption: 'Sorted by total invoiced · sourced from the NetSuite per-invoice export'
+        }),
+        { kind: 'callout', tone: gap >= 0 ? 'success' : 'warn',
+          title: gap >= 0 ? 'On pace to plan' : 'Below plan',
+          body: gap >= 0
+            ? 'Annualized run-rate of <strong>' + fmt.money(actual, { short: true }) + '</strong> clears the ' + fmt.money(bdg, { short: true }) + ' Service plan. The bridge in Budget Recovery shows the per-month pace required to hold the lead.'
+            : 'Annualized run-rate of <strong>' + fmt.money(actual, { short: true }) + '</strong> projects <strong>' + fmt.money(gap, { short: true }) + '</strong> short of the ' + fmt.money(bdg, { short: true }) + ' plan, a <strong>' + (brH.upliftPct || 0).toFixed(1) + '%</strong> uplift on remaining months. Service is fee-for-service, so the lever is volume, not ticket size.'
+        }
+      ].filter(Boolean)
+    };
+    svcPages.index = indexPage;
+    svcPages.executive = indexPage;
+
+    // ─────────────────────────────────────────────────────────────
+    // PROJECTION
+    // ─────────────────────────────────────────────────────────────
+    svcPages.projection = {
+      eyebrow: 'PROJECTION · SERVICE',
+      title: 'Annual Projection',
+      intro: 'Where Service lands at year-end. Two views: annualized run-rate (YTD × 12 / months elapsed) versus plan-rest forecast (YTD actual + plan for remaining months). Plan-rest is the more honest read for board materials.',
+      tags: [
+        { kind: 'info', text: 'Annual plan ' + fmt.money(bdg, { short: true }) },
+        { kind: gap >= 0 ? 'success' : 'warn', text: (gap >= 0 ? '+' : '') + fmt.money(gap, { short: true }) + ' vs plan' }
+      ],
+      sections: [
+        kpisRow([
+          paceKpi || { label: 'Annualized Pace', value: fmt.money(actual, { short: true }), sub: 'YTD × 12/months', tone: gap >= 0 ? 'success' : 'warn' },
+          planRestKpi || { label: 'Plan-Rest Forecast', value: fmt.money(actual, { short: true }), sub: 'YTD + remaining plan', tone: 'navy' },
+          { label: 'Annual Budget', value: fmt.money(bdg, { short: true }), sub: '2026 Service plan', tone: 'navy' },
+          { label: 'Forecast Gap', value: (gap >= 0 ? '+' : '') + fmt.money(gap, { short: true }), sub: (brH.upliftPct || 0).toFixed(1) + '% uplift needed', tone: gap >= 0 ? 'success' : 'warn' }
+        ]),
+        chartFromId('sv-rev-vs-plan') ? {
+          kind: 'chart-grid', cols: 1,
+          charts: [chartFromId('sv-rev-vs-plan', { title: 'Revenue vs plan by month', height: 360 })].filter(Boolean)
+        } : null,
+        tableFromId('sv-monthly-rollup', { heading: 'Monthly trajectory' }),
+        { kind: 'callout', tone: gap >= 0 ? 'success' : 'warn',
+          title: 'How to read the projection',
+          body: 'Service is short-cycle, so the annualized run-rate reflects sales pace pretty directly. <strong>Plan-rest</strong> is more honest because it assumes the rest of the year hits the budget plan, not that the current pace persists. Both are below ' + fmt.money(bdg, { short: true }) + ' currently; the lever is volume in the top branches (Columbus, Detroit, Raleigh).'
+        }
+      ].filter(Boolean)
+    };
+
+    // ─────────────────────────────────────────────────────────────
+    // MONTHLY
+    // ─────────────────────────────────────────────────────────────
+    svcPages.monthly = {
+      eyebrow: 'MONTHLY DETAIL · SERVICE',
+      title: 'Monthly Roll-Up',
+      intro: 'Per-month invoiced revenue against the Service Budget plan. Each row is a month; each cell is sourced from NetSuite for actuals and the budget XLSX for plan.',
+      tags: [
+        lastClosedKpi ? { kind: 'success', text: lastClosedKpi.label + ' ' + lastClosedKpi.value } : null,
+        lastVsPlanKpi ? { kind: lastVsPlanKpi.tone === 'danger' ? 'warn' : 'info', text: lastVsPlanKpi.label + ' ' + lastVsPlanKpi.value } : null
+      ].filter(Boolean),
+      sections: [
+        kpisRow([
+          lastClosedKpi || { label: 'Last Month', value: '—', sub: '' },
+          lastVsPlanKpi || { label: 'Last Month vs Plan', value: '—', sub: '' },
+          ytdVsPlanKpi  || { label: 'YTD vs Plan', value: '—', sub: '' },
+          paceKpi       || { label: 'Annualized Pace', value: '—', sub: '' }
+        ]),
+        chartFromId('sv-rev-vs-plan') ? {
+          kind: 'chart-grid', cols: 1,
+          charts: [chartFromId('sv-rev-vs-plan', { height: 320 })].filter(Boolean)
+        } : null,
+        tableFromId('sv-monthly-rollup', { heading: 'Monthly roll-up' })
+      ].filter(Boolean)
+    };
+
+    // ─────────────────────────────────────────────────────────────
+    // BUDGET (annual plan detail)
+    // ─────────────────────────────────────────────────────────────
+    svcPages.budget = {
+      eyebrow: 'PLAN · 2026 SERVICE BUDGET',
+      title: 'Annual Budget Detail',
+      intro: 'Per-month invoiced-revenue plan from the 2026 Service Budget XLSX (Total - 40000 - Revenue row). Annual headline is ' + fmt.money(bdg, { short: true }) + '.',
+      tags: [
+        { kind: 'info', text: 'Annual plan ' + fmt.money(bdg, { short: true }) },
+        ytdVsPlanKpi ? { kind: ytdVsPlanKpi.tone === 'danger' ? 'warn' : 'success', text: 'YTD vs plan ' + ytdVsPlanKpi.value } : null
+      ].filter(Boolean),
+      sections: [
+        kpisRow([
+          { label: 'Annual Plan',      value: fmt.money(bdg, { short: true }),       sub: 'Service Budget · 2026', tone: 'navy' },
+          ytdVsPlanKpi || { label: 'YTD vs Plan', value: '—', sub: '' },
+          { label: 'Forecast vs Plan', value: (gap >= 0 ? '+' : '') + fmt.money(gap, { short: true }), sub: (brH.upliftPct || 0).toFixed(1) + '% gap', tone: gap >= 0 ? 'success' : 'warn' },
+          { label: 'Uplift Needed',    value: (brH.upliftPct || 0).toFixed(1) + '%', sub: 'on remaining months',  tone: (brH.upliftPct || 0) > 10 ? 'danger' : (brH.upliftPct || 0) > 0 ? 'warn' : 'success' }
+        ]),
+        tableFromId('sv-monthly-rollup', { heading: 'Monthly plan vs actual' }),
+        { kind: 'callout', tone: 'info', title: 'Plan source',
+          body: 'Sourced from <code>2026 Service Budget.xlsx</code> in <code>inputs/service/revenue-forecast/</code>. Drop a re-planned XLSX in the same folder and the bridge updates automatically.' }
+      ].filter(Boolean)
+    };
+
+    // ─────────────────────────────────────────────────────────────
+    // BUDGET RECOVERY (variance)
+    // ─────────────────────────────────────────────────────────────
+    svcPages['budget-recovery'] = {
+      eyebrow: 'RECOVERY · SERVICE',
+      title: 'Budget Recovery',
+      intro: 'Where Service stands against plan and what the rest-of-year pace needs to be to land ' + fmt.money(bdg, { short: true }) + '.',
+      tags: [
+        { kind: gap >= 0 ? 'success' : 'warn', text: 'Forecast vs Plan ' + (gap >= 0 ? '+' : '') + fmt.money(gap, { short: true }) },
+        ytdVsPlanKpi ? { kind: ytdVsPlanKpi.tone === 'danger' ? 'warn' : 'success', text: 'YTD vs Plan ' + ytdVsPlanKpi.value } : null
+      ].filter(Boolean),
+      sections: [
+        kpisRow([
+          { label: 'Annual Plan',     value: fmt.money(bdg, { short: true }),    sub: 'Service Budget',                            tone: 'navy' },
+          ytdVsPlanKpi || { label: 'YTD vs Plan', value: '—', sub: '' },
+          { label: 'Uplift Needed',   value: (brH.upliftPct || 0).toFixed(1) + '%', sub: 'on remaining months to recover plan',  tone: (brH.upliftPct || 0) > 10 ? 'danger' : (brH.upliftPct || 0) > 0 ? 'warn' : 'success' },
+          { label: 'Forecast Gap',    value: (gap >= 0 ? '+' : '') + fmt.money(gap, { short: true }), sub: 'annualized run-rate vs plan', tone: gap >= 0 ? 'success' : 'warn' }
+        ]),
+        chartFromId('sv-rev-vs-plan') ? {
+          kind: 'chart-grid', cols: 1,
+          charts: [chartFromId('sv-rev-vs-plan', { title: 'Monthly revenue vs plan', height: 320 })].filter(Boolean)
+        } : null,
+        tableFromId('sv-monthly-rollup', { heading: 'Monthly plan vs actual' }),
+        { kind: 'callout', tone: gap >= 0 ? 'success' : 'warn',
+          title: gap >= 0 ? 'On pace' : 'Recovery levers',
+          body: gap >= 0
+            ? 'Annualized run-rate clears the plan. Watch for any single month dropping more than 25% below plan; service revenue is concentrated in the top three branches and a coverage gap there shows up immediately.'
+            : 'To close the <strong>' + fmt.money(Math.abs(gap), { short: true }) + '</strong> gap, lift remaining-month invoiced revenue by <strong>' + (brH.upliftPct || 0).toFixed(1) + '%</strong>. The service book is fee-for-service so the lever is volume: more service tickets per branch per week, especially at the top branches that already carry the book.'
+        }
+      ].filter(Boolean)
+    };
+
+    // ─────────────────────────────────────────────────────────────
+    // PROFITABILITY (full cost-mix view, mirrors MF)
+    // ─────────────────────────────────────────────────────────────
+    var profParsed = (ps.combinedGP || 0) > 0 || (ps.materialCost || 0) > 0;
+    var jtProf  = (D.profitabilityByJobType || []);
+    var mkProf  = (D.profitabilityByMarket || []);
+    var jtProf25 = (D.profitabilityByJobType2025 || []);
+    var ytdGmDelta = (ps.y2026_GP_pct || 0) - (ps.y2025_GP_pct || 0);
+    var bestMktGm = mkProf.slice().filter(function (r) { return r.jobs >= 3; }).sort(function (a, b) { return b.gp_pct - a.gp_pct; })[0];
+    var worstMktGm = mkProf.slice().filter(function (r) { return r.jobs >= 3; }).sort(function (a, b) { return a.gp_pct - b.gp_pct; })[0];
+
+    function profRow(r) {
+      var rev = r.revenue || 0;
+      return [
+        { html: '<strong>' + r.key + '</strong>' },
+        r.jobs,
+        fmt.money(r.revenue || 0),
+        fmt.money(r.gross_profit || 0),
+        { html: r.gp_pct >= 35
+            ? '<span class="pill pill-success">' + r.gp_pct.toFixed(1) + '%</span>'
+            : r.gp_pct >= 25
+              ? '<span class="pill pill-warn">' + r.gp_pct.toFixed(1) + '%</span>'
+              : '<span class="pill pill-danger">' + r.gp_pct.toFixed(1) + '%</span>' },
+        rev > 0 ? (r.material / rev * 100).toFixed(1) + '%' : '—',
+        rev > 0 ? (r.labor / rev * 100).toFixed(1) + '%' : '—'
+      ];
+    }
+    var profHeaders = [
+      'Segment',
+      { label: 'Jobs', num: true },
+      { label: 'Revenue', num: true },
+      { label: 'Gross Profit', num: true },
+      { label: 'GM %', num: true },
+      { label: 'Material %', num: true },
+      { label: 'Labor %', num: true }
+    ];
+
+    svcPages.profitability = profParsed ? {
+      eyebrow: 'PROFITABILITY · SERVICE',
+      title: 'Profitability',
+      intro: 'Gross margin and cost mix on the Service book, sourced from <code>' + (ps.sourceFile || 'GregProfitabilityServiceResults*.csv') + '</code>. Service is a higher-margin line than installs (typical 45-60% GM) because fewer materials and more labor density per ticket.',
+      tags: [
+        { kind: 'success', text: 'Combined GM ' + (ps.combinedGP_pct || 0).toFixed(1) + '%' },
+        { kind: ytdGmDelta >= 0 ? 'success' : 'warn',
+          text: 'YoY ' + (ytdGmDelta >= 0 ? '+' : '') + ytdGmDelta.toFixed(1) + ' pts vs 2025' },
+        bestMktGm ? { kind: 'info', text: 'Top margin: ' + bestMktGm.key + ' (' + bestMktGm.gp_pct.toFixed(1) + '%)' } : null
+      ].filter(Boolean),
+      sections: [
+        kpisRow([
+          { label: 'Combined Revenue', value: fmt.money(ps.combinedRevenue || 0, { short: true }), sub: (ps.jobsParsed || 0) + ' invoiced/closed jobs in source', tone: 'navy' },
+          { label: 'Combined GM',      value: (ps.combinedGP_pct || 0).toFixed(1) + '%',           sub: fmt.money(ps.combinedGP || 0, { short: true }) + ' gross profit', tone: 'success' },
+          { label: 'FY2026 GM',        value: (ps.y2026_GP_pct || 0).toFixed(1) + '%',
+            sub: (ps.y2026_jobs || 0) + ' jobs · ' + fmt.money(ps.y2026_revenue || 0, { short: true }),
+            tone: ytdGmDelta >= 0 ? 'success' : 'warn' },
+          { label: 'FY2025 GM',        value: (ps.y2025_GP_pct || 0).toFixed(1) + '%',
+            sub: (ps.y2025_jobs || 0) + ' jobs · ' + fmt.money(ps.y2025_revenue || 0, { short: true }),
+            tone: 'navy' }
+        ]),
+        kpisRow([
+          { label: 'Material Cost',  value: fmt.money(ps.materialCost || 0, { short: true }),   sub: (ps.materialPctContract || 0).toFixed(1) + '% of revenue',   tone: (ps.materialPctContract || 0) > 35 ? 'warn' : 'navy' },
+          { label: 'Labor Cost',     value: fmt.money(ps.laborCost || 0, { short: true }),      sub: (ps.laborPctContract || 0).toFixed(1) + '% of revenue',      tone: (ps.laborPctContract || 0) > 32 ? 'warn' : 'navy' },
+          { label: 'Other Cost',     value: fmt.money(ps.otherCost || 0, { short: true }),      sub: (ps.otherPctContract || 0).toFixed(1) + '% of revenue',      tone: 'navy' },
+          { label: 'Commissions',    value: fmt.money(ps.commissions || 0, { short: true }),    sub: (ps.commissionPctContract || 0).toFixed(1) + '% of revenue', tone: 'navy' }
+        ], 4),
+        {
+          kind: 'chart-grid', cols: 2,
+          charts: [
+            jtProf.length ? {
+              title: 'FY2026 Revenue by job type',
+              sub: 'Mix of cost-tracked jobs YTD',
+              height: 300,
+              config: {
+                type: 'doughnut',
+                data: {
+                  labels: jtProf.map(function (r) { return r.key; }),
+                  datasets: [{
+                    data: jtProf.map(function (r) { return r.revenue; }),
+                    backgroundColor: [pal.navy, pal.success, pal.warning, pal.danger, '#7d3c98', '#16a085'],
+                    borderColor: '#fff', borderWidth: 2
+                  }]
+                },
+                options: withOpts({ cutout: '60%', plugins: { legend: { position: 'right' } } })
+              }
+            } : null,
+            mkProf.length ? {
+              title: 'FY2026 GM% by branch',
+              sub: '≥35% green · ≥25% amber · <25% red',
+              height: 300,
+              config: {
+                type: 'bar',
+                data: {
+                  labels: mkProf.map(function (r) { return r.key; }),
+                  datasets: [{
+                    data: mkProf.map(function (r) { return r.gp_pct; }),
+                    backgroundColor: mkProf.map(function (r) {
+                      return r.gp_pct >= 35 ? pal.success : r.gp_pct >= 25 ? pal.warning : pal.danger;
+                    }),
+                    label: 'GM %'
+                  }]
+                },
+                options: withOpts({
+                  indexAxis: 'y',
+                  scales: { x: { ticks: { callback: function (v) { return v + '%'; } }, beginAtZero: true } },
+                  plugins: { legend: { display: false } }
+                })
+              }
+            } : null
+          ].filter(Boolean)
+        },
+        jtProf.length ? {
+          kind: 'table',
+          heading: 'FY2026 profitability by job type',
+          caption: 'GM% pill: green ≥35%, amber ≥25%, red <25%',
+          headers: profHeaders,
+          rows: jtProf.map(profRow)
+        } : null,
+        mkProf.length ? {
+          kind: 'table',
+          heading: 'FY2026 profitability by branch',
+          caption: 'Branches with at least one cost-tracked Service job in 2026',
+          headers: profHeaders,
+          rows: mkProf.map(profRow)
+        } : null,
+        jtProf25.length ? {
+          kind: 'table',
+          heading: 'FY2025 profitability by job type (comparison)',
+          caption: 'Year-over-year baseline',
+          headers: profHeaders,
+          rows: jtProf25.map(profRow)
+        } : null,
+        {
+          kind: 'callout',
+          tone: ytdGmDelta >= 0 ? 'success' : 'warn',
+          title: ytdGmDelta >= 0 ? 'Margin trending up' : 'Margin trending down',
+          body: ytdGmDelta >= 0
+            ? 'FY2026 YTD GM is <strong>' + ytdGmDelta.toFixed(1) + ' points higher</strong> than FY2025 (' + ps.y2026_GP_pct.toFixed(1) + '% vs ' + ps.y2025_GP_pct.toFixed(1) + '%). Service GM is sensitive to dispatch density: fewer trucks per geo means higher labor% per ticket. Sustained gains usually come from route optimization.'
+            : 'FY2026 YTD GM is <strong>' + Math.abs(ytdGmDelta).toFixed(1) + ' points lower</strong> than FY2025 (' + ps.y2026_GP_pct.toFixed(1) + '% vs ' + ps.y2025_GP_pct.toFixed(1) + '%). Drill into the per-branch table; concentrated weakness in 1-2 branches usually means a coverage gap or under-pricing on small tickets.'
+        },
+        bestMktGm && worstMktGm && bestMktGm.key !== worstMktGm.key ? {
+          kind: 'callout', tone: 'info', title: 'Margin spread',
+          body: '<strong>' + bestMktGm.key + '</strong> leads with <strong>' + bestMktGm.gp_pct.toFixed(1) + '%</strong> GM on ' + bestMktGm.jobs + ' jobs (' + fmt.money(bestMktGm.revenue, { short: true }) + ' revenue). <strong>' + worstMktGm.key + '</strong> trails at <strong>' + worstMktGm.gp_pct.toFixed(1) + '%</strong> on ' + worstMktGm.jobs + ' jobs. The spread is ' + (bestMktGm.gp_pct - worstMktGm.gp_pct).toFixed(1) + ' points; if it persists three months, it is a structural issue not noise.'
+        } : null
+      ].filter(Boolean)
+    } : {
+      eyebrow: 'PROFITABILITY · SERVICE',
+      title: 'Profitability',
+      intro: 'Service profitability CSV not parsed this refresh. Drop the latest <code>GregProfitabilityServiceResults*.csv</code> into <code>inputs/service/revenue-forecast/</code> and rerun the build.',
+      tags: [{ kind: 'info', text: 'Awaiting cost data' }],
+      sections: [
+        { kind: 'callout', tone: 'info', title: 'Profitability source',
+          body: 'The Service profitability view reads <code>GregProfitabilityServiceResults*.csv</code> exported from NetSuite. Same column shape as residential and MF. Filter is Feazel Status in {Invoiced, Closed and Capped Out}.' }
+      ]
+    };
+
+    // ─────────────────────────────────────────────────────────────
+    // RECOMMENDATIONS
+    // ─────────────────────────────────────────────────────────────
+    var actions = (commentary.actionableRecommendations || []).map(function (r) { return { text: r }; });
+    svcPages.recommendations = {
+      eyebrow: 'STRATEGY · SERVICE',
+      title: 'Recommendations',
+      intro: es.narrative || 'Where the Service book stands and the next moves to land the plan.',
+      tags: actions.length ? [{ kind: 'info', text: actions.length + ' action item' + (actions.length === 1 ? '' : 's') }] : [],
+      sections: [
+        kpisRow([
+          { label: 'Plan',            value: fmt.money(bdg, { short: true }),    sub: '2026 Service Budget',           tone: 'navy' },
+          { label: 'Annual Forecast', value: fmt.money(actual, { short: true }), sub: 'annualized run-rate',           tone: gap >= 0 ? 'success' : 'warn' },
+          { label: 'Forecast Gap',    value: (gap >= 0 ? '+' : '') + fmt.money(gap, { short: true }), sub: (brH.upliftPct || 0).toFixed(1) + '% uplift needed', tone: gap >= 0 ? 'success' : 'warn' },
+          { label: 'Top Branch',      value: (function () {
+              var rows = (T['sv-by-branch'] && T['sv-by-branch'].rows) || [];
+              return rows[0] ? rows[0][0] : '—';
+            })(), sub: (function () {
+              var rows = (T['sv-by-branch'] && T['sv-by-branch'].rows) || [];
+              return rows[0] ? rows[0][1] + ' · ' + rows[0][2] + ' invoices' : '';
+            })(), tone: 'navy' }
+        ]),
+        actions.length ? {
+          kind: 'prose',
+          cards: [
+            {
+              kind: 'navy', eyebrow: 'EXECUTIVE NARRATIVE', title: 'Where Service stands',
+              body: '<p>' + (es.narrative || '') + '</p>'
+            },
+            {
+              kind: 'tint', eyebrow: 'NEXT MOVES', title: 'Action items',
+              list: actions
+            }
+          ],
+          cols: 2
+        } : null
+      ].filter(Boolean)
+    };
+
+    return svcPages;
   }
 
   // ============================================================

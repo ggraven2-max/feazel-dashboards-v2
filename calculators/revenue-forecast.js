@@ -192,6 +192,10 @@ function run(opts) {
     const mfCalc = require('./revenue-forecast-mf');
     return mfCalc.run({ inputDir, snapshotPath, lob });
   }
+  if (lob === 'service') {
+    const svcCalc = require('./revenue-forecast-service');
+    return svcCalc.run({ inputDir, snapshotPath, lob });
+  }
 
   const inputs = io.listInputs(inputDir);
   console.log('  [' + PROJECT_ID + '] inputs found: ' + inputs.length);
