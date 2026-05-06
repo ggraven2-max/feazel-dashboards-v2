@@ -303,10 +303,26 @@ function run(opts) {
 
   const completedRaw = completedFile ? readFirstSheet(completedFile.fullPath) : [];
 
-  let closingRaw = [];
+  let closingRaw = null;
   if (closingFile) {
-    closingRaw = readFirstSheet(closingFile.fullPath);
-    console.log('  [' + PROJECT_ID + '] closing/NSLI source: ' + closingFile.name + ' (' + closingRaw.length + ' opportunities)');
+    // Two supported formats:
+    //   1. Salesforce *aggregated report* XLSX (header row + per-branch totals).
+    //      Has the literal column "Sum of Sold Deals" — that's our format flag.
+    //   2. Per-opportunity export (one row per opp, includes Stage and Branch).
+    const xlsx = require('xlsx');
+    const wb = xlsx.readFile(closingFile.fullPath, { cellDates: false });
+    const sheet = wb.Sheets[wb.SheetNames[0]];
+    const raw2D = xlsx.utils.sheet_to_json(sheet, { header: 1, defval: null });
+    const isAggregated = raw2D.some(row =>
+      Array.isArray(row) && row.some(c => typeof c === 'string' && /sum of sold deals/i.test(c)));
+    if (isAggregated) {
+      closingRaw = { format: 'aggregated', rows: raw2D, sourceFile: closingFile.name };
+      const dataRows = raw2D.filter(r => r && r.some(c => c != null)).length;
+      console.log('  [' + PROJECT_ID + '] closing/NSLI source: ' + closingFile.name + ' (Salesforce report · ' + dataRows + ' rows)');
+    } else {
+      closingRaw = { format: 'per-opportunity', rows: readFirstSheet(closingFile.fullPath), sourceFile: closingFile.name };
+      console.log('  [' + PROJECT_ID + '] closing/NSLI source: ' + closingFile.name + ' (' + closingRaw.rows.length + ' opportunities)');
+    }
   } else {
     console.log('  [' + PROJECT_ID + '] no Closing Percent By Branch XLSX found; closingByBranch will be empty');
   }
@@ -428,8 +444,9 @@ function buildOutput(salesRaw, completedRaw, snapshotPath, closingRaw, inputDirR
   const marketScorecard = buildMarketScorecard(rows);
 
   // Closing % and NSLI by branch (sourced from "Closing Percent By Branch" export)
-  // Optional input. Empty when the export wasn't dropped this refresh cycle.
-  const closingByBranch = buildClosingByBranch(closingRaw || []);
+  // Accepts both the Salesforce aggregated report XLSX and the legacy
+  // per-opportunity export. Empty result when no file is provided.
+  const closingByBranch = buildClosingByBranch(closingRaw);
 
   // Market kickbacks (RULE-012)
   const marketKickbacks = buildMarketKickbacks(rows);
@@ -665,10 +682,9 @@ function buildMarketScorecard(rows) {
  * Branch normalization mirrors NetSuite: 'Detroit Metro' → 'Detroit',
  * 'NOVA' → 'DC Metro' so the table joins cleanly with the rest of the dashboard.
  */
-function buildClosingByBranch(rawRows) {
-  if (!Array.isArray(rawRows) || !rawRows.length) {
-    return { headers: [], rows: [], totals: null, source: null };
-  }
+function buildClosingByBranch(closingInput) {
+  // Empty / not provided
+  if (!closingInput) return { headers: [], rows: [], totals: null, source: null, format: 'none' };
 
   const BRANCH_REMAP = {
     'detroit metro': 'Detroit',
@@ -679,6 +695,98 @@ function buildClosingByBranch(rawRows) {
     const key = String(loc).trim().toLowerCase();
     return BRANCH_REMAP[key] || String(loc).trim();
   };
+
+  // ── FORMAT 1: Salesforce aggregated report XLSX ─────────────────
+  // The XLSX has a "Sum of Sold Deals" header row followed by per-branch
+  // totals and a Total row. Already pre-aggregated; just lift the table.
+  if (closingInput.format === 'aggregated' && Array.isArray(closingInput.rows)) {
+    const raw = closingInput.rows;
+    // Find the header row (contains 'Branch Location to Service' or 'Sum of Sold Deals')
+    let headerIdx = -1;
+    let cBranch = -1, cSold = -1, cClose = -1, cNsli = -1, cCount = -1;
+    for (let i = 0; i < raw.length && headerIdx < 0; i++) {
+      const row = raw[i] || [];
+      for (let j = 0; j < row.length; j++) {
+        const cell = String(row[j] || '').trim();
+        if (/branch location to service/i.test(cell)) {
+          headerIdx = i;
+          // Locate each column by header label
+          for (let k = j; k < row.length; k++) {
+            const lbl = String(row[k] || '').trim().toLowerCase();
+            if (/branch location/.test(lbl)) cBranch = k;
+            else if (/sum of sold deals/.test(lbl)) cSold = k;
+            else if (/closing percent/.test(lbl)) cClose = k;
+            else if (lbl === 'nsli') cNsli = k;
+            else if (/record count/.test(lbl)) cCount = k;
+          }
+          break;
+        }
+      }
+    }
+    if (headerIdx < 0 || cBranch < 0) {
+      return { headers: [], rows: [], totals: null, source: closingInput.sourceFile || null, format: 'aggregated-empty' };
+    }
+
+    const display = [];
+    let totalsRow = null;
+    for (let i = headerIdx + 1; i < raw.length; i++) {
+      const row = raw[i] || [];
+      const branchRaw = row[cBranch];
+      if (!branchRaw) continue;
+      const branchTxt = String(branchRaw).trim();
+      // Skip blank lines and the footer rows ("Confidential...", copyright)
+      if (!branchTxt || /confidential|copyright/i.test(branchTxt)) continue;
+      const isTotal = /^total$/i.test(branchTxt);
+      const soldAmt = parseMoney(row[cSold]);
+      // Closing Percent comes through as a decimal (0.232) in the XLSX
+      const closeDec = parseMoney(row[cClose]);
+      const closePct = closeDec > 1 ? closeDec : closeDec * 100;
+      const nsli = parseMoney(row[cNsli]);
+      const opps = parseMoney(row[cCount]);
+      if (soldAmt === 0 && opps === 0) continue;
+      const entry = {
+        branch: normBranch(branchTxt),
+        opps: Math.round(opps),
+        soldAmt: round(soldAmt),
+        closePct: round1(closePct),
+        nsli: Math.round(nsli)
+      };
+      if (isTotal) totalsRow = entry;
+      else display.push(entry);
+    }
+    display.sort((a, b) => b.soldAmt - a.soldAmt);
+
+    // If the report didn't include a Total row, compute one from rows
+    if (!totalsRow) {
+      const tOpps = display.reduce((s, r) => s + r.opps, 0);
+      const tSold = display.reduce((s, r) => s + r.soldAmt, 0);
+      totalsRow = {
+        branch: 'Total',
+        opps: tOpps,
+        soldAmt: round(tSold),
+        closePct: 0,
+        nsli: tOpps > 0 ? Math.round(tSold / tOpps) : 0
+      };
+    }
+
+    return {
+      headers: ['Branch', 'Sum of Sold Deals', 'Closing Percent', 'NSLI', 'Record Count'],
+      rows: display,
+      totals: {
+        opps: totalsRow.opps,
+        soldAmt: totalsRow.soldAmt,
+        closePct: totalsRow.closePct,
+        nsli: totalsRow.nsli
+      },
+      source: closingInput.sourceFile || 'Closing Percent By Branch (Salesforce report)',
+      format: 'aggregated'
+    };
+  }
+
+  // ── FORMAT 2: Per-opportunity export (legacy) ───────────────────
+  const rawRows = Array.isArray(closingInput.rows) ? closingInput.rows
+                : (Array.isArray(closingInput) ? closingInput : []);
+  if (!rawRows.length) return { headers: [], rows: [], totals: null, source: null, format: 'per-opportunity-empty' };
 
   const SOLD_STAGES = new Set(['Closed - Sold', 'Kicked Back to Salesperson']);
   const LOST_STAGES = new Set(['Closed - Lost']);
@@ -705,52 +813,36 @@ function buildClosingByBranch(rawRows) {
     }
   });
 
+  // For the per-opportunity format we report the same 4-column shape as the
+  // aggregated XLSX so the page-def renders consistently.
   const arr = Array.from(map.values()).map(m => {
-    const closed = m.soldCnt + m.lostCnt;
-    const closePct = closed > 0 ? (m.soldCnt / closed) * 100 : 0;
-    const issuePct = m.opps > 0 ? (m.soldCnt / m.opps) * 100 : 0;
+    const closePct = m.opps > 0 ? (m.soldCnt / m.opps) * 100 : 0;   // issue close
     const nsli = m.opps > 0 ? m.soldAmt / m.opps : 0;
-    const avgSold = m.soldCnt > 0 ? m.soldAmt / m.soldCnt : 0;
     return {
       branch: m.branch,
       opps: m.opps,
-      sold: m.soldCnt,
-      lost: m.lostCnt,
-      open: m.openCnt,
-      closePct: round1(closePct),
-      issuePct: round1(issuePct),
       soldAmt: round(m.soldAmt),
-      nsli: Math.round(nsli),
-      avgSold: Math.round(avgSold)
+      closePct: round1(closePct),
+      nsli: Math.round(nsli)
     };
   }).sort((a, b) => b.soldAmt - a.soldAmt);
 
-  // Drop the unassigned bucket from headline display but keep it summable
   const display = arr.filter(r => r.branch !== '(unassigned)');
-
-  // Totals row — weighted blend, not a naive average of branch %s
   const tOpps = arr.reduce((s, r) => s + r.opps, 0);
-  const tSold = arr.reduce((s, r) => s + r.sold, 0);
-  const tLost = arr.reduce((s, r) => s + r.lost, 0);
   const tSoldAmt = arr.reduce((s, r) => s + r.soldAmt, 0);
-  const tClosed = tSold + tLost;
   const totals = {
     opps: tOpps,
-    sold: tSold,
-    lost: tLost,
-    open: tOpps - tClosed,
-    closePct: tClosed > 0 ? round1(tSold / tClosed * 100) : 0,
-    issuePct: tOpps > 0 ? round1(tSold / tOpps * 100) : 0,
     soldAmt: round(tSoldAmt),
-    nsli: tOpps > 0 ? Math.round(tSoldAmt / tOpps) : 0,
-    avgSold: tSold > 0 ? Math.round(tSoldAmt / tSold) : 0
+    closePct: tOpps > 0 ? round1(arr.reduce((s, r) => s + (r.closePct * r.opps), 0) / tOpps) : 0,
+    nsli: tOpps > 0 ? Math.round(tSoldAmt / tOpps) : 0
   };
 
   return {
-    headers: ['Branch', 'Opps', 'Sold', 'Lost', 'Close %', 'Issue %', 'Sold $', 'NSLI ($/lead)', 'Avg Sold $'],
+    headers: ['Branch', 'Sum of Sold Deals', 'Closing Percent', 'NSLI', 'Record Count'],
     rows: display,
-    totals: totals,
-    source: 'Closing Percent By Branch · opportunity-level export'
+    totals,
+    source: closingInput.sourceFile || 'Closing Percent By Branch · opportunity export',
+    format: 'per-opportunity'
   };
 }
 
