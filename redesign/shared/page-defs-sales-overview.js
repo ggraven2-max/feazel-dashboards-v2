@@ -1436,7 +1436,20 @@
           heading: 'Market scorecard',
           caption: 'Sorted by signed $ · ' + mscRows.length + ' active MF markets',
           headers: msc.headers.map(function (h, i) { return { label: h, num: i > 0 }; }),
-          rows: mscRows
+          // Branch (0) plain · Sales (1) dollars · Deals (2) int · Avg Deal (3) dollars ·
+          // Installs (4) int · Repairs (5) int · Repair % (6) percent · Median Days (7) days
+          rows: mscRows.map(function (r) {
+            return [
+              { html: '<strong>' + r[0] + '</strong>' },
+              fmt.money(r[1] || 0),
+              r[2],
+              fmt.money(r[3] || 0),
+              r[4],
+              r[5],
+              (r[6] != null ? r[6].toFixed(1) : '0.0') + '%',
+              (r[7] != null ? r[7] : 0) + 'd'
+            ];
+          })
         } : null
       ].filter(Boolean)
     };
