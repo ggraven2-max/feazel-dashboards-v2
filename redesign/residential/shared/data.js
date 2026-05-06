@@ -1,8 +1,8 @@
-/* AUTO-GENERATED — do not edit. Generated 2026-05-06T14:03:49.542Z (residential) */
+/* AUTO-GENERATED — do not edit. Generated 2026-05-06T14:55:04.373Z (residential) */
 window.FZ = window.FZ || {};
 window.FZ.data = {
   "_meta": {
-    "builtAt": "2026-05-06T14:03:49.542Z",
+    "builtAt": "2026-05-06T14:55:04.373Z",
     "pipelineVersion": "2.0.0",
     "lob": "residential",
     "lastBuiltProjects": [
@@ -15,26 +15,26 @@ window.FZ.data = {
       {
         "id": "installs-ytd",
         "version": "1.0-rules-encoded",
-        "elapsedMs": 73,
-        "builtAt": "2026-05-06T14:03:49.542Z"
+        "elapsedMs": 83,
+        "builtAt": "2026-05-06T14:55:04.373Z"
       },
       {
         "id": "sales-overview",
         "version": "1.0-rules-encoded",
-        "elapsedMs": 288,
-        "builtAt": "2026-05-06T14:03:49.542Z"
+        "elapsedMs": 474,
+        "builtAt": "2026-05-06T14:55:04.373Z"
       },
       {
         "id": "revenue-forecast",
         "version": "V5-locked-2026-04-19-shell-1.0",
-        "elapsedMs": 3762,
-        "builtAt": "2026-05-06T14:03:49.542Z"
+        "elapsedMs": 4330,
+        "builtAt": "2026-05-06T14:55:04.373Z"
       },
       {
         "id": "backlog",
         "version": "1.0-rules-encoded",
-        "elapsedMs": 41,
-        "builtAt": "2026-05-06T14:03:49.542Z"
+        "elapsedMs": 46,
+        "builtAt": "2026-05-06T14:55:04.373Z"
       }
     ]
   },
@@ -53,7 +53,7 @@ window.FZ.data = {
       "multiTradeJobs": 318,
       "singleTradeJobs": 809,
       "multiTradePct": 28.2,
-      "lastBuild": "2026-05-06T14:03:49.542Z"
+      "lastBuild": "2026-05-06T14:55:04.373Z"
     },
     "tabs": [
       {
@@ -2314,6 +2314,177 @@ window.FZ.data = {
           24
         ]
       ]
+    },
+    "closingByBranch": {
+      "headers": [
+        "Branch",
+        "Opps",
+        "Sold",
+        "Lost",
+        "Close %",
+        "Issue %",
+        "Sold $",
+        "NSLI ($/lead)",
+        "Avg Sold $"
+      ],
+      "rows": [
+        {
+          "branch": "Columbus",
+          "opps": 1521,
+          "sold": 429,
+          "lost": 538,
+          "open": 554,
+          "closePct": 44.4,
+          "issuePct": 28.2,
+          "soldAmt": 4202801.26,
+          "nsli": 2763,
+          "avgSold": 9797
+        },
+        {
+          "branch": "Detroit",
+          "opps": 597,
+          "sold": 213,
+          "lost": 263,
+          "open": 121,
+          "closePct": 44.7,
+          "issuePct": 35.7,
+          "soldAmt": 2856116.25,
+          "nsli": 4784,
+          "avgSold": 13409
+        },
+        {
+          "branch": "Nashville",
+          "opps": 224,
+          "sold": 97,
+          "lost": 84,
+          "open": 43,
+          "closePct": 53.6,
+          "issuePct": 43.3,
+          "soldAmt": 1090218.22,
+          "nsli": 4867,
+          "avgSold": 11239
+        },
+        {
+          "branch": "Cleveland",
+          "opps": 466,
+          "sold": 121,
+          "lost": 132,
+          "open": 213,
+          "closePct": 47.8,
+          "issuePct": 26,
+          "soldAmt": 1020426.45,
+          "nsli": 2190,
+          "avgSold": 8433
+        },
+        {
+          "branch": "DC Metro",
+          "opps": 259,
+          "sold": 70,
+          "lost": 112,
+          "open": 77,
+          "closePct": 38.5,
+          "issuePct": 27,
+          "soldAmt": 831936.09,
+          "nsli": 3212,
+          "avgSold": 11885
+        },
+        {
+          "branch": "Cincinnati",
+          "opps": 227,
+          "sold": 49,
+          "lost": 82,
+          "open": 96,
+          "closePct": 37.4,
+          "issuePct": 21.6,
+          "soldAmt": 630423.49,
+          "nsli": 2777,
+          "avgSold": 12866
+        },
+        {
+          "branch": "Dayton",
+          "opps": 160,
+          "sold": 37,
+          "lost": 49,
+          "open": 74,
+          "closePct": 43,
+          "issuePct": 23.1,
+          "soldAmt": 485637.61,
+          "nsli": 3035,
+          "avgSold": 13125
+        },
+        {
+          "branch": "Greenville",
+          "opps": 71,
+          "sold": 16,
+          "lost": 32,
+          "open": 23,
+          "closePct": 33.3,
+          "issuePct": 22.5,
+          "soldAmt": 320185.9,
+          "nsli": 4510,
+          "avgSold": 20012
+        },
+        {
+          "branch": "Knoxville",
+          "opps": 51,
+          "sold": 18,
+          "lost": 26,
+          "open": 7,
+          "closePct": 40.9,
+          "issuePct": 35.3,
+          "soldAmt": 229155.66,
+          "nsli": 4493,
+          "avgSold": 12731
+        },
+        {
+          "branch": "Richmond",
+          "opps": 60,
+          "sold": 15,
+          "lost": 16,
+          "open": 29,
+          "closePct": 48.4,
+          "issuePct": 25,
+          "soldAmt": 209553.93,
+          "nsli": 3493,
+          "avgSold": 13970
+        },
+        {
+          "branch": "Raleigh",
+          "opps": 109,
+          "sold": 17,
+          "lost": 32,
+          "open": 60,
+          "closePct": 34.7,
+          "issuePct": 15.6,
+          "soldAmt": 196833.06,
+          "nsli": 1806,
+          "avgSold": 11578
+        },
+        {
+          "branch": "Grand Rapids",
+          "opps": 73,
+          "sold": 4,
+          "lost": 29,
+          "open": 40,
+          "closePct": 12.1,
+          "issuePct": 5.5,
+          "soldAmt": 61132.98,
+          "nsli": 837,
+          "avgSold": 15283
+        }
+      ],
+      "totals": {
+        "opps": 3820,
+        "sold": 1086,
+        "lost": 1395,
+        "open": 1339,
+        "closePct": 43.8,
+        "issuePct": 28.4,
+        "soldAmt": 12134420.9,
+        "nsli": 3177,
+        "avgSold": 11173
+      },
+      "source": "Closing Percent By Branch · opportunity-level export"
     },
     "marketKickbacks": [
       {
@@ -6586,7 +6757,7 @@ window.FZ.data = {
       "totalWOs": 749,
       "portfolioValue": 10743756.42,
       "avgDaysInStatus": 12,
-      "lastBuild": "2026-05-06T14:03:49.467Z"
+      "lastBuild": "2026-05-06T14:55:04.288Z"
     },
     "tabs": [
       {

@@ -289,6 +289,9 @@ function run(opts) {
   // Match inputs by leading text (RULE: filename-flexible)
   const turnedFile = inputs.find(f => /turned/i.test(f.name) && /\.xlsx?$/i.test(f.name));
   const completedFile = inputs.find(f => /completed/i.test(f.name) && /\.xlsx?$/i.test(f.name));
+  // Optional: Closing Percent By Branch export (opportunity-level, used for
+  // close rate and Net Sales per Lead Issued metrics on the Markets tab).
+  const closingFile = inputs.find(f => /closing/i.test(f.name) && /\.xlsx?$/i.test(f.name));
 
   if (!turnedFile) {
     console.log('  [' + PROJECT_ID + '] no Turned-In XLSX found, falling back to existing extracted-data.json');
@@ -300,7 +303,15 @@ function run(opts) {
 
   const completedRaw = completedFile ? readFirstSheet(completedFile.fullPath) : [];
 
-  return buildOutput(salesRaw, completedRaw, snapshotPath);
+  let closingRaw = [];
+  if (closingFile) {
+    closingRaw = readFirstSheet(closingFile.fullPath);
+    console.log('  [' + PROJECT_ID + '] closing/NSLI source: ' + closingFile.name + ' (' + closingRaw.length + ' opportunities)');
+  } else {
+    console.log('  [' + PROJECT_ID + '] no Closing Percent By Branch XLSX found; closingByBranch will be empty');
+  }
+
+  return buildOutput(salesRaw, completedRaw, snapshotPath, closingRaw);
 }
 
 function readFirstSheet(filePath) {
@@ -326,7 +337,7 @@ function validateColumns(rows, required, filename) {
 // ────────────────────────────────────────────────────────────
 // Build the SALES_OVERVIEW output shape
 // ────────────────────────────────────────────────────────────
-function buildOutput(salesRaw, completedRaw, snapshotPath) {
+function buildOutput(salesRaw, completedRaw, snapshotPath, closingRaw) {
   // Normalize sales rows (RULE-001)
   const rows = salesRaw.map(r => {
     const market = String(r['Branch Location to Service'] || '').trim();
@@ -416,6 +427,10 @@ function buildOutput(salesRaw, completedRaw, snapshotPath) {
   // Market scorecard (RULE-011)
   const marketScorecard = buildMarketScorecard(rows);
 
+  // Closing % and NSLI by branch (sourced from "Closing Percent By Branch" export)
+  // Optional input. Empty when the export wasn't dropped this refresh cycle.
+  const closingByBranch = buildClosingByBranch(closingRaw || []);
+
   // Market kickbacks (RULE-012)
   const marketKickbacks = buildMarketKickbacks(rows);
 
@@ -503,6 +518,7 @@ function buildOutput(salesRaw, completedRaw, snapshotPath) {
     jobTypeTotals: jobTypeTotals,
     weeklyTrend: weeklyTrend,
     marketScorecard: marketScorecard,
+    closingByBranch: closingByBranch,
     marketKickbacks: marketKickbacks,
     marketJobTypeChart: marketJobTypeChart,
     topPeople: peopleAgg.top20,
@@ -618,6 +634,118 @@ function buildMarketScorecard(rows) {
     return [market, round(totalAmt), rs.length, avg, installs, reps, round1(reps / rs.length * 100), medD];
   }).sort((a, b) => b[1] - a[1]);
   return { headers: headers, rows: arr };
+}
+
+/**
+ * Closing % and NSLI per branch, sourced from the "Closing Percent By Branch"
+ * opportunity-level export. Each row is one opportunity with stage, amount,
+ * sold-deal value, and branch.
+ *
+ * Definitions:
+ *   • Closing % (decision close)  = Sold / (Sold + Lost)
+ *       Of opportunities that reached a final outcome, what % closed sold.
+ *       Excludes still-open / kicked / claim-filed opps.
+ *   • Issue close %               = Sold / Total Opps
+ *       Of every issued opportunity, what % closed sold.
+ *       Lower number, less inflated by lost-side hygiene.
+ *   • NSLI ($/lead)               = Sold $ / Total Opps
+ *       Net Sales per Lead Issued. The dollar version of issue-close.
+ *       Useful for comparing markets where deal sizes vary.
+ *
+ * "Sold" = stage in {Closed - Sold, Kicked Back to Salesperson} per the same
+ * convention used for Signed Contracts YTD elsewhere in this calculator.
+ * "Lost" = Closed - Lost.
+ *
+ * Branch normalization mirrors NetSuite: 'Detroit Metro' → 'Detroit',
+ * 'NOVA' → 'DC Metro' so the table joins cleanly with the rest of the dashboard.
+ */
+function buildClosingByBranch(rawRows) {
+  if (!Array.isArray(rawRows) || !rawRows.length) {
+    return { headers: [], rows: [], totals: null, source: null };
+  }
+
+  const BRANCH_REMAP = {
+    'detroit metro': 'Detroit',
+    'nova': 'DC Metro'
+  };
+  const normBranch = function (loc) {
+    if (!loc) return '(unassigned)';
+    const key = String(loc).trim().toLowerCase();
+    return BRANCH_REMAP[key] || String(loc).trim();
+  };
+
+  const SOLD_STAGES = new Set(['Closed - Sold', 'Kicked Back to Salesperson']);
+  const LOST_STAGES = new Set(['Closed - Lost']);
+
+  const map = new Map();
+  rawRows.forEach(r => {
+    const branch = normBranch(r['Branch Location to Service']);
+    const stage = String(r['Stage'] || '').trim();
+    const amount = parseMoney(r['Amount $']);
+    const sold = parseMoney(r['Sold Deals']);
+    if (!map.has(branch)) {
+      map.set(branch, { branch, opps: 0, soldCnt: 0, lostCnt: 0, openCnt: 0, soldAmt: 0, presAmt: 0 });
+    }
+    const m = map.get(branch);
+    m.opps++;
+    m.presAmt += amount;
+    if (SOLD_STAGES.has(stage)) {
+      m.soldCnt++;
+      m.soldAmt += sold;
+    } else if (LOST_STAGES.has(stage)) {
+      m.lostCnt++;
+    } else {
+      m.openCnt++;
+    }
+  });
+
+  const arr = Array.from(map.values()).map(m => {
+    const closed = m.soldCnt + m.lostCnt;
+    const closePct = closed > 0 ? (m.soldCnt / closed) * 100 : 0;
+    const issuePct = m.opps > 0 ? (m.soldCnt / m.opps) * 100 : 0;
+    const nsli = m.opps > 0 ? m.soldAmt / m.opps : 0;
+    const avgSold = m.soldCnt > 0 ? m.soldAmt / m.soldCnt : 0;
+    return {
+      branch: m.branch,
+      opps: m.opps,
+      sold: m.soldCnt,
+      lost: m.lostCnt,
+      open: m.openCnt,
+      closePct: round1(closePct),
+      issuePct: round1(issuePct),
+      soldAmt: round(m.soldAmt),
+      nsli: Math.round(nsli),
+      avgSold: Math.round(avgSold)
+    };
+  }).sort((a, b) => b.soldAmt - a.soldAmt);
+
+  // Drop the unassigned bucket from headline display but keep it summable
+  const display = arr.filter(r => r.branch !== '(unassigned)');
+
+  // Totals row — weighted blend, not a naive average of branch %s
+  const tOpps = arr.reduce((s, r) => s + r.opps, 0);
+  const tSold = arr.reduce((s, r) => s + r.sold, 0);
+  const tLost = arr.reduce((s, r) => s + r.lost, 0);
+  const tSoldAmt = arr.reduce((s, r) => s + r.soldAmt, 0);
+  const tClosed = tSold + tLost;
+  const totals = {
+    opps: tOpps,
+    sold: tSold,
+    lost: tLost,
+    open: tOpps - tClosed,
+    closePct: tClosed > 0 ? round1(tSold / tClosed * 100) : 0,
+    issuePct: tOpps > 0 ? round1(tSold / tOpps * 100) : 0,
+    soldAmt: round(tSoldAmt),
+    nsli: tOpps > 0 ? Math.round(tSoldAmt / tOpps) : 0,
+    avgSold: tSold > 0 ? Math.round(tSoldAmt / tSold) : 0
+  };
+
+  return {
+    headers: ['Branch', 'Opps', 'Sold', 'Lost', 'Close %', 'Issue %', 'Sold $', 'NSLI ($/lead)', 'Avg Sold $'],
+    rows: display,
+    totals: totals,
+    source: 'Closing Percent By Branch · opportunity-level export'
+  };
 }
 
 function buildMarketKickbacks(rows) {

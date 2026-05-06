@@ -1,8 +1,8 @@
-/* AUTO-GENERATED — do not edit. Generated 2026-05-06T14:03:49.729Z (multi-family) */
+/* AUTO-GENERATED — do not edit. Generated 2026-05-06T14:55:04.555Z (multi-family) */
 window.FZ = window.FZ || {};
 window.FZ.data = {
   "_meta": {
-    "builtAt": "2026-05-06T14:03:49.729Z",
+    "builtAt": "2026-05-06T14:55:04.555Z",
     "pipelineVersion": "2.0.0",
     "lob": "multi-family",
     "lastBuiltProjects": [
@@ -15,26 +15,26 @@ window.FZ.data = {
       {
         "id": "sales-overview",
         "version": "1.0-rules-encoded",
-        "elapsedMs": 16,
-        "builtAt": "2026-05-06T14:03:49.729Z"
+        "elapsedMs": 14,
+        "builtAt": "2026-05-06T14:55:04.555Z"
       },
       {
         "id": "revenue-forecast",
         "version": "V5-locked-2026-04-19-shell-1.0",
-        "elapsedMs": 129,
-        "builtAt": "2026-05-06T14:03:49.729Z"
+        "elapsedMs": 128,
+        "builtAt": "2026-05-06T14:55:04.555Z"
       },
       {
         "id": "backlog",
         "version": "1.0-rules-encoded",
-        "elapsedMs": 20,
-        "builtAt": "2026-05-06T14:03:49.729Z"
+        "elapsedMs": 18,
+        "builtAt": "2026-05-06T14:55:04.555Z"
       },
       {
         "id": "installs-ytd",
         "version": "1.0-rules-encoded",
-        "elapsedMs": 14,
-        "builtAt": "2026-05-06T14:03:49.729Z"
+        "elapsedMs": 15,
+        "builtAt": "2026-05-06T14:55:04.555Z"
       }
     ]
   },
@@ -496,6 +496,12 @@ window.FZ.data = {
           70
         ]
       ]
+    },
+    "closingByBranch": {
+      "headers": [],
+      "rows": [],
+      "totals": null,
+      "source": null
     },
     "marketKickbacks": [],
     "marketJobTypeChart": {
@@ -2895,7 +2901,7 @@ window.FZ.data = {
       "totalWOs": 322,
       "portfolioValue": 21350727.31,
       "avgDaysInStatus": 40,
-      "lastBuild": "2026-05-06T14:03:49.713Z"
+      "lastBuild": "2026-05-06T14:55:04.539Z"
     },
     "tabs": [
       {
@@ -4118,7 +4124,7 @@ window.FZ.data = {
       "multiTradeJobs": 10,
       "singleTradeJobs": 90,
       "multiTradePct": 10,
-      "lastBuild": "2026-05-06T14:03:49.728Z"
+      "lastBuild": "2026-05-06T14:55:04.555Z"
     },
     "tabs": [
       {

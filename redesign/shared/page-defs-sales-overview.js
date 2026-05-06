@@ -539,7 +539,148 @@
         kind: 'callout', tone: 'success', title: 'Detroit Metro: the model branch',
         body: '$4.59M on 277 deals at $16,559 avg with only 8.3% repair mix and 4-day median close. That ratio of volume + ticket size + clean job mix + speed is the template for Columbus and Cleveland to chase.'
       }
-    ]
+    ].concat(((function () {
+      // ----- Closing % and NSLI by branch (Salesforce opportunity-level) -----
+      // Sourced from inputs/residential/sales-overview/Closing Percent By Branch*.xlsx
+      // Close% = Sold / (Sold + Lost). NSLI = Sold $ / Total Opportunities.
+      var cb = D.closingByBranch;
+      if (!cb || !cb.rows || !cb.rows.length) return [];
+
+      var topNsli  = cb.rows.slice().sort(function (a, b) { return b.nsli - a.nsli; })[0];
+      var topClose = cb.rows.slice().sort(function (a, b) { return b.closePct - a.closePct; })[0];
+      var lowNsli  = cb.rows.slice().sort(function (a, b) { return a.nsli - b.nsli; })[0];
+      var lowClose = cb.rows.slice().sort(function (a, b) { return a.closePct - b.closePct; })[0];
+
+      return [
+            { kind: 'prose',
+              heading: 'Closing percentage and NSLI by branch',
+              caption: 'Same branches, second lens: how efficiently each market converts the leads it gets into signed dollars.'
+            },
+            {
+              kind: 'kpi-row', cols: 4,
+              items: [
+                { label: 'Network Close %', value: cb.totals.closePct.toFixed(1) + '%',
+                  sub: cb.totals.sold + ' sold of ' + (cb.totals.sold + cb.totals.lost) + ' decisions', tone: 'navy' },
+                { label: 'Network NSLI',     value: '$' + cb.totals.nsli.toLocaleString(),
+                  sub: cb.totals.opps.toLocaleString() + ' opportunities issued', tone: 'navy' },
+                { label: 'Best NSLI',        value: topNsli.branch,
+                  sub: '$' + topNsli.nsli.toLocaleString() + '/lead · ' + topNsli.closePct.toFixed(1) + '% close', tone: 'success' },
+                { label: 'Watch List',       value: lowNsli.branch,
+                  sub: '$' + lowNsli.nsli.toLocaleString() + '/lead · ' + lowNsli.closePct.toFixed(1) + '% close', tone: 'danger' }
+              ]
+            },
+            {
+              kind: 'chart-grid', cols: 2,
+              charts: [
+                {
+                  title: 'Close % by Market',
+                  sub: 'Sold / (Sold + Lost). Network avg ' + cb.totals.closePct.toFixed(1) + '% · ≥50% green, <35% red',
+                  height: 360,
+                  config: {
+                    type: 'bar',
+                    data: {
+                      labels: cb.rows.map(function (r) { return r.branch; }),
+                      datasets: [{
+                        data: cb.rows.map(function (r) { return r.closePct; }),
+                        backgroundColor: cb.rows.map(function (r) {
+                          return r.closePct >= 50 ? pal.success : r.closePct < 35 ? pal.danger : pal.navy;
+                        }),
+                        label: 'Close %'
+                      }]
+                    },
+                    options: withOpts({
+                      indexAxis: 'y',
+                      scales: { x: { ticks: { callback: function (v) { return v + '%'; } }, beginAtZero: true } },
+                      plugins: { legend: { display: false } }
+                    })
+                  }
+                },
+                {
+                  title: 'NSLI by Market',
+                  sub: 'Net Sales per Lead Issued. Network avg $' + cb.totals.nsli.toLocaleString(),
+                  height: 360,
+                  config: {
+                    type: 'bar',
+                    data: {
+                      labels: cb.rows.map(function (r) { return r.branch; }),
+                      datasets: [{
+                        data: cb.rows.map(function (r) { return r.nsli; }),
+                        backgroundColor: cb.rows.map(function (r) {
+                          return r.nsli >= cb.totals.nsli * 1.25 ? pal.success
+                               : r.nsli < cb.totals.nsli * 0.75 ? pal.danger : pal.navy;
+                        }),
+                        label: 'NSLI ($/lead)'
+                      }]
+                    },
+                    options: withOpts({
+                      indexAxis: 'y',
+                      scales: { x: moneyAxis() },
+                      plugins: { legend: { display: false } }
+                    })
+                  }
+                }
+              ]
+            },
+            {
+              kind: 'table',
+              heading: 'Closing % and NSLI by branch',
+              caption: 'Source: ' + cb.source + ' · Sold = Closed-Sold + Kicked-Back · Lost = Closed-Lost',
+              headers: [
+                { label: 'Branch', num: false },
+                { label: 'Opps', num: true },
+                { label: 'Sold', num: true },
+                { label: 'Lost', num: true },
+                { label: 'Open', num: true },
+                { label: 'Close %', num: true },
+                { label: 'Issue %', num: true },
+                { label: 'Sold $', num: true },
+                { label: 'NSLI ($/lead)', num: true },
+                { label: 'Avg Sold $', num: true }
+              ],
+              rows: cb.rows.map(function (r) {
+                var closePill = r.closePct >= 50
+                  ? '<span class="pill pill-success">' + r.closePct.toFixed(1) + '%</span>'
+                  : r.closePct < 35
+                    ? '<span class="pill pill-danger">' + r.closePct.toFixed(1) + '%</span>'
+                    : '<span class="pill pill-warn">' + r.closePct.toFixed(1) + '%</span>';
+                var nsliPill = r.nsli >= cb.totals.nsli * 1.25
+                  ? '<span class="pill pill-success">$' + r.nsli.toLocaleString() + '</span>'
+                  : r.nsli < cb.totals.nsli * 0.75
+                    ? '<span class="pill pill-danger">$' + r.nsli.toLocaleString() + '</span>'
+                    : '$' + r.nsli.toLocaleString();
+                return [
+                  { html: '<strong>' + r.branch + '</strong>' },
+                  r.opps.toLocaleString(),
+                  r.sold.toLocaleString(),
+                  r.lost.toLocaleString(),
+                  r.open.toLocaleString(),
+                  { html: closePill },
+                  r.issuePct.toFixed(1) + '%',
+                  fmt.money(r.soldAmt),
+                  { html: nsliPill },
+                  fmt.money(r.avgSold)
+                ];
+              }).concat([[
+                { html: '<strong>Network Total</strong>' },
+                cb.totals.opps.toLocaleString(),
+                cb.totals.sold.toLocaleString(),
+                cb.totals.lost.toLocaleString(),
+                cb.totals.open.toLocaleString(),
+                { html: '<strong>' + cb.totals.closePct.toFixed(1) + '%</strong>' },
+                cb.totals.issuePct.toFixed(1) + '%',
+                { html: '<strong>' + fmt.money(cb.totals.soldAmt) + '</strong>' },
+                { html: '<strong>$' + cb.totals.nsli.toLocaleString() + '</strong>' },
+                fmt.money(cb.totals.avgSold)
+              ]])
+            },
+            {
+              kind: 'callout',
+              tone: lowClose.closePct < 25 ? 'danger' : 'warn',
+              title: 'Where to focus this week',
+              body: '<strong>' + lowClose.branch + '</strong> is at <strong>' + lowClose.closePct.toFixed(1) + '%</strong> close on ' + lowClose.opps + ' opps (NSLI $' + lowClose.nsli.toLocaleString() + '), well below the network ' + cb.totals.closePct.toFixed(1) + '% / $' + cb.totals.nsli.toLocaleString() + '. <strong>' + topClose.branch + '</strong> sets the bar at <strong>' + topClose.closePct.toFixed(1) + '%</strong> close, and <strong>' + topNsli.branch + '</strong> leads NSLI at <strong>$' + topNsli.nsli.toLocaleString() + '</strong> per lead. Worth a coaching call on lead handling and price defense at the bottom-tier branches before the Q3 push.'
+            }
+      ];
+    })()))
   };
 
   // ============================================================
