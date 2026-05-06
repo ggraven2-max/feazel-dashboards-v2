@@ -77,17 +77,23 @@
     var bdg = es.budget || 0;
     var actual = es.modelAnnualInvoiced || 0;
     var gap = es.gap || 0;
+    var ps = D.profitabilitySummary || {};
+    var pip = D.pipelineSnapshot || {};
+    var wtH = D.weeklyTargetsHeader || {};
+    var brH = D.budgetRecoveryHeader || {};
+    var commentary = D.commentary || {};
 
-    // Pull KPI values straight from the calculator output (already formatted)
     function kpisRow (slice, cols) {
       return { kind: 'kpi-row', cols: cols || 4, items: slice };
     }
     function kpiObj (k) {
-      return { label: k.label, value: k.value, sub: k.sub || '', tone: k.trend === 'positive' ? 'good' : (k.trend === 'negative' ? 'crit' : 'navy') };
+      return {
+        label: k.label, value: k.value, sub: k.sub || '',
+        tone: k.trend === 'positive' ? 'success' : (k.trend === 'negative' ? 'danger' : 'navy')
+      };
     }
     var allKpis = (D.kpis || []).map(kpiObj);
 
-    // Helper: pluck a chart object by id (returns the renderer-friendly shape)
     function chartFromId (id, opts) {
       var c = C[id];
       if (!c) return null;
@@ -96,7 +102,9 @@
         title: opts.title || c.title,
         sub: opts.sub || c.sub,
         height: opts.height || 300,
-        config: Object.assign({}, c.config, { options: withOpts({ scales: { y: moneyAxis() } }) })
+        config: Object.assign({}, c.config, {
+          options: withOpts(Object.assign({ scales: { y: moneyAxis() } }, opts.options || {}))
+        })
       };
     }
     function tableFromId (id, opts) {
@@ -116,15 +124,26 @@
 
     var mfPages = {};
 
-    // ---- INDEX / EXECUTIVE (the hub) ----
+    // Pre-compute YTD numbers for KPI rows
+    var ytdRev = (T['mf-monthly-rollup'] || { rows: [] }).rows
+      .filter(function (r) { return r[1] && r[1] !== '—' && r[1] !== '$0'; })
+      .length;
+    var lastClosedKpi = allKpis.find(function (k) { return /last month revenue/i.test(k.label); });
+    var ytdVsPlanKpi = allKpis.find(function (k) { return /ytd vs plan/i.test(k.label); });
+    var ytdVsFcstKpi = allKpis.find(function (k) { return /ytd vs forecast/i.test(k.label); });
+    var planRestKpi  = allKpis.find(function (k) { return /plan-rest forecast/i.test(k.label); });
+
+    // ─────────────────────────────────────────────────────────────
+    // INDEX / EXECUTIVE
+    // ─────────────────────────────────────────────────────────────
     var indexPage = {
       eyebrow: D.subtitle || 'MF-v1 · 2026',
       title: 'Multi-Family Revenue Forecast',
-      intro: es.narrative || 'MF revenue tracking against the Commercial Budget. Reads job-level dates from Salesforce for actuals and Lisa\'s monthly schedules for forward forecast. Variance views show planned vs actual per month.',
+      intro: es.narrative || 'MF revenue tracking against the $51.67M Commercial Budget. Actuals come from Salesforce invoiced dates (NetSuite cross-check available); forecast is Lisa\'s monthly schedule.',
       tags: [
-        { kind: 'info',    text: 'MF-v1 · ' + (D.methodologyLock ? D.methodologyLock.lockedOn : '2026-05-04') },
+        { kind: 'info',    text: 'MF-v1 · locked ' + (D.methodologyLock ? D.methodologyLock.lockedOn : '2026-05-04') },
         { kind: gap >= 0 ? 'success' : 'warn', text: (gap >= 0 ? '+' : '') + fmt.money(gap, { short: true }) + ' vs plan' },
-        { kind: 'info',    text: 'Budget ' + fmt.money(bdg, { short: true }) }
+        { kind: 'info',    text: 'Plan ' + fmt.money(bdg, { short: true }) }
       ],
       sections: [
         kpisRow(allKpis.slice(0, 4)),
@@ -137,142 +156,416 @@
         },
         {
           kind: 'chart-grid', cols: 2,
-          heading: 'WIP and Variance',
+          heading: 'WIP balance and forecast variance',
           charts: [
             chartFromId('mf-wip-balance', { height: 280 }),
             chartFromId('mf-variance', { height: 280 })
           ].filter(Boolean)
         },
-        tableFromId('mf-variance', { heading: 'Forecast vs Actual (per month)', caption: 'Positive variance = actuals beat Lisa\'s pre-month schedule.' })
+        tableFromId('mf-variance', {
+          heading: 'Forecast vs Actual (per month)',
+          caption: 'Positive variance = actuals beat Lisa\'s pre-month schedule.'
+        }),
+        { kind: 'callout', tone: gap >= 0 ? 'success' : 'warn',
+          title: gap >= 0 ? 'On pace to plan' : 'Below plan',
+          body: gap >= 0
+            ? 'Annualized run-rate of <strong>' + fmt.money(actual, { short: true }) + '</strong> clears the $51.67M plan with cushion. The bridge in Budget Recovery shows where the lead came from and the per-month pace required to hold it.'
+            : 'Annualized run-rate of <strong>' + fmt.money(actual, { short: true }) + '</strong> projects <strong>' + fmt.money(gap, { short: true }) + '</strong> short of the $51.67M plan, a <strong>' + brH.upliftPct.toFixed(1) + '%</strong> uplift on remaining months. Push WIP through to invoice and accelerate starts in the top branches; see Recommendations for the specific moves.'
+        }
       ].filter(Boolean)
     };
     mfPages.index = indexPage;
     mfPages.executive = indexPage;
 
-    // ---- MONTHLY ----
-    mfPages.monthly = {
-      eyebrow: 'MONTHLY DETAIL',
-      title: 'Monthly Roll-Up',
-      intro: 'Per-month revenue, starts, WIP movement, and forecast variance. Drill in for branch-level detail on the Production tab.',
-      tags: [],
+    // ─────────────────────────────────────────────────────────────
+    // PROJECTION (rest-of-year trajectory)
+    // ─────────────────────────────────────────────────────────────
+    mfPages.projection = {
+      eyebrow: 'PROJECTION · MF',
+      title: 'Annual Projection',
+      intro: 'Where MF lands at year-end. Closed months are NetSuite invoiced revenue; remaining months come from Lisa\'s schedule for the next 1-2 months and Commercial Budget plan thereafter. The "Plan-Rest Forecast" KPI is the formal projection used in board materials.',
+      tags: [
+        { kind: 'info',    text: 'Annual plan ' + fmt.money(bdg, { short: true }) },
+        { kind: gap >= 0 ? 'success' : 'warn', text: (gap >= 0 ? '+' : '') + fmt.money(gap, { short: true }) + ' vs plan' }
+      ],
       sections: [
+        kpisRow([
+          allKpis.find(function (k) { return /annualized|annual forecast|annual budget/i.test(k.label); }) || { label: 'Annual Forecast', value: fmt.money(actual, { short: true }), sub: 'annualized run-rate' },
+          planRestKpi || { label: 'Plan-Rest Forecast', value: fmt.money(actual, { short: true }), sub: 'YTD + remaining plan', tone: 'navy' },
+          { label: 'Annual Budget', value: fmt.money(bdg, { short: true }), sub: '2026 MF target', tone: 'navy' },
+          { label: 'Forecast vs Plan', value: (gap >= 0 ? '+' : '') + fmt.money(gap, { short: true }), sub: brH.upliftPct ? brH.upliftPct.toFixed(1) + '% gap' : '', tone: gap >= 0 ? 'success' : 'warn' }
+        ]),
         {
           kind: 'chart-grid', cols: 1,
-          heading: 'Monthly Revenue: three views',
+          heading: 'Forecast vs Actual vs Plan',
+          caption: 'The three views together: solid bars are actuals (closed months), the forecast line traces Lisa\'s monthly schedule, the plan line is the Commercial Budget.',
+          charts: [chartFromId('mf-rev-vs-plan-vs-forecast', { height: 360 })].filter(Boolean)
+        },
+        tableFromId('mf-monthly-rollup', { heading: 'Monthly trajectory (revenue, plan, gap)' }),
+        { kind: 'callout', tone: gap >= 0 ? 'success' : 'warn',
+          title: 'Methodology read',
+          body: 'Two annual projections to compare. <strong>Annualized run-rate</strong> = (YTD revenue / months elapsed) × 12, sensitive to lumpy months. <strong>Plan-rest</strong> = YTD actual + plan for remaining months, the more honest forecast for MF given seasonality. Run-rate currently shows ' + fmt.money(actual, { short: true }) + '; plan-rest shows ' + (planRestKpi ? planRestKpi.value : fmt.money(actual, { short: true })) + '.'
+        }
+      ].filter(Boolean)
+    };
+
+    // ─────────────────────────────────────────────────────────────
+    // MONTHLY
+    // ─────────────────────────────────────────────────────────────
+    mfPages.monthly = {
+      eyebrow: 'MONTHLY DETAIL · MF',
+      title: 'Monthly Roll-Up',
+      intro: 'Per-month revenue, starts, WIP movement, and forecast variance. Drill into branch-level detail on the Production tab.',
+      tags: [
+        lastClosedKpi ? { kind: 'success', text: lastClosedKpi.label + ' ' + lastClosedKpi.value } : null,
+        ytdVsFcstKpi ? { kind: ytdVsFcstKpi.tone === 'danger' ? 'warn' : 'info', text: 'YTD vs forecast ' + ytdVsFcstKpi.value } : null
+      ].filter(Boolean),
+      sections: [
+        kpisRow([
+          lastClosedKpi || { label: 'Last Month', value: '—', sub: '' },
+          ytdVsPlanKpi || { label: 'YTD vs Plan', value: '—', sub: '' },
+          ytdVsFcstKpi || { label: 'YTD vs Forecast', value: '—', sub: '' },
+          { label: 'Current WIP', value: allKpis.find(function (k) { return /current wip/i.test(k.label); }) ? allKpis.find(function (k) { return /current wip/i.test(k.label); }).value : fmt.money(pip.totalValue || 0, { short: true }), sub: (pip.totalJobs || 0) + ' jobs in flight today', tone: 'navy' }
+        ]),
+        {
+          kind: 'chart-grid', cols: 1,
+          heading: 'Monthly revenue: three views',
           charts: [chartFromId('mf-rev-vs-plan-vs-forecast', { height: 320 })].filter(Boolean)
         },
-        tableFromId('mf-monthly-rollup', { heading: 'Monthly Roll-Up' }),
+        tableFromId('mf-monthly-rollup', { heading: 'Monthly roll-up' }),
         tableFromId('mf-variance', { heading: 'Forecast vs Actual (per month)' }),
         {
           kind: 'chart-grid', cols: 1,
-          heading: 'WIP Starts vs Completions',
+          heading: 'WIP starts vs completions',
+          caption: 'When the green starts bar exceeds the gold completions bar, WIP grows for the month.',
           charts: [chartFromId('mf-starts-vs-completions', { height: 280 })].filter(Boolean)
         }
       ].filter(Boolean)
     };
 
-    // ---- BUDGET ----
+    // ─────────────────────────────────────────────────────────────
+    // BUDGET (annual plan detail)
+    // ─────────────────────────────────────────────────────────────
     mfPages.budget = {
-      eyebrow: 'PLAN',
+      eyebrow: 'PLAN · MF COMMERCIAL BUDGET',
       title: 'Annual Budget Detail',
-      intro: 'Per-month plan from the 2026 Commercial Budget XLSX (row 6, "Total - 40000 - Revenue").',
+      intro: 'Per-month invoiced-revenue plan from the 2026 Commercial Budget XLSX (Total - 40000 - Revenue row). Headline annual is locked at $51.67M; monthly cells sum slightly lower (~$49.7M) and the bridge grosses them up to match the headline.',
       tags: [
-        { kind: 'info', text: 'Annual budget ' + fmt.money(bdg, { short: true }) }
-      ],
+        { kind: 'info', text: 'Annual plan ' + fmt.money(bdg, { short: true }) },
+        ytdVsPlanKpi ? { kind: ytdVsPlanKpi.tone === 'danger' ? 'warn' : 'success', text: 'YTD vs plan ' + ytdVsPlanKpi.value } : null
+      ].filter(Boolean),
       sections: [
-        tableFromId('mf-monthly-rollup', { heading: 'Monthly Plan vs Actual' })
+        kpisRow([
+          { label: 'Annual Plan',      value: fmt.money(bdg, { short: true }),       sub: 'Commercial Budget · 2026',          tone: 'navy' },
+          ytdVsPlanKpi || { label: 'YTD vs Plan', value: '—', sub: '' },
+          { label: 'Forecast vs Plan', value: (gap >= 0 ? '+' : '') + fmt.money(gap, { short: true }), sub: brH.upliftPct ? brH.upliftPct.toFixed(1) + '% gap' : 'on plan', tone: gap >= 0 ? 'success' : 'warn' },
+          { label: 'Uplift Needed',    value: (brH.upliftPct || 0).toFixed(1) + '%', sub: 'to recover plan on remaining months', tone: (brH.upliftPct || 0) > 10 ? 'danger' : (brH.upliftPct || 0) > 0 ? 'warn' : 'success' }
+        ]),
+        tableFromId('mf-monthly-rollup', { heading: 'Monthly plan vs actual' }),
+        { kind: 'callout', tone: 'info', title: 'Plan source',
+          body: 'Pulled directly from <code>2026 Commercial Budget.xlsx</code> in <code>inputs/multi-family/revenue-forecast/</code>. The monthly cells are illustrative; the contract is the $51.67M annual headline. If the budget is re-planned mid-year, drop the new XLSX in the inputs folder and the bridge updates automatically.'
+        }
       ].filter(Boolean)
     };
 
-    // ---- PIPELINE / WIP ----
+    // ─────────────────────────────────────────────────────────────
+    // JOB TYPES (mf-by-jobtype)
+    // ─────────────────────────────────────────────────────────────
+    var jtTable = T['mf-by-jobtype'];
+    var jtRows = (jtTable && jtTable.rows) || [];
+    mfPages['job-types'] = {
+      eyebrow: 'JOB TYPES · MF',
+      title: 'Job Type Analysis',
+      intro: 'How the MF book splits across job types. Insurance is a tiny share of the count but a meaningful share of the dollars per deal; retail-no-financing is the volume engine.',
+      tags: [{ kind: 'info', text: jtRows.length + ' active job types' }],
+      sections: [
+        jtRows.length ? kpisRow(jtRows.map(function (r, i) {
+          return {
+            label: r[0],
+            value: r[1],   // pre-formatted dollar string
+            sub: r[2] + ' jobs',
+            tone: i === 0 ? 'navy' : i === 1 ? 'success' : 'navy'
+          };
+        }), Math.min(jtRows.length, 4)) : null,
+        jtTable ? {
+          kind: 'chart-grid', cols: 2,
+          charts: [
+            {
+              title: 'Revenue share by job type',
+              height: 300,
+              config: {
+                type: 'doughnut',
+                data: {
+                  labels: jtRows.map(function (r) { return r[0]; }),
+                  datasets: [{
+                    data: jtRows.map(function (r) {
+                      // Strip "$" + "M/K" suffix to get a numeric share weight.
+                      var s = String(r[1]).replace(/[$,\s]/g, '');
+                      var mult = 1;
+                      if (/M$/i.test(s)) { mult = 1e6; s = s.slice(0, -1); }
+                      else if (/K$/i.test(s)) { mult = 1e3; s = s.slice(0, -1); }
+                      return parseFloat(s) * mult || 0;
+                    }),
+                    backgroundColor: [pal.navy, pal.success, pal.warning, pal.danger],
+                    borderColor: '#fff', borderWidth: 2
+                  }]
+                },
+                options: withOpts({
+                  cutout: '60%',
+                  plugins: { legend: { position: 'right' } }
+                })
+              }
+            },
+            {
+              title: 'Job count by type',
+              height: 300,
+              config: {
+                type: 'bar',
+                data: {
+                  labels: jtRows.map(function (r) { return r[0]; }),
+                  datasets: [{ data: jtRows.map(function (r) { return r[2] || 0; }), backgroundColor: pal.navy, label: '# Jobs' }]
+                },
+                options: withOpts({ plugins: { legend: { display: false } } })
+              }
+            }
+          ].filter(Boolean)
+        } : null,
+        tableFromId('mf-by-jobtype', { heading: 'Revenue and job count by job type' }),
+        { kind: 'callout', tone: 'info', title: 'Where the leverage is',
+          body: 'Insurance jobs are the smallest count but tend to carry the largest contracts on the MF book. A single insurance contract in the $300K+ range materially moves a month. Retail-no-financing sets the volume baseline.'
+        }
+      ].filter(Boolean)
+    };
+
+    // ─────────────────────────────────────────────────────────────
+    // PIPELINE / WIP
+    // ─────────────────────────────────────────────────────────────
     mfPages.pipeline = {
-      eyebrow: 'PIPELINE',
+      eyebrow: 'PIPELINE · MF WIP',
       title: 'WIP & Pipeline',
       intro: 'Jobs currently in WIP (started, not yet invoiced) and the forecasted WIP roll-forward from Lisa\'s monthly schedules.',
-      tags: [],
+      tags: [
+        { kind: 'info', text: (pip.totalJobs || 0) + ' jobs in WIP' },
+        { kind: 'info', text: fmt.money(pip.totalValue || 0, { short: true }) + ' WIP value' }
+      ],
       sections: [
+        kpisRow([
+          { label: 'WIP Today',  value: fmt.money(pip.totalValue || 0, { short: true }), sub: (pip.totalJobs || 0) + ' jobs in flight', tone: 'navy' },
+          { label: 'Avg Job in WIP', value: pip.totalJobs ? fmt.money((pip.totalValue || 0) / pip.totalJobs, { short: true }) : '$0', sub: 'mean contract value', tone: 'navy' },
+          allKpis.find(function (k) { return /current wip/i.test(k.label); }) || { label: 'Current WIP KPI', value: '—', sub: '' },
+          ytdVsFcstKpi || { label: 'YTD vs Forecast', value: '—', sub: '' }
+        ]),
         {
           kind: 'chart-grid', cols: 1,
-          heading: 'WIP Balance Over Time',
+          heading: 'WIP balance over time',
+          caption: 'Month-end WIP balance. Spikes mean we started more than we completed.',
           charts: [chartFromId('mf-wip-balance', { height: 320 })].filter(Boolean)
         },
-        tableFromId('mf-wip-schedule', { heading: 'Forecasted WIP Schedule (from Lisa\'s monthly forecasts)' }),
+        {
+          kind: 'chart-grid', cols: 1,
+          heading: 'Starts vs completions per month',
+          charts: [chartFromId('mf-starts-vs-completions', { height: 280 })].filter(Boolean)
+        },
+        tableFromId('mf-wip-schedule', { heading: 'Forecasted WIP schedule (Lisa\'s monthly forecasts)' }),
         tableFromId('mf-in-wip', { heading: 'Currently in WIP (Salesforce-derived)', maxHeight: '480px' })
       ].filter(Boolean)
     };
 
-    // ---- PRODUCTION (per branch) ----
+    // ─────────────────────────────────────────────────────────────
+    // CYCLE (days from start to invoice)
+    // ─────────────────────────────────────────────────────────────
+    mfPages.cycle = {
+      eyebrow: 'CYCLE · MF',
+      title: 'Cycle Times',
+      intro: 'How long MF jobs take from start (in-progress) to invoiced. The list below is jobs currently in WIP, sorted by days since start. Pull from this list to find slips.',
+      tags: [
+        { kind: 'info', text: (pip.totalJobs || 0) + ' jobs in WIP' }
+      ],
+      sections: [
+        kpisRow([
+          { label: 'WIP Jobs',          value: (pip.totalJobs || 0) + '', sub: 'currently in flight', tone: 'navy' },
+          { label: 'WIP Value',         value: fmt.money(pip.totalValue || 0, { short: true }), sub: 'sum of contract values', tone: 'navy' },
+          { label: 'Avg WIP Contract',  value: pip.totalJobs ? fmt.money((pip.totalValue || 0) / pip.totalJobs, { short: true }) : '$0', sub: 'mean contract size', tone: 'navy' },
+          { label: 'See Installs YTD',  value: 'Cycle median', sub: 'click through for the median-days view', tone: 'navy' }
+        ]),
+        tableFromId('mf-in-wip', {
+          heading: 'WIP detail · sortable',
+          caption: 'Each row = a job that has started but is not yet invoiced. Started date drives cycle.',
+          maxHeight: '520px'
+        }),
+        { kind: 'callout', tone: 'info', title: 'For full cycle analysis',
+          body: 'The Installs YTD dashboard has the cycle medians by branch, PM, and trade based on completed (invoiced) MF jobs. This tab focuses on what is currently in flight; for the closed-job cycle picture, see <strong>Installs YTD → Trends</strong> and <strong>Installs YTD → PMs</strong>.'
+        }
+      ].filter(Boolean)
+    };
+
+    // ─────────────────────────────────────────────────────────────
+    // WEEKLY TARGETS (re-presented as monthly for MF)
+    // ─────────────────────────────────────────────────────────────
+    var monthlyNeed = (wtH.avgWeeklyNeed || 0) * (52 / 12);
+    mfPages['weekly-targets'] = {
+      eyebrow: 'TARGETS · MF MONTHLY',
+      title: 'Monthly Targets',
+      intro: 'What MF needs each month to land the $51.67M plan. The MF book runs monthly (lumpy big-deal cadence), so we treat the weekly target as informational only and anchor on the per-month bridge.',
+      tags: [
+        { kind: 'info', text: 'Annual plan ' + fmt.money(bdg, { short: true }) },
+        gap >= 0
+          ? { kind: 'success', text: 'On pace, +' + fmt.money(gap, { short: true }) }
+          : { kind: 'warn',    text: brH.upliftPct.toFixed(1) + '% uplift needed' }
+      ],
+      sections: [
+        kpisRow([
+          { label: 'Avg Weekly Need',  value: fmt.money(wtH.avgWeeklyNeed || 0, { short: true }), sub: '$51.67M / 52 weeks · informational', tone: 'navy' },
+          { label: 'Avg Monthly Need', value: fmt.money(monthlyNeed, { short: true }),            sub: '$51.67M / 12 months',                tone: 'navy' },
+          ytdVsPlanKpi || { label: 'YTD vs Plan', value: '—', sub: '' },
+          { label: 'Uplift Needed',    value: (brH.upliftPct || 0).toFixed(1) + '%',              sub: 'on remaining months',                tone: (brH.upliftPct || 0) > 10 ? 'danger' : (brH.upliftPct || 0) > 0 ? 'warn' : 'success' }
+        ]),
+        tableFromId('mf-monthly-rollup', { heading: 'Monthly target schedule (plan, actual, gap, starts)' }),
+        { kind: 'callout', tone: 'info', title: 'Why monthly, not weekly',
+          body: 'MF deal sizes range from a few thousand for repairs to several hundred thousand for insurance jobs. Weekly cadence is too noisy for management — a single big contract can flip a week. The Sales Overview Monthly Targets tab has the deeper monthly view with per-market lift.'
+        }
+      ].filter(Boolean)
+    };
+
+    // ─────────────────────────────────────────────────────────────
+    // PRODUCTION (per branch)
+    // ─────────────────────────────────────────────────────────────
+    var byBranchTbl = T['mf-by-branch'];
+    var byBranchRows = (byBranchTbl && byBranchTbl.rows) || [];
+    var topBranchRow = byBranchRows[0];
     mfPages.production = {
-      eyebrow: 'BRANCH DETAIL',
+      eyebrow: 'BRANCH DETAIL · MF',
       title: 'Production by Branch',
-      intro: 'Forecasted revenue per branch per month (from Lisa\'s schedules) and YTD invoiced totals per branch (from Salesforce).',
-      tags: [],
+      intro: 'Forecasted revenue per branch per month from Lisa\'s schedules, plus YTD invoiced totals per branch from Salesforce.',
+      tags: byBranchRows.length ? [{ kind: 'info', text: byBranchRows.length + ' branches with MF activity' }] : [],
       sections: [
-        tableFromId('mf-branch-forecast', { heading: 'Forecasted Revenue by Branch (per month)' }),
-        tableFromId('mf-by-branch', { heading: 'YTD Invoiced by Branch (Salesforce actuals)' }),
-        tableFromId('mf-by-jobtype', { heading: 'YTD Revenue by Job Type' })
+        topBranchRow ? kpisRow([
+          { label: 'Top Branch',     value: topBranchRow[0],                sub: topBranchRow[1] + ' invoiced · ' + (topBranchRow[3] || 0) + ' jobs', tone: 'success' },
+          { label: 'WIP at Top',     value: topBranchRow[2] || '$0',        sub: 'currently in flight',                                              tone: 'navy' },
+          { label: 'Total Branches', value: byBranchRows.length + '',       sub: 'with YTD MF activity',                                            tone: 'navy' },
+          { label: 'YTD Revenue',    value: fmt.money((es && es.modelAnnualInvoiced ? actual / 12 * 5 : 0), { short: true }), sub: 'invoiced through last closed month',                                            tone: 'navy' }
+        ]) : null,
+        tableFromId('mf-branch-forecast', { heading: 'Forecasted revenue by branch (per month, from Lisa)' }),
+        tableFromId('mf-by-branch',       { heading: 'YTD invoiced by branch (Salesforce actuals)' }),
+        tableFromId('mf-by-jobtype',      { heading: 'YTD revenue by job type' }),
+        { kind: 'callout', tone: 'info', title: 'Reading the two tables',
+          body: 'The first table is forward-looking: what each branch said it would invoice in the upcoming months. The second is backward-looking: what each branch actually invoiced YTD. Compare the trajectory between them to spot branches running ahead or behind their own forecast.'
+        }
       ].filter(Boolean)
     };
 
-    // ---- BUDGET RECOVERY (variance focused) ----
+    // ─────────────────────────────────────────────────────────────
+    // PROFITABILITY
+    // ─────────────────────────────────────────────────────────────
+    var profParsed = (ps.combinedGP || 0) > 0 || (ps.materialCost || 0) > 0;
+    mfPages.profitability = {
+      eyebrow: 'PROFITABILITY · MF',
+      title: 'Profitability',
+      intro: profParsed
+        ? 'Margin and cost mix on the MF book. GM and cost ratios sourced from the MF profitability export.'
+        : 'MF profitability detail is not parsed in v1. The summary below is what we have today; full cost-mix analysis is on the v2 backlog.',
+      tags: [
+        { kind: profParsed ? 'success' : 'info', text: profParsed ? 'GM ' + (ps.combinedGP_pct || 0).toFixed(1) + '%' : 'Revenue-only view' }
+      ],
+      sections: [
+        kpisRow([
+          { label: 'YTD Revenue',  value: fmt.money(ps.combinedRevenue || 0, { short: true }),  sub: (ps.y2026_jobs || 0) + ' jobs invoiced FY2026', tone: 'navy' },
+          { label: 'YTD Jobs',     value: (ps.y2026_jobs || 0) + '',                            sub: 'unique completed jobs',                        tone: 'navy' },
+          { label: 'GM (combined)', value: profParsed ? (ps.combinedGP_pct || 0).toFixed(1) + '%' : '—', sub: profParsed ? fmt.money(ps.combinedGP || 0, { short: true }) + ' GP' : 'not parsed yet', tone: profParsed ? 'success' : 'navy' },
+          { label: 'FY2025 Comp',  value: ps.y2025_jobs ? (ps.y2025_jobs + ' jobs') : '—',      sub: ps.y2025_revenue ? fmt.money(ps.y2025_revenue, { short: true }) + ' revenue' : 'no FY2025 data in this export', tone: 'navy' }
+        ]),
+        !profParsed ? {
+          kind: 'callout', tone: 'info', title: 'Profitability v2 backlog',
+          body: 'The MF profitability CSV is in the inputs folder but the full cost-mix parser (material, labor, commissions, MMU) is not built yet. v1 surfaces revenue and job counts; v2 will add GM by branch, cost variance vs budget, and the residential-equivalent MMU read.'
+        } : null,
+        profParsed ? {
+          kind: 'kpi-row', cols: 3,
+          items: [
+            { label: 'Material Cost',   value: fmt.money(ps.materialCost || 0, { short: true }),   sub: (ps.materialPctContract || 0).toFixed(1) + '% of contract',  tone: 'navy' },
+            { label: 'Labor Cost',      value: fmt.money(ps.laborCost || 0, { short: true }),      sub: (ps.laborPctContract || 0).toFixed(1) + '% of contract',     tone: 'navy' },
+            { label: 'Commissions',     value: fmt.money(ps.commissions || 0, { short: true }),    sub: (ps.commissionPctContract || 0).toFixed(1) + '% of contract', tone: 'navy' }
+          ]
+        } : null
+      ].filter(Boolean)
+    };
+
+    // ─────────────────────────────────────────────────────────────
+    // BUDGET RECOVERY (variance)
+    // ─────────────────────────────────────────────────────────────
     mfPages['budget-recovery'] = {
-      eyebrow: 'VARIANCE',
+      eyebrow: 'RECOVERY · MF VARIANCE',
       title: 'Budget Recovery',
-      intro: 'Per-month variance against plan and against Lisa\'s forecast. Tells you where to intervene.',
-      tags: [],
+      intro: 'Per-month variance against plan and against Lisa\'s forecast. Tells you where to intervene before the month closes.',
+      tags: [
+        { kind: gap >= 0 ? 'success' : 'warn', text: 'Forecast vs Plan ' + (gap >= 0 ? '+' : '') + fmt.money(gap, { short: true }) },
+        ytdVsPlanKpi ? { kind: ytdVsPlanKpi.tone === 'danger' ? 'warn' : 'success', text: 'YTD vs Plan ' + ytdVsPlanKpi.value } : null
+      ].filter(Boolean),
       sections: [
-        tableFromId('mf-variance', { heading: 'Forecast vs Actual (per month)' }),
-        tableFromId('mf-monthly-rollup', { heading: 'Monthly Plan vs Actual' })
+        kpisRow([
+          { label: 'Annual Plan',     value: fmt.money(bdg, { short: true }),    sub: 'Commercial Budget · 2026',                  tone: 'navy' },
+          ytdVsPlanKpi || { label: 'YTD vs Plan', value: '—', sub: '' },
+          { label: 'Uplift Needed',   value: (brH.upliftPct || 0).toFixed(1) + '%', sub: 'on remaining months to recover plan',  tone: (brH.upliftPct || 0) > 10 ? 'danger' : (brH.upliftPct || 0) > 0 ? 'warn' : 'success' },
+          { label: 'Forecast Gap',    value: (gap >= 0 ? '+' : '') + fmt.money(gap, { short: true }), sub: 'annualized run-rate vs plan', tone: gap >= 0 ? 'success' : 'warn' }
+        ]),
+        {
+          kind: 'chart-grid', cols: 1,
+          heading: 'Per-month forecast variance',
+          caption: 'Bars above zero = beat Lisa\'s forecast that month. Bars below = missed.',
+          charts: [chartFromId('mf-variance', { height: 320 })].filter(Boolean)
+        },
+        tableFromId('mf-variance', { heading: 'Forecast vs actual (per month)' }),
+        tableFromId('mf-monthly-rollup', { heading: 'Monthly plan vs actual' }),
+        { kind: 'callout', tone: gap >= 0 ? 'success' : 'warn',
+          title: gap >= 0 ? 'On pace' : 'Recovery levers',
+          body: gap >= 0
+            ? 'Annualized run-rate clears the plan. The variance table shows where each month landed against Lisa\'s forecast; treat negative variance as an early warning even when the year is on track.'
+            : 'Two levers to close the <strong>' + fmt.money(Math.abs(gap), { short: true }) + '</strong> gap: push WIP through to invoice (<strong>' + fmt.money(pip.totalValue || 0, { short: true }) + '</strong> currently sitting in WIP) and accelerate starts on the higher-margin job types. The Recommendations tab has the specific moves.'
+        }
       ].filter(Boolean)
     };
 
-    // ---- RECOMMENDATIONS ----
+    // ─────────────────────────────────────────────────────────────
+    // RECOMMENDATIONS
+    // ─────────────────────────────────────────────────────────────
+    var actions = (commentary.actionableRecommendations || []).map(function (r) { return { text: r }; });
+    var highlights = (commentary.strategyHighlights || []).map(function (r) { return { text: r }; });
     mfPages.recommendations = {
-      eyebrow: 'STRATEGY',
+      eyebrow: 'STRATEGY · MF',
       title: 'Recommendations',
-      intro: '',
-      tags: [],
+      intro: es.narrative || 'Where the MF book stands and the next moves to land the $51.67M plan.',
+      tags: actions.length ? [{ kind: 'info', text: actions.length + ' action item' + (actions.length === 1 ? '' : 's') }] : [],
       sections: [
+        kpisRow([
+          { label: 'Plan',            value: fmt.money(bdg, { short: true }),    sub: 'MF Commercial Budget',           tone: 'navy' },
+          { label: 'Annual Forecast', value: fmt.money(actual, { short: true }), sub: 'annualized run-rate',            tone: gap >= 0 ? 'success' : 'warn' },
+          { label: 'Forecast Gap',    value: (gap >= 0 ? '+' : '') + fmt.money(gap, { short: true }), sub: brH.upliftPct ? brH.upliftPct.toFixed(1) + '% uplift needed' : 'on plan', tone: gap >= 0 ? 'success' : 'warn' },
+          { label: 'Current WIP',     value: fmt.money(pip.totalValue || 0, { short: true }), sub: (pip.totalJobs || 0) + ' jobs to push through', tone: 'navy' }
+        ]),
         {
           kind: 'prose',
           cards: [
             {
               kind: 'navy',
               eyebrow: 'EXECUTIVE NARRATIVE',
-              title: 'Where MF Stands',
+              title: 'Where MF stands',
               body: '<p>' + (es.narrative || '') + '</p>'
             },
-            {
-              eyebrow: 'ACTIONS',
-              title: 'Next Moves',
-              list: (D.commentary && D.commentary.actionableRecommendations || []).map(function (r) {
-                return { text: r };
-              })
-            }
-          ]
+            actions.length ? {
+              kind: 'tint',
+              eyebrow: 'NEXT MOVES',
+              title: 'Action items',
+              list: actions
+            } : null,
+            highlights.length ? {
+              eyebrow: 'STRATEGY',
+              title: 'Highlights',
+              list: highlights
+            } : null
+          ].filter(Boolean),
+          cols: 2
         }
-      ]
+      ].filter(Boolean)
     };
-
-    // ---- TABS NOT BUILT YET FOR MF ----
-    var notBuiltSlugs = ['projection', 'job-types', 'cycle', 'weekly-targets', 'profitability'];
-    notBuiltSlugs.forEach(function (slug) {
-      mfPages[slug] = {
-        eyebrow: 'COMING SOON',
-        title: slug.replace(/-/g, ' ').replace(/\b\w/g, function (c) { return c.toUpperCase(); }),
-        intro: 'This view is built for residential and not yet ported to multi-family. The data model differs (no statistical conversion curves, no four-job-type taxonomy, no weekly cadence). Tracking it as a v2 follow-up.',
-        tags: [],
-        sections: [
-          {
-            kind: 'callout',
-            tone: 'info',
-            title: 'Not yet built for MF',
-            body: '<p>The multi-family revenue methodology (MF-v1) is event-driven and monthly. The residential V5 model uses statistical conversion curves over a four-job-type taxonomy with weekly cadence. Several of the residential tabs (Projection, Job Types, Cycle, Weekly Targets, Profitability) don\'t map cleanly to the MF model and need their own v2 designs.</p>' +
-                  '<p>Use the <strong>Index</strong>, <strong>Monthly</strong>, <strong>Pipeline</strong>, <strong>Production</strong>, and <strong>Budget Recovery</strong> tabs for MF-specific views.</p>'
-          }
-        ]
-      };
-    });
 
     return mfPages;
   }
