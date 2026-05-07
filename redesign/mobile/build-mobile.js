@@ -212,9 +212,9 @@ function serviceHubHTML () {
         <p>Appointments, accounts, branches, techs, aging, and findings.</p>
         <div class="tile-stats">
           <div class="tile-stat"><div class="l">Apps YTD</div><div class="v" data-bind="tile.sc.apps">—</div></div>
-          <div class="tile-stat"><div class="l">Billed</div><div class="v" data-bind="tile.sc.billed">—</div></div>
-          <div class="tile-stat"><div class="l">In Progress 14+</div><div class="v" data-bind="tile.sc.inProg">—</div></div>
           <div class="tile-stat"><div class="l">Techs</div><div class="v" data-bind="tile.sc.techs">—</div></div>
+          <div class="tile-stat"><div class="l">Hours</div><div class="v" data-bind="tile.sc.hours">—</div></div>
+          <div class="tile-stat"><div class="l">Contract $</div><div class="v" data-bind="tile.sc.contract">—</div></div>
         </div>
         <span class="tile-cta">Open dashboard →</span>
       </a>
@@ -269,10 +269,10 @@ function serviceHubHTML () {
       return '$' + Math.round(v).toLocaleString('en-US');
     };
 
-    var scApps   = kpi(SC.kpis, 'Total Appointments') || kpi(SC.kpis, 'Appointments YTD');
-    var scBilled = kpi(SC.kpis, 'Billed Revenue') || kpi(SC.kpis, 'True Revenue');
-    var scInProg = kpi(SC.kpisAging || [], 'In Progress 14+ Days') || kpi(SC.kpisAging || [], 'In Progress 60+ Days');
-    var scTechs  = kpi(SC.kpis, 'Active Techs') || kpi(SC.kpis, 'Techs');
+    var scApps     = kpi(SC.kpis, 'Appointments YTD');
+    var scTechs    = kpi(SC.kpis, 'Service Techs');
+    var scHours    = kpi(SC.kpis, 'Total Hours');
+    var scContract = kpi(SC.kpis, 'Contract $ on Calls');
 
     var binds = {
       'hero.target':      fmtBigMoney(rfBudget),
@@ -287,9 +287,9 @@ function serviceHubHTML () {
       'tile.svc.pace':     val(rfPace),
       'tile.svc.gm':       ps.y2026_GP_pct ? ps.y2026_GP_pct.toFixed(1) + '%' : '—',
       'tile.sc.apps':      val(scApps, '—'),
-      'tile.sc.billed':    val(scBilled, '—'),
-      'tile.sc.inProg':    val(scInProg, '—'),
       'tile.sc.techs':     val(scTechs, '—'),
+      'tile.sc.hours':     val(scHours, '—'),
+      'tile.sc.contract':  val(scContract, '—'),
       'freshness.headline': 'As of ' + (window.FZ.formatBuiltAt ? window.FZ.formatBuiltAt({ dateOnly: true }) : '—'),
       'freshness.stamp':    window.FZ.formatBuiltAt ? window.FZ.formatBuiltAt() : '—'
     };
@@ -354,8 +354,9 @@ function commandCenterHTML (lob) {
   <section class="section">
     <div class="callout">
       <span class="callout-title">Where it stands</span>
-      4-week pace <strong data-bind="rollup.weeklyPace">—</strong>/wk projects to <strong data-bind="rollup.annualForecast">—</strong>
-      vs <strong data-bind="rollup.budget">—</strong> budget, gap <strong data-bind="rollup.gap">—</strong>.
+      ${lob === 'multi-family'
+        ? `Invoiced <strong data-bind="rollup.invoicedYTD">—</strong> YTD, projecting to <strong data-bind="rollup.annualForecast">—</strong> against the <strong data-bind="rollup.budget">—</strong> plan, gap <strong data-bind="rollup.gap">—</strong>.`
+        : `4-week pace <strong data-bind="rollup.weeklyPace">—</strong>/wk projects to <strong data-bind="rollup.annualForecast">—</strong> vs <strong data-bind="rollup.budget">—</strong> budget, gap <strong data-bind="rollup.gap">—</strong>.`}
     </div>
   </section>
 
@@ -458,9 +459,11 @@ function commandCenterHTML (lob) {
     var soSold   = kpi(SO.kpis, 'Sold');
     var soKicked = kpi(SO.kpis, 'Kicked Back');
     var soAvg    = kpi(SO.kpis, 'Avg Deal Size');
-    var rfFcst   = kpi(RF.kpis, 'Annual Forecast');
+    // MF uses 'Plan-Rest Forecast' instead of 'Annual Forecast'; fall back so
+    // the rollup line and the Revenue tile show real numbers in both LOBs.
+    var rfFcst   = kpi(RF.kpis, 'Annual Forecast') || kpi(RF.kpis, 'Plan-Rest Forecast');
     var rfBudget = kpi(RF.kpis, 'Annual Budget');
-    var rfGap    = kpi(RF.kpis, 'Forecast vs Budget');
+    var rfGap    = kpi(RF.kpis, 'Forecast vs Budget') || kpi(RF.kpis, 'YTD vs Plan');
     var rfPipe   = kpi(RF.kpis, 'Active Pipeline');
     var rfWeekly = kpi(RF.kpis, '4-Week Avg Weekly Sales');
     var rfInv    = kpi(RF.kpis, 'Invoiced YTD');
@@ -496,6 +499,7 @@ function commandCenterHTML (lob) {
       'rollup.annualForecast':val(rfFcst, '—'),
       'rollup.budget':        val(rfBudget, '—'),
       'rollup.gap':           val(rfGap, '—'),
+      'rollup.invoicedYTD':   val(rfInv, '—'),
       'tile.sales.signed': val(soSigned),
       'tile.sales.sold':   val(soSold),
       'tile.sales.kicked': val(soKicked),

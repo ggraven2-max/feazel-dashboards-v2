@@ -72,9 +72,9 @@
         <p>Appointments, accounts, branches, techs, aging, and findings.</p>
         <div class="tile-stats">
           <div class="tile-stat"><div class="l">Apps YTD</div><div class="v" data-bind="tile.sc.apps">—</div></div>
-          <div class="tile-stat"><div class="l">Billed</div><div class="v" data-bind="tile.sc.billed">—</div></div>
-          <div class="tile-stat"><div class="l">In Progress 14+</div><div class="v" data-bind="tile.sc.inProg">—</div></div>
           <div class="tile-stat"><div class="l">Techs</div><div class="v" data-bind="tile.sc.techs">—</div></div>
+          <div class="tile-stat"><div class="l">Hours</div><div class="v" data-bind="tile.sc.hours">—</div></div>
+          <div class="tile-stat"><div class="l">Contract $</div><div class="v" data-bind="tile.sc.contract">—</div></div>
         </div>
         <span class="tile-cta">Open dashboard →</span>
       </a>
@@ -129,10 +129,10 @@
       return '$' + Math.round(v).toLocaleString('en-US');
     };
 
-    var scApps   = kpi(SC.kpis, 'Total Appointments') || kpi(SC.kpis, 'Appointments YTD');
-    var scBilled = kpi(SC.kpis, 'Billed Revenue') || kpi(SC.kpis, 'True Revenue');
-    var scInProg = kpi(SC.kpisAging || [], 'In Progress 14+ Days') || kpi(SC.kpisAging || [], 'In Progress 60+ Days');
-    var scTechs  = kpi(SC.kpis, 'Active Techs') || kpi(SC.kpis, 'Techs');
+    var scApps     = kpi(SC.kpis, 'Appointments YTD');
+    var scTechs    = kpi(SC.kpis, 'Service Techs');
+    var scHours    = kpi(SC.kpis, 'Total Hours');
+    var scContract = kpi(SC.kpis, 'Contract $ on Calls');
 
     var binds = {
       'hero.target':      fmtBigMoney(rfBudget),
@@ -147,9 +147,9 @@
       'tile.svc.pace':     val(rfPace),
       'tile.svc.gm':       ps.y2026_GP_pct ? ps.y2026_GP_pct.toFixed(1) + '%' : '—',
       'tile.sc.apps':      val(scApps, '—'),
-      'tile.sc.billed':    val(scBilled, '—'),
-      'tile.sc.inProg':    val(scInProg, '—'),
       'tile.sc.techs':     val(scTechs, '—'),
+      'tile.sc.hours':     val(scHours, '—'),
+      'tile.sc.contract':  val(scContract, '—'),
       'freshness.headline': 'As of ' + (window.FZ.formatBuiltAt ? window.FZ.formatBuiltAt({ dateOnly: true }) : '—'),
       'freshness.stamp':    window.FZ.formatBuiltAt ? window.FZ.formatBuiltAt() : '—'
     };

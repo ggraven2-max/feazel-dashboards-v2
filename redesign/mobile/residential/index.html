@@ -45,8 +45,7 @@
   <section class="section">
     <div class="callout">
       <span class="callout-title">Where it stands</span>
-      4-week pace <strong data-bind="rollup.weeklyPace">—</strong>/wk projects to <strong data-bind="rollup.annualForecast">—</strong>
-      vs <strong data-bind="rollup.budget">—</strong> budget, gap <strong data-bind="rollup.gap">—</strong>.
+      4-week pace <strong data-bind="rollup.weeklyPace">—</strong>/wk projects to <strong data-bind="rollup.annualForecast">—</strong> vs <strong data-bind="rollup.budget">—</strong> budget, gap <strong data-bind="rollup.gap">—</strong>.
     </div>
   </section>
 
@@ -149,9 +148,11 @@
     var soSold   = kpi(SO.kpis, 'Sold');
     var soKicked = kpi(SO.kpis, 'Kicked Back');
     var soAvg    = kpi(SO.kpis, 'Avg Deal Size');
-    var rfFcst   = kpi(RF.kpis, 'Annual Forecast');
+    // MF uses 'Plan-Rest Forecast' instead of 'Annual Forecast'; fall back so
+    // the rollup line and the Revenue tile show real numbers in both LOBs.
+    var rfFcst   = kpi(RF.kpis, 'Annual Forecast') || kpi(RF.kpis, 'Plan-Rest Forecast');
     var rfBudget = kpi(RF.kpis, 'Annual Budget');
-    var rfGap    = kpi(RF.kpis, 'Forecast vs Budget');
+    var rfGap    = kpi(RF.kpis, 'Forecast vs Budget') || kpi(RF.kpis, 'YTD vs Plan');
     var rfPipe   = kpi(RF.kpis, 'Active Pipeline');
     var rfWeekly = kpi(RF.kpis, '4-Week Avg Weekly Sales');
     var rfInv    = kpi(RF.kpis, 'Invoiced YTD');
@@ -187,6 +188,7 @@
       'rollup.annualForecast':val(rfFcst, '—'),
       'rollup.budget':        val(rfBudget, '—'),
       'rollup.gap':           val(rfGap, '—'),
+      'rollup.invoicedYTD':   val(rfInv, '—'),
       'tile.sales.signed': val(soSigned),
       'tile.sales.sold':   val(soSold),
       'tile.sales.kicked': val(soKicked),
