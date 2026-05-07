@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "builtAt": "2026-05-06T20:44:13.510Z",
+    "builtAt": "2026-05-07T16:09:31.627Z",
     "pipelineVersion": "2.0.0",
     "lob": "residential",
     "lastBuiltProjects": [
@@ -13,26 +13,26 @@
       {
         "id": "installs-ytd",
         "version": "1.0-rules-encoded",
-        "elapsedMs": 76,
-        "builtAt": "2026-05-06T20:44:13.510Z"
+        "elapsedMs": 89,
+        "builtAt": "2026-05-07T16:09:31.627Z"
       },
       {
         "id": "sales-overview",
         "version": "1.0-rules-encoded",
-        "elapsedMs": 434,
-        "builtAt": "2026-05-06T20:44:13.510Z"
+        "elapsedMs": 255,
+        "builtAt": "2026-05-07T16:09:31.627Z"
       },
       {
         "id": "revenue-forecast",
         "version": "V5-locked-2026-04-19-shell-1.0",
-        "elapsedMs": 4619,
-        "builtAt": "2026-05-06T20:44:13.510Z"
+        "elapsedMs": 4344,
+        "builtAt": "2026-05-07T16:09:31.627Z"
       },
       {
         "id": "backlog",
         "version": "1.0-rules-encoded",
-        "elapsedMs": 43,
-        "builtAt": "2026-05-06T20:44:13.510Z"
+        "elapsedMs": 46,
+        "builtAt": "2026-05-07T16:09:31.627Z"
       }
     ]
   },
@@ -40,7 +40,7 @@
     "_source": "calculator/installs-ytd.js v1.0-rules-encoded",
     "title": "Residential Installs YTD",
     "subtitle": "Invoiced Jobs - Jan 06, 2026 - May 05, 2026 - De-Duplicated at Job Level - 1,127 Jobs - 14 Markets - 28 PMs",
-    "generated": "2026-05-06",
+    "generated": "2026-05-07",
     "headerMeta": {
       "trueRevenue": 20926817.06,
       "uniqueJobs": 1127,
@@ -51,7 +51,7 @@
       "multiTradeJobs": 318,
       "singleTradeJobs": 809,
       "multiTradePct": 28.2,
-      "lastBuild": "2026-05-06T20:44:13.510Z"
+      "lastBuild": "2026-05-07T16:09:31.627Z"
     },
     "tabs": [
       {
@@ -1819,7 +1819,7 @@
     "title": "Residential Sales Overview",
     "subtitle": "YTD 2026",
     "lastSigned": "2026-05-28",
-    "ytdDays": 126,
+    "ytdDays": 127,
     "rowCount": 1730,
     "tabs": [
       {
@@ -1915,8 +1915,8 @@
       },
       {
         "label": "Annualized Sales Rate",
-        "value": "~$77.84M",
-        "sub": "Based on 126 days YTD"
+        "value": "~$77.23M",
+        "sub": "Based on 127 days YTD"
       },
       {
         "label": "Install vs Repair",
@@ -4261,7 +4261,7 @@
     },
     "commentary": {
       "whatsWorking": [
-        "Sales Trajectory: Monthly sales moved from January $3.26M to May $787K (-76%). Annualized run rate: $77.84M.",
+        "Sales Trajectory: Monthly sales moved from January $3.26M to May $787K (-76%). Annualized run rate: $77.23M.",
         "Premium Deal Types: Insurance averages $19,915 per deal. Retail-Financing averages $20,995 (highest per-deal value). Retail-No Financing averages $11,458 (the volume engine).",
         "Sold Conversion: 1,538 of 1,730 signed contracts (88.9%) have made it to Sold status for $23.34M in confirmed sales."
       ],
@@ -4314,8 +4314,8 @@
   },
   "REVENUE_FORECAST": {
     "title": "Residential Revenue Forecast",
-    "subtitle": "V5 Model with Job Type Analysis · Data as of May 06, 2026",
-    "runDate": "May 06, 2026",
+    "subtitle": "V5 Model with Job Type Analysis · Data as of May 07, 2026",
+    "runDate": "May 07, 2026",
     "tabs": [
       {
         "id": "executive",
@@ -4384,7 +4384,7 @@
       },
       {
         "label": "Current Week (Projected)",
-        "value": "$2M",
+        "value": "$1.5M",
         "sub": "WTD: $477K"
       },
       {
@@ -4421,10 +4421,10 @@
         "netRevenue": 9225279.160000004,
         "beginningWip": 3518463.231,
         "endingWip": 3092796.9555,
-        "materialCost": 3121266.477,
-        "laborCost": 1961938.9284,
-        "grossProfit": 3856338.5946,
-        "grossMarginPct": 43.138
+        "materialCost": 3156763.827,
+        "laborCost": 1984251.5484,
+        "grossProfit": 3798528.6246,
+        "grossMarginPct": 42.4913
       },
       "may": {
         "invoiced": 13991386.3178,
@@ -4478,7 +4478,7 @@
       "stages": [
         {
           "label": "New Sales",
-          "subtitle": "184 jobs · 7d avg",
+          "subtitle": "184 jobs · 8d avg",
           "value": 3472211.67,
           "jobs": 184,
           "color": "#3b82f6",
@@ -4544,12 +4544,12 @@
               "value": 4187.62
             }
           ],
-          "avgDays": 6.7,
-          "medianDays": 2.5
+          "avgDays": 7.7,
+          "medianDays": 3.5
         },
         {
           "label": "Backlog",
-          "subtitle": "411 jobs · 20d avg",
+          "subtitle": "411 jobs · 21d avg",
           "value": 8047482.56,
           "jobs": 411,
           "color": "#f97316",
@@ -4615,8 +4615,8 @@
               "value": 57988.01
             }
           ],
-          "avgDays": 20.1,
-          "medianDays": 12
+          "avgDays": 21.1,
+          "medianDays": 13
         },
         {
           "label": "In Progress",
@@ -4805,7 +4805,7 @@
           [
             "Jun 2026",
             14956779,
-            8732259.0128,
+            8732260.0128,
             14343976.3478,
             14397126.8353,
             -559652.1647
@@ -4887,7 +4887,7 @@
           ],
           [
             "Jun 2026",
-            8732259.0128,
+            8732260.0128,
             1691390.3258,
             13142369.6742,
             14343976.3478
@@ -5998,7 +5998,7 @@
               2993442.64,
               2949104.42,
               2000862.74,
-              1967982.4439,
+              1475986.8329,
               3219501.8677,
               3398267.2637,
               3577032.6596,
@@ -6401,7 +6401,7 @@
         "budget_rev": 14292330,
         "pipeline_backlog": 15112089.05,
         "new_sales_backlog": 0,
-        "pipe_invoicing": 14016990.65,
+        "pipe_invoicing": 14016989.65,
         "future_invoicing": 3219501.92,
         "rev_from_backlog": 4508755.8355,
         "revenue_gap": 9783574.1645,
@@ -6410,18 +6410,18 @@
       },
       {
         "month": "Jun 2026",
-        "total_backlog": 8732259.0128,
-        "wip_est": 5239355.4077,
-        "not_started": 3492903.6051,
+        "total_backlog": 8732260.0128,
+        "wip_est": 5239356.0077,
+        "not_started": 3492904.0051,
         "budget_rev": 14833760,
-        "pipeline_backlog": 1095098.4,
+        "pipeline_backlog": 1095099.4,
         "new_sales_backlog": 7637160.6128,
-        "pipe_invoicing": 1033591.6,
+        "pipe_invoicing": 1033592.6,
         "future_invoicing": 14665661.45,
         "rev_from_backlog": 1691390.3258,
         "revenue_gap": 13142369.6742,
         "adjusted_required_sales": 14343976.3478,
-        "backlog_surplus": -5611717.3351
+        "backlog_surplus": -5611716.3351
       },
       {
         "month": "Jul 2026",
@@ -6694,7 +6694,7 @@
       "totalWOs": 749,
       "portfolioValue": 10743756.42,
       "avgDaysInStatus": 12,
-      "lastBuild": "2026-05-06T20:44:13.431Z"
+      "lastBuild": "2026-05-07T16:09:31.534Z"
     },
     "tabs": [
       {

@@ -1,8 +1,8 @@
-/* AUTO-GENERATED — do not edit. Generated 2026-05-06T20:44:13.703Z (multi-family) */
+/* AUTO-GENERATED — do not edit. Generated 2026-05-07T16:09:31.838Z (multi-family) */
 window.FZ = window.FZ || {};
 window.FZ.data = {
   "_meta": {
-    "builtAt": "2026-05-06T20:44:13.703Z",
+    "builtAt": "2026-05-07T16:09:31.838Z",
     "pipelineVersion": "2.0.0",
     "lob": "multi-family",
     "lastBuiltProjects": [
@@ -15,26 +15,26 @@ window.FZ.data = {
       {
         "id": "sales-overview",
         "version": "1.0-rules-encoded",
-        "elapsedMs": 23,
-        "builtAt": "2026-05-06T20:44:13.703Z"
+        "elapsedMs": 25,
+        "builtAt": "2026-05-07T16:09:31.838Z"
       },
       {
         "id": "revenue-forecast",
         "version": "V5-locked-2026-04-19-shell-1.0",
-        "elapsedMs": 128,
-        "builtAt": "2026-05-06T20:44:13.703Z"
+        "elapsedMs": 137,
+        "builtAt": "2026-05-07T16:09:31.838Z"
       },
       {
         "id": "backlog",
         "version": "1.0-rules-encoded",
-        "elapsedMs": 22,
-        "builtAt": "2026-05-06T20:44:13.703Z"
+        "elapsedMs": 23,
+        "builtAt": "2026-05-07T16:09:31.838Z"
       },
       {
         "id": "installs-ytd",
         "version": "1.0-rules-encoded",
-        "elapsedMs": 15,
-        "builtAt": "2026-05-06T20:44:13.703Z"
+        "elapsedMs": 18,
+        "builtAt": "2026-05-07T16:09:31.838Z"
       }
     ]
   },
@@ -43,7 +43,7 @@ window.FZ.data = {
     "title": "Residential Sales Overview",
     "subtitle": "YTD 2026",
     "lastSigned": "2026-05-05",
-    "ytdDays": 126,
+    "ytdDays": 127,
     "rowCount": 210,
     "tabs": [
       {
@@ -139,8 +139,8 @@ window.FZ.data = {
       },
       {
         "label": "Annualized Sales Rate",
-        "value": "~$49.60M",
-        "sub": "Based on 126 days YTD"
+        "value": "~$49.21M",
+        "sub": "Based on 127 days YTD"
       },
       {
         "label": "Install vs Repair",
@@ -1471,7 +1471,7 @@ window.FZ.data = {
     },
     "commentary": {
       "whatsWorking": [
-        "Sales Trajectory: Monthly sales moved from January $3.46M to May $129K (-96%). Annualized run rate: $49.60M.",
+        "Sales Trajectory: Monthly sales moved from January $3.46M to May $129K (-96%). Annualized run rate: $49.21M.",
         "Premium Deal Types: Insurance averages $395,406 per deal. Retail-Financing averages $32,200 (highest per-deal value). Retail-No Financing averages $70,899 (the volume engine).",
         "Sold Conversion: 207 of 210 signed contracts (98.6%) have made it to Sold status for $17.12M in confirmed sales."
       ],
@@ -1508,8 +1508,8 @@ window.FZ.data = {
   "REVENUE_FORECAST": {
     "_source": "calculator/revenue-forecast-mf.js MF-v1.1-2026-05-04",
     "title": "Multi-Family Revenue Forecast",
-    "subtitle": "MF-v1 · Job-by-job event model · Data through 2026-05-06",
-    "runDate": "2026-05-06",
+    "subtitle": "MF-v1 · Job-by-job event model · Data through 2026-05-07",
+    "runDate": "2026-05-07",
     "methodologyLock": {
       "version": "MF-v1.1-2026-05-04",
       "lockedOn": "2026-05-04",
@@ -1557,7 +1557,7 @@ window.FZ.data = {
       {
         "label": "Current WIP",
         "value": "$7.95M",
-        "sub": "16 jobs in flight today"
+        "sub": "17 jobs in flight today"
       },
       {
         "label": "Last Month Revenue",
@@ -2110,16 +2110,16 @@ window.FZ.data = {
       "stages": [
         {
           "stage": "In WIP today",
-          "jobs": 16,
-          "value": 7947267.3100000005
+          "jobs": 17,
+          "value": 7951767.3100000005
         }
       ],
-      "totalJobs": 16,
-      "totalValue": 7947267.3100000005
+      "totalJobs": 17,
+      "totalValue": 7951767.3100000005
     },
     "commentary": {
       "actionableRecommendations": [
-        "Annualized pace is $5.56M short of the $51.67M plan. Push to invoice WIP balance ($7.9M) faster, or accelerate starts."
+        "Annualized pace is $5.56M short of the $51.67M plan. Push to invoice WIP balance ($8.0M) faster, or accelerate starts."
       ],
       "strategyHighlights": []
     },
@@ -2682,7 +2682,7 @@ window.FZ.data = {
             "Cincinnati",
             "$492K",
             "$1.49M",
-            16
+            17
           ],
           [
             "Nashville",
@@ -2909,6 +2909,13 @@ window.FZ.data = {
             "Cincinnati",
             "$11K",
             "2026-05-05"
+          ],
+          [
+            "Job-108754",
+            "Towne Properties - Cincinnati West District Office",
+            "Cincinnati",
+            "$5K",
+            "2026-05-07"
           ]
         ]
       }
@@ -3263,7 +3270,7 @@ window.FZ.data = {
       "totalWOs": 322,
       "portfolioValue": 21350727.31,
       "avgDaysInStatus": 40,
-      "lastBuild": "2026-05-06T20:44:13.687Z"
+      "lastBuild": "2026-05-07T16:09:31.819Z"
     },
     "tabs": [
       {
@@ -4475,7 +4482,7 @@ window.FZ.data = {
     "_source": "calculator/installs-ytd.js v1.0-rules-encoded",
     "title": "Residential Installs YTD",
     "subtitle": "Invoiced Jobs - Jan 08, 2026 - May 04, 2026 - De-Duplicated at Job Level - 100 Jobs - 11 Markets - 9 PMs",
-    "generated": "2026-05-06",
+    "generated": "2026-05-07",
     "headerMeta": {
       "trueRevenue": 9318907.24,
       "uniqueJobs": 100,
@@ -4486,7 +4493,7 @@ window.FZ.data = {
       "multiTradeJobs": 10,
       "singleTradeJobs": 90,
       "multiTradePct": 10,
-      "lastBuild": "2026-05-06T20:44:13.703Z"
+      "lastBuild": "2026-05-07T16:09:31.838Z"
     },
     "tabs": [
       {
