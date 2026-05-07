@@ -1,163 +1,314 @@
 /* ============================================================
-   FEAZEL DASHBOARDS · iOS app (multi-LOB)
-   Lightweight Expo wrapper around the unified web suite.
-   Five tabs: Command Center, Sales, Revenue, Backlog, Installs.
-   Top of every screen: segmented control to switch LOB
-   between Residential and Multi-Family.
+   FEAZEL DASHBOARDS · iOS app v1.1
+   Hybrid native + webview wrapper around the unified web suite.
 
-   Each tab renders the matching page from the deployed Netlify
-   site inside a WebView with pull-to-refresh and a loading state.
+   Architecture:
+   - 4 LOB-centric tabs (Home, Residential, Multi-Family, Service)
+   - Home tab = native splash header (animated mesh, gradient title,
+     animated counters) + webview to /mobile/ for the LOB cards
+     and markets grid
+   - Each LOB tab = webview to /mobile/<lob>/ with pull-to-refresh
+   - Custom floating pill tab bar with sliding gold indicator,
+     branded SVG icons, light haptic on tap
    ============================================================ */
 
 import { StatusBar } from 'expo-status-bar';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { WebView } from 'react-native-webview';
+import { LinearGradient } from 'expo-linear-gradient';
+import { BlurView } from 'expo-blur';
+import * as Haptics from 'expo-haptics';
+import Svg, { Path, Circle, Polyline, Polygon, Line } from 'react-native-svg';
+import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
-  SafeAreaView,
   ActivityIndicator,
+  Animated,
+  Dimensions,
+  Easing,
+  Platform,
+  Pressable,
   StyleSheet,
-  View,
   Text,
   TouchableOpacity,
+  View,
 } from 'react-native';
-import { useState, useCallback, createContext, useContext } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
-// === EDIT ME WHEN YOU CONFIRM THE LIVE URL =========================
-// Custom domain (mapped through GoDaddy → Netlify). The original
-// feazel-command-center.netlify.app subdomain still works as a backup.
+// === Site constants ============================================
 const SITE = 'https://feazelcommandcenter.com';
 const MOBILE_BASE = `${SITE}/mobile`;
-// ===================================================================
 
-// Feazel brand palette (mirrors redesign/shared/styles.css tokens)
+// === Brand palette (mirrors redesign/shared/styles.css tokens) =
 const NAVY = '#1f2d4b';
 const NAVY_DEEP = '#16203a';
+const NAVY_DARKER = '#101a32';
 const BLUE = '#5e82bc';
-const TINT = '#eaf0fa';
+const BLUE_SOFT = '#7895c4';
+const GOLD = '#d4a857';
+const GOLD_SOFT = '#ecc88c';
 const FG_LIGHT = '#a9b3c8';
+const FG_QUIET = 'rgba(255,255,255,0.55)';
+
+// === Tab definitions ===========================================
+const TABS = [
+  { key: 'Home',     label: 'Home',         icon: 'home',  color: BLUE },
+  { key: 'Res',      label: 'Residential',  icon: 'res',   color: BLUE },
+  { key: 'MF',       label: 'Multi-Family', icon: 'mf',    color: GOLD },
+  { key: 'Service',  label: 'Service',      icon: 'svc',   color: '#6ee7d7' },
+];
 
 const Tab = createBottomTabNavigator();
+const SESSION_TS = Date.now();
+const { width: SCREEN_W } = Dimensions.get('window');
 
-// Shared LOB state across all tabs. Toggle in any screen, every tab updates.
-const LobContext = createContext({
-  lob: 'residential',
-  setLob: () => {},
-});
-
-// Lightweight inline icons. Unicode glyphs keep the bundle small and remove
-// the need for react-native-svg or vector-icons.
-function Icon({ name, color, size = 22 }) {
-  const stroke = color || NAVY;
-  const glyph = {
-    home: '⌂',     // house
-    sales: '↗',    // up-right arrow
-    rev: '▲',      // up triangle
-    backlog: '☰',  // trigram
-    inst: '✓',     // check
-  }[name] || '•';
-  return (
-    <Text style={{ color: stroke, fontSize: size, fontWeight: '700' }}>
-      {glyph}
-    </Text>
-  );
+// =================================================================
+// SVG ICONS — custom Lucide-style strokes that match the website
+// =================================================================
+function TabIcon({ name, color, size = 22 }) {
+  const stroke = color || '#fff';
+  const sw = 2;
+  const common = { stroke, strokeWidth: sw, strokeLinecap: 'round', strokeLinejoin: 'round', fill: 'none' };
+  switch (name) {
+    case 'home':
+      return (
+        <Svg width={size} height={size} viewBox="0 0 24 24">
+          <Path {...common} d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2h-4v-7H10v7H6a2 2 0 0 1-2-2z" />
+        </Svg>
+      );
+    case 'res':
+      return (
+        <Svg width={size} height={size} viewBox="0 0 24 24">
+          <Path {...common} d="M3 11l9-8 9 8" />
+          <Path {...common} d="M5 10v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V10" />
+          <Path {...common} d="M10 21v-6h4v6" />
+        </Svg>
+      );
+    case 'mf':
+      return (
+        <Svg width={size} height={size} viewBox="0 0 24 24">
+          <Polygon {...common} points="12 2 2 7 12 12 22 7 12 2" />
+          <Polyline {...common} points="2 17 12 22 22 17" />
+          <Polyline {...common} points="2 12 12 17 22 12" />
+        </Svg>
+      );
+    case 'svc':
+      return (
+        <Svg width={size} height={size} viewBox="0 0 24 24">
+          <Path {...common} d="M14.7 6.3a4 4 0 1 1 5.66 5.66L7 25.32l-5.32-5.32L14.7 6.3Z" transform="translate(0 -3)" />
+          <Path {...common} d="M3 18l3 3" />
+          <Circle {...common} cx="18" cy="6" r="3" />
+        </Svg>
+      );
+    default:
+      return null;
+  }
 }
 
-// Segmented control rendered above each WebView. State lifted via context.
-function LobSwitch() {
-  const { lob, setLob } = useContext(LobContext);
+// =================================================================
+// ANIMATED MESH BACKGROUND — slowly drifting radial gradient pattern
+// matches the website hero's animated mesh feel
+// =================================================================
+function AnimatedMesh() {
+  const drift = useRef(new Animated.Value(0)).current;
+  useEffect(() => {
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(drift, { toValue: 1, duration: 18000, easing: Easing.inOut(Easing.quad), useNativeDriver: true }),
+        Animated.timing(drift, { toValue: 0, duration: 18000, easing: Easing.inOut(Easing.quad), useNativeDriver: true }),
+      ]),
+    ).start();
+  }, [drift]);
+
+  const tx = drift.interpolate({ inputRange: [0, 1], outputRange: [-30, 30] });
+  const ty = drift.interpolate({ inputRange: [0, 1], outputRange: [-20, 20] });
+
   return (
-    <View style={styles.lobSwitchWrap}>
-      <TouchableOpacity
-        style={[styles.lobBtn, lob === 'residential' && styles.lobBtnActive]}
-        onPress={() => setLob('residential')}
-        activeOpacity={0.7}
-      >
-        <Text style={[styles.lobBtnTxt, lob === 'residential' && styles.lobBtnTxtActive]}>
-          Residential
-        </Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={[styles.lobBtn, lob === 'multi-family' && styles.lobBtnActive]}
-        onPress={() => setLob('multi-family')}
-        activeOpacity={0.7}
-      >
-        <Text style={[styles.lobBtnTxt, lob === 'multi-family' && styles.lobBtnTxtActive]}>
-          Multi-Family
-        </Text>
-      </TouchableOpacity>
+    <View style={StyleSheet.absoluteFill} pointerEvents="none">
+      <LinearGradient
+        colors={[NAVY_DEEP, NAVY, '#1a2540']}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={StyleSheet.absoluteFill}
+      />
+      <Animated.View
+        style={[
+          styles.meshBlob,
+          { backgroundColor: 'rgba(94,130,188,0.36)', top: 40, left: 40, transform: [{ translateX: tx }, { translateY: ty }] },
+        ]}
+      />
+      <Animated.View
+        style={[
+          styles.meshBlob,
+          { backgroundColor: 'rgba(212,168,87,0.18)', top: 60, right: 30, transform: [{ translateX: ty }, { translateY: tx }] },
+        ]}
+      />
+      <Animated.View
+        style={[
+          styles.meshBlob,
+          {
+            backgroundColor: 'rgba(94,130,188,0.30)',
+            bottom: -40,
+            left: SCREEN_W * 0.4,
+            transform: [{ translateX: tx }, { translateY: ty }],
+          },
+        ]}
+      />
     </View>
   );
 }
 
-// Cache buster: appended to every WebView URL so iOS WebView doesn't serve
-// stale HTML/CSS while we're iterating. Fresh per app boot.
-const SESSION_TS = Date.now();
+// =================================================================
+// HERO HEADER — gradient title, freshness pill, fade-up entrance
+// =================================================================
+function HeroHeader() {
+  const insets = useSafeAreaInsets();
+  const fade = useRef(new Animated.Value(0)).current;
+  const slide = useRef(new Animated.Value(12)).current;
+  useEffect(() => {
+    Animated.parallel([
+      Animated.timing(fade, { toValue: 1, duration: 700, delay: 180, easing: Easing.out(Easing.cubic), useNativeDriver: true }),
+      Animated.timing(slide, { toValue: 0, duration: 700, delay: 180, easing: Easing.out(Easing.cubic), useNativeDriver: true }),
+    ]).start();
+  }, [fade, slide]);
 
-function DashboardScreen({ pathSuffix, label }) {
-  const { lob } = useContext(LobContext);
+  return (
+    <View style={[styles.heroWrap, { paddingTop: insets.top + 8 }]}>
+      <View style={styles.heroTopRow}>
+        <Text style={styles.heroBrandTag}>COO Office</Text>
+        <FreshnessPill />
+      </View>
+      <Animated.View style={{ opacity: fade, transform: [{ translateY: slide }] }}>
+        <Text style={styles.heroTitle}>One picture</Text>
+        <Text style={styles.heroTitleAccent}>across 13 markets.</Text>
+        <Text style={styles.heroIntro}>
+          Pick a side to dive in. Combined enterprise rollup below.
+        </Text>
+      </Animated.View>
+    </View>
+  );
+}
+
+function FreshnessPill() {
+  const pulse = useRef(new Animated.Value(0)).current;
+  useEffect(() => {
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(pulse, { toValue: 1, duration: 1200, easing: Easing.out(Easing.quad), useNativeDriver: false }),
+        Animated.timing(pulse, { toValue: 0, duration: 1200, easing: Easing.in(Easing.quad), useNativeDriver: false }),
+      ]),
+    ).start();
+  }, [pulse]);
+  const haloScale = pulse.interpolate({ inputRange: [0, 1], outputRange: [1, 2.4] });
+  const haloOpacity = pulse.interpolate({ inputRange: [0, 1], outputRange: [0.5, 0] });
+  const today = new Date();
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const stamp = `${months[today.getMonth()]} ${today.getDate()}, ${today.getFullYear()}`;
+  return (
+    <View style={styles.freshnessPill}>
+      <View style={styles.dotWrap}>
+        <Animated.View
+          style={[
+            styles.dotHalo,
+            { transform: [{ scale: haloScale }], opacity: haloOpacity },
+          ]}
+        />
+        <View style={styles.dot} />
+      </View>
+      <Text style={styles.freshnessTxt}>{stamp}</Text>
+    </View>
+  );
+}
+
+// =================================================================
+// HOME SCREEN — native hero on top, webview on the bottom for the
+// LOB cards + market grid + quick links
+// =================================================================
+function HomeScreen({ navigation }) {
   const [loading, setLoading] = useState(true);
   const [errored, setErrored] = useState(false);
   const [reloadKey, setReloadKey] = useState(Date.now());
+  const url = `${MOBILE_BASE}/?embed=1&t=${SESSION_TS}_${reloadKey}`;
 
-  const reload = useCallback(() => {
-    setErrored(false);
-    setLoading(true);
-    setReloadKey(Date.now());
-  }, []);
-
-  // Build URL: ${MOBILE_BASE}/${lob}/${pathSuffix}/?t=...
-  const baseUrl = pathSuffix
-    ? `${MOBILE_BASE}/${lob}/${pathSuffix}/`
-    : `${MOBILE_BASE}/${lob}/`;
-  const sep = baseUrl.indexOf('?') >= 0 ? '&' : '?';
-  // Include lob in cache key so swapping LOB forces a fresh fetch
-  const finalUrl = `${baseUrl}${sep}t=${SESSION_TS}_${lob}_${reloadKey}`;
+  // Intercept clicks on the LOB cards inside the webview and route them
+  // back to the matching native tab so we don't double-load the webview.
+  const onShouldStartLoadWithRequest = useCallback((req) => {
+    const u = req.url || '';
+    if (!u.startsWith(SITE)) return false;
+    if (/\/mobile\/residential\//.test(u))   { navigation.navigate('Res');     return false; }
+    if (/\/mobile\/multi-family\//.test(u))  { navigation.navigate('MF');      return false; }
+    if (/\/mobile\/service\//.test(u))       { navigation.navigate('Service'); return false; }
+    return true;
+  }, [navigation]);
 
   return (
-    <SafeAreaView style={styles.screen}>
-      <LobSwitch />
-      <View style={styles.webHost}>
+    <View style={styles.screenDark}>
+      <AnimatedMesh />
+      <HeroHeader />
+      <View style={styles.homeWebHost}>
         {!errored ? (
           <WebView
-            // Re-mount when lob changes so the WebView fully reloads
+            key={`home-${reloadKey}`}
+            source={{ uri: url }}
+            style={styles.homeWebview}
+            opaque={false}
+            backgroundColor="transparent"
+            allowsBackForwardNavigationGestures={false}
+            pullToRefreshEnabled
+            bounces
+            cacheEnabled={false}
+            cacheMode="LOAD_NO_CACHE"
+            incognito
+            onLoadStart={() => setLoading(true)}
+            onLoadEnd={() => setLoading(false)}
+            onError={() => { setLoading(false); setErrored(true); }}
+            onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}
+          />
+        ) : (
+          <ErrorPane onRetry={() => { setErrored(false); setReloadKey(Date.now()); }} />
+        )}
+        {loading && !errored ? (
+          <View pointerEvents="none" style={styles.subtleLoading}>
+            <ActivityIndicator size="small" color={GOLD} />
+          </View>
+        ) : null}
+      </View>
+    </View>
+  );
+}
+
+// =================================================================
+// LOB SCREEN — clean webview wrapper for the per-LOB hub
+// =================================================================
+function makeLobScreen(lob, label) {
+  return function LobScreen() {
+    const insets = useSafeAreaInsets();
+    const [loading, setLoading] = useState(true);
+    const [errored, setErrored] = useState(false);
+    const [reloadKey, setReloadKey] = useState(Date.now());
+
+    const reload = useCallback(() => { setErrored(false); setLoading(true); setReloadKey(Date.now()); }, []);
+    const url = `${MOBILE_BASE}/${lob}/?t=${SESSION_TS}_${reloadKey}`;
+
+    return (
+      <View style={[styles.screenLight, { paddingTop: insets.top }]}>
+        {!errored ? (
+          <WebView
             key={`${lob}-${reloadKey}`}
-            source={{ uri: finalUrl }}
+            source={{ uri: url }}
             style={styles.webview}
             pullToRefreshEnabled
             bounces
             cacheEnabled={false}
             cacheMode="LOAD_NO_CACHE"
-            incognito={true}
-            startInLoadingState={false}
+            incognito
             onLoadStart={() => setLoading(true)}
             onLoadEnd={() => setLoading(false)}
-            onError={() => {
-              setLoading(false);
-              setErrored(true);
-            }}
-            onHttpError={({ nativeEvent }) => {
-              if (nativeEvent && nativeEvent.statusCode >= 500) {
-                setErrored(true);
-              }
-            }}
-            onShouldStartLoadWithRequest={(req) => {
-              if (!req.url) return true;
-              return req.url.startsWith(SITE);
-            }}
-            scalesPageToFit
+            onError={() => { setLoading(false); setErrored(true); }}
+            onShouldStartLoadWithRequest={(req) => !req.url || req.url.startsWith(SITE)}
           />
         ) : (
-          <View style={styles.errorPane}>
-            <Text style={styles.errorTitle}>Couldn't reach the dashboards.</Text>
-            <Text style={styles.errorBody}>
-              Check your connection. If this keeps happening, confirm the
-              Netlify site is live and the URL in App.js matches.
-            </Text>
-            <TouchableOpacity onPress={reload} style={styles.retryBtn}>
-              <Text style={styles.retryTxt}>Retry</Text>
-            </TouchableOpacity>
-          </View>
+          <ErrorPane onRetry={reload} />
         )}
         {loading && !errored ? (
           <View pointerEvents="none" style={styles.loadingOverlay}>
@@ -166,130 +317,236 @@ function DashboardScreen({ pathSuffix, label }) {
           </View>
         ) : null}
       </View>
-    </SafeAreaView>
+    );
+  };
+}
+
+// =================================================================
+// ERROR PANE
+// =================================================================
+function ErrorPane({ onRetry }) {
+  return (
+    <View style={styles.errorPane}>
+      <Text style={styles.errorTitle}>Couldn't reach the dashboards.</Text>
+      <Text style={styles.errorBody}>
+        Check your connection, then tap retry.
+      </Text>
+      <TouchableOpacity onPress={onRetry} style={styles.retryBtn}>
+        <Text style={styles.retryTxt}>Retry</Text>
+      </TouchableOpacity>
+    </View>
   );
 }
 
-const screenOptions = {
-  headerStyle: { backgroundColor: NAVY },
-  headerTintColor: '#fff',
-  headerTitleStyle: { fontWeight: '700', letterSpacing: 0.2 },
-  tabBarStyle: {
-    backgroundColor: NAVY,
-    borderTopWidth: 0,
-    height: 84,
-    paddingTop: 6,
-    paddingBottom: 24,
-  },
-  tabBarActiveTintColor: '#ffffff',
-  tabBarInactiveTintColor: FG_LIGHT,
-  tabBarLabelStyle: { fontSize: 11, fontWeight: '600', letterSpacing: 0.2 },
-};
+// =================================================================
+// FLOATING PILL TAB BAR — custom navigator UI with sliding indicator
+// =================================================================
+function FloatingTabBar({ state, descriptors, navigation }) {
+  const insets = useSafeAreaInsets();
+  const indicator = useRef(new Animated.Value(state.index)).current;
+  useEffect(() => {
+    Animated.spring(indicator, {
+      toValue: state.index,
+      stiffness: 220,
+      damping: 22,
+      mass: 0.9,
+      useNativeDriver: true,
+    }).start();
+  }, [state.index, indicator]);
+
+  // Pill geometry: tab bar fills the screen minus 16px gutters; each
+  // tab is 1/4 of the inner width.
+  const barWidth = SCREEN_W - 24;
+  const tabWidth = barWidth / state.routes.length;
+  const indicatorWidth = tabWidth - 14;
+  const indicatorTranslate = indicator.interpolate({
+    inputRange: state.routes.map((_, i) => i),
+    outputRange: state.routes.map((_, i) => i * tabWidth + 7),
+  });
+
+  // Active tab color drives the sliding indicator's accent
+  const activeColor = TABS[state.index] ? TABS[state.index].color : GOLD;
+
+  return (
+    <View style={[styles.tabBarOuter, { paddingBottom: insets.bottom > 0 ? insets.bottom : 12 }]} pointerEvents="box-none">
+      <BlurView intensity={32} tint="dark" style={[styles.tabBarPill, { width: barWidth }]}>
+        <View style={styles.tabBarInner}>
+          <Animated.View
+            style={[
+              styles.tabIndicator,
+              {
+                width: indicatorWidth,
+                transform: [{ translateX: indicatorTranslate }],
+              },
+            ]}
+          >
+            <LinearGradient
+              colors={[activeColor, GOLD]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={StyleSheet.absoluteFill}
+            />
+          </Animated.View>
+          {state.routes.map((route, idx) => {
+            const isFocused = state.index === idx;
+            const tabDef = TABS.find(t => t.key === route.name) || TABS[idx];
+            const onPress = () => {
+              if (Platform.OS === 'ios') Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light).catch(() => {});
+              const event = navigation.emit({ type: 'tabPress', target: route.key, canPreventDefault: true });
+              if (!isFocused && !event.defaultPrevented) navigation.navigate(route.name);
+            };
+            return (
+              <Pressable
+                key={route.key}
+                onPress={onPress}
+                style={({ pressed }) => [
+                  styles.tabBtn,
+                  { width: tabWidth, opacity: pressed ? 0.65 : 1 },
+                ]}
+                accessibilityRole="button"
+                accessibilityState={{ selected: isFocused }}
+              >
+                <TabIcon name={tabDef.icon} color={isFocused ? '#fff' : 'rgba(255,255,255,0.55)'} size={22} />
+                <Text style={[styles.tabLbl, isFocused && styles.tabLblActive]}>{tabDef.label}</Text>
+              </Pressable>
+            );
+          })}
+        </View>
+      </BlurView>
+    </View>
+  );
+}
+
+// =================================================================
+// MAIN APP
+// =================================================================
+const ResScreen = makeLobScreen('residential',  'Residential');
+const MFScreen  = makeLobScreen('multi-family', 'Multi-Family');
+const SvcScreen = makeLobScreen('service',      'Service');
 
 export default function App() {
-  const [lob, setLob] = useState('residential');
   return (
-    <LobContext.Provider value={{ lob, setLob }}>
+    <SafeAreaProvider>
+      <StatusBar style="light" />
       <NavigationContainer>
-        <StatusBar style="light" />
-        <Tab.Navigator screenOptions={screenOptions}>
-          <Tab.Screen
-            name="Home"
-            options={{
-              title: 'Command Center',
-              tabBarLabel: 'Home',
-              tabBarIcon: ({ color }) => <Icon name="home" color={color} />,
-            }}
-          >
-            {() => <DashboardScreen pathSuffix="" label="Command Center" />}
-          </Tab.Screen>
-
-          <Tab.Screen
-            name="Sales"
-            options={{
-              title: 'Sales Overview',
-              tabBarLabel: 'Sales',
-              tabBarIcon: ({ color }) => <Icon name="sales" color={color} />,
-            }}
-          >
-            {() => <DashboardScreen pathSuffix="sales-overview" label="Sales Overview" />}
-          </Tab.Screen>
-
-          <Tab.Screen
-            name="Forecast"
-            options={{
-              title: 'Revenue Forecast',
-              tabBarLabel: 'Forecast',
-              tabBarIcon: ({ color }) => <Icon name="rev" color={color} />,
-            }}
-          >
-            {() => <DashboardScreen pathSuffix="revenue-forecast" label="Revenue Forecast" />}
-          </Tab.Screen>
-
-          <Tab.Screen
-            name="Backlog"
-            options={{
-              title: 'Backlog',
-              tabBarLabel: 'Backlog',
-              tabBarIcon: ({ color }) => <Icon name="backlog" color={color} />,
-            }}
-          >
-            {() => <DashboardScreen pathSuffix="backlog" label="Backlog" />}
-          </Tab.Screen>
-
-          <Tab.Screen
-            name="Installs"
-            options={{
-              title: 'Installs YTD',
-              tabBarLabel: 'Installs',
-              tabBarIcon: ({ color }) => <Icon name="inst" color={color} />,
-            }}
-          >
-            {() => <DashboardScreen pathSuffix="installs-ytd" label="Installs" />}
-          </Tab.Screen>
+        <Tab.Navigator
+          tabBar={(props) => <FloatingTabBar {...props} />}
+          screenOptions={{ headerShown: false, sceneStyle: { backgroundColor: NAVY_DARKER } }}
+        >
+          <Tab.Screen name="Home"    component={HomeScreen} />
+          <Tab.Screen name="Res"     component={ResScreen} />
+          <Tab.Screen name="MF"      component={MFScreen} />
+          <Tab.Screen name="Service" component={SvcScreen} />
         </Tab.Navigator>
       </NavigationContainer>
-    </LobContext.Provider>
+    </SafeAreaProvider>
   );
 }
 
+// =================================================================
+// STYLES
+// =================================================================
 const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: NAVY_DEEP },
-  webHost: { flex: 1, backgroundColor: '#fff' },
-  webview: { flex: 1, backgroundColor: '#fff' },
+  // Screens
+  screenDark:  { flex: 1, backgroundColor: NAVY_DARKER },
+  screenLight: { flex: 1, backgroundColor: '#fff' },
+  webview:     { flex: 1, backgroundColor: '#fff' },
 
-  // Top-of-screen LOB segmented control
-  lobSwitchWrap: {
-    flexDirection: 'row',
-    backgroundColor: NAVY_DEEP,
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    gap: 4,
-    borderBottomWidth: 1,
-    borderBottomColor: 'rgba(255,255,255,0.05)',
+  // Mesh background
+  meshBlob: {
+    position: 'absolute',
+    width: 320,
+    height: 320,
+    borderRadius: 200,
+    opacity: 0.9,
+    transform: [{ scale: 1.4 }],
   },
-  lobBtn: {
-    flex: 1,
-    paddingVertical: 8,
-    borderRadius: 8,
-    backgroundColor: 'rgba(255,255,255,0.04)',
+
+  // Hero header
+  heroWrap: {
+    paddingHorizontal: 18,
+    paddingBottom: 14,
+  },
+  heroTopRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 18,
+  },
+  heroBrandTag: {
+    color: FG_QUIET,
+    fontSize: 10,
+    fontWeight: '600',
+    letterSpacing: 2.5,
+    textTransform: 'uppercase',
+  },
+  heroTitle: {
+    color: '#fff',
+    fontSize: 30,
+    fontWeight: '800',
+    letterSpacing: -0.5,
+    lineHeight: 34,
+  },
+  heroTitleAccent: {
+    color: GOLD,
+    fontSize: 30,
+    fontWeight: '700',
+    letterSpacing: -0.5,
+    fontStyle: 'italic',
+    lineHeight: 34,
+  },
+  heroIntro: {
+    color: 'rgba(255,255,255,0.78)',
+    fontSize: 13,
+    lineHeight: 19,
+    marginTop: 10,
+  },
+
+  // Freshness pill
+  freshnessPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    backgroundColor: 'rgba(255,255,255,0.06)',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.12)',
+    borderRadius: 999,
+  },
+  dotWrap: { width: 8, height: 8, alignItems: 'center', justifyContent: 'center' },
+  dot: {
+    width: 7,
+    height: 7,
+    borderRadius: 99,
+    backgroundColor: '#4ade80',
+  },
+  dotHalo: {
+    position: 'absolute',
+    width: 7,
+    height: 7,
+    borderRadius: 99,
+    backgroundColor: '#4ade80',
+  },
+  freshnessTxt: {
+    color: 'rgba(255,255,255,0.78)',
+    fontSize: 10.5,
+    fontWeight: '500',
+  },
+
+  // Home webview
+  homeWebHost: { flex: 1, marginTop: 8 },
+  homeWebview: { flex: 1, backgroundColor: 'transparent' },
+  subtleLoading: {
+    position: 'absolute',
+    top: 30, left: 0, right: 0,
     alignItems: 'center',
   },
-  lobBtnActive: { backgroundColor: BLUE },
-  lobBtnTxt: {
-    color: 'rgba(255,255,255,0.62)',
-    fontSize: 12,
-    fontWeight: '600',
-    letterSpacing: 0.4,
-  },
-  lobBtnTxtActive: { color: '#fff' },
 
+  // LOB screen loading + error
   loadingOverlay: {
     position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
+    top: 0, left: 0, right: 0, bottom: 0,
     backgroundColor: 'rgba(255,255,255,0.85)',
     alignItems: 'center',
     justifyContent: 'center',
@@ -298,25 +555,66 @@ const styles = StyleSheet.create({
   loadingTxt: { color: NAVY, fontSize: 13, fontWeight: '600', letterSpacing: 0.3 },
   errorPane: {
     flex: 1,
-    backgroundColor: TINT,
+    backgroundColor: '#eaf0fa',
     alignItems: 'center',
     justifyContent: 'center',
     padding: 28,
     gap: 14,
   },
   errorTitle: { color: NAVY, fontSize: 18, fontWeight: '700' },
-  errorBody: {
-    color: '#3a3f4a',
-    fontSize: 14,
-    textAlign: 'center',
-    lineHeight: 20,
-  },
-  retryBtn: {
-    backgroundColor: BLUE,
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 8,
-    marginTop: 6,
-  },
+  errorBody: { color: '#3a3f4a', fontSize: 14, textAlign: 'center', lineHeight: 20 },
+  retryBtn: { backgroundColor: BLUE, paddingHorizontal: 20, paddingVertical: 10, borderRadius: 8, marginTop: 6 },
   retryTxt: { color: '#fff', fontWeight: '700', letterSpacing: 0.3 },
+
+  // Floating tab bar
+  tabBarOuter: {
+    position: 'absolute',
+    left: 0, right: 0, bottom: 0,
+    paddingHorizontal: 12,
+    alignItems: 'center',
+  },
+  tabBarPill: {
+    height: 64,
+    borderRadius: 22,
+    overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.10)',
+    backgroundColor: 'rgba(22,32,58,0.82)',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.35,
+    shadowRadius: 18,
+    elevation: 18,
+  },
+  tabBarInner: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 6,
+  },
+  tabIndicator: {
+    position: 'absolute',
+    top: 6,
+    bottom: 6,
+    borderRadius: 16,
+    overflow: 'hidden',
+    opacity: 0.95,
+  },
+  tabBtn: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 3,
+    paddingHorizontal: 4,
+  },
+  tabLbl: {
+    color: 'rgba(255,255,255,0.55)',
+    fontSize: 10.5,
+    fontWeight: '600',
+    letterSpacing: 0.2,
+    marginTop: 2,
+  },
+  tabLblActive: {
+    color: '#fff',
+    fontWeight: '700',
+  },
 });
