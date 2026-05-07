@@ -309,6 +309,22 @@
     text-align: center;
     color: var(--fg-quiet); font-size: 10px;
   }
+
+  /* ========================================================================
+     Embed mode (loaded inside the iOS app via ?embed=1).
+     The native shell already shows the Feazel logo, COO Office tag, freshness
+     pill, "One picture across 13 markets" headline, the LOB rollup chips, and
+     the market ticker. Hide the duplicate web hero so the WebView opens
+     directly on the Combined Invoiced YTD card.
+     ======================================================================== */
+  html.embed-mode .top,
+  html.embed-mode .hero,
+  html.embed-mode footer {
+    display: none !important;
+  }
+  /* Pull the Combined Invoiced YTD card up so it sits flush against the
+     native ticker, and reserve room at the bottom for the floating tab bar. */
+  html.embed-mode .page { padding-top: 8px; padding-bottom: 130px !important; }
 </style>
 </head>
 <body>
@@ -471,6 +487,18 @@
 
 <script>
 (function () {
+  // Embed mode: when this page is loaded inside the iOS app via WebView with
+  // ?embed=1, the native shell already provides the Feazel logo, "One picture
+  // across 13 markets" headline, the LOB rollup chips, and the market ticker.
+  // Tag the document so the matching CSS hides the duplicate web hero. The
+  // public web view at feazelcommandcenter.com/mobile/ keeps the full hero.
+  try {
+    if (/[?&]embed=1\b/.test(window.location.search || '')) {
+      document.documentElement.classList.add('embed-mode');
+      if (document.body) document.body.classList.add('embed-mode');
+    }
+  } catch (e) {}
+
   function fmtMoney (v) {
     if (v == null || isNaN(v)) return '—';
     var abs = Math.abs(v);
