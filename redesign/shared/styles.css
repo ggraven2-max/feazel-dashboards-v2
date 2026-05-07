@@ -1517,14 +1517,13 @@ p, .prose, .prose p, small, .caption {
   font-weight: 600;
 }
 
-/* KPI value gets the gradient text treatment from Home's .ent-strip .value. */
+/* KPI value: bold white, tabular-nums. The gradient-text effect (blue-soft
+   to gold) reads too pale on the dark mesh; keep the gradient reserved for
+   the truly hero value (Home's .ent-strip .value). */
 .kpi-value {
-  background: linear-gradient(135deg, #7895c4 0%, #d4a857 100%);
-  -webkit-background-clip: text;
-          background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: #ffffff;
+  color: #ffffff !important;
   font-variant-numeric: tabular-nums;
+  font-weight: 800;
 }
 .kpi-label {
   color: rgba(255,255,255,0.55);
@@ -1618,4 +1617,152 @@ strong { color: #ffffff; }
    point in a circle. */
 @media (min-width: 769px) {
   .page-foot { display: none; }
+}
+
+
+/* ============================================================
+   TOPBAR — transparent so it dissolves into the body mesh.
+   The desktop topbar previously used --surface (was white). On the
+   dark theme we want the breadcrumb + freshness stamp to read like a
+   floating row, not a separate white bar pinned to the top.
+   ============================================================ */
+.topbar {
+  background: transparent !important;
+  border-bottom: 1px solid rgba(255,255,255,0.08) !important;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+.topbar-crumbs { color: rgba(255,255,255,0.55); }
+.topbar-crumbs .crumb-current { color: #ffffff; }
+.topbar-right .stamp {
+  background: rgba(255,255,255,0.08);
+  color: rgba(255,255,255,0.78);
+  border: 1px solid rgba(255,255,255,0.10);
+}
+
+
+/* ============================================================
+   HUB HERO — mobile-app aesthetic on the desktop landing pages.
+   Each LOB gets an animated background pattern (residential
+   chevrons, multi-family window grid, service radar pulse) plus
+   a giant LOB title and italic tagline that mirrors App.js's
+   ResidentialHeader / MultiFamilyHeader / ServiceHeader.
+   ============================================================ */
+.hub-hero {
+  position: relative;
+  overflow: hidden;
+  padding: 56px 32px 36px;
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,0.10);
+  background:
+    linear-gradient(180deg, rgba(94,130,188,0.18) 0%, transparent 60%),
+    linear-gradient(180deg, var(--feazel-navy-deep) 0%, var(--feazel-navy) 55%, #1a2540 100%);
+  margin: 0 0 28px;
+  isolation: isolate;
+}
+
+/* Animated background per LOB. ::before holds the texture so the
+   .hub-hero itself can keep its solid base gradient. */
+.hub-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+.hub-hero > * { position: relative; z-index: 1; }
+
+/* RESIDENTIAL: chevron rooftop pattern, two layers drifting opposite ways */
+.hub-hero[data-lob="residential"]::before {
+  background-image:
+    repeating-linear-gradient(135deg, transparent 0 28px, rgba(120,149,196,0.20) 28px 30px, transparent 30px 56px),
+    repeating-linear-gradient(45deg,  transparent 0 64px, rgba(212,168,87,0.12)  64px 65px, transparent 65px 130px);
+  background-size: 200% 200%;
+  opacity: 0.55;
+  animation: hubChevrons 28s linear infinite;
+}
+@keyframes hubChevrons {
+  from { background-position: 0 0, 0 0; }
+  to   { background-position: 320px 320px, -320px 0; }
+}
+
+/* MULTI-FAMILY: subtle grid of glowing windows */
+.hub-hero[data-lob="multi-family"]::before {
+  background-image:
+    radial-gradient(circle at 20% 28%, rgba(212,168,87,0.28) 5px, transparent 7px),
+    radial-gradient(circle at 52% 62%, rgba(212,168,87,0.18) 4px, transparent 6px),
+    radial-gradient(circle at 78% 22%, rgba(212,168,87,0.22) 5px, transparent 7px),
+    radial-gradient(circle at 35% 78%, rgba(212,168,87,0.20) 5px, transparent 7px),
+    radial-gradient(circle at 65% 38%, rgba(212,168,87,0.16) 4px, transparent 6px),
+    radial-gradient(circle at 12% 70%, rgba(212,168,87,0.24) 5px, transparent 7px),
+    radial-gradient(circle at 88% 78%, rgba(212,168,87,0.18) 4px, transparent 6px);
+  background-size:
+    220px 180px, 200px 200px, 250px 200px, 180px 220px,
+    240px 180px, 200px 240px, 200px 200px;
+  animation: hubWindows 6s ease-in-out infinite alternate;
+}
+@keyframes hubWindows {
+  0%   { opacity: 0.35; }
+  50%  { opacity: 0.70; }
+  100% { opacity: 0.45; }
+}
+
+/* SERVICE: radar pulse rings off the right side */
+.hub-hero[data-lob="service"]::before {
+  background:
+    radial-gradient(circle at 85% 50%, rgba(110,231,215,0.45) 0 2px, transparent 4px),
+    radial-gradient(circle at 85% 50%, transparent 60px, rgba(110,231,215,0.18) 62px, transparent 66px),
+    radial-gradient(circle at 85% 50%, transparent 130px, rgba(110,231,215,0.10) 132px, transparent 138px),
+    radial-gradient(circle at 85% 50%, transparent 210px, rgba(110,231,215,0.06) 212px, transparent 218px);
+  animation: hubRadar 3.6s ease-out infinite;
+}
+@keyframes hubRadar {
+  0%   { transform: scale(0.92); opacity: 0.45; }
+  100% { transform: scale(1.08); opacity: 0.10; }
+}
+
+/* Hero typography */
+.hub-hero .eyebrow {
+  color: rgba(255,255,255,0.55);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  margin-bottom: 6px;
+  display: block;
+}
+.hub-hero h1 {
+  font-size: 56px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.0;
+  margin: 0;
+  color: #ffffff;
+}
+@media (max-width: 768px) {
+  .hub-hero { padding: 36px 20px 24px; border-radius: 14px; }
+  .hub-hero h1 { font-size: 38px; }
+}
+.hub-hero .hero-tagline {
+  margin: 6px 0 14px;
+  font-size: 22px;
+  font-weight: 600;
+  font-style: italic;
+  letter-spacing: 0.01em;
+  color: #7895c4;            /* default: residential blue */
+}
+.hub-hero[data-lob="multi-family"] .hero-tagline { color: #d4a857; }
+.hub-hero[data-lob="service"]      .hero-tagline { color: #6ee7d7; }
+
+.hub-hero .hero-narrative,
+.hub-hero p {
+  margin-top: 4px;
+  font-size: 14px;
+  color: rgba(255,255,255,0.70);
+  max-width: 760px;
+  line-height: 1.55;
+}
+
+/* The 4-stat KPI block keeps its grid; just tighten spacing now that the
+   hero has a stronger headline above it. */
+.hub-hero-stats {
+  margin-top: 26px;
 }

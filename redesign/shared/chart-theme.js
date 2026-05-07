@@ -10,7 +10,10 @@
     return;
   }
 
-  // Brand palette mirrors styles.css tokens
+  // Brand palette tuned for the universal dark theme. The fg/line tokens
+  // were dark-on-light; they have been re-aliased to white-alpha so legend
+  // labels, axis ticks, and gridlines read against the navy mesh background.
+  // Brand color hexes (navy, blue, gold, etc.) stay anchored.
   const PALETTE = {
     navy:       '#1f2d4b',
     navyDeep:   '#16203a',
@@ -22,29 +25,34 @@
     blueTint:   '#eaf0fa',
     vista:      '#7895c4',
     delft:      '#2c3b5b',
-    success:    '#2e7d55',
-    warning:    '#c77a1a',
-    danger:     '#b23a2c',
-    dim:        '#6b7280',
-    line:       '#e3e6ec',
-    fg1:        '#1a1a1a',
-    fg2:        '#3a3f4a',
-    fg3:        '#6b7280'
+    gold:       '#d4a857',
+    goldSoft:   '#ecc88c',
+    teal:       '#6ee7d7',
+    tealDeep:   '#16a085',
+    success:    '#4ade80',
+    warning:    '#fbbf24',
+    danger:     '#f87171',
+    dim:        'rgba(255,255,255,0.55)',
+    line:       'rgba(255,255,255,0.10)',
+    fg1:        '#ffffff',
+    fg2:        'rgba(255,255,255,0.85)',
+    fg3:        'rgba(255,255,255,0.55)'
   };
 
-  // Ordered series palette (used when caller doesn't specify backgroundColor)
+  // Ordered series palette: lead with bright hues that read on dark.
+  // Navy used to be #1, but on a navy mesh it disappears — push it to last.
   const SERIES = [
-    PALETTE.navy,
     PALETTE.blue,
-    PALETTE.slate,
+    PALETTE.gold,
     PALETTE.vista,
+    PALETTE.teal,
     PALETTE.success,
     PALETTE.warning,
     PALETTE.danger,
+    PALETTE.goldSoft,
     PALETTE.slateSoft,
-    PALETTE.navy80,
-    PALETTE.delft,
-    PALETTE.dim
+    PALETTE.tealDeep,
+    PALETTE.slate
   ];
 
   // Heat scale (for stacked + per-bar tinting)
@@ -88,7 +96,7 @@
       caretSize: 5
     });
     Chart.defaults.plugins.title = Object.assign({}, Chart.defaults.plugins.title, {
-      color: PALETTE.navy,
+      color: PALETTE.fg1,    /* white on dark */
       font: { size: 14, weight: '600' },
       padding: { top: 0, bottom: 10 }
     });
@@ -233,17 +241,18 @@
   };
 
   // Helper: build a clean line dataset
+  // Default line color is blue (was navy, which disappears on the dark mesh).
   window.FZ.lineDataset = function (label, data, color, opts) {
     opts = opts || {};
     return Object.assign({
       label: label,
       data: data,
-      borderColor: color || PALETTE.navy,
-      backgroundColor: color || PALETTE.navy,
+      borderColor: color || PALETTE.blue,
+      backgroundColor: color || PALETTE.blue,
       tension: 0.3,
       fill: false,
       pointBackgroundColor: '#fff',
-      pointBorderColor: color || PALETTE.navy,
+      pointBorderColor: color || PALETTE.blue,
       pointBorderWidth: 2,
       pointRadius: opts.points === false ? 0 : 3
     }, opts.extra || {});
