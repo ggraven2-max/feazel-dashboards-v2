@@ -372,45 +372,53 @@ h3 { font-size: 14px; line-height: 1.3; }
    COMMAND CENTER (mobile hub)
    Hero, tiles, freshness card.
    ============================================================ */
-/* Note: selector is intentionally ".page .hub-hero" (specificity 0,2,0)
-   so it beats the later-defined ".page * { max-width: 100% !important }"
-   rule which would otherwise cap the hero at the parent's content-box and
-   prevent the negative margin from extending it to the viewport edges. */
+/* Mobile hub-hero: defer to the universal animated treatment in
+   shared/styles.css (which renders the chevron / window / radar pattern
+   keyed on data-lob), but extend it edge-to-edge on phone screens and
+   tighten the padding. The selector ".page .hub-hero" (specificity 0,2,0)
+   beats the later ".page * { max-width: 100% !important }" rule that
+   would otherwise clip the hero at the page's content-box.
+
+   IMPORTANT: do NOT set background here — the styles.css universal rule
+   provides the navy mesh + per-LOB animated ::before pattern. Overriding
+   the background was the bug that suppressed the new animated hero on
+   the public mobile site. */
 .page .hub-hero {
-  /* Extend the hero to the full viewport width regardless of the parent
-     .page's padding. Using viewport units + a symmetric margin trick
-     guarantees the box is centered horizontally and not subject to the
-     global ".page * { max-width: 100% !important }" rule. */
   width: 100vw;
   max-width: none !important;
   margin-left: calc(50% - 50vw);
   margin-right: calc(50% - 50vw);
-  margin-bottom: 16px;
-  padding: 22px var(--m-pad) 18px;
-  background: linear-gradient(180deg, var(--feazel-navy) 0%, var(--feazel-navy-deep) 100%);
-  color: var(--fg-on-navy);
-  border-radius: 0 0 var(--m-radius) var(--m-radius);
-  text-align: center;
+  margin-bottom: 20px;
+  padding: 36px var(--m-pad) 26px;
+  border: 0 !important;
+  border-radius: 0 !important;
 }
 .hub-hero h1 {
-  color: var(--fg-on-navy);
-  font-size: 24px;
-  margin-top: 6px;
-  letter-spacing: -0.01em;
+  color: #ffffff;
+  font-size: 38px;
+  margin-top: 4px;
+  letter-spacing: -0.02em;
+  line-height: 1;
 }
 .hub-hero .eyebrow {
-  color: var(--fg-on-navy-soft);
   font-size: 10px;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.16em;
   display: block;
 }
+.hub-hero .hero-tagline {
+  font-size: 18px;
+  font-weight: 600;
+  font-style: italic;
+  margin: 4px 0 12px;
+  line-height: 1.2;
+}
+.hub-hero .hero-narrative,
 .hub-hero p {
-  color: var(--fg-on-navy-soft);
   font-size: 13px;
-  margin: 10px auto 0;
   line-height: 1.5;
-  max-width: 320px;
-  text-wrap: pretty;
+  margin: 4px 0 0;
+  max-width: none;
+  text-align: left;
 }
 .hub-hero-stats {
   display: grid;
@@ -589,7 +597,7 @@ html.embed-mode .subnav {
   background: rgba(22, 32, 58, 0.92) !important;
   border: 1px solid rgba(255, 255, 255, 0.10) !important;
   border-radius: 22px !important;            /* matches App.js tabBarPill */
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.35);
+  box-shadow: none !important;               /* no drop shadow / bar below the strip */
   gap: 4px !important;
 }
 
