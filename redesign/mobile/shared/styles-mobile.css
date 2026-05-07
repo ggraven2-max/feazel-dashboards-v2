@@ -58,8 +58,8 @@ h3 { font-size: 14px; line-height: 1.3; }
   height: 32px;
   display: flex;
   align-items: center;
-  justify-content: center;     /* pin home + stamp as a centered pair */
-  gap: 10px;
+  justify-content: space-between;   /* home pill flush left, stamp flush right */
+  gap: 8px;
   padding: 0 var(--m-pad);
   background: var(--feazel-navy);
   color: var(--fg-on-navy);
@@ -373,8 +373,17 @@ h3 { font-size: 14px; line-height: 1.3; }
    Hero, tiles, freshness card.
    ============================================================ */
 .hub-hero {
+  /* Extend the hero to the full viewport width regardless of the parent
+     .page's padding or any max-width caps applied to descendants of .page.
+     Using viewport units + a symmetric margin trick guarantees the box is
+     centered horizontally and not subject to the global
+     ".page * { max-width: 100% !important }" rule. */
+  width: 100vw;
+  max-width: none !important;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  margin-bottom: 16px;
   padding: 22px var(--m-pad) 18px;
-  margin: 0 calc(-1 * var(--m-pad)) 16px;
   background: linear-gradient(180deg, var(--feazel-navy) 0%, var(--feazel-navy-deep) 100%);
   color: var(--fg-on-navy);
   border-radius: 0 0 var(--m-radius) var(--m-radius);
