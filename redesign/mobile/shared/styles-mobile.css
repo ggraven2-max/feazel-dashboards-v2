@@ -582,3 +582,12 @@ html.embed-mode .page > section.hub-hero:first-child {
   border-top-left-radius: 0;
   border-top-right-radius: 0;
 }
+
+/* Bottom breathing room. The native floating pill tab bar (≈64px high,
+   plus the iPhone home-indicator safe area, plus a 12px gutter) sits
+   on top of the webview. Without padding, the last items in the page
+   scroll under the bar and get hidden. 130px is the tab bar (64) +
+   home-indicator safe area on Pro Max sized phones (≈34) + gutter
+   (12) + a comfort buffer (20). On phones with no bottom inset this
+   over-pads by a hair, which is harmless. */
+html.embed-mode .page { padding-bottom: 130px !important; }
