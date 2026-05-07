@@ -561,11 +561,10 @@ small { font-size: 11px; }
 .topbar-home .lbl { line-height: 1; }
 
 /* ============================================================
-   EMBED MODE — page is loaded inside the iOS app via WebView
-   with ?embed=1. The native shell already provides the topbar,
-   the freshness stamp, the LOB tab bar, and a themed splash
-   header. Hide the duplicate web chrome and let the Command
-   Center hub-hero sit flush against the native header above.
+   EMBED MODE — page is loaded inside the iOS app via WebView.
+   The native shell already provides the topbar, freshness stamp,
+   LOB tab bar, and a themed splash header. Hide the duplicate web
+   chrome and let the page sit flush against the native header.
    ============================================================ */
 html.embed-mode .topbar,
 html.embed-mode .lob-switch,
@@ -573,10 +572,37 @@ html.embed-mode .page-foot,
 html.embed-mode .hub-hero {
   display: none !important;
 }
-/* The hub-hero is hidden in embed mode (its KPIs now live in the native
-   header chips). Give the next visible section a small top padding so
-   it doesn't slam right against the native header. */
-html.embed-mode .page { padding-top: var(--m-pad); }
+
+/* The sub-nav (page-level pill strip: Home / Executive / Trends / etc.)
+   becomes the first chrome the user sees once topbar + LOB switcher are
+   gone. Pin it to the very top of the WebView with no sticky offset so
+   it sits flush against the bottom of the native iOS header (instead of
+   leaving the 70px gap that the desktop sticky-offset assumes). */
+html.embed-mode .subnav {
+  top: 0 !important;
+  margin-top: 0 !important;
+}
+
+/* Belt-and-suspenders: zero out any inherited margin/padding on the app
+   or main wrappers that could create a gap above the first visible
+   element. Without this, page templates that previously sat below a
+   topbar can leave dead space when the topbar is removed. */
+html.embed-mode .app,
+html.embed-mode .main {
+  margin: 0 !important;
+  padding-top: 0 !important;
+}
+
+/* Hub pages have no .subnav (since hub-hero was the chrome there, and we
+   hide it). Their page content should sit right against the native
+   header. Sub-pages keep a small gap below the sub-nav so the first
+   card is not glued to the pill strip. */
+html.embed-mode .page {
+  padding-top: 0 !important;
+}
+html.embed-mode .subnav ~ .page {
+  padding-top: 12px !important;
+}
 
 /* Bottom breathing room. The native floating pill tab bar (≈64px high,
    plus the iPhone home-indicator safe area, plus a 12px gutter) sits
