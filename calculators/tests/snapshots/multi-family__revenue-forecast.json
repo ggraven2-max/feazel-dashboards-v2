@@ -1,0 +1,1755 @@
+{
+  "_source": "calculator/revenue-forecast-mf.js MF-v1.1-2026-05-04",
+  "title": "Multi-Family Revenue Forecast",
+  "subtitle": "MF-v1 · Job-by-job event model · Data through 2026-05-07",
+  "methodologyLock": {
+    "version": "MF-v1.1-2026-05-04",
+    "lockedOn": "2026-05-04",
+    "items": [
+      "Annual budget $51.67M (sourced from Commercial Budget XLSX)",
+      "Revenue = Date Moved to Invoiced",
+      "Start = Date Moved to In Progress (or Start Date if missing)",
+      "WIP = jobs with start ≤ month-end AND no invoice (or invoice > month-end)"
+    ]
+  },
+  "kpis": [
+    {
+      "label": "Invoiced YTD",
+      "value": "$10.23M",
+      "sub": "5 months elapsed"
+    },
+    {
+      "label": "YTD vs Plan",
+      "value": "−$3.61M",
+      "sub": "Plan YTD: $13.84M",
+      "trend": "negative"
+    },
+    {
+      "label": "YTD vs Forecast",
+      "value": "−$125K",
+      "sub": "Lisa's forecast YTD: $10.36M",
+      "trend": "negative"
+    },
+    {
+      "label": "Plan-Rest Forecast",
+      "value": "$46.12M",
+      "sub": "YTD actual + remaining-month plan"
+    },
+    {
+      "label": "Annual Budget",
+      "value": "$51.67M",
+      "sub": "2026 MF target"
+    },
+    {
+      "label": "Forecast vs Budget",
+      "value": "−$5.56M",
+      "sub": "10.8% uplift needed",
+      "trend": "negative"
+    },
+    {
+      "label": "Current WIP",
+      "value": "$7.95M",
+      "sub": "17 jobs in flight today"
+    },
+    {
+      "label": "Last Month Revenue",
+      "value": "$4.82M",
+      "sub": "April 2026"
+    }
+  ],
+  "execSummary": {
+    "budget": 51673207,
+    "modelAnnualInvoiced": 24554321.688,
+    "gap": -5557274.249589749,
+    "narrative": "5 months of FY2026 MF activity reported, $10.23M invoiced YTD. Run-rate annualizes to $24.55M against the $51.67M plan, a $5.56M shortfall (10.8% uplift needed)."
+  },
+  "monthRevenue": {
+    "jan": {
+      "invoiced": 1085061.87,
+      "wipChange": -777936.1700000002,
+      "netRevenue": 1085061.87,
+      "startingCount": 5,
+      "completingCount": 14,
+      "plan": 639122.2851245126,
+      "gap": 445939.5848754875
+    },
+    "feb": {
+      "invoiced": 363231.03,
+      "wipChange": 40753.27999999997,
+      "netRevenue": 363231.03,
+      "startingCount": 10,
+      "completingCount": 10,
+      "plan": 759049.0680259366,
+      "gap": -395818.0380259366
+    },
+    "mar": {
+      "invoiced": 3966078.4399999995,
+      "wipChange": 3682486.1800000006,
+      "netRevenue": 3966078.4399999995,
+      "startingCount": 29,
+      "completingCount": 33,
+      "plan": 2964722.142117475,
+      "gap": 1001356.2978825243
+    },
+    "apr": {
+      "invoiced": 4816596.029999999,
+      "wipChange": 712717.79,
+      "netRevenue": 4816596.029999999,
+      "startingCount": 31,
+      "completingCount": 37,
+      "plan": 3111458.0780510968,
+      "gap": 1705137.9519489026
+    },
+    "may": {
+      "invoiced": 0,
+      "wipChange": 299586.31,
+      "netRevenue": 0,
+      "startingCount": 8,
+      "completingCount": 4,
+      "plan": 6369333.738681715,
+      "gap": -6369333.738681715
+    },
+    "jun": {
+      "invoiced": 0,
+      "wipChange": 0,
+      "netRevenue": 0,
+      "startingCount": 0,
+      "completingCount": 0,
+      "plan": 3526786.1836693906,
+      "gap": -3526786.1836693906
+    },
+    "jul": {
+      "invoiced": 0,
+      "wipChange": 0,
+      "netRevenue": 0,
+      "startingCount": 0,
+      "completingCount": 0,
+      "plan": 5099079.268445946,
+      "gap": -5099079.268445946
+    },
+    "aug": {
+      "invoiced": 0,
+      "wipChange": 0,
+      "netRevenue": 0,
+      "startingCount": 0,
+      "completingCount": 0,
+      "plan": 5134896.622445581,
+      "gap": -5134896.622445581
+    },
+    "sep": {
+      "invoiced": 0,
+      "wipChange": 0,
+      "netRevenue": 0,
+      "startingCount": 0,
+      "completingCount": 0,
+      "plan": 4305784.787290315,
+      "gap": -4305784.787290315
+    },
+    "oct": {
+      "invoiced": 0,
+      "wipChange": 0,
+      "netRevenue": 0,
+      "startingCount": 0,
+      "completingCount": 0,
+      "plan": 7086194.828295313,
+      "gap": -7086194.828295313
+    },
+    "nov": {
+      "invoiced": 0,
+      "wipChange": 0,
+      "netRevenue": 0,
+      "startingCount": 0,
+      "completingCount": 0,
+      "plan": 5651293.5390924625,
+      "gap": -5651293.5390924625
+    },
+    "dec": {
+      "invoiced": 0,
+      "wipChange": 0,
+      "netRevenue": 0,
+      "startingCount": 0,
+      "completingCount": 0,
+      "plan": 5080930.151171241,
+      "gap": -5080930.151171241
+    }
+  },
+  "weeklyTargetsHeader": {
+    "avgWeeklyNeed": 993715.5192307692,
+    "recent4WkAvg": 0,
+    "gap": 0,
+    "productionAvgWeeklyNeed": 0,
+    "productionCycleStart": 0,
+    "productionCycleComplete": 0,
+    "productionTotalCycle": 0
+  },
+  "budgetRecoveryHeader": {
+    "fullYearBudget": 51673207,
+    "gap": 5557274.249589749,
+    "upliftPct": 10.754653276290261,
+    "aprilGap": 0,
+    "q1OriginalBudget": 0,
+    "q1Actual": 0,
+    "q1Shortfall": 0,
+    "recoveryRatio": 0
+  },
+  "profitabilitySummary": {
+    "combinedGP": 16391384.770000001,
+    "combinedGP_pct": 33.77225886607375,
+    "combinedRevenue": 48535056.05000004,
+    "y2025_GP_pct": 33.11319976273804,
+    "y2025_revenue": 43040429.080000035,
+    "y2025_jobs": 351,
+    "y2026_GP_pct": 38.93479069062262,
+    "y2026_revenue": 5494626.970000002,
+    "y2026_jobs": 52,
+    "materialCost": 16669892.810000002,
+    "laborCost": 14956307.430000005,
+    "otherCost": 473079.19999999995,
+    "commissions": 103518.12,
+    "materialPctContract": 34.346087481236125,
+    "laborPctContract": 30.81547369512102,
+    "otherPctContract": 0.974716500816732,
+    "commissionPctContract": 0.21328525899580145,
+    "sourceFile": "GregProfitabilityMFResults54.csv",
+    "jobsParsed": 403
+  },
+  "profitabilityByJobType": [
+    {
+      "key": "Retail",
+      "jobs": 50,
+      "revenue": 4235585.260000001,
+      "expenses": 2809487.24,
+      "gross_profit": 1426098.020000001,
+      "material": 1441556.1699999995,
+      "labor": 1341929.9800000002,
+      "other": 21460.92,
+      "commission": 0,
+      "contract": 4231619.16,
+      "gp_pct": 33.66944430248586
+    },
+    {
+      "key": "Insurance",
+      "jobs": 2,
+      "revenue": 1259041.71,
+      "expenses": 545818.22,
+      "gross_profit": 713223.49,
+      "material": 299663.44,
+      "labor": 241238.54,
+      "other": 4578.1,
+      "commission": 0,
+      "contract": 1259041.71,
+      "gp_pct": 56.648122483567285
+    }
+  ],
+  "profitabilityByMarket": [
+    {
+      "key": "Columbus",
+      "jobs": 10,
+      "revenue": 2190821.53,
+      "expenses": 1140848.72,
+      "gross_profit": 1049972.81,
+      "material": 553996.84,
+      "labor": 567540.6799999999,
+      "other": 16212.130000000003,
+      "commission": 0,
+      "contract": 2188561.53,
+      "gp_pct": 47.92598555483431
+    },
+    {
+      "key": "Raleigh",
+      "jobs": 16,
+      "revenue": 1190852.9,
+      "expenses": 785343.72,
+      "gross_profit": 405509.18,
+      "material": 406225.77999999997,
+      "labor": 378963.04,
+      "other": 122,
+      "commission": 0,
+      "contract": 1189910.2,
+      "gp_pct": 34.05199584264354
+    },
+    {
+      "key": "Nashville",
+      "jobs": 4,
+      "revenue": 466108.37,
+      "expenses": 334407.58,
+      "gross_profit": 131700.79,
+      "material": 189152.38,
+      "labor": 140232,
+      "other": 4843.98,
+      "commission": 0,
+      "contract": 466108.37,
+      "gp_pct": 28.255401206376106
+    },
+    {
+      "key": "Detroit Metro",
+      "jobs": 6,
+      "revenue": 449449.04,
+      "expenses": 309408.17,
+      "gross_profit": 140040.87000000002,
+      "material": 167340.15000000002,
+      "labor": 139188.02,
+      "other": 2880,
+      "commission": 0,
+      "contract": 448685.63999999996,
+      "gp_pct": 31.158342222735648
+    },
+    {
+      "key": "DC Metro",
+      "jobs": 3,
+      "revenue": 321087,
+      "expenses": 203678.18,
+      "gross_profit": 117408.81999999999,
+      "material": 101280.7,
+      "labor": 102218.98999999999,
+      "other": 0,
+      "commission": 0,
+      "contract": 321087,
+      "gp_pct": 36.56604596262072
+    },
+    {
+      "key": "Cleveland",
+      "jobs": 4,
+      "revenue": 296880.71,
+      "expenses": 191175.13,
+      "gross_profit": 105705.58000000002,
+      "material": 107896.98000000001,
+      "labor": 80513.07,
+      "other": 1980.91,
+      "commission": 0,
+      "contract": 296880.71,
+      "gp_pct": 35.605405282141774
+    },
+    {
+      "key": "Dayton",
+      "jobs": 2,
+      "revenue": 186672,
+      "expenses": 134698.51,
+      "gross_profit": 51973.490000000005,
+      "material": 72100.92,
+      "labor": 62030,
+      "other": 0,
+      "commission": 0,
+      "contract": 186672,
+      "gp_pct": 27.842145581554817
+    },
+    {
+      "key": "Indianapolis",
+      "jobs": 1,
+      "revenue": 140624,
+      "expenses": 96033.25,
+      "gross_profit": 44590.75,
+      "material": 55848.25,
+      "labor": 40185,
+      "other": 0,
+      "commission": 0,
+      "contract": 140624,
+      "gp_pct": 31.709203265445446
+    },
+    {
+      "key": "Cincinnati",
+      "jobs": 3,
+      "revenue": 113351.3,
+      "expenses": 59823.70999999999,
+      "gross_profit": 53527.59000000001,
+      "material": 35082.08,
+      "labor": 24687.72,
+      "other": 0,
+      "commission": 0,
+      "contract": 113351.3,
+      "gp_pct": 47.222740277350155
+    },
+    {
+      "key": "Richmond",
+      "jobs": 1,
+      "revenue": 84529.44,
+      "expenses": 61380.77,
+      "gross_profit": 23148.670000000006,
+      "material": 33941.77,
+      "labor": 27439,
+      "other": 0,
+      "commission": 0,
+      "contract": 84529.44,
+      "gp_pct": 27.38533462424453
+    },
+    {
+      "key": "Knoxville",
+      "jobs": 2,
+      "revenue": 54250.68,
+      "expenses": 38507.72,
+      "gross_profit": 15742.96,
+      "material": 18353.76,
+      "labor": 20171,
+      "other": 0,
+      "commission": 0,
+      "contract": 54250.68,
+      "gp_pct": 29.018917366565727
+    }
+  ],
+  "profitabilityByJobType2025": [
+    {
+      "key": "Retail",
+      "jobs": 331,
+      "revenue": 35583734.96000001,
+      "expenses": 24604970.64,
+      "gross_profit": 10978764.320000008,
+      "material": 12780138.049999997,
+      "labor": 11450520.37,
+      "other": 363742.6699999999,
+      "commission": 89990.93000000001,
+      "contract": 35666317.00000002,
+      "gp_pct": 30.85332198079076
+    },
+    {
+      "key": "Insurance",
+      "jobs": 19,
+      "revenue": 7398184.92,
+      "expenses": 4139385.9200000004,
+      "gross_profit": 3258798.9999999995,
+      "material": 2123205.4899999998,
+      "labor": 1903048.54,
+      "other": 83297.51,
+      "commission": 13527.19,
+      "contract": 7330994.92,
+      "gp_pct": 44.04862861957227
+    },
+    {
+      "key": "LowMar",
+      "jobs": 1,
+      "revenue": 58509.2,
+      "expenses": 44009.26,
+      "gross_profit": 14499.939999999995,
+      "material": 25329.66,
+      "labor": 19570,
+      "other": 0,
+      "commission": 0,
+      "contract": 58509.2,
+      "gp_pct": 24.782324830966747
+    }
+  ],
+  "profitabilityByMarket2025": [
+    {
+      "key": "Detroit Metro",
+      "jobs": 75,
+      "revenue": 10860376.409999996,
+      "expenses": 7623004.820000001,
+      "gross_profit": 3237371.5899999975,
+      "material": 3863131.010000001,
+      "labor": 3642336.36,
+      "other": 129949.63,
+      "commission": 15631.079999999998,
+      "contract": 10851228.049999997,
+      "gp_pct": 29.809018286135064
+    },
+    {
+      "key": "Raleigh",
+      "jobs": 70,
+      "revenue": 10336937.79,
+      "expenses": 7242363.369999998,
+      "gross_profit": 3094574.42,
+      "material": 3920024.0499999993,
+      "labor": 3250046.1700000004,
+      "other": 64141.77,
+      "commission": 20939.480000000003,
+      "contract": 10344061.979999999,
+      "gp_pct": 29.937051792975915
+    },
+    {
+      "key": "Columbus",
+      "jobs": 53,
+      "revenue": 7921068.729999999,
+      "expenses": 5432709.380000001,
+      "gross_profit": 2488359.35,
+      "material": 2784453.329999999,
+      "labor": 2451648.35,
+      "other": 153879.95000000004,
+      "commission": 0,
+      "contract": 7974578.729999999,
+      "gp_pct": 31.41443957651407
+    },
+    {
+      "key": "Cleveland",
+      "jobs": 40,
+      "revenue": 4867525.16,
+      "expenses": 2820338.309999999,
+      "gross_profit": 2047186.8500000003,
+      "material": 1423307.7100000004,
+      "labor": 1347030.4999999998,
+      "other": 50091.87999999999,
+      "commission": 25537.39,
+      "contract": 4863609.34,
+      "gp_pct": 42.058064061450075
+    },
+    {
+      "key": "Cincinnati",
+      "jobs": 48,
+      "revenue": 2579323.4200000004,
+      "expenses": 1646980.5800000005,
+      "gross_profit": 932342.8400000001,
+      "material": 855262.7399999998,
+      "labor": 782365.9900000001,
+      "other": 8643.12,
+      "commission": 12133.57,
+      "contract": 2567448.75,
+      "gp_pct": 36.14679852749912
+    },
+    {
+      "key": "Nashville",
+      "jobs": 9,
+      "revenue": 1841735.6199999999,
+      "expenses": 990683.23,
+      "gross_profit": 851052.39,
+      "material": 501467.06,
+      "labor": 472323.49,
+      "other": 14053.54,
+      "commission": 1266.48,
+      "contract": 1726735.6199999999,
+      "gp_pct": 46.20925939413606
+    },
+    {
+      "key": "DC Metro",
+      "jobs": 19,
+      "revenue": 1766930.27,
+      "expenses": 1148540.6299999997,
+      "gross_profit": 618389.64,
+      "material": 532529.72,
+      "labor": 609607,
+      "other": 6645.08,
+      "commission": 8911.019999999999,
+      "contract": 1864194.03,
+      "gp_pct": 34.99796514324247
+    },
+    {
+      "key": "Winston-Salem",
+      "jobs": 5,
+      "revenue": 1602303.2,
+      "expenses": 959829.91,
+      "gross_profit": 642473.2899999999,
+      "material": 537354.01,
+      "labor": 415100.53,
+      "other": 9383.93,
+      "commission": 15684.97,
+      "contract": 1599017.2,
+      "gp_pct": 40.09686119331222
+    },
+    {
+      "key": "Indianapolis",
+      "jobs": 8,
+      "revenue": 376998.46,
+      "expenses": 303750.0399999999,
+      "gross_profit": 73248.42000000001,
+      "material": 178099.49000000002,
+      "labor": 121275.52,
+      "other": 4550.43,
+      "commission": 0,
+      "contract": 376803.4,
+      "gp_pct": 19.42936849131957
+    },
+    {
+      "key": "Dayton",
+      "jobs": 6,
+      "revenue": 346262.7,
+      "expenses": 226257.36999999997,
+      "gross_profit": 120005.32999999999,
+      "material": 124503.94000000002,
+      "labor": 97577,
+      "other": 3861.7,
+      "commission": 3071.35,
+      "contract": 346262.7,
+      "gp_pct": 34.65730787636092
+    },
+    {
+      "key": "Richmond",
+      "jobs": 5,
+      "revenue": 252074.91999999998,
+      "expenses": 176005.90000000002,
+      "gross_profit": 76069.02000000003,
+      "material": 96186,
+      "labor": 79886,
+      "other": 0,
+      "commission": 0,
+      "contract": 252988.91999999998,
+      "gp_pct": 30.177147333816485
+    },
+    {
+      "key": "Knoxville",
+      "jobs": 12,
+      "revenue": 238499.4,
+      "expenses": 179535.6,
+      "gross_profit": 58963.79999999999,
+      "material": 90615.73000000001,
+      "labor": 87086,
+      "other": 1839.15,
+      "commission": 342.78,
+      "contract": 238499.4,
+      "gp_pct": 24.722829491394943
+    },
+    {
+      "key": "Greenville",
+      "jobs": 1,
+      "revenue": 50393,
+      "expenses": 38366.68,
+      "gross_profit": 12026.32,
+      "material": 21738.41,
+      "labor": 16856,
+      "other": 0,
+      "commission": 0,
+      "contract": 50393,
+      "gp_pct": 23.865060623499296
+    }
+  ],
+  "pipelineSnapshot": {
+    "stages": [
+      {
+        "stage": "In WIP today",
+        "jobs": 17,
+        "value": 7951767.3100000005
+      }
+    ],
+    "totalJobs": 17,
+    "totalValue": 7951767.3100000005
+  },
+  "commentary": {
+    "actionableRecommendations": [
+      "Annualized pace is $5.56M short of the $51.67M plan. Push to invoice WIP balance ($8.0M) faster, or accelerate starts."
+    ],
+    "strategyHighlights": []
+  },
+  "tables": [
+    {
+      "id": "mf-monthly-rollup",
+      "title": "Monthly Roll-Up",
+      "headers": [
+        "Month",
+        {
+          "label": "Revenue",
+          "num": true
+        },
+        {
+          "label": "Plan",
+          "num": true
+        },
+        {
+          "label": "Gap",
+          "num": true
+        },
+        {
+          "label": "Starts",
+          "num": true
+        },
+        {
+          "label": "WIP End",
+          "num": true
+        },
+        {
+          "label": "# Inv.",
+          "num": true
+        },
+        {
+          "label": "# Start",
+          "num": true
+        }
+      ],
+      "rows": [
+        [
+          "January",
+          "$1.09M",
+          "$639K",
+          "$446K",
+          "$307K",
+          "$2.08M",
+          14,
+          5
+        ],
+        [
+          "February",
+          "$363K",
+          "$759K",
+          "$-396K",
+          "$404K",
+          "$2.22M",
+          10,
+          10
+        ],
+        [
+          "March",
+          "$3.97M",
+          "$2.96M",
+          "$1M",
+          "$7.65M",
+          "$6.04M",
+          33,
+          29
+        ],
+        [
+          "April",
+          "$4.82M",
+          "$3.11M",
+          "$1.71M",
+          "$5.53M",
+          "$7.94M",
+          37,
+          31
+        ],
+        [
+          "May",
+          "$0",
+          "$6.37M",
+          "$-6.37M",
+          "$300K",
+          "$7.95M",
+          4,
+          8
+        ],
+        [
+          "June",
+          "$0",
+          "$3.53M",
+          "$-3.53M",
+          "$0",
+          "$7.95M",
+          0,
+          0
+        ],
+        [
+          "July",
+          "$0",
+          "$5.1M",
+          "$-5.1M",
+          "$0",
+          "$7.95M",
+          0,
+          0
+        ],
+        [
+          "August",
+          "$0",
+          "$5.13M",
+          "$-5.13M",
+          "$0",
+          "$7.95M",
+          0,
+          0
+        ],
+        [
+          "September",
+          "$0",
+          "$4.31M",
+          "$-4.31M",
+          "$0",
+          "$7.95M",
+          0,
+          0
+        ],
+        [
+          "October",
+          "$0",
+          "$7.09M",
+          "$-7.09M",
+          "$0",
+          "$7.95M",
+          0,
+          0
+        ],
+        [
+          "November",
+          "$0",
+          "$5.65M",
+          "$-5.65M",
+          "$0",
+          "$7.95M",
+          0,
+          0
+        ],
+        [
+          "December",
+          "$0",
+          "$5.08M",
+          "$-5.08M",
+          "$0",
+          "$7.95M",
+          0,
+          0
+        ]
+      ]
+    },
+    {
+      "id": "mf-variance",
+      "title": "Forecast vs Actual (per month)",
+      "headers": [
+        "Month",
+        {
+          "label": "Forecast",
+          "num": true
+        },
+        {
+          "label": "Actual",
+          "num": true
+        },
+        {
+          "label": "Variance",
+          "num": true
+        },
+        {
+          "label": "Variance %",
+          "num": true
+        }
+      ],
+      "rows": [
+        [
+          "January",
+          "—",
+          "$1.09M",
+          "—",
+          "—"
+        ],
+        [
+          "February",
+          "—",
+          "$363K",
+          "—",
+          "—"
+        ],
+        [
+          "March",
+          "—",
+          "$3.97M",
+          "—",
+          "—"
+        ],
+        [
+          "April",
+          "$4.93M",
+          "$4.82M",
+          "$-115K",
+          "-2%"
+        ],
+        [
+          "May",
+          "$5.42M",
+          "$0",
+          "$-5.42M",
+          "-100%"
+        ],
+        [
+          "June",
+          "—",
+          "$0",
+          "—",
+          "—"
+        ],
+        [
+          "July",
+          "—",
+          "$0",
+          "—",
+          "—"
+        ],
+        [
+          "August",
+          "—",
+          "$0",
+          "—",
+          "—"
+        ],
+        [
+          "September",
+          "—",
+          "$0",
+          "—",
+          "—"
+        ],
+        [
+          "October",
+          "—",
+          "$0",
+          "—",
+          "—"
+        ],
+        [
+          "November",
+          "—",
+          "$0",
+          "—",
+          "—"
+        ],
+        [
+          "December",
+          "—",
+          "$0",
+          "—",
+          "—"
+        ]
+      ]
+    },
+    {
+      "id": "mf-branch-forecast",
+      "title": "Forecasted Revenue by Branch (per month)",
+      "headers": [
+        "Month",
+        "Branch",
+        {
+          "label": "Forecast",
+          "num": true
+        },
+        {
+          "label": "# Jobs",
+          "num": true
+        },
+        "Avg GM"
+      ],
+      "rows": [
+        [
+          "April",
+          "Columbus",
+          "$1.77M",
+          5,
+          "33.9%"
+        ],
+        [
+          "April",
+          "Detroit",
+          "$1.4M",
+          6,
+          "27.5%"
+        ],
+        [
+          "April",
+          "Raleigh",
+          "$738K",
+          8,
+          "30.9%"
+        ],
+        [
+          "April",
+          "Cincinnati",
+          "$536K",
+          10,
+          "38.2%"
+        ],
+        [
+          "April",
+          "Cleveland",
+          "$383K",
+          5,
+          "32.6%"
+        ],
+        [
+          "April",
+          "Nashville",
+          "$89K",
+          3,
+          "30.0%"
+        ],
+        [
+          "April",
+          "DC",
+          "$22K",
+          1,
+          "31.0%"
+        ],
+        [
+          "May",
+          "Raleigh",
+          "$1.86M",
+          5,
+          "—"
+        ],
+        [
+          "May",
+          "Detroit",
+          "$1.28M",
+          6,
+          "—"
+        ],
+        [
+          "May",
+          "Columbus",
+          "$969K",
+          7,
+          "—"
+        ],
+        [
+          "May",
+          "Cincinnati",
+          "$657K",
+          10,
+          "—"
+        ],
+        [
+          "May",
+          "Nashville",
+          "$394K",
+          2,
+          "—"
+        ],
+        [
+          "May",
+          "Indianapolis",
+          "$139K",
+          2,
+          "—"
+        ],
+        [
+          "May",
+          "DC",
+          "$93K",
+          4,
+          "—"
+        ],
+        [
+          "May",
+          "Cleveland",
+          "$32K",
+          1,
+          "—"
+        ]
+      ]
+    },
+    {
+      "id": "mf-wip-schedule",
+      "title": "Forecasted WIP Schedule (from Lisa's monthly forecasts)",
+      "headers": [
+        "Month",
+        "Job",
+        {
+          "label": "Contract",
+          "num": true
+        },
+        "% Complete by EOM",
+        "Anticipated Completion",
+        "Est. GM"
+      ],
+      "rows": [
+        [
+          "April",
+          "Woodholme Village",
+          "$3.21M",
+          "25%",
+          "June-26",
+          "32%"
+        ],
+        [
+          "April",
+          "Eagle View",
+          "$1.33M",
+          "20%",
+          "November-26",
+          "32%"
+        ],
+        [
+          "April",
+          "Ashford Place",
+          "$671K",
+          "50%",
+          "May-26",
+          "24%"
+        ],
+        [
+          "April",
+          "Rosebrook Village",
+          "$740K",
+          "90%",
+          "May-26",
+          "28.02%"
+        ],
+        [
+          "April",
+          "One West Fifth",
+          "$527K",
+          "90%",
+          "May-26",
+          "—"
+        ],
+        [
+          "April",
+          "Ivy Hall HOA",
+          "$458K",
+          "33%",
+          "May-26",
+          "25.2%"
+        ],
+        [
+          "April",
+          "Townhomes at Highland Creek",
+          "$624K",
+          "15%",
+          "May-26",
+          "25.7%"
+        ],
+        [
+          "May",
+          "Woodholme Village",
+          "$3.21M",
+          "—",
+          "—",
+          "—"
+        ],
+        [
+          "May",
+          "Eagle View",
+          "$1.33M",
+          "—",
+          "—",
+          "—"
+        ],
+        [
+          "May",
+          "Ashford Place",
+          "$671K",
+          "—",
+          "—",
+          "—"
+        ],
+        [
+          "May",
+          "One West Fifth",
+          "$527K",
+          "—",
+          "—",
+          "—"
+        ],
+        [
+          "May (new)",
+          "Cider Mill Village",
+          "$2.3M",
+          "—",
+          "—",
+          "—"
+        ],
+        [
+          "May (new)",
+          "Northcrest II",
+          "$336K",
+          "—",
+          "—",
+          "—"
+        ]
+      ]
+    },
+    {
+      "id": "mf-by-branch",
+      "title": "By Branch (YTD)",
+      "headers": [
+        "Branch",
+        {
+          "label": "Invoiced",
+          "num": true
+        },
+        {
+          "label": "WIP",
+          "num": true
+        },
+        {
+          "label": "# Jobs",
+          "num": true
+        }
+      ],
+      "rows": [
+        [
+          "Columbus",
+          "$3.45M",
+          "$817K",
+          21
+        ],
+        [
+          "DC Metro",
+          "$346K",
+          "$3.41M",
+          10
+        ],
+        [
+          "Raleigh",
+          "$1.79M",
+          "$1.08M",
+          34
+        ],
+        [
+          "Detroit",
+          "$2.39M",
+          "$0",
+          19
+        ],
+        [
+          "Cincinnati",
+          "$492K",
+          "$1.49M",
+          17
+        ],
+        [
+          "Nashville",
+          "$584K",
+          "$352K",
+          9
+        ],
+        [
+          "Detroit Metro",
+          "$0",
+          "$800K",
+          2
+        ],
+        [
+          "Cleveland",
+          "$694K",
+          "$0",
+          9
+        ],
+        [
+          "Dayton",
+          "$187K",
+          "$0",
+          2
+        ],
+        [
+          "Indianapolis",
+          "$149K",
+          "$0",
+          2
+        ],
+        [
+          "Richmond",
+          "$85K",
+          "$0",
+          1
+        ],
+        [
+          "Knoxville",
+          "$54K",
+          "$0",
+          2
+        ],
+        [
+          "Greenville",
+          "$0",
+          "$0",
+          0
+        ],
+        [
+          "Greensboro",
+          "$0",
+          "$0",
+          0
+        ],
+        [
+          "Winston-Salem",
+          "$0",
+          "$0",
+          0
+        ],
+        [
+          "(unassigned)",
+          "$0",
+          "$0",
+          0
+        ]
+      ]
+    },
+    {
+      "id": "mf-by-jobtype",
+      "title": "Revenue by Job Type (YTD)",
+      "headers": [
+        "Job Type",
+        {
+          "label": "Revenue",
+          "num": true
+        },
+        {
+          "label": "# Jobs",
+          "num": true
+        }
+      ],
+      "rows": [
+        [
+          "Retail-No Financing",
+          "$6.73M",
+          93
+        ],
+        [
+          "Insurance",
+          "$2.3M",
+          4
+        ],
+        [
+          "LowMar",
+          "$59K",
+          1
+        ]
+      ]
+    },
+    {
+      "id": "mf-in-wip",
+      "title": "Currently in WIP",
+      "headers": [
+        "Job",
+        "Account",
+        "Branch",
+        {
+          "label": "Contract",
+          "num": true
+        },
+        "Started"
+      ],
+      "rows": [
+        [
+          "Job-103685",
+          "WPM Real Estate Management",
+          "DC Metro",
+          "$3.21M",
+          "2026-03-27"
+        ],
+        [
+          "Job-101476",
+          "Towne Properties - Cincinnati West District Office",
+          "Cincinnati",
+          "$1.33M",
+          "2025-11-17"
+        ],
+        [
+          "Job-108550",
+          "Oakwood Management Company",
+          "Columbus",
+          "$740K",
+          "2026-04-13"
+        ],
+        [
+          "Job-109026",
+          "Select Management",
+          "Detroit Metro",
+          "$671K",
+          "2026-04-13"
+        ],
+        [
+          "Job-109665",
+          "Charleston Management",
+          "Raleigh",
+          "$624K",
+          "2026-04-27"
+        ],
+        [
+          "Job-105011",
+          "Charleston Management",
+          "Raleigh",
+          "$459K",
+          "2026-04-27"
+        ],
+        [
+          "Job-111826",
+          "Ghertner & Company",
+          "Nashville",
+          "$352K",
+          "2026-04-26"
+        ],
+        [
+          "Job-110389",
+          "WPM Real Estate Management",
+          "DC Metro",
+          "$164K",
+          "2026-05-06"
+        ],
+        [
+          "Job-104447",
+          "Lakefront Manor Condominiums",
+          "Detroit Metro",
+          "$129K",
+          "2026-04-30"
+        ],
+        [
+          "Job-101477",
+          "Towne Properties - Cincinnati West District Office",
+          "Cincinnati",
+          "$110K",
+          "2025-11-17"
+        ],
+        [
+          "Job-111899",
+          "Ohio Plastic Surgery Specialists",
+          "Columbus",
+          "$53K",
+          "2026-05-02"
+        ],
+        [
+          "Job-108755",
+          "Conover Family Dental",
+          "Cincinnati",
+          "$36K",
+          "2026-03-30"
+        ],
+        [
+          "Job-110601",
+          "Allie Dye",
+          "Columbus",
+          "$24K",
+          "2026-05-04"
+        ],
+        [
+          "Job-111148",
+          "Associa - Community Management Corporation DC Market - Opp# 254255",
+          "DC Metro",
+          "$24K",
+          "2026-05-04"
+        ],
+        [
+          "Job-111157",
+          "Associa - Community Management Corporation DC Market - Opp# 254255",
+          "DC Metro",
+          "$12K",
+          "2026-05-04"
+        ],
+        [
+          "Job-109960",
+          "Towne Properties - Northern Kentucky",
+          "Cincinnati",
+          "$11K",
+          "2026-05-05"
+        ],
+        [
+          "Job-108754",
+          "Towne Properties - Cincinnati West District Office",
+          "Cincinnati",
+          "$5K",
+          "2026-05-07"
+        ]
+      ]
+    }
+  ],
+  "charts": [
+    {
+      "id": "mf-rev-vs-plan-vs-forecast",
+      "title": "Monthly Revenue: Forecast vs Actual vs Plan",
+      "sub": "Forecast = Lisa's monthly schedule. Actual = Salesforce invoiced dates. Plan = Commercial Budget.",
+      "config": {
+        "type": "bar",
+        "data": {
+          "labels": [
+            "Jan",
+            "Feb",
+            "Mar",
+            "Apr",
+            "May",
+            "Jun",
+            "Jul",
+            "Aug",
+            "Sep",
+            "Oct",
+            "Nov",
+            "Dec"
+          ],
+          "datasets": [
+            {
+              "label": "Forecast",
+              "data": [
+                0,
+                0,
+                0,
+                4931898.45,
+                5424329.3100000005,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "backgroundColor": "#7895c4"
+            },
+            {
+              "label": "Actual",
+              "data": [
+                1085061.87,
+                363231.03,
+                3966078.4399999995,
+                4816596.029999999,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "backgroundColor": "#1f2d4b"
+            },
+            {
+              "label": "Plan",
+              "data": [
+                639122.2851245126,
+                759049.0680259366,
+                2964722.142117475,
+                3111458.0780510968,
+                6369333.738681715,
+                3526786.1836693906,
+                5099079.268445946,
+                5134896.622445581,
+                4305784.787290315,
+                7086194.828295313,
+                5651293.5390924625,
+                5080930.151171241
+              ],
+              "type": "line",
+              "borderColor": "#b23a2c",
+              "borderDash": [
+                6,
+                4
+              ],
+              "backgroundColor": "transparent",
+              "pointRadius": 2
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "mf-variance",
+      "title": "Forecast Variance per Month",
+      "sub": "Actual − Forecast. Positive = overperformed Lisa's schedule, negative = underperformed.",
+      "config": {
+        "type": "bar",
+        "data": {
+          "labels": [
+            "Jan",
+            "Feb",
+            "Mar",
+            "Apr",
+            "May",
+            "Jun",
+            "Jul",
+            "Aug",
+            "Sep",
+            "Oct",
+            "Nov",
+            "Dec"
+          ],
+          "datasets": [
+            {
+              "label": "Variance",
+              "data": [
+                0,
+                0,
+                0,
+                -115302.42000000086,
+                -5424329.3100000005,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "backgroundColor": [
+                "#e3e6ec",
+                "#e3e6ec",
+                "#e3e6ec",
+                "#b23a2c",
+                "#b23a2c",
+                "#e3e6ec",
+                "#e3e6ec",
+                "#e3e6ec",
+                "#e3e6ec",
+                "#e3e6ec",
+                "#e3e6ec",
+                "#e3e6ec"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "mf-wip-balance",
+      "title": "WIP Balance at Month-End",
+      "sub": "Sum of contract values for jobs in flight (started, not yet invoiced)",
+      "config": {
+        "type": "line",
+        "data": {
+          "labels": [
+            "Jan",
+            "Feb",
+            "Mar",
+            "Apr",
+            "May",
+            "Jun",
+            "Jul",
+            "Aug",
+            "Sep",
+            "Oct",
+            "Nov",
+            "Dec"
+          ],
+          "datasets": [
+            {
+              "label": "WIP Balance",
+              "data": [
+                2081200.16,
+                2217620.42,
+                6038147.71,
+                7943603.6,
+                7951767.3100000005,
+                7951767.3100000005,
+                7951767.3100000005,
+                7951767.3100000005,
+                7951767.3100000005,
+                7951767.3100000005,
+                7951767.3100000005,
+                7951767.3100000005
+              ],
+              "borderColor": "#1f2d4b",
+              "backgroundColor": "rgba(31,45,75,0.12)",
+              "fill": true,
+              "tension": 0.3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "mf-starts-vs-completions",
+      "title": "WIP Starts vs Completions per Month",
+      "sub": "Are we adding to WIP faster than we drain it?",
+      "config": {
+        "type": "bar",
+        "data": {
+          "labels": [
+            "Jan",
+            "Feb",
+            "Mar",
+            "Apr",
+            "May",
+            "Jun",
+            "Jul",
+            "Aug",
+            "Sep",
+            "Oct",
+            "Nov",
+            "Dec"
+          ],
+          "datasets": [
+            {
+              "label": "New Starts",
+              "data": [
+                307125.7,
+                403984.31,
+                7648564.62,
+                5529313.819999999,
+                299586.31,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "backgroundColor": "#c77a1a"
+            },
+            {
+              "label": "Completions",
+              "data": [
+                1085061.87,
+                363231.03,
+                3966078.4399999995,
+                4816596.029999999,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              "backgroundColor": "#2e7d55"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "monthsLabel": [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec"
+  ],
+  "budgetInv": [
+    639122.2851245126,
+    759049.0680259366,
+    2964722.142117475,
+    3111458.0780510968,
+    6369333.738681715,
+    3526786.1836693906,
+    5099079.268445946,
+    5134896.622445581,
+    4305784.787290315,
+    7086194.828295313,
+    5651293.5390924625,
+    5080930.151171241
+  ],
+  "revModel": [
+    1085061.87,
+    363231.03,
+    3966078.4399999995,
+    4816596.029999999,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "revFromKnown": [
+    1085061.87,
+    363231.03,
+    3966078.4399999995,
+    4816596.029999999,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "requiredSales": [
+    639122.2851245126,
+    759049.0680259366,
+    2964722.142117475,
+    3111458.0780510968,
+    6369333.738681715,
+    3526786.1836693906,
+    5099079.268445946,
+    5134896.622445581,
+    4305784.787290315,
+    7086194.828295313,
+    5651293.5390924625,
+    5080930.151171241
+  ],
+  "backlogData": [
+    2081200.16,
+    2217620.42,
+    6038147.71,
+    7943603.6,
+    7951767.3100000005,
+    7951767.3100000005,
+    7951767.3100000005,
+    7951767.3100000005,
+    7951767.3100000005,
+    7951767.3100000005,
+    7951767.3100000005,
+    7951767.3100000005
+  ],
+  "tabs": []
+}

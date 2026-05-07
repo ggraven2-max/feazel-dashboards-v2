@@ -1,0 +1,1216 @@
+{
+  "_source": "calculator/backlog.js v1.0-rules-encoded",
+  "title": "Job Backlog & Production",
+  "subtitle": "Live job-level backlog",
+  "headerMeta": {
+    "totalJobs": 100,
+    "totalWOs": 322,
+    "portfolioValue": 21350727.31,
+    "avgDaysInStatus": 40
+  },
+  "tabs": [
+    {
+      "id": "index",
+      "label": "Overview"
+    },
+    {
+      "id": "executive",
+      "label": "Executive Summary"
+    },
+    {
+      "id": "partial",
+      "label": "Partially Complete"
+    },
+    {
+      "id": "holds",
+      "label": "Holds & Blockers"
+    },
+    {
+      "id": "trades",
+      "label": "Trade Analysis"
+    },
+    {
+      "id": "branches",
+      "label": "Branch Drilldown"
+    },
+    {
+      "id": "salespeople",
+      "label": "Salesperson View"
+    },
+    {
+      "id": "pipeline",
+      "label": "Backlog Pipeline"
+    },
+    {
+      "id": "action-plan",
+      "label": "Action Plan"
+    }
+  ],
+  "kpisExecutive": [
+    {
+      "label": "Total Jobs",
+      "value": "100",
+      "sub": "322 work orders",
+      "tone": "info"
+    },
+    {
+      "label": "In Progress",
+      "value": "11",
+      "sub": "11.0% of book",
+      "tone": "info"
+    },
+    {
+      "label": "Not Started",
+      "value": "89",
+      "sub": "89.0% of book",
+      "tone": "info"
+    },
+    {
+      "label": "Partially Complete",
+      "value": "1",
+      "sub": "9.1% of In Progress",
+      "tone": "crit"
+    },
+    {
+      "label": "Avg Days in Status",
+      "value": "40",
+      "sub": "Job-level average",
+      "tone": "warn"
+    },
+    {
+      "label": "Total Portfolio Value",
+      "value": "$21.35M",
+      "sub": "Sum of signed contracts in book",
+      "tone": "good"
+    }
+  ],
+  "kpisRiskOpportunity": [
+    {
+      "label": "Revenue at Risk",
+      "value": "$9.24M",
+      "sub": "Jobs with WOs >30 days in status",
+      "tone": "crit"
+    },
+    {
+      "label": "Immediate Throughput Opportunity",
+      "value": "$36K",
+      "sub": "Partial-job value waiting on trailing trades",
+      "tone": "good"
+    }
+  ],
+  "kpisPartial": [
+    {
+      "label": "Partial Jobs",
+      "value": "1",
+      "sub": "9.1% of In Progress",
+      "tone": "warn"
+    },
+    {
+      "label": "Trapped Value",
+      "value": "$36K",
+      "sub": "Recoverable contract value",
+      "tone": "good"
+    },
+    {
+      "label": "Open WOs on Partials",
+      "value": "1",
+      "sub": "Across 1 jobs",
+      "tone": "info"
+    },
+    {
+      "label": "RTS Ready Today",
+      "value": "1",
+      "sub": "No blocker, dispatch now",
+      "tone": "good"
+    },
+    {
+      "label": "Top Trailing Trade",
+      "value": "Gutters",
+      "sub": "1 open WOs / 1 jobs",
+      "tone": "warn"
+    }
+  ],
+  "kpisHolds": [
+    {
+      "label": "Total Holds",
+      "value": "145",
+      "sub": "WOs in On Hold status",
+      "tone": "crit"
+    },
+    {
+      "label": "Pending Permit",
+      "value": "114",
+      "sub": "78.6% of all holds",
+      "tone": "warn"
+    },
+    {
+      "label": "Pending Sales",
+      "value": "0",
+      "sub": "Awaiting sales disposition",
+      "tone": "warn"
+    },
+    {
+      "label": "Avg Hold Age",
+      "value": "37d",
+      "sub": "Mean days in hold across all sub-statuses",
+      "tone": "info"
+    }
+  ],
+  "kpisSales": [
+    {
+      "label": "Active Reps",
+      "value": "16",
+      "sub": "Reps with at least one open WO",
+      "tone": "info"
+    },
+    {
+      "label": "Stuck Value >30d",
+      "value": "$9.24M",
+      "sub": "Sum of stale value across all reps",
+      "tone": "crit"
+    },
+    {
+      "label": "Reps with Stuck Work",
+      "value": "8",
+      "sub": "Reps carrying any >30d WO",
+      "tone": "warn"
+    },
+    {
+      "label": "Top Stuck Rep",
+      "value": "$3.64M",
+      "sub": "Highest single-rep stuck value",
+      "tone": "warn"
+    }
+  ],
+  "kpisBacklog": [
+    {
+      "label": "Not Started Jobs",
+      "value": "89",
+      "sub": "89.0% of book",
+      "tone": "info"
+    },
+    {
+      "label": "Not Started Value",
+      "value": "$15.52M",
+      "sub": "Signed and waiting",
+      "tone": "good"
+    },
+    {
+      "label": "Oldest Not Started",
+      "value": "580d",
+      "sub": "Days in status, oldest job",
+      "tone": "crit"
+    },
+    {
+      "label": "Top Branch Concentration",
+      "value": "Detroit Metro",
+      "sub": "20 jobs (22.5% of backlog)",
+      "tone": "warn"
+    }
+  ],
+  "charts": [
+    {
+      "id": "ch-wo-status",
+      "labels": [
+        "On Hold",
+        "Scheduled",
+        "In Progress",
+        "Ready to Schedule",
+        "New",
+        "Completed"
+      ],
+      "datasets": [
+        {
+          "label": "Work Orders",
+          "data": [
+            145,
+            90,
+            43,
+            33,
+            8,
+            3
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ch-branch",
+      "labels": [
+        "Detroit Metro",
+        "Columbus",
+        "Raleigh",
+        "Cleveland",
+        "Cincinnati",
+        "DC Metro",
+        "Richmond",
+        "Dayton",
+        "Indianapolis",
+        "Nashville"
+      ],
+      "datasets": [
+        {
+          "label": "Completed",
+          "data": [
+            0,
+            0,
+            0,
+            0,
+            2,
+            0,
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "label": "Open",
+          "data": [
+            8,
+            20,
+            10,
+            2,
+            4,
+            5,
+            0,
+            1,
+            0,
+            1
+          ]
+        },
+        {
+          "label": "On Hold",
+          "data": [
+            27,
+            23,
+            26,
+            38,
+            16,
+            7,
+            4,
+            4,
+            0,
+            0
+          ]
+        },
+        {
+          "label": "RTS",
+          "data": [
+            9,
+            10,
+            2,
+            0,
+            4,
+            0,
+            2,
+            0,
+            6,
+            0
+          ]
+        },
+        {
+          "label": "Scheduled",
+          "data": [
+            65,
+            6,
+            12,
+            0,
+            3,
+            2,
+            0,
+            1,
+            0,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ch-wo-aging",
+      "labels": [
+        "On Hold",
+        "Completed",
+        "Ready to Schedule",
+        "In Progress",
+        "Scheduled",
+        "New"
+      ],
+      "datasets": [
+        {
+          "label": "Avg Days",
+          "data": [
+            37,
+            27,
+            23,
+            19,
+            8,
+            2
+          ]
+        },
+        {
+          "label": "Max Days",
+          "data": [
+            580,
+            47,
+            96,
+            170,
+            34,
+            14
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ch-trade",
+      "labels": [
+        "Roofing",
+        "Gutters",
+        "Siding",
+        "Windows",
+        "Other"
+      ],
+      "datasets": [
+        {
+          "label": "Completed",
+          "data": [
+            3,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "label": "Open",
+          "data": [
+            275,
+            28,
+            11,
+            3,
+            2
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ch-incomplete-status",
+      "labels": [
+        "Ready to Schedule"
+      ],
+      "datasets": [
+        {
+          "label": "WOs",
+          "data": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ch-incomplete-age",
+      "labels": [
+        "<7d",
+        "7-14d",
+        "14-30d",
+        "30-60d",
+        "60-90d",
+        "90+d"
+      ],
+      "datasets": [
+        {
+          "label": "Open WOs",
+          "data": [
+            0,
+            0,
+            0,
+            1,
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ch-backlog",
+      "labels": [
+        "Detroit Metro",
+        "Cincinnati",
+        "Columbus",
+        "Cleveland",
+        "Raleigh",
+        "DC Metro",
+        "Dayton",
+        "Richmond",
+        "Indianapolis",
+        "Nashville"
+      ],
+      "datasets": [
+        {
+          "label": "Jobs",
+          "data": [
+            20,
+            14,
+            14,
+            13,
+            13,
+            6,
+            4,
+            2,
+            2,
+            1
+          ]
+        }
+      ]
+    }
+  ],
+  "tables": [
+    {
+      "id": "branchDetail",
+      "title": "Branch detail",
+      "headers": [
+        "Branch",
+        "WOs",
+        "Completed",
+        "On Hold",
+        "RTS",
+        "Scheduled",
+        "In Progress",
+        "RAS",
+        "Permits",
+        "Jobs",
+        "Value"
+      ],
+      "rows": [
+        [
+          "Detroit Metro",
+          109,
+          0,
+          27,
+          9,
+          65,
+          8,
+          0,
+          21,
+          21,
+          8265262
+        ],
+        [
+          "Columbus",
+          59,
+          0,
+          23,
+          10,
+          6,
+          19,
+          0,
+          16,
+          14,
+          1556269.31
+        ],
+        [
+          "Raleigh",
+          50,
+          0,
+          26,
+          2,
+          12,
+          7,
+          0,
+          25,
+          14,
+          2496553
+        ],
+        [
+          "Cleveland",
+          40,
+          0,
+          38,
+          0,
+          0,
+          0,
+          0,
+          34,
+          13,
+          1847755
+        ],
+        [
+          "Cincinnati",
+          29,
+          2,
+          16,
+          4,
+          3,
+          3,
+          0,
+          7,
+          18,
+          2363542
+        ],
+        [
+          "DC Metro",
+          14,
+          0,
+          7,
+          0,
+          2,
+          5,
+          0,
+          3,
+          10,
+          3914509
+        ],
+        [
+          "Richmond",
+          7,
+          1,
+          4,
+          2,
+          0,
+          0,
+          0,
+          4,
+          2,
+          123449
+        ],
+        [
+          "Dayton",
+          6,
+          0,
+          4,
+          0,
+          1,
+          0,
+          0,
+          4,
+          4,
+          249944
+        ],
+        [
+          "Indianapolis",
+          6,
+          0,
+          0,
+          6,
+          0,
+          0,
+          0,
+          0,
+          2,
+          139259
+        ],
+        [
+          "Nashville",
+          2,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0,
+          0,
+          2,
+          394185
+        ]
+      ]
+    },
+    {
+      "id": "holdsBySubStatus",
+      "title": "On-Hold sub-status breakdown",
+      "headers": [
+        "Sub-Status",
+        "WOs",
+        "Avg Age (d)",
+        "Oldest (d)"
+      ],
+      "rows": [
+        [
+          "Pending Permit",
+          114,
+          19,
+          580
+        ],
+        [
+          "Pending Deposit",
+          18,
+          26,
+          225
+        ],
+        [
+          "Spring Hold",
+          7,
+          329,
+          405
+        ],
+        [
+          "(no sub-status)",
+          4,
+          12,
+          14
+        ],
+        [
+          "Pending Material",
+          1,
+          13,
+          13
+        ],
+        [
+          "Homeowner Request",
+          1,
+          342,
+          342
+        ]
+      ]
+    },
+    {
+      "id": "trailingTrades",
+      "title": "Trailing trades on partial jobs",
+      "headers": [
+        "Trade",
+        "Open WOs",
+        "Jobs Blocked",
+        "Trapped Value"
+      ],
+      "rows": [
+        [
+          "Gutters",
+          1,
+          1,
+          36158
+        ]
+      ]
+    },
+    {
+      "id": "gutterStatusBreakdown",
+      "title": "Gutter WO status breakdown",
+      "headers": [
+        "Status",
+        "Count"
+      ],
+      "rows": [
+        [
+          "On Hold",
+          10
+        ],
+        [
+          "Ready to Schedule",
+          7
+        ],
+        [
+          "In Progress",
+          5
+        ],
+        [
+          "New",
+          3
+        ],
+        [
+          "Scheduled",
+          3
+        ]
+      ]
+    },
+    {
+      "id": "tradeDetail",
+      "title": "Trade performance",
+      "headers": [
+        "Trade",
+        "WOs",
+        "Completed",
+        "Open",
+        "Jobs",
+        "Value"
+      ],
+      "rows": [
+        [
+          "Roofing",
+          278,
+          3,
+          275,
+          76,
+          18491323.31
+        ],
+        [
+          "Gutters",
+          28,
+          0,
+          28,
+          28,
+          8954675.31
+        ],
+        [
+          "Siding",
+          11,
+          0,
+          11,
+          11,
+          2014770
+        ],
+        [
+          "Windows",
+          3,
+          0,
+          3,
+          3,
+          66348
+        ],
+        [
+          "Other",
+          2,
+          0,
+          2,
+          2,
+          702970
+        ]
+      ]
+    },
+    {
+      "id": "specialtyWatch",
+      "title": "Specialty trade watch",
+      "headers": [
+        "Trade",
+        "WOs"
+      ],
+      "rows": [
+        [
+          "Solar",
+          0
+        ],
+        [
+          "Metal",
+          0
+        ]
+      ]
+    },
+    {
+      "id": "salesTop15ByStuck",
+      "title": "Top 15 salespeople by stuck value (>30d)",
+      "headers": [
+        "Salesperson",
+        "WOs",
+        "Jobs",
+        "Stuck Value",
+        "Stale WOs",
+        "Branches"
+      ],
+      "rows": [
+        [
+          "Marko Jovanovic",
+          14,
+          10,
+          3644279,
+          5,
+          1
+        ],
+        [
+          "Shawn Dunnigan",
+          28,
+          10,
+          3270770,
+          11,
+          1
+        ],
+        [
+          "Mark Leedy",
+          35,
+          19,
+          1589325,
+          7,
+          3
+        ],
+        [
+          "Nicholas Andrukat",
+          32,
+          5,
+          310210,
+          3,
+          1
+        ],
+        [
+          "Lisa Gibson",
+          26,
+          18,
+          196500,
+          5,
+          6
+        ],
+        [
+          "Jason Crooke",
+          7,
+          2,
+          123449,
+          4,
+          1
+        ],
+        [
+          "Evan Hall",
+          48,
+          12,
+          52660,
+          2,
+          1
+        ],
+        [
+          "Ron Saxe",
+          22,
+          6,
+          47920,
+          3,
+          1
+        ],
+        [
+          "Courtney Lyon",
+          11,
+          4,
+          0,
+          0,
+          1
+        ],
+        [
+          "Micah Williamson",
+          67,
+          6,
+          0,
+          0,
+          1
+        ],
+        [
+          "Samuel Kayser",
+          1,
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          "Todd Sandler",
+          23,
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          "RaShauna Watts",
+          4,
+          2,
+          0,
+          0,
+          1
+        ],
+        [
+          "Kristi Mitchell",
+          1,
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          "Aaron Ellis",
+          2,
+          2,
+          0,
+          0,
+          1
+        ]
+      ]
+    },
+    {
+      "id": "backlogByBranch",
+      "title": "Backlog (not started) by branch",
+      "headers": [
+        "Branch",
+        "Jobs",
+        "Value",
+        "Oldest (d)"
+      ],
+      "rows": [
+        [
+          "Detroit Metro",
+          20,
+          8135987,
+          317
+        ],
+        [
+          "Cincinnati",
+          14,
+          877662,
+          96
+        ],
+        [
+          "Columbus",
+          14,
+          1556269.31,
+          22
+        ],
+        [
+          "Cleveland",
+          13,
+          1847755,
+          342
+        ],
+        [
+          "Raleigh",
+          13,
+          2037195,
+          225
+        ],
+        [
+          "DC Metro",
+          6,
+          505778,
+          580
+        ],
+        [
+          "Dayton",
+          4,
+          249944,
+          1
+        ],
+        [
+          "Richmond",
+          2,
+          123449,
+          0
+        ],
+        [
+          "Indianapolis",
+          2,
+          139259,
+          16
+        ],
+        [
+          "Nashville",
+          1,
+          42143,
+          7
+        ]
+      ]
+    },
+    {
+      "id": "oldest15NotStarted",
+      "title": "Oldest 15 not-started jobs",
+      "headers": [
+        "Job #",
+        "Account",
+        "Branch",
+        "Trade",
+        "Sub-Status",
+        "Salesperson",
+        "Days",
+        "Contract"
+      ],
+      "rows": [
+        [
+          "Job-089560",
+          "Scott Management INC",
+          "DC Metro",
+          "Gutters",
+          "Pending Permit",
+          "Marko Jovanovic",
+          580,
+          69162
+        ],
+        [
+          "Job-093347",
+          "Comsource Management, Inc.",
+          "DC Metro",
+          "Roofing",
+          "Spring Hold",
+          "Marko Jovanovic",
+          405,
+          205493
+        ],
+        [
+          "Job-097306",
+          "Barnett Management Inc.",
+          "Cleveland",
+          "Gutters",
+          "Homeowner Request",
+          "Nicholas Andrukat",
+          342,
+          34652
+        ],
+        [
+          "Job-098561",
+          "Compass Management Professionals",
+          "Detroit Metro",
+          "Roofing",
+          "Spring Hold",
+          "Shawn Dunnigan",
+          317,
+          866666
+        ],
+        [
+          "Job-098557",
+          "Compass Management Professionals",
+          "Detroit Metro",
+          "Roofing",
+          "Spring Hold",
+          "Shawn Dunnigan",
+          317,
+          866667
+        ],
+        [
+          "Job-098563",
+          "Compass Management Professionals",
+          "Detroit Metro",
+          "Roofing",
+          "Spring Hold",
+          "Shawn Dunnigan",
+          317,
+          866667
+        ],
+        [
+          "Job-102699",
+          "Main Street Management Group",
+          "Raleigh",
+          "Gutters",
+          "Pending Deposit",
+          "Evan Hall",
+          225,
+          24500
+        ],
+        [
+          "Job-106687",
+          "Management Plus",
+          "Cincinnati",
+          "Other",
+          "",
+          "Mark Leedy",
+          96,
+          32200
+        ],
+        [
+          "Job-106353",
+          "Towne Properties - Northern Kentucky",
+          "Cincinnati",
+          "Siding",
+          "",
+          "Mark Leedy",
+          93,
+          42560
+        ],
+        [
+          "Job-107174",
+          "Keystone Professional Association Management",
+          "Raleigh",
+          "Siding",
+          "",
+          "Evan Hall",
+          75,
+          28160
+        ],
+        [
+          "Job-108318",
+          "Towne Properties - Cincinnati West District Office",
+          "Cincinnati",
+          "Roofing",
+          "Pending Deposit",
+          "Mark Leedy",
+          72,
+          27703
+        ],
+        [
+          "Job-108479",
+          "Mike LaSalvia",
+          "Cleveland",
+          "Roofing",
+          "Pending Permit",
+          "Lisa Gibson",
+          70,
+          1100
+        ],
+        [
+          "Job-108497",
+          "Julie Yamokski",
+          "Cleveland",
+          "Roofing",
+          "Pending Permit",
+          "Lisa Gibson",
+          70,
+          2200
+        ],
+        [
+          "Job-108499",
+          "William Kemer",
+          "Cleveland",
+          "Roofing",
+          "Pending Permit",
+          "Lisa Gibson",
+          70,
+          2200
+        ],
+        [
+          "Job-108407",
+          "Continental Management",
+          "Cleveland",
+          "Roofing",
+          "Pending Permit",
+          "Nicholas Andrukat",
+          69,
+          32035
+        ]
+      ]
+    }
+  ],
+  "computedExtras": {
+    "permitsByBranch": [
+      {
+        "branch": "Cleveland",
+        "permits": 34
+      },
+      {
+        "branch": "Raleigh",
+        "permits": 25
+      },
+      {
+        "branch": "Detroit Metro",
+        "permits": 21
+      },
+      {
+        "branch": "Columbus",
+        "permits": 16
+      },
+      {
+        "branch": "Cincinnati",
+        "permits": 7
+      },
+      {
+        "branch": "Richmond",
+        "permits": 4
+      },
+      {
+        "branch": "Dayton",
+        "permits": 4
+      },
+      {
+        "branch": "DC Metro",
+        "permits": 3
+      }
+    ]
+  },
+  "actionPlan": {
+    "strategicGoal": "Convert $36K of trapped partial-job revenue into billable revenue, reduce $9.24M of at-risk contract value, and clear the not-started backlog without adding headcount.",
+    "immediate": [
+      "Dispatch the 1 RTS WOs sitting on partial jobs. No blocker, no hold, just dispatch.",
+      "Gutters sweep: 1 open WOs across 1 partial jobs blocking $36K. Highest single-trade leverage in the book.",
+      "Cleveland permit sweep: 34 pending-permit WOs concentrated at one branch. AHJ-relations problem, not a company-wide one."
+    ],
+    "structural": [
+      "Stand up a partial-job dispatch SLA: any job that crosses 14 days with at least one Completed WO and at least one open WO triggers a daily stand-up review.",
+      "Add a Permit Aging escalation path: any pending-permit WO over 14 days routes to the branch GM with a daily AHJ touchpoint requirement.",
+      "Trade-specific dispatch surge for the dominant trailing trade (currently Gutters): evaluate whether sub-fleet expansion or schedule re-balance moves the number faster than headcount.",
+      "Pending Sales disposition cadence: weekly meeting with the top stuck reps to triage. Most are dispositions, not deals to lose.",
+      "Not-Started intake review: 89 jobs ($15.52M) sit waiting. Audit the dispatch trigger so jobs do not languish post-signature."
+    ],
+    "cadence": [
+      "Weekly Monday Action Plan refresh: re-baseline the Immediate list every 7 days.",
+      "Daily branch standup includes the Permit Aging report and any RAS WO over 30 days.",
+      "Bi-weekly partial-job review: walk the trailing-trades table with the production scheduler.",
+      "Monthly Salesperson View read: surface the top stuck reps to sales leadership for joint disposition.",
+      "Quarterly Trade Analysis read: validate that Roofing-to-Gutters cadence still matches install volume."
+    ],
+    "bottomLine": "The book is healthy in volume terms. The drag is in the middle of the funnel: partial jobs trap $36K, holds are concentrated in permits, and the not-started cohort needs an intake audit. The fix list is operational, not strategic. The top three workstreams (RTS dispatch, RAS re-dispatch, permit sweep) move the number without adding headcount."
+  }
+}

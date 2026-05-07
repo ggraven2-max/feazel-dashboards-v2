@@ -1,0 +1,1467 @@
+{
+  "_source": "calculator/sales-overview.js v1.0-rules-encoded",
+  "title": "Residential Sales Overview",
+  "subtitle": "YTD 2026",
+  "lastSigned": "2026-05-05",
+  "ytdDays": 127,
+  "rowCount": 210,
+  "tabs": [
+    {
+      "id": "overview",
+      "label": "Executive Overview"
+    },
+    {
+      "id": "trends",
+      "label": "Trends & Momentum"
+    },
+    {
+      "id": "market",
+      "label": "Market Deep Dive"
+    },
+    {
+      "id": "people",
+      "label": "People & Productivity"
+    },
+    {
+      "id": "jobtype",
+      "label": "Job Type & Service Mix"
+    },
+    {
+      "id": "salescycle",
+      "label": "Sales Cycle Analysis"
+    },
+    {
+      "id": "risks",
+      "label": "Risks & Red Flags"
+    },
+    {
+      "id": "good",
+      "label": "Build on the Good"
+    },
+    {
+      "id": "weak",
+      "label": "Fix the Weak Areas"
+    },
+    {
+      "id": "action",
+      "label": "Action Plan"
+    },
+    {
+      "id": "targets",
+      "label": "Weekly Sales Targets"
+    },
+    {
+      "id": "recovery",
+      "label": "Budget Recovery"
+    },
+    {
+      "id": "billing",
+      "label": "Completed → Billing"
+    }
+  ],
+  "kpis": [
+    {
+      "label": "Signed Contracts YTD",
+      "value": "$17.12M",
+      "sub": "210 signed contracts across 11 markets"
+    },
+    {
+      "label": "Sold",
+      "value": "$17.12M",
+      "sub": "207 deals | 98.6% of signed contracts"
+    },
+    {
+      "label": "Production Review",
+      "value": "$0",
+      "sub": "0 deals | Ops Review, PM Review, Contracted"
+    },
+    {
+      "label": "Kicked Back",
+      "value": "$0",
+      "sub": "0 deals | 0.0% of signed contracts",
+      "trend": "negative"
+    },
+    {
+      "label": "Sales Action",
+      "value": "$0",
+      "sub": "0 deals requiring sales follow-up",
+      "trend": "neutral"
+    },
+    {
+      "label": "Avg Deal Size",
+      "value": "$81,532",
+      "sub": "Median: $13,980 | Install avg: $115,194"
+    },
+    {
+      "label": "Organization",
+      "value": "21 Reps",
+      "sub": "11 active markets"
+    },
+    {
+      "label": "Annualized Sales Rate",
+      "value": "~$49.21M",
+      "sub": "Based on 127 days YTD"
+    },
+    {
+      "label": "Install vs Repair",
+      "value": "70.0% / 29.5%",
+      "sub": "147 installs | 62 repairs"
+    }
+  ],
+  "pipelineBuckets": [
+    {
+      "label": "Sold",
+      "count": 207,
+      "amount": 17117453.79
+    },
+    {
+      "label": "Other",
+      "count": 3,
+      "amount": 4280
+    }
+  ],
+  "stageBuckets": {
+    "Closed - Sold": "Sold",
+    "Pending PM/Financial Review": "Production Review",
+    "Ops Review": "Production Review",
+    "Contracted": "Production Review",
+    "CMT": "Production Review",
+    "Claim Filed": "Production Review",
+    "Sales Action Required": "Sales Action",
+    "No Show": "Sales Action",
+    "Kicked Back to Salesperson": "Kicked Back"
+  },
+  "monthly": [
+    {
+      "key": "2026-01",
+      "label": "January",
+      "count": 51,
+      "amount": 3459924.79,
+      "installs": 33,
+      "repairs": 17,
+      "avgDeal": 67842,
+      "repairPct": 33.3,
+      "installAvg": 102907,
+      "repairAvg": 3736
+    },
+    {
+      "key": "2026-02",
+      "label": "February",
+      "count": 35,
+      "amount": 2446214.66,
+      "installs": 29,
+      "repairs": 6,
+      "avgDeal": 69892,
+      "repairPct": 17.1,
+      "installAvg": 84068,
+      "repairAvg": 1373
+    },
+    {
+      "key": "2026-03",
+      "label": "March",
+      "count": 49,
+      "amount": 3377991,
+      "installs": 33,
+      "repairs": 16,
+      "avgDeal": 68939,
+      "repairPct": 32.7,
+      "installAvg": 100944,
+      "repairAvg": 2928
+    },
+    {
+      "key": "2026-04",
+      "label": "April",
+      "count": 70,
+      "amount": 7708261.34,
+      "installs": 49,
+      "repairs": 21,
+      "avgDeal": 110118,
+      "repairPct": 30,
+      "installAvg": 155932,
+      "repairAvg": 3219
+    },
+    {
+      "key": "2026-05",
+      "label": "May",
+      "count": 5,
+      "amount": 129342,
+      "installs": 3,
+      "repairs": 2,
+      "avgDeal": 25868,
+      "repairPct": 40,
+      "installAvg": 42614,
+      "repairAvg": 750
+    }
+  ],
+  "jobTypeMixByMonth": {
+    "Retail-No Financing": {
+      "2026-01": 2220928.5,
+      "2026-02": 2395513,
+      "2026-03": 3377491,
+      "2026-04": 6198416.34,
+      "2026-05": 129342
+    },
+    "Insurance": {
+      "2026-01": 1206796.29,
+      "2026-02": 50701.66,
+      "2026-03": 500,
+      "2026-04": 1509845,
+      "2026-05": 0
+    },
+    "Retail-Financing": {
+      "2026-01": 32200,
+      "2026-02": 0,
+      "2026-03": 0,
+      "2026-04": 0,
+      "2026-05": 0
+    }
+  },
+  "jobTypeTotals": [
+    {
+      "jobType": "Retail-No Financing",
+      "count": 202,
+      "amount": 14321690.84,
+      "avg": 70899
+    },
+    {
+      "jobType": "Insurance",
+      "count": 7,
+      "amount": 2767842.95,
+      "avg": 395406
+    },
+    {
+      "jobType": "Retail-Financing",
+      "count": 1,
+      "amount": 32200,
+      "avg": 32200
+    }
+  ],
+  "weeklyTrend": [
+    {
+      "w": 1,
+      "count": 2,
+      "amount": 318236
+    },
+    {
+      "w": 2,
+      "count": 16,
+      "amount": 551896.5
+    },
+    {
+      "w": 3,
+      "count": 12,
+      "amount": 484096
+    },
+    {
+      "w": 4,
+      "count": 12,
+      "amount": 1873299.29
+    },
+    {
+      "w": 5,
+      "count": 9,
+      "amount": 232397
+    },
+    {
+      "w": 6,
+      "count": 4,
+      "amount": 488729
+    },
+    {
+      "w": 7,
+      "count": 4,
+      "amount": 86914
+    },
+    {
+      "w": 8,
+      "count": 12,
+      "amount": 657720
+    },
+    {
+      "w": 9,
+      "count": 15,
+      "amount": 1212851.66
+    },
+    {
+      "w": 10,
+      "count": 12,
+      "amount": 1348853
+    },
+    {
+      "w": 11,
+      "count": 8,
+      "amount": 347984
+    },
+    {
+      "w": 12,
+      "count": 13,
+      "amount": 1049961
+    },
+    {
+      "w": 13,
+      "count": 12,
+      "amount": 459222
+    },
+    {
+      "w": 14,
+      "count": 7,
+      "amount": 323998
+    },
+    {
+      "w": 15,
+      "count": 14,
+      "amount": 1194792.31
+    },
+    {
+      "w": 16,
+      "count": 27,
+      "amount": 1368220
+    },
+    {
+      "w": 17,
+      "count": 14,
+      "amount": 2940834
+    },
+    {
+      "w": 18,
+      "count": 13,
+      "amount": 2053338.03
+    },
+    {
+      "w": 19,
+      "count": 4,
+      "amount": 128392
+    }
+  ],
+  "marketScorecard": {
+    "headers": [
+      "Branch",
+      "Sales",
+      "Deals",
+      "Avg Deal",
+      "Installs",
+      "Repairs",
+      "Repair %",
+      "Median Days"
+    ],
+    "rows": [
+      [
+        "Detroit Metro",
+        5099322.5,
+        43,
+        118589,
+        24,
+        19,
+        44.2,
+        21
+      ],
+      [
+        "Columbus",
+        3729477.63,
+        37,
+        100797,
+        25,
+        12,
+        32.4,
+        36
+      ],
+      [
+        "Raleigh",
+        3082880,
+        32,
+        96340,
+        29,
+        2,
+        6.3,
+        99
+      ],
+      [
+        "Cleveland",
+        2118742,
+        23,
+        92119,
+        17,
+        6,
+        26.1,
+        13
+      ],
+      [
+        "Cincinnati",
+        901569.66,
+        21,
+        42932,
+        16,
+        5,
+        23.8,
+        21
+      ],
+      [
+        "DC Metro",
+        781383,
+        21,
+        37209,
+        13,
+        8,
+        38.1,
+        35
+      ],
+      [
+        "Nashville",
+        503530,
+        10,
+        50353,
+        9,
+        1,
+        10,
+        50
+      ],
+      [
+        "Dayton",
+        346915,
+        9,
+        38546,
+        5,
+        4,
+        44.4,
+        0
+      ],
+      [
+        "Indianapolis",
+        278937,
+        3,
+        92979,
+        3,
+        0,
+        0,
+        63
+      ],
+      [
+        "Richmond",
+        225238,
+        8,
+        28155,
+        3,
+        5,
+        62.5,
+        19
+      ],
+      [
+        "Knoxville",
+        53739,
+        3,
+        17913,
+        3,
+        0,
+        0,
+        70
+      ]
+    ]
+  },
+  "closingByBranch": {
+    "headers": [],
+    "rows": [],
+    "totals": null,
+    "source": null,
+    "format": "none"
+  },
+  "marketKickbacks": [],
+  "marketJobTypeChart": {
+    "_description": "Stacked horizontal bar; sales-by-job-type per branch.",
+    "branches": [
+      "Detroit Metro",
+      "Columbus",
+      "Raleigh",
+      "Cleveland",
+      "Cincinnati",
+      "DC Metro",
+      "Nashville",
+      "Dayton",
+      "Indianapolis",
+      "Richmond",
+      "Knoxville"
+    ]
+  },
+  "topPeople": [
+    {
+      "name": "Micah Williamson",
+      "amount": 3748227,
+      "count": 26,
+      "avg": 144163,
+      "medDays": 11,
+      "jt": {
+        "Retail-No Financing": 26
+      },
+      "installs": 9,
+      "repairs": 17
+    },
+    {
+      "name": "Evan Hall",
+      "amount": 2896236,
+      "count": 28,
+      "avg": 103437,
+      "medDays": 99,
+      "jt": {
+        "Retail-No Financing": 28
+      },
+      "installs": 25,
+      "repairs": 2
+    },
+    {
+      "name": "Nicholas Andrukat",
+      "amount": 2095442,
+      "count": 16,
+      "avg": 130965,
+      "medDays": 13,
+      "jt": {
+        "Retail-No Financing": 14,
+        "Insurance": 2
+      },
+      "installs": 10,
+      "repairs": 6
+    },
+    {
+      "name": "Mark Leedy",
+      "amount": 1458169.66,
+      "count": 28,
+      "avg": 52077,
+      "medDays": 26,
+      "jt": {
+        "Retail-No Financing": 26,
+        "Retail-Financing": 1,
+        "Insurance": 1
+      },
+      "installs": 22,
+      "repairs": 6
+    },
+    {
+      "name": "Christy Osborne",
+      "amount": 1303964.29,
+      "count": 6,
+      "avg": 217327,
+      "medDays": 35,
+      "jt": {
+        "Retail-No Financing": 4,
+        "Insurance": 2
+      },
+      "installs": 3,
+      "repairs": 3
+    },
+    {
+      "name": "Ron Saxe",
+      "amount": 1124582,
+      "count": 14,
+      "avg": 80327,
+      "medDays": 76,
+      "jt": {
+        "Retail-No Financing": 14
+      },
+      "installs": 12,
+      "repairs": 2
+    },
+    {
+      "name": "Todd Sandler",
+      "amount": 1103836,
+      "count": 6,
+      "avg": 183973,
+      "medDays": 67,
+      "jt": {
+        "Retail-No Financing": 6
+      },
+      "installs": 4,
+      "repairs": 2
+    },
+    {
+      "name": "Courtney Lyon",
+      "amount": 849540,
+      "count": 6,
+      "avg": 141590,
+      "medDays": 112,
+      "jt": {
+        "Retail-No Financing": 6
+      },
+      "installs": 6,
+      "repairs": 0
+    },
+    {
+      "name": "Marko Jovanovic",
+      "amount": 781383,
+      "count": 21,
+      "avg": 37209,
+      "medDays": 35,
+      "jt": {
+        "Retail-No Financing": 20,
+        "Insurance": 1
+      },
+      "installs": 13,
+      "repairs": 8
+    },
+    {
+      "name": "Aaron Ellis",
+      "amount": 556119,
+      "count": 12,
+      "avg": 46343,
+      "medDays": 57,
+      "jt": {
+        "Retail-No Financing": 11,
+        "Insurance": 1
+      },
+      "installs": 11,
+      "repairs": 1
+    },
+    {
+      "name": "Shawn Dunnigan",
+      "amount": 484340,
+      "count": 9,
+      "avg": 53816,
+      "medDays": 98,
+      "jt": {
+        "Retail-No Financing": 9
+      },
+      "installs": 9,
+      "repairs": 0
+    },
+    {
+      "name": "Jason Crooke",
+      "amount": 225238,
+      "count": 8,
+      "avg": 28155,
+      "medDays": 19,
+      "jt": {
+        "Retail-No Financing": 8
+      },
+      "installs": 3,
+      "repairs": 5
+    },
+    {
+      "name": "Lisa Gibson",
+      "amount": 209855.03,
+      "count": 17,
+      "avg": 12344,
+      "medDays": 28,
+      "jt": {
+        "Retail-No Financing": 17
+      },
+      "installs": 14,
+      "repairs": 3
+    },
+    {
+      "name": "Emily Carey",
+      "amount": 73203,
+      "count": 1,
+      "avg": 73203,
+      "medDays": 149,
+      "jt": {
+        "Retail-No Financing": 1
+      },
+      "installs": 1,
+      "repairs": 0
+    },
+    {
+      "name": "RaShauna Watts",
+      "amount": 68321.31,
+      "count": 2,
+      "avg": 34161,
+      "medDays": 0,
+      "jt": {
+        "Retail-No Financing": 2
+      },
+      "installs": 1,
+      "repairs": 1
+    },
+    {
+      "name": "Kristi Mitchell",
+      "amount": 65764,
+      "count": 2,
+      "avg": 32882,
+      "medDays": 165,
+      "jt": {
+        "Retail-No Financing": 2
+      },
+      "installs": 2,
+      "repairs": 0
+    },
+    {
+      "name": "Matthew Cooke",
+      "amount": 44845,
+      "count": 1,
+      "avg": 44845,
+      "medDays": 11,
+      "jt": {
+        "Retail-No Financing": 1
+      },
+      "installs": 1,
+      "repairs": 0
+    },
+    {
+      "name": "Samuel Kayser",
+      "amount": 29020,
+      "count": 4,
+      "avg": 7255,
+      "medDays": 6,
+      "jt": {
+        "Retail-No Financing": 4
+      },
+      "installs": 1,
+      "repairs": 3
+    },
+    {
+      "name": "Chris Atkins",
+      "amount": 2016.5,
+      "count": 1,
+      "avg": 2017,
+      "medDays": 0,
+      "jt": {
+        "Retail-No Financing": 1
+      },
+      "installs": 0,
+      "repairs": 1
+    },
+    {
+      "name": "Justin Milliron",
+      "amount": 1282,
+      "count": 1,
+      "avg": 1282,
+      "medDays": 0,
+      "jt": {
+        "Retail-No Financing": 1
+      },
+      "installs": 0,
+      "repairs": 1
+    }
+  ],
+  "speedSellers": [],
+  "repairHeavy": [
+    {
+      "name": "Micah Williamson",
+      "repairs": 17,
+      "deals": 26,
+      "pct": 65.4
+    },
+    {
+      "name": "Jason Crooke",
+      "repairs": 5,
+      "deals": 8,
+      "pct": 62.5
+    },
+    {
+      "name": "Marko Jovanovic",
+      "repairs": 8,
+      "deals": 21,
+      "pct": 38.1
+    }
+  ],
+  "salesCycle": {
+    "kpis": [
+      {
+        "label": "Overall Median",
+        "value": "41 days",
+        "sub": "Mean: 96 days (skewed by insurance)"
+      },
+      {
+        "label": "Retail",
+        "value": "40 days",
+        "sub": "All retail job types"
+      },
+      {
+        "label": "Insurance",
+        "value": "94 days",
+        "sub": "Median | Mean: 216 days"
+      },
+      {
+        "label": "Repair",
+        "value": "1 days",
+        "sub": "Fast turn, low value"
+      }
+    ],
+    "byJobType": [
+      {
+        "label": "Retail-No Fin",
+        "median": 40,
+        "mean": 90,
+        "count": 149
+      },
+      {
+        "label": "Retail-Fin",
+        "median": 0,
+        "mean": 0,
+        "count": 0
+      },
+      {
+        "label": "Insurance",
+        "median": 94,
+        "mean": 216,
+        "count": 7
+      },
+      {
+        "label": "Repair",
+        "median": 1,
+        "mean": 18,
+        "count": 43
+      },
+      {
+        "label": "Install",
+        "median": 63,
+        "mean": 126,
+        "count": 112
+      }
+    ],
+    "byMarket": [
+      {
+        "market": "Dayton",
+        "median": 0,
+        "mean": 34,
+        "count": 8
+      },
+      {
+        "market": "Cleveland",
+        "median": 13,
+        "mean": 50,
+        "count": 13
+      },
+      {
+        "market": "Richmond",
+        "median": 19,
+        "mean": 47,
+        "count": 6
+      },
+      {
+        "market": "Detroit Metro",
+        "median": 21,
+        "mean": 51,
+        "count": 31
+      },
+      {
+        "market": "Cincinnati",
+        "median": 21,
+        "mean": 48,
+        "count": 13
+      },
+      {
+        "market": "DC Metro",
+        "median": 35,
+        "mean": 97,
+        "count": 18
+      },
+      {
+        "market": "Columbus",
+        "median": 36,
+        "mean": 226,
+        "count": 21
+      },
+      {
+        "market": "Nashville",
+        "median": 50,
+        "mean": 83,
+        "count": 9
+      },
+      {
+        "market": "Raleigh",
+        "median": 99,
+        "mean": 121,
+        "count": 31
+      }
+    ],
+    "starInsuranceClosers": []
+  },
+  "completedBilling": {
+    "totalUnbilled": 0,
+    "totalJobs": 0,
+    "avgAge": 0,
+    "medAge": 0,
+    "tiers": [],
+    "bySubStatus": [],
+    "byMarket": [],
+    "byRepTop15": [],
+    "fullJobList": []
+  },
+  "weeklyTargets_BUDGET": {
+    "avgWeeklyNeed": 1476377.34,
+    "weeksRemaining": 35,
+    "annualPlan": 51673207,
+    "byJobType": [],
+    "byTrade": [],
+    "byMarket": [
+      {
+        "market": "Detroit Metro",
+        "total": 439705.72,
+        "retNoFin": 0,
+        "ins": 0,
+        "retFin": 0,
+        "deals": 2.3
+      },
+      {
+        "market": "Columbus",
+        "total": 321586.37,
+        "retNoFin": 0,
+        "ins": 0,
+        "retFin": 0,
+        "deals": 1.9
+      },
+      {
+        "market": "Raleigh",
+        "total": 265831.38,
+        "retNoFin": 0,
+        "ins": 0,
+        "retFin": 0,
+        "deals": 1.7
+      },
+      {
+        "market": "Cleveland",
+        "total": 182695.44,
+        "retNoFin": 0,
+        "ins": 0,
+        "retFin": 0,
+        "deals": 1.2
+      },
+      {
+        "market": "Cincinnati",
+        "total": 77740.78,
+        "retNoFin": 0,
+        "ins": 0,
+        "retFin": 0,
+        "deals": 1.1
+      },
+      {
+        "market": "DC Metro",
+        "total": 67377.3,
+        "retNoFin": 0,
+        "ins": 0,
+        "retFin": 0,
+        "deals": 1.1
+      },
+      {
+        "market": "Nashville",
+        "total": 43418.52,
+        "retNoFin": 0,
+        "ins": 0,
+        "retFin": 0,
+        "deals": 0.5
+      },
+      {
+        "market": "Dayton",
+        "total": 29913.88,
+        "retNoFin": 0,
+        "ins": 0,
+        "retFin": 0,
+        "deals": 0.5
+      },
+      {
+        "market": "Indianapolis",
+        "total": 24052.25,
+        "retNoFin": 0,
+        "ins": 0,
+        "retFin": 0,
+        "deals": 0.2
+      },
+      {
+        "market": "Richmond",
+        "total": 19421.88,
+        "retNoFin": 0,
+        "ins": 0,
+        "retFin": 0,
+        "deals": 0.4
+      },
+      {
+        "market": "Knoxville",
+        "total": 4633.82,
+        "retNoFin": 0,
+        "ins": 0,
+        "retFin": 0,
+        "deals": 0.2
+      }
+    ],
+    "weekSchedule": [
+      {
+        "wk": "05/11/2026",
+        "mo": "May",
+        "target": 1476377.34
+      },
+      {
+        "wk": "05/18/2026",
+        "mo": "May",
+        "target": 1476377.34
+      },
+      {
+        "wk": "05/25/2026",
+        "mo": "May",
+        "target": 1476377.34
+      },
+      {
+        "wk": "06/01/2026",
+        "mo": "Jun",
+        "target": 1476377.34
+      },
+      {
+        "wk": "06/08/2026",
+        "mo": "Jun",
+        "target": 1476377.34
+      },
+      {
+        "wk": "06/15/2026",
+        "mo": "Jun",
+        "target": 1476377.34
+      },
+      {
+        "wk": "06/22/2026",
+        "mo": "Jun",
+        "target": 1476377.34
+      },
+      {
+        "wk": "06/29/2026",
+        "mo": "Jun",
+        "target": 1476377.34
+      },
+      {
+        "wk": "07/06/2026",
+        "mo": "Jul",
+        "target": 1476377.34
+      },
+      {
+        "wk": "07/13/2026",
+        "mo": "Jul",
+        "target": 1476377.34
+      },
+      {
+        "wk": "07/20/2026",
+        "mo": "Jul",
+        "target": 1476377.34
+      },
+      {
+        "wk": "07/27/2026",
+        "mo": "Jul",
+        "target": 1476377.34
+      },
+      {
+        "wk": "08/03/2026",
+        "mo": "Aug",
+        "target": 1476377.34
+      },
+      {
+        "wk": "08/10/2026",
+        "mo": "Aug",
+        "target": 1476377.34
+      },
+      {
+        "wk": "08/17/2026",
+        "mo": "Aug",
+        "target": 1476377.34
+      },
+      {
+        "wk": "08/24/2026",
+        "mo": "Aug",
+        "target": 1476377.34
+      },
+      {
+        "wk": "08/31/2026",
+        "mo": "Aug",
+        "target": 1476377.34
+      },
+      {
+        "wk": "09/07/2026",
+        "mo": "Sep",
+        "target": 1476377.34
+      },
+      {
+        "wk": "09/14/2026",
+        "mo": "Sep",
+        "target": 1476377.34
+      },
+      {
+        "wk": "09/21/2026",
+        "mo": "Sep",
+        "target": 1476377.34
+      },
+      {
+        "wk": "09/28/2026",
+        "mo": "Sep",
+        "target": 1476377.34
+      },
+      {
+        "wk": "10/05/2026",
+        "mo": "Oct",
+        "target": 1476377.34
+      },
+      {
+        "wk": "10/12/2026",
+        "mo": "Oct",
+        "target": 1476377.34
+      },
+      {
+        "wk": "10/19/2026",
+        "mo": "Oct",
+        "target": 1476377.34
+      },
+      {
+        "wk": "10/26/2026",
+        "mo": "Oct",
+        "target": 1476377.34
+      },
+      {
+        "wk": "11/02/2026",
+        "mo": "Nov",
+        "target": 1476377.34
+      },
+      {
+        "wk": "11/09/2026",
+        "mo": "Nov",
+        "target": 1476377.34
+      },
+      {
+        "wk": "11/16/2026",
+        "mo": "Nov",
+        "target": 1476377.34
+      },
+      {
+        "wk": "11/23/2026",
+        "mo": "Nov",
+        "target": 1476377.34
+      },
+      {
+        "wk": "11/30/2026",
+        "mo": "Nov",
+        "target": 1476377.34
+      },
+      {
+        "wk": "12/07/2026",
+        "mo": "Dec",
+        "target": 1476377.34
+      },
+      {
+        "wk": "12/14/2026",
+        "mo": "Dec",
+        "target": 1476377.34
+      },
+      {
+        "wk": "12/21/2026",
+        "mo": "Dec",
+        "target": 1476377.34
+      },
+      {
+        "wk": "12/28/2026",
+        "mo": "Dec",
+        "target": 1476377.34
+      }
+    ],
+    "recent4WkAvg": 1622696.01
+  },
+  "budgetRecovery": {
+    "fullYearBudget": 51673207,
+    "sourceFile": "2026 Commercial Budget.xlsx",
+    "totalToRecover": 0,
+    "upliftPct": -5.6,
+    "q1Budget": 4533497.2,
+    "q1Actual": 5414371.34,
+    "q1Shortfall": 880874.14,
+    "aprilGap": 1583469.55,
+    "aprilBudget": 3233126.48,
+    "aprilFcst": 4816596.03,
+    "adjWeeklySalesAvg": 1184063.99,
+    "origWeeklySalesAvg": 1254473.81,
+    "salesDeltaPerWeek": -70409.82,
+    "weeksRemaining": 35,
+    "adjWeeklyProdAvg": 1184063.99,
+    "origWeeklyProdAvg": 1254473.81,
+    "prodDeltaPerWeek": -70409.82,
+    "monthlyBridge": [
+      {
+        "mo": "Jan 2026",
+        "monthIdx": 0,
+        "origBudget": 664114.1,
+        "fcst": 664114.1,
+        "recovTarget": 1085061.87,
+        "catchUp": 0,
+        "status": "Actual",
+        "liveActual": 1085061.87,
+        "deals": 51
+      },
+      {
+        "mo": "Feb 2026",
+        "monthIdx": 1,
+        "origBudget": 788730.42,
+        "fcst": 788730.42,
+        "recovTarget": 788730.42,
+        "catchUp": 0,
+        "status": "Actual",
+        "liveActual": 363231.03,
+        "deals": 35
+      },
+      {
+        "mo": "Mar 2026",
+        "monthIdx": 2,
+        "origBudget": 3080652.68,
+        "fcst": 3080652.68,
+        "recovTarget": 3966078.44,
+        "catchUp": 0,
+        "status": "Actual",
+        "liveActual": 3966078.44,
+        "deals": 49
+      },
+      {
+        "mo": "Apr 2026",
+        "monthIdx": 3,
+        "origBudget": 3233126.48,
+        "fcst": 3233126.48,
+        "recovTarget": 4816596.03,
+        "catchUp": 0,
+        "status": "Actual",
+        "liveActual": 4816596.03,
+        "deals": 70
+      },
+      {
+        "mo": "May 2026",
+        "monthIdx": 4,
+        "origBudget": 6618395.96,
+        "fcst": 6618395.96,
+        "recovTarget": 6618395.96,
+        "catchUp": 0,
+        "status": "Active",
+        "deals": 5
+      },
+      {
+        "mo": "Jun 2026",
+        "monthIdx": 5,
+        "origBudget": 3664695.3,
+        "fcst": 3664695.3,
+        "recovTarget": 3664695.3,
+        "catchUp": 0,
+        "status": "Recovery",
+        "deals": 0
+      },
+      {
+        "mo": "Jul 2026",
+        "monthIdx": 6,
+        "origBudget": 5298470.3,
+        "fcst": 5298470.3,
+        "recovTarget": 5298470.3,
+        "catchUp": 0,
+        "status": "Recovery",
+        "deals": 0
+      },
+      {
+        "mo": "Aug 2026",
+        "monthIdx": 7,
+        "origBudget": 5335688.23,
+        "fcst": 5335688.23,
+        "recovTarget": 5335688.23,
+        "catchUp": 0,
+        "status": "Recovery",
+        "deals": 0
+      },
+      {
+        "mo": "Sep 2026",
+        "monthIdx": 8,
+        "origBudget": 4474155.35,
+        "fcst": 4474155.35,
+        "recovTarget": 4474155.35,
+        "catchUp": 0,
+        "status": "Recovery",
+        "deals": 0
+      },
+      {
+        "mo": "Oct 2026",
+        "monthIdx": 9,
+        "origBudget": 7363288.71,
+        "fcst": 7363288.71,
+        "recovTarget": 7363288.71,
+        "catchUp": 0,
+        "status": "Recovery",
+        "deals": 0
+      },
+      {
+        "mo": "Nov 2026",
+        "monthIdx": 10,
+        "origBudget": 5872277.99,
+        "fcst": 5872277.99,
+        "recovTarget": 5872277.99,
+        "catchUp": 0,
+        "status": "Recovery",
+        "deals": 0
+      },
+      {
+        "mo": "Dec 2026",
+        "monthIdx": 11,
+        "origBudget": 5279611.49,
+        "fcst": 5279611.49,
+        "recovTarget": 5279611.49,
+        "catchUp": 0,
+        "status": "Recovery",
+        "deals": 0
+      }
+    ],
+    "adjSalesByMarket": [
+      {
+        "market": "Detroit Metro",
+        "recovTarget": 707504.67,
+        "original": 728474.64,
+        "delta": -20969.98
+      },
+      {
+        "market": "Columbus",
+        "recovTarget": 517445.76,
+        "original": 532782.52,
+        "delta": -15336.76
+      },
+      {
+        "market": "Raleigh",
+        "recovTarget": 427733.68,
+        "original": 440411.43,
+        "delta": -12677.75
+      },
+      {
+        "market": "Cleveland",
+        "recovTarget": 293964.51,
+        "original": 302677.43,
+        "delta": -8712.92
+      },
+      {
+        "market": "Cincinnati",
+        "recovTarget": 125088.13,
+        "original": 128795.67,
+        "delta": -3707.53
+      },
+      {
+        "market": "DC Metro",
+        "recovTarget": 108412.86,
+        "original": 111626.14,
+        "delta": -3213.29
+      },
+      {
+        "market": "Nashville",
+        "recovTarget": 69862.19,
+        "original": 71932.86,
+        "delta": -2070.67
+      },
+      {
+        "market": "Dayton",
+        "recovTarget": 48132.66,
+        "original": 49559.29,
+        "delta": -1426.62
+      },
+      {
+        "market": "Indianapolis",
+        "recovTarget": 38701.07,
+        "original": 39848.14,
+        "delta": -1147.07
+      },
+      {
+        "market": "Richmond",
+        "recovTarget": 31250.61,
+        "original": 32176.86,
+        "delta": -926.25
+      },
+      {
+        "market": "Knoxville",
+        "recovTarget": 7456.01,
+        "original": 7677,
+        "delta": -220.99
+      }
+    ],
+    "adjProdByMarket": [
+      {
+        "market": "Detroit Metro",
+        "recovTarget": 707504.67,
+        "original": 728474.64,
+        "delta": -20969.98
+      },
+      {
+        "market": "Columbus",
+        "recovTarget": 517445.76,
+        "original": 532782.52,
+        "delta": -15336.76
+      },
+      {
+        "market": "Raleigh",
+        "recovTarget": 427733.68,
+        "original": 440411.43,
+        "delta": -12677.75
+      },
+      {
+        "market": "Cleveland",
+        "recovTarget": 293964.51,
+        "original": 302677.43,
+        "delta": -8712.92
+      },
+      {
+        "market": "Cincinnati",
+        "recovTarget": 125088.13,
+        "original": 128795.67,
+        "delta": -3707.53
+      },
+      {
+        "market": "DC Metro",
+        "recovTarget": 108412.86,
+        "original": 111626.14,
+        "delta": -3213.29
+      },
+      {
+        "market": "Nashville",
+        "recovTarget": 69862.19,
+        "original": 71932.86,
+        "delta": -2070.67
+      },
+      {
+        "market": "Dayton",
+        "recovTarget": 48132.66,
+        "original": 49559.29,
+        "delta": -1426.62
+      },
+      {
+        "market": "Indianapolis",
+        "recovTarget": 38701.07,
+        "original": 39848.14,
+        "delta": -1147.07
+      },
+      {
+        "market": "Richmond",
+        "recovTarget": 31250.61,
+        "original": 32176.86,
+        "delta": -926.25
+      },
+      {
+        "market": "Knoxville",
+        "recovTarget": 7456.01,
+        "original": 7677,
+        "delta": -220.99
+      }
+    ],
+    "actualSource": "NetSuite AR · invoiced revenue",
+    "netsuiteTotal": 10230967.37,
+    "netsuiteInvoiceCount": 111,
+    "netsuiteLatestDate": "2026-04-30"
+  },
+  "commentary": {
+    "whatsWorking": [
+      "Sales Trajectory: Monthly sales moved from January $3.46M to May $129K (-96%). Annualized run rate: $49.21M.",
+      "Premium Deal Types: Insurance averages $395,406 per deal. Retail-Financing averages $32,200 (highest per-deal value). Retail-No Financing averages $70,899 (the volume engine).",
+      "Sold Conversion: 207 of 210 signed contracts (98.6%) have made it to Sold status for $17.12M in confirmed sales."
+    ],
+    "whatNeedsAttention": [
+      "Repair Rate Elevated: 29.5% of all deals are repairs (62 of 210). Repairs average ~$3,027, low value relative to installs at $115,194."
+    ],
+    "criticalRisks": [
+      "Pipeline kickbacks company-wide: 0 kickbacks totaling $0."
+    ],
+    "strengthsToAmplify": [
+      "Retail Velocity: 40d median close on 149 retail deals.",
+      "Insurance Density: $395,406 avg on 7 deals = $2.77M; +20% lift = ~$554K.",
+      "Financing Lifts Ticket: Retail-Financing averages $32,200, highest per-deal value."
+    ],
+    "fixList": [
+      "Financing Push, 1 financing deals YTD (0.5%) at $32,200 avg. Target 15% mix."
+    ],
+    "actionPlan": {
+      "thisWeek": [],
+      "thisMonth": [
+        "Supplement Escalation SOP, 7/14/30 day cadence with carrier escalation.",
+        "Completed-to-Billing SLA, 100% invoiced within 21 days.",
+        "Repair Triage Pilot in markets where repair rate exceeds 25%.",
+        "Financing Training, peer training led by top financing reps. Target 15% mix."
+      ],
+      "thisQuarter": [
+        "Add Kickback Reason field to accounting workflow.",
+        "Repair Business Decision, 62 repairs YTD at ~$3,027 avg.",
+        "Ops Capacity Planning, May hit 5 deals; summer typically exceeds spring."
+      ]
+    }
+  }
+}

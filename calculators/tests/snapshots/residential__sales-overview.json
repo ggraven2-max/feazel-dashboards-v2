@@ -1,0 +1,2498 @@
+{
+  "_source": "calculator/sales-overview.js v1.0-rules-encoded",
+  "title": "Residential Sales Overview",
+  "subtitle": "YTD 2026",
+  "lastSigned": "2026-05-28",
+  "ytdDays": 127,
+  "rowCount": 1730,
+  "tabs": [
+    {
+      "id": "overview",
+      "label": "Executive Overview"
+    },
+    {
+      "id": "trends",
+      "label": "Trends & Momentum"
+    },
+    {
+      "id": "market",
+      "label": "Market Deep Dive"
+    },
+    {
+      "id": "people",
+      "label": "People & Productivity"
+    },
+    {
+      "id": "jobtype",
+      "label": "Job Type & Service Mix"
+    },
+    {
+      "id": "salescycle",
+      "label": "Sales Cycle Analysis"
+    },
+    {
+      "id": "risks",
+      "label": "Risks & Red Flags"
+    },
+    {
+      "id": "good",
+      "label": "Build on the Good"
+    },
+    {
+      "id": "weak",
+      "label": "Fix the Weak Areas"
+    },
+    {
+      "id": "action",
+      "label": "Action Plan"
+    },
+    {
+      "id": "targets",
+      "label": "Weekly Sales Targets"
+    },
+    {
+      "id": "recovery",
+      "label": "Budget Recovery"
+    },
+    {
+      "id": "billing",
+      "label": "Completed → Billing"
+    }
+  ],
+  "kpis": [
+    {
+      "label": "Signed Contracts YTD",
+      "value": "$26.87M",
+      "sub": "1,730 signed contracts across 13 markets"
+    },
+    {
+      "label": "Sold",
+      "value": "$23.34M",
+      "sub": "1,538 deals | 88.9% of signed contracts"
+    },
+    {
+      "label": "Production Review",
+      "value": "$2.32M",
+      "sub": "130 deals | Ops Review, PM Review, Contracted"
+    },
+    {
+      "label": "Kicked Back",
+      "value": "$1.16M",
+      "sub": "58 deals | 3.4% of signed contracts",
+      "trend": "negative"
+    },
+    {
+      "label": "Sales Action",
+      "value": "$49K",
+      "sub": "3 deals requiring sales follow-up",
+      "trend": "neutral"
+    },
+    {
+      "label": "Avg Deal Size",
+      "value": "$15,533",
+      "sub": "Median: $14,322 | Install avg: $18,134"
+    },
+    {
+      "label": "Organization",
+      "value": "131 Reps",
+      "sub": "13 active markets"
+    },
+    {
+      "label": "Annualized Sales Rate",
+      "value": "~$77.23M",
+      "sub": "Based on 127 days YTD"
+    },
+    {
+      "label": "Install vs Repair",
+      "value": "84.1% / 15.7%",
+      "sub": "1,455 installs | 272 repairs"
+    }
+  ],
+  "pipelineBuckets": [
+    {
+      "label": "Sold",
+      "count": 1538,
+      "amount": 23344184.55
+    },
+    {
+      "label": "Production Review",
+      "count": 130,
+      "amount": 2318458.17
+    },
+    {
+      "label": "Kicked Back",
+      "count": 58,
+      "amount": 1160372.47
+    },
+    {
+      "label": "Sales Action",
+      "count": 3,
+      "amount": 48656
+    },
+    {
+      "label": "Other",
+      "count": 1,
+      "amount": 746.39
+    }
+  ],
+  "stageBuckets": {
+    "Closed - Sold": "Sold",
+    "Pending PM/Financial Review": "Production Review",
+    "Ops Review": "Production Review",
+    "Contracted": "Production Review",
+    "CMT": "Production Review",
+    "Claim Filed": "Production Review",
+    "Sales Action Required": "Sales Action",
+    "No Show": "Sales Action",
+    "Kicked Back to Salesperson": "Kicked Back"
+  },
+  "monthly": [
+    {
+      "key": "2026-01",
+      "label": "January",
+      "count": 182,
+      "amount": 3263898.78,
+      "installs": 163,
+      "repairs": 19,
+      "avgDeal": 17934,
+      "repairPct": 10.4,
+      "installAvg": 19894,
+      "repairAvg": 1113
+    },
+    {
+      "key": "2026-02",
+      "label": "February",
+      "count": 233,
+      "amount": 4111512.18,
+      "installs": 197,
+      "repairs": 36,
+      "avgDeal": 17646,
+      "repairPct": 15.5,
+      "installAvg": 20603,
+      "repairAvg": 1464
+    },
+    {
+      "key": "2026-03",
+      "label": "March",
+      "count": 503,
+      "amount": 6933007.04,
+      "installs": 390,
+      "repairs": 112,
+      "avgDeal": 13783,
+      "repairPct": 22.3,
+      "installAvg": 17187,
+      "repairAvg": 1887
+    },
+    {
+      "key": "2026-04",
+      "label": "April",
+      "count": 757,
+      "amount": 11776809.37,
+      "installs": 656,
+      "repairs": 100,
+      "avgDeal": 15557,
+      "repairPct": 13.2,
+      "installAvg": 17724,
+      "repairAvg": 1493
+    },
+    {
+      "key": "2026-05",
+      "label": "May",
+      "count": 55,
+      "amount": 787190.21,
+      "installs": 49,
+      "repairs": 5,
+      "avgDeal": 14313,
+      "repairPct": 9.1,
+      "installAvg": 15376,
+      "repairAvg": 1903
+    }
+  ],
+  "jobTypeMixByMonth": {
+    "Retail-No Financing": {
+      "2026-01": 1317788.72,
+      "2026-02": 1790259.77,
+      "2026-03": 2949119.7,
+      "2026-04": 3922553.93,
+      "2026-05": 69144.53
+    },
+    "Insurance": {
+      "2026-01": 1437020.6,
+      "2026-02": 1673072.24,
+      "2026-03": 2685615.35,
+      "2026-04": 4334714.91,
+      "2026-05": 106063.02
+    },
+    "Retail-Financing": {
+      "2026-01": 509089.46,
+      "2026-02": 648180.17,
+      "2026-03": 1135621.56,
+      "2026-04": 951111.6,
+      "2026-05": 31220.99
+    }
+  },
+  "jobTypeTotals": [
+    {
+      "jobType": "Insurance",
+      "count": 514,
+      "amount": 10236486.12,
+      "avg": 19915
+    },
+    {
+      "jobType": "Retail-No Financing",
+      "count": 877,
+      "amount": 10048866.65,
+      "avg": 11458
+    },
+    {
+      "jobType": "Retail-Financing",
+      "count": 156,
+      "amount": 3275223.78,
+      "avg": 20995
+    }
+  ],
+  "weeklyTrend": [
+    {
+      "w": 1,
+      "count": 7,
+      "amount": 173909.56
+    },
+    {
+      "w": 2,
+      "count": 45,
+      "amount": 705781.14
+    },
+    {
+      "w": 3,
+      "count": 44,
+      "amount": 757883.56
+    },
+    {
+      "w": 4,
+      "count": 51,
+      "amount": 1014145.12
+    },
+    {
+      "w": 5,
+      "count": 35,
+      "amount": 612179.4
+    },
+    {
+      "w": 6,
+      "count": 54,
+      "amount": 621122.06
+    },
+    {
+      "w": 7,
+      "count": 51,
+      "amount": 834901.83
+    },
+    {
+      "w": 8,
+      "count": 47,
+      "amount": 752985.69
+    },
+    {
+      "w": 9,
+      "count": 81,
+      "amount": 1902502.6
+    },
+    {
+      "w": 10,
+      "count": 75,
+      "amount": 1175624.58
+    },
+    {
+      "w": 11,
+      "count": 81,
+      "amount": 1166374.12
+    },
+    {
+      "w": 12,
+      "count": 141,
+      "amount": 1580608.99
+    },
+    {
+      "w": 13,
+      "count": 153,
+      "amount": 2357002.02
+    },
+    {
+      "w": 14,
+      "count": 151,
+      "amount": 2153635.03
+    },
+    {
+      "w": 15,
+      "count": 178,
+      "amount": 2707784.69
+    },
+    {
+      "w": 16,
+      "count": 184,
+      "amount": 3006933.72
+    },
+    {
+      "w": 17,
+      "count": 189,
+      "amount": 2923062.45
+    },
+    {
+      "w": 18,
+      "count": 137,
+      "amount": 2036666.78
+    },
+    {
+      "w": 19,
+      "count": 25,
+      "amount": 388064.24
+    },
+    {
+      "w": 22,
+      "count": 1,
+      "amount": 1250
+    }
+  ],
+  "marketScorecard": {
+    "headers": [
+      "Branch",
+      "Sales",
+      "Deals",
+      "Avg Deal",
+      "Installs",
+      "Repairs",
+      "Repair %",
+      "Median Days"
+    ],
+    "rows": [
+      [
+        "Columbus",
+        8401827.47,
+        564,
+        14897,
+        454,
+        110,
+        19.5,
+        7
+      ],
+      [
+        "Detroit Metro",
+        4913914.87,
+        293,
+        16771,
+        270,
+        23,
+        7.8,
+        4
+      ],
+      [
+        "Nashville",
+        2667924.7,
+        177,
+        15073,
+        126,
+        51,
+        28.8,
+        6
+      ],
+      [
+        "Dayton",
+        1728563.62,
+        105,
+        16463,
+        98,
+        6,
+        5.7,
+        20
+      ],
+      [
+        "DC Metro",
+        1718036.24,
+        113,
+        15204,
+        84,
+        29,
+        25.7,
+        13
+      ],
+      [
+        "Cleveland",
+        1660892.1,
+        159,
+        10446,
+        120,
+        39,
+        24.5,
+        4
+      ],
+      [
+        "Richmond",
+        1575624.09,
+        68,
+        23171,
+        65,
+        2,
+        2.9,
+        32
+      ],
+      [
+        "Cincinnati",
+        1155086.46,
+        79,
+        14621,
+        73,
+        6,
+        7.6,
+        9
+      ],
+      [
+        "Knoxville",
+        921048.06,
+        54,
+        17056,
+        53,
+        1,
+        1.9,
+        22
+      ],
+      [
+        "Raleigh",
+        902287.9,
+        56,
+        16112,
+        53,
+        3,
+        5.4,
+        37
+      ],
+      [
+        "Greenville",
+        576059.37,
+        24,
+        24002,
+        24,
+        0,
+        0,
+        5
+      ],
+      [
+        "NOVA",
+        341477.75,
+        18,
+        18971,
+        16,
+        2,
+        11.1,
+        26
+      ],
+      [
+        "Grand Rapids",
+        309674.95,
+        20,
+        15484,
+        19,
+        0,
+        0,
+        24
+      ]
+    ]
+  },
+  "closingByBranch": {
+    "headers": [
+      "Branch",
+      "Sum of Sold Deals",
+      "Closing Percent",
+      "NSLI",
+      "Record Count"
+    ],
+    "rows": [
+      {
+        "branch": "Columbus",
+        "opps": 1521,
+        "soldAmt": 4727768.37,
+        "closePct": 30.3,
+        "nsli": 3108
+      },
+      {
+        "branch": "Detroit",
+        "opps": 596,
+        "soldAmt": 3421548.25,
+        "closePct": 41.1,
+        "nsli": 5741
+      },
+      {
+        "branch": "Cleveland",
+        "opps": 473,
+        "soldAmt": 1167845.29,
+        "closePct": 27.5,
+        "nsli": 2469
+      },
+      {
+        "branch": "Nashville",
+        "opps": 224,
+        "soldAmt": 1090218.22,
+        "closePct": 43.3,
+        "nsli": 4867
+      },
+      {
+        "branch": "DC Metro",
+        "opps": 237,
+        "soldAmt": 781206.74,
+        "closePct": 26.6,
+        "nsli": 3296
+      },
+      {
+        "branch": "Cincinnati",
+        "opps": 228,
+        "soldAmt": 679287.61,
+        "closePct": 23.2,
+        "nsli": 2979
+      },
+      {
+        "branch": "Dayton",
+        "opps": 160,
+        "soldAmt": 536081.51,
+        "closePct": 25,
+        "nsli": 3351
+      },
+      {
+        "branch": "Greenville",
+        "opps": 71,
+        "soldAmt": 326223.36,
+        "closePct": 25.4,
+        "nsli": 4595
+      },
+      {
+        "branch": "Knoxville",
+        "opps": 51,
+        "soldAmt": 229155.66,
+        "closePct": 35.3,
+        "nsli": 4493
+      },
+      {
+        "branch": "Richmond",
+        "opps": 59,
+        "soldAmt": 209553.93,
+        "closePct": 25.4,
+        "nsli": 3552
+      },
+      {
+        "branch": "Raleigh",
+        "opps": 109,
+        "soldAmt": 196833.06,
+        "closePct": 16.5,
+        "nsli": 1806
+      },
+      {
+        "branch": "Grand Rapids",
+        "opps": 74,
+        "soldAmt": 158964.2,
+        "closePct": 16.2,
+        "nsli": 2148
+      },
+      {
+        "branch": "DC Metro",
+        "opps": 24,
+        "soldAmt": 50729.35,
+        "closePct": 29.2,
+        "nsli": 2114
+      }
+    ],
+    "totals": {
+      "opps": 3827,
+      "soldAmt": 13575415.55,
+      "closePct": 30.8,
+      "nsli": 3547
+    },
+    "source": "Closing Percent By Branch-2026-05-06-13-59-30.xlsx",
+    "format": "aggregated"
+  },
+  "marketKickbacks": [
+    {
+      "market": "Columbus",
+      "kicked": 25,
+      "kickedAmount": 581199.07
+    },
+    {
+      "market": "Dayton",
+      "kicked": 6,
+      "kickedAmount": 60694.98
+    },
+    {
+      "market": "Cincinnati",
+      "kicked": 5,
+      "kickedAmount": 29086.74
+    },
+    {
+      "market": "Cleveland",
+      "kicked": 5,
+      "kickedAmount": 27498.18
+    },
+    {
+      "market": "Richmond",
+      "kicked": 4,
+      "kickedAmount": 216638.9
+    },
+    {
+      "market": "Nashville",
+      "kicked": 4,
+      "kickedAmount": 96567.5
+    }
+  ],
+  "marketJobTypeChart": {
+    "_description": "Stacked horizontal bar; sales-by-job-type per branch.",
+    "branches": [
+      "Columbus",
+      "Detroit Metro",
+      "Nashville",
+      "Dayton",
+      "DC Metro",
+      "Cleveland",
+      "Richmond",
+      "Cincinnati",
+      "Knoxville",
+      "Raleigh",
+      "Greenville",
+      "NOVA",
+      "Grand Rapids"
+    ]
+  },
+  "topPeople": [
+    {
+      "name": "Kevin Ditty",
+      "amount": 998831.75,
+      "count": 57,
+      "avg": 17523,
+      "medDays": 3,
+      "jt": {
+        "Retail-No Financing": 35,
+        "Insurance": 9,
+        "Retail-Financing": 13
+      },
+      "installs": 40,
+      "repairs": 17
+    },
+    {
+      "name": "Storm Drumm",
+      "amount": 843559.38,
+      "count": 55,
+      "avg": 15337,
+      "medDays": 2,
+      "jt": {
+        "Retail-No Financing": 27,
+        "Retail-Financing": 11,
+        "Insurance": 12
+      },
+      "installs": 52,
+      "repairs": 3
+    },
+    {
+      "name": "Michael Conley",
+      "amount": 835684.16,
+      "count": 53,
+      "avg": 15768,
+      "medDays": 14,
+      "jt": {
+        "Insurance": 25,
+        "Retail-Financing": 5,
+        "Retail-No Financing": 16
+      },
+      "installs": 49,
+      "repairs": 4
+    },
+    {
+      "name": "Stephen Harmon",
+      "amount": 793486.63,
+      "count": 32,
+      "avg": 24796,
+      "medDays": 11,
+      "jt": {
+        "Retail-No Financing": 30,
+        "Insurance": 2
+      },
+      "installs": 30,
+      "repairs": 2
+    },
+    {
+      "name": "Sam Scorziell",
+      "amount": 729143.65,
+      "count": 35,
+      "avg": 20833,
+      "medDays": 18,
+      "jt": {
+        "Insurance": 22,
+        "Retail-No Financing": 8
+      },
+      "installs": 35,
+      "repairs": 0
+    },
+    {
+      "name": "Robert Beck",
+      "amount": 687591.7,
+      "count": 26,
+      "avg": 26446,
+      "medDays": 28,
+      "jt": {
+        "Retail-No Financing": 6,
+        "Insurance": 13
+      },
+      "installs": 25,
+      "repairs": 1
+    },
+    {
+      "name": "Cole Burgess",
+      "amount": 681750.84,
+      "count": 33,
+      "avg": 20659,
+      "medDays": 2,
+      "jt": {
+        "Retail-Financing": 3,
+        "Retail-No Financing": 24,
+        "Insurance": 2
+      },
+      "installs": 33,
+      "repairs": 0
+    },
+    {
+      "name": "Scott Scaperato",
+      "amount": 563287.66,
+      "count": 55,
+      "avg": 10242,
+      "medDays": 2,
+      "jt": {
+        "Retail-Financing": 12,
+        "Retail-No Financing": 32,
+        "Insurance": 6
+      },
+      "installs": 43,
+      "repairs": 12
+    },
+    {
+      "name": "Matthew Ross",
+      "amount": 556177.56,
+      "count": 33,
+      "avg": 16854,
+      "medDays": 3,
+      "jt": {
+        "Retail-No Financing": 23,
+        "Insurance": 1,
+        "Retail-Financing": 7
+      },
+      "installs": 29,
+      "repairs": 4
+    },
+    {
+      "name": "Donald Richard",
+      "amount": 544962,
+      "count": 31,
+      "avg": 17579,
+      "medDays": 4,
+      "jt": {
+        "Retail-No Financing": 23,
+        "Retail-Financing": 1,
+        "Insurance": 2
+      },
+      "installs": 29,
+      "repairs": 2
+    },
+    {
+      "name": "Dave Norris",
+      "amount": 535707.94,
+      "count": 44,
+      "avg": 12175,
+      "medDays": 13,
+      "jt": {
+        "Retail-No Financing": 23,
+        "Retail-Financing": 1,
+        "Insurance": 16
+      },
+      "installs": 30,
+      "repairs": 14
+    },
+    {
+      "name": "Kyle Gibson",
+      "amount": 501189.18,
+      "count": 38,
+      "avg": 13189,
+      "medDays": 7,
+      "jt": {
+        "Retail-Financing": 7,
+        "Retail-No Financing": 16,
+        "Insurance": 11
+      },
+      "installs": 36,
+      "repairs": 2
+    },
+    {
+      "name": "Richard Rice",
+      "amount": 497541,
+      "count": 25,
+      "avg": 19902,
+      "medDays": 6,
+      "jt": {
+        "Retail-No Financing": 15,
+        "Insurance": 3,
+        "Retail-Financing": 2
+      },
+      "installs": 22,
+      "repairs": 3
+    },
+    {
+      "name": "Trey Rury",
+      "amount": 478854.1,
+      "count": 25,
+      "avg": 19154,
+      "medDays": 10,
+      "jt": {
+        "Retail-No Financing": 7,
+        "Insurance": 7,
+        "Retail-Financing": 9
+      },
+      "installs": 24,
+      "repairs": 1
+    },
+    {
+      "name": "Mark Daggett",
+      "amount": 469569.46,
+      "count": 26,
+      "avg": 18060,
+      "medDays": 3,
+      "jt": {
+        "Insurance": 3,
+        "Retail-No Financing": 19
+      },
+      "installs": 21,
+      "repairs": 5
+    },
+    {
+      "name": "James Cole Dionisi",
+      "amount": 446516,
+      "count": 24,
+      "avg": 18605,
+      "medDays": 3,
+      "jt": {
+        "Retail-Financing": 7,
+        "Retail-No Financing": 13,
+        "Insurance": 1
+      },
+      "installs": 23,
+      "repairs": 1
+    },
+    {
+      "name": "Frank Butts",
+      "amount": 437451.31,
+      "count": 36,
+      "avg": 12151,
+      "medDays": 9,
+      "jt": {
+        "Retail-No Financing": 20,
+        "Insurance": 13,
+        "Retail-Financing": 1
+      },
+      "installs": 30,
+      "repairs": 6
+    },
+    {
+      "name": "Matt Busch",
+      "amount": 432355,
+      "count": 26,
+      "avg": 16629,
+      "medDays": 3,
+      "jt": {
+        "Insurance": 5,
+        "Retail-No Financing": 12,
+        "Retail-Financing": 3
+      },
+      "installs": 26,
+      "repairs": 0
+    },
+    {
+      "name": "Frank Drummond",
+      "amount": 406338.51,
+      "count": 50,
+      "avg": 8127,
+      "medDays": 3,
+      "jt": {
+        "Retail-No Financing": 37,
+        "Insurance": 8,
+        "Retail-Financing": 1
+      },
+      "installs": 28,
+      "repairs": 22
+    },
+    {
+      "name": "Bill Applegate",
+      "amount": 405391.29,
+      "count": 32,
+      "avg": 12668,
+      "medDays": 16,
+      "jt": {
+        "Insurance": 12,
+        "Retail-No Financing": 15,
+        "Retail-Financing": 1
+      },
+      "installs": 25,
+      "repairs": 7
+    }
+  ],
+  "speedSellers": [
+    {
+      "name": "Evan Kelley",
+      "medDays": 1
+    },
+    {
+      "name": "Storm Drumm",
+      "medDays": 2
+    },
+    {
+      "name": "Scott Scaperato",
+      "medDays": 2
+    },
+    {
+      "name": "Cole Burgess",
+      "medDays": 2
+    },
+    {
+      "name": "Kevin Ditty",
+      "medDays": 3
+    },
+    {
+      "name": "Frank Drummond",
+      "medDays": 3
+    },
+    {
+      "name": "Matthew Ross",
+      "medDays": 3
+    },
+    {
+      "name": "Derik Heinz",
+      "medDays": 3
+    }
+  ],
+  "repairHeavy": [
+    {
+      "name": "Ryan Johnson",
+      "repairs": 13,
+      "deals": 23,
+      "pct": 56.5
+    },
+    {
+      "name": "Justin Koenig",
+      "repairs": 7,
+      "deals": 13,
+      "pct": 53.8
+    },
+    {
+      "name": "John Emrich",
+      "repairs": 8,
+      "deals": 17,
+      "pct": 47.1
+    }
+  ],
+  "salesCycle": {
+    "kpis": [
+      {
+        "label": "Overall Median",
+        "value": "8 days",
+        "sub": "Mean: 37 days (skewed by insurance)"
+      },
+      {
+        "label": "Retail",
+        "value": "4 days",
+        "sub": "All retail job types"
+      },
+      {
+        "label": "Insurance",
+        "value": "27 days",
+        "sub": "Median | Mean: 73 days"
+      },
+      {
+        "label": "Repair",
+        "value": "3 days",
+        "sub": "Fast turn, low value"
+      }
+    ],
+    "byJobType": [
+      {
+        "label": "Retail-No Fin",
+        "median": 4,
+        "mean": 21,
+        "count": 828
+      },
+      {
+        "label": "Retail-Fin",
+        "median": 3,
+        "mean": 19,
+        "count": 152
+      },
+      {
+        "label": "Insurance",
+        "median": 27,
+        "mean": 73,
+        "count": 492
+      },
+      {
+        "label": "Repair",
+        "median": 3,
+        "mean": 7,
+        "count": 253
+      },
+      {
+        "label": "Install",
+        "median": 9,
+        "mean": 42,
+        "count": 1384
+      }
+    ],
+    "byMarket": [
+      {
+        "market": "Detroit Metro",
+        "median": 4,
+        "mean": 24,
+        "count": 284
+      },
+      {
+        "market": "Cleveland",
+        "median": 4,
+        "mean": 28,
+        "count": 152
+      },
+      {
+        "market": "Greenville",
+        "median": 5,
+        "mean": 6,
+        "count": 24
+      },
+      {
+        "market": "Nashville",
+        "median": 6,
+        "mean": 18,
+        "count": 172
+      },
+      {
+        "market": "Columbus",
+        "median": 7,
+        "mean": 33,
+        "count": 514
+      },
+      {
+        "market": "Cincinnati",
+        "median": 9,
+        "mean": 31,
+        "count": 77
+      },
+      {
+        "market": "DC Metro",
+        "median": 13,
+        "mean": 58,
+        "count": 105
+      },
+      {
+        "market": "Dayton",
+        "median": 20,
+        "mean": 46,
+        "count": 102
+      },
+      {
+        "market": "Knoxville",
+        "median": 22,
+        "mean": 41,
+        "count": 54
+      },
+      {
+        "market": "Grand Rapids",
+        "median": 24,
+        "mean": 31,
+        "count": 19
+      },
+      {
+        "market": "NOVA",
+        "median": 26,
+        "mean": 97,
+        "count": 18
+      },
+      {
+        "market": "Richmond",
+        "median": 32,
+        "mean": 88,
+        "count": 65
+      },
+      {
+        "market": "Raleigh",
+        "median": 37,
+        "mean": 102,
+        "count": 54
+      }
+    ],
+    "starInsuranceClosers": [
+      {
+        "name": "Jacob Perry",
+        "medDays": 1,
+        "count": 3
+      },
+      {
+        "name": "Justin Koenig",
+        "medDays": 2,
+        "count": 4
+      },
+      {
+        "name": "Storm Drumm",
+        "medDays": 2,
+        "count": 12
+      },
+      {
+        "name": "Scott Scaperato",
+        "medDays": 3,
+        "count": 6
+      },
+      {
+        "name": "Matt Busch",
+        "medDays": 4,
+        "count": 5
+      }
+    ]
+  },
+  "completedBilling": {
+    "totalUnbilled": 898982.82,
+    "totalJobs": 48,
+    "avgAge": 12.8,
+    "medAge": 11,
+    "tiers": [
+      {
+        "label": "Warning (30-59 days)",
+        "count": 4,
+        "amount": 70014.64,
+        "color": "orange"
+      },
+      {
+        "label": "Watch (14-29 days)",
+        "count": 15,
+        "amount": 293366.16,
+        "color": "blue"
+      },
+      {
+        "label": "Fresh (0-13 days)",
+        "count": 29,
+        "amount": 535602.02,
+        "color": "green"
+      }
+    ],
+    "bySubStatus": [
+      {
+        "subStatus": "Pending Supplement",
+        "count": 31,
+        "amount": 579782.77,
+        "avgAge": 14,
+        "action": "Follow up with insurance carrier on supplement approval. Escalate if >30 days."
+      },
+      {
+        "subStatus": "Accounting Kickback",
+        "count": 9,
+        "amount": 170236.92,
+        "avgAge": 14,
+        "action": "Review kickback reason, correct documentation or pricing, resubmit to accounting."
+      },
+      {
+        "subStatus": "Ready to Invoice",
+        "count": 6,
+        "amount": 123338.39,
+        "avgAge": 0,
+        "action": "No blockers, submit invoice immediately. This is free cash waiting."
+      },
+      {
+        "subStatus": "No Sub Status",
+        "count": 2,
+        "amount": 25624.74,
+        "avgAge": 25,
+        "action": "Review job, identify what is blocking billing, assign owner."
+      }
+    ],
+    "byMarket": [
+      {
+        "market": "Columbus",
+        "count": 16,
+        "amount": 267707.45,
+        "avgAge": 14,
+        "urgency": "LOW"
+      },
+      {
+        "market": "Knoxville",
+        "count": 5,
+        "amount": 100194.46,
+        "avgAge": 16,
+        "urgency": "MEDIUM"
+      },
+      {
+        "market": "Cincinnati",
+        "count": 4,
+        "amount": 91740.7,
+        "avgAge": 11,
+        "urgency": "LOW"
+      },
+      {
+        "market": "Richmond",
+        "count": 3,
+        "amount": 73215.88,
+        "avgAge": 9,
+        "urgency": "LOW"
+      },
+      {
+        "market": "Detroit Metro",
+        "count": 3,
+        "amount": 71145,
+        "avgAge": 1,
+        "urgency": "LOW"
+      },
+      {
+        "market": "Dayton",
+        "count": 3,
+        "amount": 61233.98,
+        "avgAge": 11,
+        "urgency": "LOW"
+      },
+      {
+        "market": "Nashville",
+        "count": 2,
+        "amount": 55857.53,
+        "avgAge": 18,
+        "urgency": "MEDIUM"
+      },
+      {
+        "market": "Cleveland",
+        "count": 5,
+        "amount": 51650.08,
+        "avgAge": 14,
+        "urgency": "LOW"
+      },
+      {
+        "market": "DC Metro",
+        "count": 2,
+        "amount": 47286.54,
+        "avgAge": 12,
+        "urgency": "LOW"
+      },
+      {
+        "market": "Greenville",
+        "count": 3,
+        "amount": 46352.81,
+        "avgAge": 9,
+        "urgency": "LOW"
+      },
+      {
+        "market": "Raleigh",
+        "count": 2,
+        "amount": 32598.39,
+        "avgAge": 26,
+        "urgency": "MEDIUM"
+      }
+    ],
+    "byRepTop15": [
+      {
+        "rep": "Sam Doyle",
+        "count": 2,
+        "amount": 63843.25,
+        "oldest": 14
+      },
+      {
+        "rep": "Sam Scorziell",
+        "count": 2,
+        "amount": 60625.06,
+        "oldest": 36
+      },
+      {
+        "rep": "Trey Rury",
+        "count": 2,
+        "amount": 55857.53,
+        "oldest": 28
+      },
+      {
+        "rep": "Frank Butts",
+        "count": 4,
+        "amount": 51450.08,
+        "oldest": 12
+      },
+      {
+        "rep": "Derrick Sieber",
+        "count": 2,
+        "amount": 47286.54,
+        "oldest": 18
+      },
+      {
+        "rep": "Tim Washer",
+        "count": 2,
+        "amount": 44600,
+        "oldest": 16
+      },
+      {
+        "rep": "Robert Beck",
+        "count": 1,
+        "amount": 43482,
+        "oldest": 19
+      },
+      {
+        "rep": "Michael Conley",
+        "count": 2,
+        "amount": 42902,
+        "oldest": 14
+      },
+      {
+        "rep": "Kyle Gibson",
+        "count": 2,
+        "amount": 41810.49,
+        "oldest": 19
+      },
+      {
+        "rep": "David Walden",
+        "count": 1,
+        "amount": 34483,
+        "oldest": 2
+      },
+      {
+        "rep": "Zachary Schneider",
+        "count": 2,
+        "amount": 34346.45,
+        "oldest": 13
+      },
+      {
+        "rep": "Morgan King",
+        "count": 2,
+        "amount": 33341.61,
+        "oldest": 21
+      },
+      {
+        "rep": "Thomas Urling",
+        "count": 1,
+        "amount": 32347.09,
+        "oldest": 0
+      },
+      {
+        "rep": "Nick Junker",
+        "count": 1,
+        "amount": 24752.82,
+        "oldest": 35
+      },
+      {
+        "rep": "Savage Grant",
+        "count": 1,
+        "amount": 24102.97,
+        "oldest": 26
+      }
+    ],
+    "fullJobList": [
+      [
+        "Job-109309",
+        "Michael Sebald",
+        "Justin Koenig",
+        "Cleveland",
+        "",
+        200,
+        49,
+        "Insurance"
+      ],
+      [
+        "Job-109182",
+        "Amanda Walton",
+        "Clint Humphreys",
+        "Raleigh",
+        "Pending Supplement",
+        15116.08,
+        44,
+        "Insurance"
+      ],
+      [
+        "Job-109530",
+        "Paul Blizniuk",
+        "Sam Scorziell",
+        "Knoxville",
+        "Pending Supplement",
+        29945.74,
+        36,
+        "Insurance"
+      ],
+      [
+        "Job-108536",
+        "Carole Bertolini",
+        "Nick Junker",
+        "Columbus",
+        "Accounting Kickback",
+        24752.82,
+        35,
+        "Insurance"
+      ],
+      [
+        "Job-110423",
+        "Ann Jones",
+        "Trey Rury",
+        "Nashville",
+        "Pending Supplement",
+        15862.53,
+        28,
+        "Insurance"
+      ],
+      [
+        "Job-110826",
+        "Julie Landholt",
+        "Bill Applegate",
+        "Columbus",
+        "Pending Supplement",
+        11400.75,
+        27,
+        "Insurance"
+      ],
+      [
+        "Job-110776",
+        "Jason & Amy Conard",
+        "Savage Grant",
+        "Greenville",
+        "Accounting Kickback",
+        24102.97,
+        26,
+        "Insurance"
+      ],
+      [
+        "Job-110950",
+        "Teddy Douglass",
+        "Luke Allberry",
+        "Columbus",
+        "Pending Supplement",
+        12839.86,
+        26,
+        "Insurance"
+      ],
+      [
+        "Job-110961",
+        "Rey Spinosa Brown",
+        "Morgan King",
+        "Columbus",
+        "Pending Supplement",
+        7916.87,
+        21,
+        "Insurance"
+      ],
+      [
+        "Job-110965",
+        "Mark Lee",
+        "Dave Norris",
+        "Columbus",
+        "Pending Supplement",
+        11738.33,
+        21,
+        "Insurance"
+      ],
+      [
+        "Job-109539",
+        "Jennifer Young",
+        "Robert Beck",
+        "Columbus",
+        "Accounting Kickback",
+        43482,
+        19,
+        "Insurance"
+      ],
+      [
+        "Job-111122",
+        "Dennis Whitlock",
+        "Kyle Gibson",
+        "Cincinnati",
+        "Pending Supplement",
+        24331.74,
+        19,
+        "Insurance"
+      ],
+      [
+        "Job-111125",
+        "Jerold fourman",
+        "Kyle Gibson",
+        "Cincinnati",
+        "Pending Supplement",
+        17478.75,
+        19,
+        "Insurance"
+      ],
+      [
+        "Job-111238",
+        "Lasean Gray",
+        "Derrick Sieber",
+        "DC Metro",
+        "Pending Supplement",
+        21251.56,
+        18,
+        "Retail-No Financing"
+      ],
+      [
+        "Job-110425",
+        "Christopher Spollen Nicole Schmidt",
+        "Tim Washer",
+        "Knoxville",
+        "Accounting Kickback",
+        20000,
+        16,
+        "Retail-No Financing"
+      ],
+      [
+        "Job-110498",
+        "Wendell Thomas",
+        "Sam Doyle",
+        "Richmond",
+        "Pending Supplement",
+        32213.27,
+        14,
+        "Insurance"
+      ],
+      [
+        "Job-111385",
+        "Lauren Burwell",
+        "Frank Drummond",
+        "Columbus",
+        "Pending Supplement",
+        6237.55,
+        14,
+        "Insurance"
+      ],
+      [
+        "Job-111453",
+        "Ron Lowe",
+        "Derek Hastings",
+        "Dayton",
+        "Pending Supplement",
+        18331.98,
+        14,
+        "Insurance"
+      ],
+      [
+        "Job-111572",
+        "Jim Waite",
+        "Michael Conley",
+        "Dayton",
+        "Pending Supplement",
+        26178,
+        14,
+        "Insurance"
+      ],
+      [
+        "Job-111471",
+        "Todd Bernhard",
+        "Zachary Schneider",
+        "Columbus",
+        "Pending Supplement",
+        17440.21,
+        13,
+        "Insurance"
+      ],
+      [
+        "Job-111541",
+        "Kent Carringer",
+        "Andrew Coleman",
+        "Knoxville",
+        "Pending Supplement",
+        19218.03,
+        13,
+        "Retail-No Financing"
+      ],
+      [
+        "Job-111656",
+        "Silva Garcia",
+        "Isaiah Morales-Laurel",
+        "Knoxville",
+        "Pending Supplement",
+        6430.69,
+        13,
+        "Insurance"
+      ],
+      [
+        "Job-111720",
+        "Gary Mott",
+        "Zachary Schneider",
+        "Columbus",
+        "Pending Supplement",
+        16906.24,
+        13,
+        "Insurance"
+      ],
+      [
+        "Job-111299",
+        "Anthony Vath Jessica Vath",
+        "Frank Butts",
+        "Cleveland",
+        "Accounting Kickback",
+        13498.3,
+        12,
+        "Insurance"
+      ],
+      [
+        "Job-110010",
+        "David Swift",
+        "Sam Scorziell",
+        "Columbus",
+        "Pending Supplement",
+        30679.32,
+        9,
+        "Insurance"
+      ],
+      [
+        "Job-111161",
+        "Gary Longberry",
+        "Jacob Miller",
+        "Columbus",
+        "Pending Supplement",
+        16640.48,
+        9,
+        "Insurance"
+      ],
+      [
+        "Job-111321",
+        "Michael J Kopp Sandra Kopp",
+        "Frank Butts",
+        "Cleveland",
+        "Pending Supplement",
+        9823.79,
+        9,
+        "Insurance"
+      ],
+      [
+        "Job-110964",
+        "Shane Goodwin",
+        "Trey Rury",
+        "Nashville",
+        "Pending Supplement",
+        39995,
+        8,
+        "Insurance"
+      ],
+      [
+        "Job-108336",
+        "Debora Cruz",
+        "Sam Doyle",
+        "Richmond",
+        "Pending Supplement",
+        31629.98,
+        7,
+        "Insurance"
+      ],
+      [
+        "Job-111708",
+        "Anu Patil",
+        "Eric England",
+        "Raleigh",
+        "Pending Supplement",
+        17482.31,
+        7,
+        "Insurance"
+      ],
+      [
+        "Job-111806",
+        "Shelby Jordan",
+        "Storm Drumm",
+        "Columbus",
+        "Accounting Kickback",
+        13132,
+        7,
+        "Insurance"
+      ],
+      [
+        "Job-111883",
+        "Workneh Abate",
+        "Micah Hayes",
+        "Richmond",
+        "Pending Supplement",
+        9372.63,
+        7,
+        "Insurance"
+      ],
+      [
+        "Job-111711",
+        "Tina Colter",
+        "Dave Norris",
+        "Columbus",
+        "Pending Supplement",
+        10119.98,
+        6,
+        "Insurance"
+      ],
+      [
+        "Job-111737",
+        "Dennis Poole",
+        "Derrick Sieber",
+        "DC Metro",
+        "Pending Supplement",
+        26034.98,
+        6,
+        "Insurance"
+      ],
+      [
+        "Job-111964",
+        "Sarah Pax",
+        "Michael Conley",
+        "Dayton",
+        "Accounting Kickback",
+        16724,
+        6,
+        "Insurance"
+      ],
+      [
+        "Job-112034",
+        "Raymond Richardson",
+        "Jacoby Taylor",
+        "Cincinnati",
+        "Pending Supplement",
+        17583.12,
+        6,
+        "Insurance"
+      ],
+      [
+        "Job-110692",
+        "Daniel Crow",
+        "David Walden",
+        "Detroit Metro",
+        "Pending Supplement",
+        34483,
+        2,
+        "Retail-No Financing"
+      ],
+      [
+        "Job-111743",
+        "Norma Diaz",
+        "Frank Butts",
+        "Cleveland",
+        "Accounting Kickback",
+        12694.99,
+        1,
+        "Insurance"
+      ],
+      [
+        "Job-111944",
+        "Beverly  Clabo",
+        "Tim Washer",
+        "Knoxville",
+        "Pending Supplement",
+        24600,
+        1,
+        "Insurance"
+      ],
+      [
+        "Job-106002",
+        "Steve And Brenda  Wetz",
+        "Mark Younce",
+        "Columbus",
+        "Ready to Invoice",
+        18496.3,
+        0,
+        "Insurance"
+      ],
+      [
+        "Job-110101",
+        "Frank  Mehling",
+        "Frank Butts",
+        "Cleveland",
+        "Ready to Invoice",
+        15433,
+        0,
+        "Retail-No Financing"
+      ],
+      [
+        "Job-110533",
+        "John  Brosnan",
+        "Michael Marinelli",
+        "Columbus",
+        "Pending Supplement",
+        500,
+        0,
+        "Insurance"
+      ],
+      [
+        "Job-110782",
+        "Mokhira Safarova",
+        "Thomas Urling",
+        "Cincinnati",
+        "Ready to Invoice",
+        32347.09,
+        0,
+        "Insurance"
+      ],
+      [
+        "Job-110790",
+        "Samantha Watson",
+        "Matthew Ross",
+        "Detroit Metro",
+        "Ready to Invoice",
+        13662,
+        0,
+        "Retail-No Financing"
+      ],
+      [
+        "Job-110814",
+        "Jeremy and Alicia Nowak",
+        "Cody Mitchell",
+        "Greenville",
+        "Accounting Kickback",
+        1849.84,
+        0,
+        "Insurance"
+      ],
+      [
+        "Job-111513",
+        "Mary Soulen",
+        "Morgan King",
+        "Columbus",
+        "",
+        25424.74,
+        0,
+        "Insurance"
+      ],
+      [
+        "Job-111624",
+        "Keith Stella",
+        "Griffin Gregory",
+        "Greenville",
+        "Ready to Invoice",
+        20400,
+        0,
+        "Insurance"
+      ],
+      [
+        "Job-111867",
+        "Linda  McKinney",
+        "Donald Richard",
+        "Detroit Metro",
+        "Ready to Invoice",
+        23000,
+        0,
+        "Retail-No Financing"
+      ]
+    ]
+  },
+  "weeklyTargets_BUDGET": {
+    "avgWeeklyNeed": 2672228,
+    "byJobType": [
+      {
+        "type": "Retail-No Financing",
+        "perWeek": 1148847,
+        "mix": 43
+      },
+      {
+        "type": "Insurance",
+        "perWeek": 1098205,
+        "mix": 41.1
+      },
+      {
+        "type": "Retail-Financing",
+        "perWeek": 425175,
+        "mix": 15.9
+      }
+    ],
+    "byTrade": [
+      {
+        "trade": "Roofing",
+        "perWeek": 1681438,
+        "mix": 62.9
+      },
+      {
+        "trade": "Gutters",
+        "perWeek": 792458,
+        "mix": 29.7
+      },
+      {
+        "trade": "Siding",
+        "perWeek": 60871,
+        "mix": 2.3
+      }
+    ],
+    "byMarket": [
+      {
+        "market": "Columbus",
+        "total": 743805,
+        "retNoFin": 292428,
+        "ins": 352071,
+        "retFin": 99306,
+        "deals": 77.6
+      },
+      {
+        "market": "Detroit Metro",
+        "total": 482937,
+        "retNoFin": 331878,
+        "ins": 45067,
+        "retFin": 105992,
+        "deals": 30.9
+      },
+      {
+        "market": "Nashville",
+        "total": 274827,
+        "retNoFin": 101518,
+        "ins": 89300,
+        "retFin": 84008,
+        "deals": 19.8
+      },
+      {
+        "market": "DC Metro",
+        "total": 249809,
+        "retNoFin": 143958,
+        "ins": 101508,
+        "retFin": 4342,
+        "deals": 16.5
+      },
+      {
+        "market": "Dayton",
+        "total": 177987,
+        "retNoFin": 50851,
+        "ins": 102425,
+        "retFin": 24710,
+        "deals": 10.9
+      },
+      {
+        "market": "Cincinnati",
+        "total": 158777,
+        "retNoFin": 49568,
+        "ins": 89449,
+        "retFin": 19760,
+        "deals": 10.1
+      },
+      {
+        "market": "Richmond",
+        "total": 137413,
+        "retNoFin": 22286,
+        "ins": 108672,
+        "retFin": 6455,
+        "deals": 7.1
+      },
+      {
+        "market": "Cleveland",
+        "total": 121677,
+        "retNoFin": 60088,
+        "ins": 35216,
+        "retFin": 26373,
+        "deals": 16.2
+      },
+      {
+        "market": "Raleigh",
+        "total": 118023,
+        "retNoFin": 13029,
+        "ins": 98208,
+        "retFin": 6786,
+        "deals": 7.7
+      },
+      {
+        "market": "Knoxville",
+        "total": 115116,
+        "retNoFin": 59627,
+        "ins": 48658,
+        "retFin": 6831,
+        "deals": 6.5
+      },
+      {
+        "market": "Greenville",
+        "total": 79373,
+        "retNoFin": 21025,
+        "ins": 17738,
+        "retFin": 40611,
+        "deals": 3.3
+      }
+    ],
+    "weekSchedule": [
+      {
+        "wk": "04/19/2026",
+        "mo": "Apr",
+        "target": 1959782
+      },
+      {
+        "wk": "04/26/2026",
+        "mo": "Apr",
+        "target": 2619633
+      },
+      {
+        "wk": "05/03/2026",
+        "mo": "May",
+        "target": 4269260
+      },
+      {
+        "wk": "05/10/2026",
+        "mo": "May",
+        "target": 4269260
+      },
+      {
+        "wk": "05/17/2026",
+        "mo": "May",
+        "target": 4269260
+      },
+      {
+        "wk": "05/24/2026",
+        "mo": "May",
+        "target": 4269260
+      },
+      {
+        "wk": "05/31/2026",
+        "mo": "May",
+        "target": 3489371
+      },
+      {
+        "wk": "06/07/2026",
+        "mo": "Jun",
+        "target": 3359390
+      },
+      {
+        "wk": "06/14/2026",
+        "mo": "Jun",
+        "target": 3359390
+      },
+      {
+        "wk": "06/21/2026",
+        "mo": "Jun",
+        "target": 3359390
+      },
+      {
+        "wk": "06/28/2026",
+        "mo": "Jun",
+        "target": 2757071
+      },
+      {
+        "wk": "07/05/2026",
+        "mo": "Jul",
+        "target": 2305332
+      },
+      {
+        "wk": "07/12/2026",
+        "mo": "Jul",
+        "target": 2305332
+      },
+      {
+        "wk": "07/19/2026",
+        "mo": "Jul",
+        "target": 2305332
+      },
+      {
+        "wk": "07/26/2026",
+        "mo": "Jul",
+        "target": 2465088
+      },
+      {
+        "wk": "08/02/2026",
+        "mo": "Aug",
+        "target": 3423621
+      },
+      {
+        "wk": "08/09/2026",
+        "mo": "Aug",
+        "target": 3423621
+      },
+      {
+        "wk": "08/16/2026",
+        "mo": "Aug",
+        "target": 3423621
+      },
+      {
+        "wk": "08/23/2026",
+        "mo": "Aug",
+        "target": 3423621
+      },
+      {
+        "wk": "08/30/2026",
+        "mo": "Aug",
+        "target": 3007788
+      },
+      {
+        "wk": "09/06/2026",
+        "mo": "Sep",
+        "target": 2841454
+      },
+      {
+        "wk": "09/13/2026",
+        "mo": "Sep",
+        "target": 2841454
+      },
+      {
+        "wk": "09/20/2026",
+        "mo": "Sep",
+        "target": 2841454
+      },
+      {
+        "wk": "09/27/2026",
+        "mo": "Sep",
+        "target": 2918633
+      },
+      {
+        "wk": "10/04/2026",
+        "mo": "Oct",
+        "target": 3021539
+      },
+      {
+        "wk": "10/11/2026",
+        "mo": "Oct",
+        "target": 3021539
+      },
+      {
+        "wk": "10/18/2026",
+        "mo": "Oct",
+        "target": 3021539
+      },
+      {
+        "wk": "10/25/2026",
+        "mo": "Oct",
+        "target": 3021539
+      },
+      {
+        "wk": "11/01/2026",
+        "mo": "Nov",
+        "target": 1925810
+      },
+      {
+        "wk": "11/08/2026",
+        "mo": "Nov",
+        "target": 1925810
+      },
+      {
+        "wk": "11/15/2026",
+        "mo": "Nov",
+        "target": 1925810
+      },
+      {
+        "wk": "11/22/2026",
+        "mo": "Nov",
+        "target": 1925810
+      },
+      {
+        "wk": "11/29/2026",
+        "mo": "Nov",
+        "target": 1038196
+      },
+      {
+        "wk": "12/06/2026",
+        "mo": "Dec",
+        "target": 683150
+      },
+      {
+        "wk": "12/13/2026",
+        "mo": "Dec",
+        "target": 683150
+      },
+      {
+        "wk": "12/20/2026",
+        "mo": "Dec",
+        "target": 683150
+      },
+      {
+        "wk": "12/27/2026",
+        "mo": "Dec",
+        "target": 487965
+      }
+    ],
+    "recent4WkAvg": 1337260.87
+  },
+  "budgetRecovery": {
+    "fullYearBudget": 126105724,
+    "totalToRecover": 5948966,
+    "upliftPct": 6.9,
+    "q1Budget": 16900198,
+    "q1Actual": 16409511,
+    "q1Shortfall": 490687,
+    "aprilGap": 5458279,
+    "aprilBudget": 12344293,
+    "aprilFcst": 6886014,
+    "adjWeeklySalesAvg": 2849800,
+    "origWeeklySalesAvg": 2672228,
+    "salesDeltaPerWeek": 177572,
+    "adjWeeklyProdAvg": 2853097,
+    "origWeeklyProdAvg": 2751323,
+    "prodDeltaPerWeek": 101774,
+    "monthlyBridge": [
+      {
+        "mo": "Jan 2026",
+        "origBudget": 4269114,
+        "fcst": 4747192,
+        "recovTarget": 4747192,
+        "catchUp": 0,
+        "status": "Actual"
+      },
+      {
+        "mo": "Feb 2026",
+        "origBudget": 4505158,
+        "fcst": 3778526,
+        "recovTarget": 3536393,
+        "catchUp": 0,
+        "status": "Actual"
+      },
+      {
+        "mo": "Mar 2026",
+        "origBudget": 8125926,
+        "fcst": 4932169,
+        "recovTarget": 8125926,
+        "catchUp": 0,
+        "status": "Actual"
+      },
+      {
+        "mo": "Apr 2026",
+        "origBudget": 12344293,
+        "fcst": 6886014,
+        "recovTarget": 6886014,
+        "catchUp": 0,
+        "status": "Forecast"
+      },
+      {
+        "mo": "May 2026",
+        "origBudget": 14292330,
+        "fcst": 13455265,
+        "recovTarget": 15170128,
+        "catchUp": 877798,
+        "status": "Recovery",
+        "liveActual": 787190.21
+      },
+      {
+        "mo": "Jun 2026",
+        "origBudget": 14833760,
+        "fcst": 14345614,
+        "recovTarget": 15744811,
+        "catchUp": 911051,
+        "status": "Recovery"
+      },
+      {
+        "mo": "Jul 2026",
+        "origBudget": 10752016,
+        "fcst": 12035648,
+        "recovTarget": 11412377,
+        "catchUp": 660361,
+        "status": "Recovery"
+      },
+      {
+        "mo": "Aug 2026",
+        "origBudget": 14513476,
+        "fcst": 13517193,
+        "recovTarget": 15404856,
+        "catchUp": 891380,
+        "status": "Recovery"
+      },
+      {
+        "mo": "Sep 2026",
+        "origBudget": 12228745,
+        "fcst": 12920784,
+        "recovTarget": 12979803,
+        "catchUp": 751058,
+        "status": "Recovery"
+      },
+      {
+        "mo": "Oct 2026",
+        "origBudget": 13652917,
+        "fcst": 13110876,
+        "recovTarget": 14491444,
+        "catchUp": 838527,
+        "status": "Recovery"
+      },
+      {
+        "mo": "Nov 2026",
+        "origBudget": 10772169,
+        "fcst": 10505376,
+        "recovTarget": 11433768,
+        "catchUp": 661599,
+        "status": "Recovery"
+      },
+      {
+        "mo": "Dec 2026",
+        "origBudget": 5815820,
+        "fcst": 6302469,
+        "recovTarget": 6173013,
+        "catchUp": 357193,
+        "status": "Recovery"
+      }
+    ],
+    "adjSalesByMarket": [
+      {
+        "market": "Columbus",
+        "recovTarget": 264411,
+        "original": 247935,
+        "delta": 16476
+      },
+      {
+        "market": "Detroit Metro",
+        "recovTarget": 171676,
+        "original": 160979,
+        "delta": 10697
+      },
+      {
+        "market": "Nashville",
+        "recovTarget": 97696,
+        "original": 91609,
+        "delta": 6088
+      },
+      {
+        "market": "DC Metro",
+        "recovTarget": 88803,
+        "original": 83270,
+        "delta": 5533
+      },
+      {
+        "market": "Dayton",
+        "recovTarget": 63271,
+        "original": 59329,
+        "delta": 3942
+      },
+      {
+        "market": "Cincinnati",
+        "recovTarget": 56442,
+        "original": 52926,
+        "delta": 3517
+      },
+      {
+        "market": "Richmond",
+        "recovTarget": 48848,
+        "original": 45804,
+        "delta": 3044
+      },
+      {
+        "market": "Cleveland",
+        "recovTarget": 43254,
+        "original": 40559,
+        "delta": 2695
+      },
+      {
+        "market": "Raleigh",
+        "recovTarget": 41955,
+        "original": 39341,
+        "delta": 2614
+      },
+      {
+        "market": "Knoxville",
+        "recovTarget": 40922,
+        "original": 38372,
+        "delta": 2550
+      },
+      {
+        "market": "Greenville",
+        "recovTarget": 28216,
+        "original": 26458,
+        "delta": 1758
+      },
+      {
+        "market": "Grand Rapids",
+        "recovTarget": 6657,
+        "original": 6242,
+        "delta": 415
+      }
+    ],
+    "adjProdByMarket": [
+      {
+        "market": "Columbus",
+        "recovTarget": 273284,
+        "pct": 29.9
+      },
+      {
+        "market": "DC Metro",
+        "recovTarget": 116716,
+        "pct": 12.8
+      },
+      {
+        "market": "Detroit Metro",
+        "recovTarget": 115017,
+        "pct": 12.6
+      },
+      {
+        "market": "Nashville",
+        "recovTarget": 96986,
+        "pct": 10.6
+      },
+      {
+        "market": "Cincinnati",
+        "recovTarget": 74119,
+        "pct": 8.1
+      },
+      {
+        "market": "Richmond",
+        "recovTarget": 57007,
+        "pct": 6.2
+      },
+      {
+        "market": "Cleveland",
+        "recovTarget": 42408,
+        "pct": 4.6
+      },
+      {
+        "market": "Dayton",
+        "recovTarget": 40967,
+        "pct": 4.5
+      },
+      {
+        "market": "Raleigh",
+        "recovTarget": 35135,
+        "pct": 3.8
+      },
+      {
+        "market": "Knoxville",
+        "recovTarget": 30491,
+        "pct": 3.3
+      },
+      {
+        "market": "Greenville",
+        "recovTarget": 14251,
+        "pct": 1.6
+      },
+      {
+        "market": "Grand Rapids",
+        "recovTarget": 10020,
+        "pct": 1.1
+      },
+      {
+        "market": "Indianapolis",
+        "recovTarget": 4781,
+        "pct": 0.5
+      },
+      {
+        "market": "Greensboro",
+        "recovTarget": 1469,
+        "pct": 0.2
+      },
+      {
+        "market": "Winston-Salem",
+        "recovTarget": 63,
+        "pct": 0
+      }
+    ]
+  },
+  "commentary": {
+    "whatsWorking": [
+      "Sales Trajectory: Monthly sales moved from January $3.26M to May $787K (-76%). Annualized run rate: $77.23M.",
+      "Premium Deal Types: Insurance averages $19,915 per deal. Retail-Financing averages $20,995 (highest per-deal value). Retail-No Financing averages $11,458 (the volume engine).",
+      "Sold Conversion: 1,538 of 1,730 signed contracts (88.9%) have made it to Sold status for $23.34M in confirmed sales."
+    ],
+    "whatNeedsAttention": [
+      "Kickback Concentration: Columbus has the most kickbacks (25, $581K). Total company kickbacks: 58 worth $1.16M.",
+      "Production Review Queue: 130 deals worth $2.32M sitting in Production Review. Watch for backlog growth, it delays revenue recognition.",
+      "Repair Rate Elevated: 15.7% of all deals are repairs (272 of 1,730). Repairs average ~$1,632, low value relative to installs at $18,134."
+    ],
+    "criticalRisks": [
+      "Columbus Kickback Concentration drives the company's largest single-market rework volume.",
+      "$899K sitting unbilled in Completed Jobs (48 jobs averaging 13 days).",
+      "Pending Supplements aging: 31 supplement jobs ($580K), avg 14 days.",
+      "Accounting Kickbacks blocking $170K (9 completed jobs).",
+      "Pipeline kickbacks company-wide: 58 kickbacks totaling $1.16M.",
+      "Production Review backlog: 130 deals ($2.32M)."
+    ],
+    "strengthsToAmplify": [
+      "Retail Velocity: 4d median close on 980 retail deals.",
+      "Insurance Density: $19,915 avg on 514 deals = $10.24M; +20% lift = ~$2.05M.",
+      "May repair rate at 9.1% vs YTD 15.7%, correction in latest month.",
+      "Financing Lifts Ticket: Retail-Financing averages $20,995, highest per-deal value."
+    ],
+    "fixList": [
+      "Columbus Pipeline Kickback Intervention, pull every kickback and categorize root cause.",
+      "Supplement Follow-Up Process, 31 supplement jobs ($580K).",
+      "Accounting Kickback Root Causes, 9 jobs ($170K), need a Kickback Reason field.",
+      "Production Review Bottleneck, 130 deals; add temporary PM capacity.",
+      "Financing Push, 156 financing deals YTD (9.0%) at $20,995 avg. Target 15% mix."
+    ],
+    "actionPlan": {
+      "thisWeek": [
+        "Invoice Immediately: $123K, 6 jobs marked Ready to Invoice.",
+        "Accounting Kickback Blitz: $170K, 9 jobs kicked back; cross-functional meeting w/ accounting + sales ops.",
+        "Columbus Pipeline Kickback Review, meet with branch leadership.",
+        "Production Review Surge Plan, 130 deals ($2.32M) in queue."
+      ],
+      "thisMonth": [
+        "Supplement Escalation SOP, 7/14/30 day cadence with carrier escalation.",
+        "Completed-to-Billing SLA, 100% invoiced within 21 days.",
+        "Repair Triage Pilot in markets where repair rate exceeds 25%.",
+        "Financing Training, peer training led by top financing reps. Target 15% mix."
+      ],
+      "thisQuarter": [
+        "Add Kickback Reason field to accounting workflow.",
+        "Repair Business Decision, 272 repairs YTD at ~$1,632 avg.",
+        "Ops Capacity Planning, May hit 55 deals; summer typically exceeds spring."
+      ]
+    }
+  }
+}

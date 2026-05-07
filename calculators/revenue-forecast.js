@@ -1,15 +1,18 @@
 /* ============================================================
-   FEAZEL CALCULATOR - Revenue Forecast (V5 LOCKED, Python shell)
+   FEAZEL CALCULATOR - Revenue Forecast (V5 baseline, Python shell)
    ----------------------------------------------------------------
    This calculator does NOT re-implement the V5 math.
    It shells out to the locked Python implementation:
      1. refresh_v5.py        (the V5 model)
      2. build_dashboard_v5.py (Greg's dashboard builder, used as a sanity check)
      3. lib/v5_to_json.py    (companion script that emits REVENUE_FORECAST JSON)
-   See inputs/revenue-forecast/RULES.md for full methodology.
+   See inputs/residential/revenue-forecast/RULES.md for full methodology.
 
    ───────────────────────────────────────────────────────────────
-   STATUS: SHELL WRAPPER · METHODOLOGY V5 LOCKED 2026-04-19
+   STATUS: SHELL WRAPPER · V5 BASELINE LOCKED 2026-04-19
+            (cycle and same-month conversion UNLOCKED 2026-04-30,
+             MMU REMOVED 2026-04-30, NetSuite invoicing LOCKED
+             2026-05-04 — see V5_CONSTANTS.lockHistory below)
    ───────────────────────────────────────────────────────────────
 
    Behavior:
@@ -33,7 +36,9 @@ const netsuite = require('./lib/netsuite-invoices');
 const v5Crosscheck = require('./lib/v5-excel-crosscheck');
 
 const PROJECT_ID = 'revenue-forecast';
-const VERSION = 'V5-locked-2026-04-19-shell-1.0';
+// Version string format: V5-baseline-<YYYY-MM-DD of last lock change>-shell-<wrapper rev>
+// Last lock change: 2026-05-04 (NetSuite invoicing canonical, closed-month auto-detection).
+const VERSION = 'V5-baseline-2026-05-04-shell-1.1';
 const REPO_ROOT = path.join(__dirname, '..');
 // Defaults point at residential. Pipeline overrides via opts.inputDir + opts.snapshotPath per LOB.
 const DEFAULT_INPUT_DIR = path.join(REPO_ROOT, 'inputs', 'residential', PROJECT_ID);
@@ -41,11 +46,27 @@ const DEFAULT_SNAPSHOT_PATH = path.join(REPO_ROOT, 'redesign', 'residential', 's
 const LIB_DIR = path.join(__dirname, 'lib');
 
 // Python source lives outside the repo (Greg's Forecasting Process folder).
-// The wrapper looks here first; if missing, the workspace mount may also expose it.
+// Resolution order:
+//   1. FEAZEL_FORECAST_SRC env var (use this in CI / shared dev environments).
+//   2. <homedir>/Documents/Claude/Projects/Forecasting Process (Greg's mac).
+//   3. <homedir>/Forecasting Process (alternate developer convention).
+//   4. Cowork workspace mounts: any /sessions/*/mnt/Forecasting Process path
+//      that happens to exist in the current sandbox. Discovered at runtime
+//      so we don't ship a stale session ID in checked-in code.
+function discoverWorkspaceMounts() {
+  const mountsRoot = '/sessions';
+  if (!fs.existsSync(mountsRoot)) return [];
+  try {
+    return fs.readdirSync(mountsRoot)
+      .map(s => path.join(mountsRoot, s, 'mnt', 'Forecasting Process'))
+      .filter(p => { try { return fs.existsSync(p); } catch (e) { return false; } });
+  } catch (e) { return []; }
+}
 const PYTHON_SOURCE_DIR_CANDIDATES = [
-  '/sessions/confident-affectionate-turing/mnt/Forecasting Process',
   process.env.FEAZEL_FORECAST_SRC || '',
   path.join(os.homedir(), 'Documents', 'Claude', 'Projects', 'Forecasting Process'),
+  path.join(os.homedir(), 'Forecasting Process'),
+  ...discoverWorkspaceMounts()
 ].filter(Boolean);
 
 const REQUIRED_PY_FILES = ['refresh_v5.py', 'build_dashboard_v5.py'];

@@ -1,0 +1,1777 @@
+{
+  "_source": "calculator/installs-ytd.js v1.0-rules-encoded",
+  "title": "Residential Installs YTD",
+  "subtitle": "Invoiced Jobs - Jan 06, 2026 - May 05, 2026 - De-Duplicated at Job Level - 1,127 Jobs - 14 Markets - 28 PMs",
+  "generated": "2026-05-07",
+  "headerMeta": {
+    "trueRevenue": 20926817.06,
+    "uniqueJobs": 1127,
+    "markets": 14,
+    "pms": 28,
+    "medianComplete": 22.6,
+    "avgStart": 28,
+    "multiTradeJobs": 318,
+    "singleTradeJobs": 809,
+    "multiTradePct": 28.2
+  },
+  "tabs": [
+    {
+      "id": "index",
+      "label": "Overview"
+    },
+    {
+      "id": "kpis",
+      "label": "KPIs"
+    },
+    {
+      "id": "trends",
+      "label": "Monthly Trends"
+    },
+    {
+      "id": "multi-trade",
+      "label": "Multi-Trade"
+    },
+    {
+      "id": "markets",
+      "label": "Markets"
+    },
+    {
+      "id": "pms",
+      "label": "Project Managers"
+    },
+    {
+      "id": "work-types",
+      "label": "Work Types"
+    },
+    {
+      "id": "creators",
+      "label": "Created By"
+    },
+    {
+      "id": "findings",
+      "label": "Key Findings"
+    }
+  ],
+  "kpis": [
+    {
+      "label": "True Revenue",
+      "value": "$20.93M",
+      "sub": "1,127 unique jobs invoiced"
+    },
+    {
+      "label": "Avg Contract Value",
+      "value": "$18,569",
+      "sub": "Per job (deduped)"
+    },
+    {
+      "label": "Median Days to Complete",
+      "value": "22.6d",
+      "sub": "Job-level median"
+    },
+    {
+      "label": "Avg Days to Start",
+      "value": "28.0d",
+      "sub": "Sale to crew on-site"
+    },
+    {
+      "label": "Multi-Trade Jobs",
+      "value": "318",
+      "sub": "28.2% of book"
+    },
+    {
+      "label": "Single-Trade Jobs",
+      "value": "809",
+      "sub": "71.8% of book"
+    }
+  ],
+  "kpisMultiTrade": [
+    {
+      "label": "Multi-Trade Avg Contract",
+      "value": "$25,920",
+      "sub": "+65.3% vs single-trade"
+    },
+    {
+      "label": "Single-Trade Avg Contract",
+      "value": "$15,679",
+      "sub": "Baseline ticket"
+    },
+    {
+      "label": "Completion Time Gap",
+      "value": "+28.0d",
+      "sub": "MT 45.6d vs ST 17.5d"
+    }
+  ],
+  "monthly": [
+    {
+      "m": "2026-01",
+      "label": "January",
+      "key": "2026-01",
+      "rev": 3275604.18,
+      "jobs": 147,
+      "med": 46.6,
+      "start": 25.2
+    },
+    {
+      "m": "2026-02",
+      "label": "February",
+      "key": "2026-02",
+      "rev": 2694605.54,
+      "jobs": 139,
+      "med": 32.5,
+      "start": 32.9
+    },
+    {
+      "m": "2026-03",
+      "label": "March",
+      "key": "2026-03",
+      "rev": 5906931.91,
+      "jobs": 335,
+      "med": 23.5,
+      "start": 33.7
+    },
+    {
+      "m": "2026-04",
+      "label": "April",
+      "key": "2026-04",
+      "rev": 7855768.45,
+      "jobs": 442,
+      "med": 17.6,
+      "start": 25
+    },
+    {
+      "m": "2026-05",
+      "label": "May",
+      "key": "2026-05",
+      "rev": 1193906.98,
+      "jobs": 64,
+      "med": 19.6,
+      "start": 18.2
+    }
+  ],
+  "charts": [
+    {
+      "id": "ch_monthly",
+      "labels": [
+        "2026-01",
+        "2026-02",
+        "2026-03",
+        "2026-04",
+        "2026-05"
+      ],
+      "datasets": [
+        {
+          "label": "Revenue",
+          "data": [
+            3275604.18,
+            2694605.54,
+            5906931.91,
+            7855768.45,
+            1193906.98
+          ]
+        },
+        {
+          "label": "Jobs",
+          "data": [
+            147,
+            139,
+            335,
+            442,
+            64
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ch_efficiency",
+      "labels": [
+        "2026-01",
+        "2026-02",
+        "2026-03",
+        "2026-04",
+        "2026-05"
+      ],
+      "datasets": [
+        {
+          "label": "Median Days to Complete",
+          "data": [
+            46.6,
+            32.5,
+            23.5,
+            17.6,
+            19.6
+          ]
+        },
+        {
+          "label": "Avg Days to Start",
+          "data": [
+            25.2,
+            32.9,
+            33.7,
+            25,
+            18.2
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ch_jobmix",
+      "labels": [
+        "Job Mix"
+      ],
+      "datasets": [
+        {
+          "label": "Multi-Trade",
+          "data": [
+            318
+          ]
+        },
+        {
+          "label": "Single-Trade",
+          "data": [
+            809
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ch_combos",
+      "labels": [
+        "Gutters + Roofing",
+        "Gutters + Siding",
+        "Gutters + Roofing + Siding",
+        "Roofing + Siding",
+        "Masonry + Roofing",
+        "Metal + Roofing",
+        "Gutters + Metal + Roofing",
+        "Roofing + Windows"
+      ],
+      "datasets": [
+        {
+          "label": "Jobs",
+          "data": [
+            211,
+            22,
+            15,
+            11,
+            10,
+            10,
+            5,
+            4
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ch_mt_by_market",
+      "labels": [
+        "Columbus",
+        "Nashville",
+        "Detroit Metro",
+        "DC Metro",
+        "Dayton",
+        "Cincinnati",
+        "Raleigh",
+        "Richmond",
+        "Knoxville",
+        "Cleveland",
+        "Greenville",
+        "NOVA",
+        "Greensboro",
+        "Grand Rapids"
+      ],
+      "datasets": [
+        {
+          "label": "MT %",
+          "data": [
+            25.5,
+            31.6,
+            28.3,
+            31,
+            23.8,
+            29.9,
+            15.3,
+            35.6,
+            35.2,
+            33.9,
+            22.2,
+            41.7,
+            100,
+            50
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ch_mt_vs_st",
+      "labels": [
+        "Columbus",
+        "Nashville",
+        "Detroit Metro",
+        "DC Metro",
+        "Dayton",
+        "Cincinnati",
+        "Raleigh",
+        "Richmond",
+        "Knoxville",
+        "Cleveland",
+        "Greenville",
+        "NOVA",
+        "Greensboro",
+        "Grand Rapids"
+      ],
+      "datasets": [
+        {
+          "label": "MT Median",
+          "data": [
+            69.1,
+            26.5,
+            43.7,
+            40.4,
+            54.7,
+            50.1,
+            64.4,
+            56.4,
+            28.5,
+            30.4,
+            38,
+            66.6,
+            346.7,
+            31.6
+          ]
+        },
+        {
+          "label": "ST Median",
+          "data": [
+            12.4,
+            18.5,
+            21.5,
+            22.6,
+            25.6,
+            18.6,
+            21.5,
+            10.1,
+            17.5,
+            16.6,
+            20.7,
+            32.6,
+            0,
+            20.6
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ch_mk_rev",
+      "labels": [
+        "Columbus",
+        "Nashville",
+        "Detroit Metro",
+        "DC Metro",
+        "Dayton",
+        "Cincinnati",
+        "Raleigh",
+        "Richmond",
+        "Knoxville",
+        "Cleveland",
+        "Greenville",
+        "NOVA",
+        "Greensboro",
+        "Grand Rapids"
+      ],
+      "datasets": [
+        {
+          "label": "Revenue",
+          "data": [
+            6146980.94,
+            2459007.73,
+            2440240.6,
+            1615474.46,
+            1396751.37,
+            1369183.73,
+            1302689.39,
+            1152891.85,
+            1022490.26,
+            757880.16,
+            742330.19,
+            469773.97,
+            33694.41,
+            17428
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ch_mk_days",
+      "labels": [
+        "Columbus",
+        "Nashville",
+        "Detroit Metro",
+        "DC Metro",
+        "Dayton",
+        "Cincinnati",
+        "Raleigh",
+        "Richmond",
+        "Knoxville",
+        "Cleveland",
+        "Greenville",
+        "NOVA",
+        "Greensboro",
+        "Grand Rapids"
+      ],
+      "datasets": [
+        {
+          "label": "Median Days",
+          "data": [
+            17.6,
+            21.6,
+            27.6,
+            25.4,
+            30,
+            28.6,
+            27.7,
+            22.4,
+            23.1,
+            21.1,
+            22.5,
+            54,
+            346.7,
+            26.1
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ch_pm_top",
+      "labels": [
+        "Eric Isakov",
+        "Joseph Yager",
+        "Mason Bryant",
+        "Brandon Harter",
+        "Kaden Carter",
+        "Landon Little",
+        "Richard Williams",
+        "Alejandro Alvarado",
+        "Abraham Santiago",
+        "Galo Munive",
+        "Alex Dubanoski",
+        "Brandon Skrzypek",
+        "Joseph Jones",
+        "Levi Nieman",
+        "Brady Weingartner"
+      ],
+      "datasets": [
+        {
+          "label": "Fractional Revenue",
+          "data": [
+            1572998.11,
+            1453608.82,
+            1438022.98,
+            1315830.81,
+            1309091.78,
+            1107279.6,
+            1015843.62,
+            988499.75,
+            951087.4,
+            945425.09,
+            907922.8,
+            905982.38,
+            904950.52,
+            830819.42,
+            736434.86
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ch_pm_scatter",
+      "labels": [
+        "Eric Isakov",
+        "Joseph Yager",
+        "Mason Bryant",
+        "Brandon Harter",
+        "Kaden Carter",
+        "Landon Little",
+        "Richard Williams",
+        "Alejandro Alvarado",
+        "Abraham Santiago",
+        "Galo Munive",
+        "Alex Dubanoski",
+        "Brandon Skrzypek",
+        "Joseph Jones",
+        "Levi Nieman",
+        "Brady Weingartner",
+        "Shawn Oehlstrom",
+        "Jason Andrews",
+        "Cody Mitchell",
+        "Drew Bailey",
+        "Austin Weingartner",
+        "Chad Williams",
+        "Daniel Galli",
+        "Adam Marrero",
+        "(Unassigned)",
+        "Neil Laux",
+        "Michael Blevins",
+        "Justin Milliron",
+        "Chris Atkins"
+      ],
+      "datasets": [
+        {
+          "label": "PMs",
+          "data": [
+            {
+              "x": 29.5,
+              "y": 1572998.11,
+              "wos": 76,
+              "name": "Eric Isakov"
+            },
+            {
+              "x": 30.5,
+              "y": 1453608.82,
+              "wos": 117,
+              "name": "Joseph Yager"
+            },
+            {
+              "x": 25.5,
+              "y": 1438022.98,
+              "wos": 92,
+              "name": "Mason Bryant"
+            },
+            {
+              "x": 23.7,
+              "y": 1315830.81,
+              "wos": 69,
+              "name": "Brandon Harter"
+            },
+            {
+              "x": 28.5,
+              "y": 1309091.78,
+              "wos": 75,
+              "name": "Kaden Carter"
+            },
+            {
+              "x": 28.5,
+              "y": 1107279.6,
+              "wos": 68,
+              "name": "Landon Little"
+            },
+            {
+              "x": 39.6,
+              "y": 1015843.62,
+              "wos": 76,
+              "name": "Richard Williams"
+            },
+            {
+              "x": 25.4,
+              "y": 988499.75,
+              "wos": 75,
+              "name": "Alejandro Alvarado"
+            },
+            {
+              "x": 23.6,
+              "y": 951087.4,
+              "wos": 48,
+              "name": "Abraham Santiago"
+            },
+            {
+              "x": 34.5,
+              "y": 945425.09,
+              "wos": 75,
+              "name": "Galo Munive"
+            },
+            {
+              "x": 14.6,
+              "y": 907922.8,
+              "wos": 66,
+              "name": "Alex Dubanoski"
+            },
+            {
+              "x": 32,
+              "y": 905982.38,
+              "wos": 46,
+              "name": "Brandon Skrzypek"
+            },
+            {
+              "x": 22.1,
+              "y": 904950.52,
+              "wos": 67,
+              "name": "Joseph Jones"
+            },
+            {
+              "x": 29.7,
+              "y": 830819.42,
+              "wos": 48,
+              "name": "Levi Nieman"
+            },
+            {
+              "x": 25.6,
+              "y": 736434.86,
+              "wos": 38,
+              "name": "Brady Weingartner"
+            },
+            {
+              "x": 21.1,
+              "y": 736013.17,
+              "wos": 81,
+              "name": "Shawn Oehlstrom"
+            },
+            {
+              "x": 28.4,
+              "y": 677909.8,
+              "wos": 91,
+              "name": "Jason Andrews"
+            },
+            {
+              "x": 24,
+              "y": 533173.92,
+              "wos": 23,
+              "name": "Cody Mitchell"
+            },
+            {
+              "x": 5.6,
+              "y": 491657.14,
+              "wos": 128,
+              "name": "Drew Bailey"
+            },
+            {
+              "x": 31.1,
+              "y": 461133.14,
+              "wos": 29,
+              "name": "Austin Weingartner"
+            },
+            {
+              "x": 65,
+              "y": 376232.44,
+              "wos": 38,
+              "name": "Chad Williams"
+            },
+            {
+              "x": 69.7,
+              "y": 359460.88,
+              "wos": 36,
+              "name": "Daniel Galli"
+            },
+            {
+              "x": 17.7,
+              "y": 300173.44,
+              "wos": 18,
+              "name": "Adam Marrero"
+            },
+            {
+              "x": 28.1,
+              "y": 168146.65,
+              "wos": 22,
+              "name": "(Unassigned)"
+            },
+            {
+              "x": 52.6,
+              "y": 122527.24,
+              "wos": 8,
+              "name": "Neil Laux"
+            },
+            {
+              "x": 16.1,
+              "y": 96019.14,
+              "wos": 7,
+              "name": "Michael Blevins"
+            },
+            {
+              "x": 107.5,
+              "y": 68552.43,
+              "wos": 9,
+              "name": "Justin Milliron"
+            },
+            {
+              "x": 62.9,
+              "y": 25111,
+              "wos": 6,
+              "name": "Chris Atkins"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ch_wt_pie",
+      "labels": [
+        "Roofing",
+        "Gutters",
+        "Siding",
+        "Metal",
+        "Windows",
+        "Masonry",
+        "Rack Mounted Solar",
+        "Painting",
+        "Electrical",
+        "Flat Roof",
+        "GAF Solar",
+        "Other",
+        "Unspecified",
+        "Door"
+      ],
+      "datasets": [
+        {
+          "label": "Revenue",
+          "data": [
+            15592830.15,
+            3073743.21,
+            907439.7,
+            378035.09,
+            359655.52,
+            256070.04,
+            122992.11,
+            98078.62,
+            39423.33,
+            32090.81,
+            31695,
+            27673.83,
+            4786.5,
+            2303.15
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ch_wt_days",
+      "labels": [
+        "Roofing",
+        "Gutters",
+        "Siding",
+        "Metal",
+        "Windows",
+        "Masonry",
+        "Rack Mounted Solar",
+        "Painting",
+        "Electrical",
+        "Flat Roof",
+        "GAF Solar",
+        "Other",
+        "Unspecified",
+        "Door"
+      ],
+      "datasets": [
+        {
+          "label": "Median Days",
+          "data": [
+            22.7,
+            33.7,
+            59,
+            148.6,
+            84,
+            105.6,
+            58.7,
+            108.6,
+            76.1,
+            149.7,
+            84.7,
+            43.7,
+            84.4,
+            67.5
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ch_cb_vol",
+      "labels": [
+        "Brandon Vera",
+        "David Schwan",
+        "Amanda Wade",
+        "Bradley Essex",
+        "Thomas Hayes",
+        "Morgan Valois",
+        "Kayla Wright",
+        "Brenda Dixon"
+      ],
+      "datasets": [
+        {
+          "label": "Jobs",
+          "data": [
+            348,
+            258,
+            236,
+            151,
+            104,
+            17,
+            6,
+            7
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ch_cb_eff",
+      "labels": [
+        "Brandon Vera",
+        "David Schwan",
+        "Amanda Wade",
+        "Bradley Essex",
+        "Thomas Hayes",
+        "Morgan Valois",
+        "Kayla Wright",
+        "Brenda Dixon"
+      ],
+      "datasets": [
+        {
+          "label": "Median Complete",
+          "data": [
+            32,
+            22.6,
+            12,
+            27.5,
+            24.6,
+            117.4,
+            103.2,
+            25.4
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ch_cb_mt",
+      "labels": [
+        "Brandon Vera",
+        "David Schwan",
+        "Amanda Wade",
+        "Bradley Essex",
+        "Thomas Hayes",
+        "Morgan Valois",
+        "Kayla Wright",
+        "Brenda Dixon"
+      ],
+      "datasets": [
+        {
+          "label": "MT %",
+          "data": [
+            34.5,
+            30.6,
+            14.4,
+            30.5,
+            23.1,
+            64.7,
+            33.3,
+            28.6
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ch_cb_scatter",
+      "labels": [
+        "Brandon Vera",
+        "David Schwan",
+        "Amanda Wade",
+        "Bradley Essex",
+        "Thomas Hayes",
+        "Morgan Valois",
+        "Kayla Wright",
+        "Brenda Dixon"
+      ],
+      "datasets": [
+        {
+          "label": "Creators",
+          "data": [
+            {
+              "x": 32,
+              "y": 19684.9,
+              "jobs": 348,
+              "name": "Brandon Vera"
+            },
+            {
+              "x": 22.6,
+              "y": 22232.27,
+              "jobs": 258,
+              "name": "David Schwan"
+            },
+            {
+              "x": 12,
+              "y": 14242.07,
+              "jobs": 236,
+              "name": "Amanda Wade"
+            },
+            {
+              "x": 27.5,
+              "y": 17423.66,
+              "jobs": 151,
+              "name": "Bradley Essex"
+            },
+            {
+              "x": 24.6,
+              "y": 15355.76,
+              "jobs": 104,
+              "name": "Thomas Hayes"
+            },
+            {
+              "x": 117.4,
+              "y": 25689.43,
+              "jobs": 17,
+              "name": "Morgan Valois"
+            },
+            {
+              "x": 103.2,
+              "y": 30826.69,
+              "jobs": 6,
+              "name": "Kayla Wright"
+            },
+            {
+              "x": 25.4,
+              "y": 18537.8,
+              "jobs": 7,
+              "name": "Brenda Dixon"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "tables": [
+    {
+      "id": "tbl_markets",
+      "title": "All markets",
+      "headers": [
+        "Market",
+        "Jobs",
+        "Revenue",
+        "Avg Contract",
+        "Median Complete",
+        "Avg Start",
+        "MT %",
+        "MT Median",
+        "ST Median"
+      ],
+      "rows": [
+        [
+          "Columbus",
+          368,
+          6146980.94,
+          16703.75,
+          17.6,
+          34.2,
+          25.5,
+          69.1,
+          12.4
+        ],
+        [
+          "Nashville",
+          98,
+          2459007.73,
+          25091.92,
+          21.6,
+          18.3,
+          31.6,
+          26.5,
+          18.5
+        ],
+        [
+          "Detroit Metro",
+          145,
+          2440240.6,
+          16829.25,
+          27.6,
+          37.9,
+          28.3,
+          43.7,
+          21.5
+        ],
+        [
+          "DC Metro",
+          87,
+          1615474.46,
+          18568.67,
+          25.4,
+          23.4,
+          31,
+          40.4,
+          22.6
+        ],
+        [
+          "Dayton",
+          80,
+          1396751.37,
+          17459.39,
+          30,
+          23.4,
+          23.8,
+          54.7,
+          25.6
+        ],
+        [
+          "Cincinnati",
+          67,
+          1369183.73,
+          20435.58,
+          28.6,
+          26,
+          29.9,
+          50.1,
+          18.6
+        ],
+        [
+          "Raleigh",
+          59,
+          1302689.39,
+          22079.48,
+          27.7,
+          23.4,
+          15.3,
+          64.4,
+          21.5
+        ],
+        [
+          "Richmond",
+          59,
+          1152891.85,
+          19540.54,
+          22.4,
+          16.6,
+          35.6,
+          56.4,
+          10.1
+        ],
+        [
+          "Knoxville",
+          54,
+          1022490.26,
+          18935,
+          23.1,
+          19.6,
+          35.2,
+          28.5,
+          17.5
+        ],
+        [
+          "Cleveland",
+          56,
+          757880.16,
+          13533.57,
+          21.1,
+          35.3,
+          33.9,
+          30.4,
+          16.6
+        ],
+        [
+          "Greenville",
+          27,
+          742330.19,
+          27493.71,
+          22.5,
+          24.1,
+          22.2,
+          38,
+          20.7
+        ],
+        [
+          "NOVA",
+          24,
+          469773.97,
+          19573.92,
+          54,
+          25.3,
+          41.7,
+          66.6,
+          32.6
+        ],
+        [
+          "Greensboro",
+          1,
+          33694.41,
+          33694.41,
+          346.7,
+          38.6,
+          100,
+          346.7,
+          0
+        ],
+        [
+          "Grand Rapids",
+          2,
+          17428,
+          8714,
+          26.1,
+          14.6,
+          50,
+          31.6,
+          20.6
+        ]
+      ]
+    },
+    {
+      "id": "tbl_pms",
+      "title": "All PMs (5+ work orders)",
+      "headers": [
+        "PM",
+        "WOs",
+        "Jobs",
+        "Fractional Revenue",
+        "Rev / WO",
+        "Median Complete",
+        "Avg Start"
+      ],
+      "rows": [
+        [
+          "Eric Isakov",
+          76,
+          64,
+          1572998.11,
+          20697.34,
+          29.5,
+          33.1
+        ],
+        [
+          "Joseph Yager",
+          117,
+          96,
+          1453608.82,
+          12424.01,
+          30.5,
+          26.3
+        ],
+        [
+          "Mason Bryant",
+          92,
+          78,
+          1438022.98,
+          15630.68,
+          25.5,
+          29.3
+        ],
+        [
+          "Brandon Harter",
+          69,
+          51,
+          1315830.81,
+          19070.01,
+          23.7,
+          17.8
+        ],
+        [
+          "Kaden Carter",
+          75,
+          61,
+          1309091.78,
+          17454.56,
+          28.5,
+          23.9
+        ],
+        [
+          "Landon Little",
+          68,
+          63,
+          1107279.6,
+          16283.52,
+          28.5,
+          33.8
+        ],
+        [
+          "Richard Williams",
+          76,
+          71,
+          1015843.62,
+          13366.36,
+          39.6,
+          33.5
+        ],
+        [
+          "Alejandro Alvarado",
+          75,
+          57,
+          988499.75,
+          13180,
+          25.4,
+          21.3
+        ],
+        [
+          "Abraham Santiago",
+          48,
+          42,
+          951087.4,
+          19814.32,
+          23.6,
+          19.8
+        ],
+        [
+          "Galo Munive",
+          75,
+          57,
+          945425.09,
+          12605.67,
+          34.5,
+          27.3
+        ],
+        [
+          "Alex Dubanoski",
+          66,
+          49,
+          907922.8,
+          13756.41,
+          14.6,
+          15.9
+        ],
+        [
+          "Brandon Skrzypek",
+          46,
+          46,
+          905982.38,
+          19695.27,
+          32,
+          32.3
+        ],
+        [
+          "Joseph Jones",
+          67,
+          50,
+          904950.52,
+          13506.72,
+          22.1,
+          18.4
+        ],
+        [
+          "Levi Nieman",
+          48,
+          47,
+          830819.42,
+          17308.74,
+          29.7,
+          44.2
+        ],
+        [
+          "Brady Weingartner",
+          38,
+          38,
+          736434.86,
+          19379.86,
+          25.6,
+          21.9
+        ],
+        [
+          "Shawn Oehlstrom",
+          81,
+          56,
+          736013.17,
+          9086.58,
+          21.1,
+          35.3
+        ],
+        [
+          "Jason Andrews",
+          91,
+          79,
+          677909.8,
+          7449.56,
+          28.4,
+          39
+        ],
+        [
+          "Cody Mitchell",
+          23,
+          20,
+          533173.92,
+          23181.47,
+          24,
+          21.2
+        ],
+        [
+          "Drew Bailey",
+          128,
+          127,
+          491657.14,
+          3841.07,
+          5.6,
+          28
+        ],
+        [
+          "Austin Weingartner",
+          29,
+          26,
+          461133.14,
+          15901.14,
+          31.1,
+          29.9
+        ],
+        [
+          "Chad Williams",
+          38,
+          22,
+          376232.44,
+          9900.85,
+          65,
+          23.1
+        ],
+        [
+          "Daniel Galli",
+          36,
+          25,
+          359460.88,
+          9985.02,
+          69.7,
+          43.5
+        ],
+        [
+          "Adam Marrero",
+          18,
+          15,
+          300173.44,
+          16676.3,
+          17.7,
+          22.6
+        ],
+        [
+          "(Unassigned)",
+          22,
+          18,
+          168146.65,
+          7643.03,
+          28.1,
+          47
+        ],
+        [
+          "Neil Laux",
+          8,
+          6,
+          122527.24,
+          15315.91,
+          52.6,
+          42.1
+        ],
+        [
+          "Michael Blevins",
+          7,
+          6,
+          96019.14,
+          13717.02,
+          16.1,
+          17.4
+        ],
+        [
+          "Justin Milliron",
+          9,
+          8,
+          68552.43,
+          7616.94,
+          107.5,
+          70.9
+        ],
+        [
+          "Chris Atkins",
+          6,
+          4,
+          25111,
+          4185.17,
+          62.9,
+          43.8
+        ]
+      ]
+    },
+    {
+      "id": "tbl_worktypes",
+      "title": "Work type detail",
+      "headers": [
+        "Service Object",
+        "WOs",
+        "Fractional Revenue",
+        "Avg Contract / WO",
+        "Median Complete"
+      ],
+      "rows": [
+        [
+          "Roofing",
+          1025,
+          15592830.15,
+          15212.52,
+          22.7
+        ],
+        [
+          "Gutters",
+          327,
+          3073743.21,
+          9399.83,
+          33.7
+        ],
+        [
+          "Siding",
+          94,
+          907439.7,
+          9653.61,
+          59
+        ],
+        [
+          "Metal",
+          21,
+          378035.09,
+          18001.67,
+          148.6
+        ],
+        [
+          "Windows",
+          26,
+          359655.52,
+          13832.9,
+          84
+        ],
+        [
+          "Masonry",
+          20,
+          256070.04,
+          12803.5,
+          105.6
+        ],
+        [
+          "Rack Mounted Solar",
+          14,
+          122992.11,
+          8785.15,
+          58.7
+        ],
+        [
+          "Painting",
+          5,
+          98078.62,
+          19615.72,
+          108.6
+        ],
+        [
+          "Electrical",
+          2,
+          39423.33,
+          19711.67,
+          76.1
+        ],
+        [
+          "Flat Roof",
+          3,
+          32090.81,
+          10696.94,
+          149.7
+        ],
+        [
+          "GAF Solar",
+          1,
+          31695,
+          31695,
+          84.7
+        ],
+        [
+          "Other",
+          3,
+          27673.83,
+          9224.61,
+          43.7
+        ],
+        [
+          "Unspecified",
+          1,
+          4786.5,
+          4786.5,
+          84.4
+        ],
+        [
+          "Door",
+          1,
+          2303.15,
+          2303.15,
+          67.5
+        ]
+      ]
+    },
+    {
+      "id": "tbl_creators",
+      "title": "Creator detail",
+      "headers": [
+        "Creator",
+        "Jobs",
+        "Revenue",
+        "Avg Contract",
+        "Median Complete",
+        "Avg Start",
+        "MT %",
+        "Rev / Job"
+      ],
+      "rows": [
+        [
+          "Brandon Vera",
+          348,
+          6850344.83,
+          19684.9,
+          "32d",
+          "27.5d",
+          34.5,
+          19684.9
+        ],
+        [
+          "David Schwan",
+          258,
+          5735926.63,
+          22232.27,
+          "22.6d",
+          "26.1d",
+          30.6,
+          22232.27
+        ],
+        [
+          "Amanda Wade",
+          236,
+          3361128.82,
+          14242.07,
+          "12d",
+          "29.7d",
+          14.4,
+          14242.07
+        ],
+        [
+          "Bradley Essex",
+          151,
+          2630973.12,
+          17423.66,
+          "27.5d",
+          "26.5d",
+          30.5,
+          17423.66
+        ],
+        [
+          "Thomas Hayes",
+          104,
+          1596998.61,
+          15355.76,
+          "24.6d",
+          "29.6d",
+          23.1,
+          15355.76
+        ],
+        [
+          "Morgan Valois",
+          17,
+          436720.32,
+          25689.43,
+          "117.4d",
+          "67.6d",
+          64.7,
+          25689.43
+        ],
+        [
+          "Kayla Wright",
+          6,
+          184960.11,
+          30826.69,
+          "103.2d",
+          "17.5d",
+          33.3,
+          30826.69
+        ],
+        [
+          "Brenda Dixon",
+          7,
+          129764.62,
+          18537.8,
+          "25.4d",
+          "15.5d",
+          28.6,
+          18537.8
+        ]
+      ]
+    },
+    {
+      "id": "creatorMarketHeatmap",
+      "title": "Creator x Market Volume Heatmap (Jobs)",
+      "headers": [
+        "Creator",
+        "Cincinnati",
+        "Cleveland",
+        "Columbus",
+        "DC Metro",
+        "Dayton",
+        "Detroit Metro",
+        "Grand Rapids",
+        "Greensboro",
+        "Greenville",
+        "Knoxville",
+        "NOVA",
+        "Nashville",
+        "Raleigh",
+        "Richmond",
+        "Total"
+      ],
+      "rows": [
+        [
+          "Amanda Wade",
+          0,
+          0,
+          165,
+          0,
+          1,
+          0,
+          0,
+          0,
+          21,
+          0,
+          0,
+          1,
+          48,
+          0,
+          236
+        ],
+        [
+          "Bradley Essex",
+          46,
+          46,
+          2,
+          0,
+          55,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          151
+        ],
+        [
+          "Brandon Vera",
+          8,
+          2,
+          95,
+          87,
+          21,
+          36,
+          0,
+          0,
+          6,
+          0,
+          24,
+          0,
+          10,
+          59,
+          348
+        ],
+        [
+          "Brenda Dixon",
+          0,
+          1,
+          6,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          7
+        ],
+        [
+          "David Schwan",
+          10,
+          2,
+          95,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          54,
+          0,
+          97,
+          0,
+          0,
+          258
+        ],
+        [
+          "Kayla Wright",
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          6
+        ],
+        [
+          "Morgan Valois",
+          0,
+          2,
+          0,
+          0,
+          0,
+          15,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          17
+        ],
+        [
+          "Thomas Hayes",
+          3,
+          3,
+          1,
+          0,
+          3,
+          92,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          104
+        ],
+        [
+          "Total",
+          67,
+          56,
+          368,
+          87,
+          80,
+          145,
+          2,
+          1,
+          27,
+          54,
+          24,
+          98,
+          59,
+          59,
+          1127
+        ]
+      ]
+    }
+  ],
+  "commentary": {
+    "areasOfConcern": [
+      "Daniel Galli: 36 WOs, $359K revenue, 69.7-day median complete, top-volume PM with the slowest cycle in the network.",
+      "Multi-trade penalty is severe in 3 markets: Columbus MT 69.1d vs ST 12.4d, Richmond MT 56.4d vs ST 10.1d, Raleigh MT 64.4d vs ST 21.5d.",
+      "Days to Start averages 28.0 days company-wide and 37.9 days in Detroit Metro (a sold job sits weeks before a crew touches it)."
+    ],
+    "watchList": [
+      "Drew Bailey: 128 WOs, $3,841 revenue per WO, the lowest revenue density of any active high-volume PM.",
+      "Gutters-only work runs at 33.7-day median complete versus 22.7 days for roofing, 48% slower cycle on the lowest-priced trade.",
+      "Amanda Wade creates 236 jobs at $14,242 average contract and 14.4% multi-trade attach, well below the top creator."
+    ],
+    "positivesToBuildOn": [
+      "April delivered $7.86M across 442 invoiced jobs at 17.6-day median complete, the highest revenue month and one of the fastest cycles of the year.",
+      "Columbus hits 17.6-day median complete and a $16,704 average contract on 368 jobs.",
+      "Multi-trade jobs carry a $25,920 average contract versus $15,679 for single-trade, a 65% revenue lift per job.",
+      "Columbus is the best-balanced market: 17.6-day median complete, 25.5% multi-trade attach, $16,704 average contract on 368 jobs."
+    ]
+  }
+}

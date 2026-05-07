@@ -6,29 +6,65 @@
    appointment-aging analysis, productivity ratios, and a list
    of stuck / disproportionate WOs that need a second look.
 
-   Schema (column index in input):
-     0  Primary Resource: Name
-     1  Work Order Number
-     2  Appointment Number
-     3  Account: Account Name
-     4  Actual Start
-     5  Actual End
-     6  Actual Duration (Minutes)
-     7  Billable Time           (man-hours billed = laborers × hours)
-     8  Service Type            (Repair, ...)
-     9  Job: Final Contract Amount
-     10 Job
-     11 # Laborers
-     12 Work Order: Work Order Number  (often duplicate of col 1)
-     13 Branch Location to Service
+   Column lookup is header-based, not positional. Salesforce report
+   exports occasionally reorder columns, and the original v1 of this
+   calculator silently emitted zeros when the duration column shifted.
+   We map by header name and refuse to run if the required headers
+   are missing.
+
+   Required headers (case-insensitive, exact match):
+     - Primary Resource: Name
+     - Account: Account Name
+     - Job Number       (was "Job" in earlier exports)
+     - Service Type     (Repair, ...)
+     - Final Contract Amount
+     - Work Order Number
+     - # Laborers
+     - Billable Time              (man-hours billed = laborers × hours)
+     - Actual Start
+     - Actual End
+     - Actual Duration (Minutes)
+     - Branch Location to Service
+
+   Optional headers (used when present):
+     - Appointment Number   (older exports had this; newer don't)
    ============================================================ */
 const path = require('path');
 const fs = require('fs');
 const io = require('./lib/io');
 
 const PROJECT_ID = 'service-calls';
-const VERSION = 'Service-Calls-v1.0-2026-05-06';
+const VERSION = 'Service-Calls-v1.1-2026-05-07';
 const FY = 2026;
+
+// Required columns. We map by header name so column order in the Salesforce
+// export can change without breaking the calculator. Names below are matched
+// case-insensitively against the first row of the XLSX.
+const REQUIRED_COLUMNS = [
+  'Primary Resource: Name',
+  'Account: Account Name',
+  'Service Type',
+  'Final Contract Amount',
+  'Work Order Number',
+  '# Laborers',
+  'Billable Time',
+  'Actual Start',
+  'Actual End',
+  'Actual Duration (Minutes)',
+  'Branch Location to Service'
+];
+
+// Header aliases — older exports used different label text for the same field.
+// Each entry: canonical name → list of acceptable header strings.
+const HEADER_ALIASES = {
+  'Job Number':         ['Job Number', 'Job'],
+  'Appointment Number': ['Appointment Number']    // optional; not required
+};
+
+function findHeaderIndex(headers, candidates) {
+  const wanted = candidates.map(s => s.toLowerCase());
+  return headers.findIndex(h => wanted.indexOf(String(h || '').trim().toLowerCase()) !== -1);
+}
 
 const BRANCH_REMAP = { 'detroit metro': 'Detroit', 'nova': 'DC Metro' };
 function normBranch(loc) {
@@ -67,6 +103,17 @@ function fmtMoney(v) {
 }
 function round(v) { return Math.round(v * 100) / 100; }
 function round1(v) { return Math.round(v * 10) / 10; }
+
+// Format a Date as "YYYY-MM-DD HH:MM" in LOCAL time. Using toISOString() here
+// would convert to UTC, which makes the snapshot non-portable across
+// timezones (sandbox is UTC, Greg's Mac is EDT/EST). Salesforce exports the
+// timestamp as local wall-clock; we want to display it the same way.
+function fmtLocalDt(d) {
+  if (!d || isNaN(d.getTime())) return null;
+  const pad = (n) => String(n).padStart(2, '0');
+  return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) +
+         ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes());
+}
 
 function findFile(inputDir) {
   if (!fs.existsSync(inputDir)) return null;
@@ -157,30 +204,59 @@ function run(opts) {
   const wb = xlsx.readFile(file.fullPath, { cellDates: false });
   const sheet = wb.Sheets[wb.SheetNames[0]];
   const raw = xlsx.utils.sheet_to_json(sheet, { header: 1, defval: null });
+  if (!raw.length) {
+    console.log('  [service-calls] empty sheet, returning stub.');
+    return emptyShape('Empty Service Appointments sheet.');
+  }
+
+  // Header-based column lookup. Required columns must exist or we bail out
+  // loudly so a silent zero-hours bug can't recur (the v1.0 trap).
+  const headers = (raw[0] || []).map(h => String(h || '').trim());
+  const colIdx = {};
+  REQUIRED_COLUMNS.forEach(name => {
+    const aliases = HEADER_ALIASES[name] || [name];
+    colIdx[name] = findHeaderIndex(headers, aliases);
+  });
+  // Job Number is required but has aliases
+  colIdx['Job Number'] = findHeaderIndex(headers, HEADER_ALIASES['Job Number']);
+  // Appointment Number is optional
+  colIdx['Appointment Number'] = findHeaderIndex(headers, HEADER_ALIASES['Appointment Number']);
+
+  const missing = REQUIRED_COLUMNS.concat(['Job Number'])
+    .filter(c => colIdx[c] === -1);
+  if (missing.length) {
+    const msg = 'Missing required columns in ' + file.name + ': ' + missing.join(', ');
+    console.error('  [service-calls] ' + msg);
+    console.error('  [service-calls] Headers seen: ' + headers.map(h => '"' + h + '"').join(', '));
+    throw new Error(msg);
+  }
 
   // Skip header row
   const rows = raw.slice(1).filter(r => Array.isArray(r) && r.some(c => c != null));
   console.log('  [service-calls] parsed ' + rows.length + ' service appointments from ' + file.name);
 
-  // Normalize records
+  // Normalize records (header-based)
+  const C = colIdx;
   const apts = rows.map(r => {
-    const start = parseDt(r[4]);
-    const end = parseDt(r[5]);
-    const minutes = parseNumber(r[6]);
+    const start = parseDt(r[C['Actual Start']]);
+    const end = parseDt(r[C['Actual End']]);
+    const minutes = parseNumber(r[C['Actual Duration (Minutes)']]);
+    const apptNum = C['Appointment Number'] !== -1
+      ? String(r[C['Appointment Number']] || '').trim() : '';
     return {
-      tech: String(r[0] || '(unassigned)').trim() || '(unassigned)',
-      wo: String(r[1] || '').trim(),
-      apptNum: String(r[2] || '').trim(),
-      account: String(r[3] || '').trim(),
+      tech:        String(r[C['Primary Resource: Name']] || '(unassigned)').trim() || '(unassigned)',
+      wo:          String(r[C['Work Order Number']] || '').trim(),
+      apptNum,
+      account:     String(r[C['Account: Account Name']] || '').trim(),
       start, end,
       minutes,
-      hours: minutes / 60,
-      billable: parseNumber(r[7]),                  // man-hours billed
-      serviceType: String(r[8] || '').trim(),
-      contract: parseNumber(r[9]),
-      jobNumber: String(r[10] || '').trim(),
-      laborers: parseNumber(r[11]) || 1,
-      branch: normBranch(r[13])
+      hours:       minutes / 60,
+      billable:    parseNumber(r[C['Billable Time']]),  // man-hours billed
+      serviceType: String(r[C['Service Type']] || '').trim(),
+      contract:    parseNumber(r[C['Final Contract Amount']]),
+      jobNumber:   String(r[C['Job Number']] || '').trim(),
+      laborers:    parseNumber(r[C['# Laborers']]) || 1,
+      branch:      normBranch(r[C['Branch Location to Service']])
     };
   });
 
@@ -325,8 +401,8 @@ function run(opts) {
       billHours: round1(w.billable),
       contract: round(w.contract),
       hoursPer100: round1(ratio),
-      oldest: oldest ? oldest.toISOString().slice(0, 10) : null,
-      newest: newest ? newest.toISOString().slice(0, 10) : null,
+      oldest: oldest ? fmtLocalDt(oldest).slice(0, 10) : null,
+      newest: newest ? fmtLocalDt(newest).slice(0, 10) : null,
       spanDays
     };
   });
@@ -411,7 +487,7 @@ function run(opts) {
       hours: round1(a.hours),
       contract: round(a.contract),
       laborers: a.laborers,
-      start: a.start ? a.start.toISOString().slice(0, 16).replace('T', ' ') : null
+      start: fmtLocalDt(a.start)
     }));
 
   // ─────────────────────────────────────────────────────────────

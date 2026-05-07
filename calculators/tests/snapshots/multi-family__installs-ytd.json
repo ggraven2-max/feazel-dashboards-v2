@@ -1,0 +1,1141 @@
+{
+  "_source": "calculator/installs-ytd.js v1.0-rules-encoded",
+  "title": "Residential Installs YTD",
+  "subtitle": "Invoiced Jobs - Jan 08, 2026 - May 04, 2026 - De-Duplicated at Job Level - 100 Jobs - 11 Markets - 9 PMs",
+  "generated": "2026-05-07",
+  "headerMeta": {
+    "trueRevenue": 9318907.24,
+    "uniqueJobs": 100,
+    "markets": 11,
+    "pms": 9,
+    "medianComplete": 53,
+    "avgStart": 70,
+    "multiTradeJobs": 10,
+    "singleTradeJobs": 90,
+    "multiTradePct": 10
+  },
+  "tabs": [
+    {
+      "id": "index",
+      "label": "Overview"
+    },
+    {
+      "id": "kpis",
+      "label": "KPIs"
+    },
+    {
+      "id": "trends",
+      "label": "Monthly Trends"
+    },
+    {
+      "id": "multi-trade",
+      "label": "Multi-Trade"
+    },
+    {
+      "id": "markets",
+      "label": "Markets"
+    },
+    {
+      "id": "pms",
+      "label": "Project Managers"
+    },
+    {
+      "id": "work-types",
+      "label": "Work Types"
+    },
+    {
+      "id": "creators",
+      "label": "Created By"
+    },
+    {
+      "id": "findings",
+      "label": "Key Findings"
+    }
+  ],
+  "kpis": [
+    {
+      "label": "True Revenue",
+      "value": "$9.32M",
+      "sub": "100 unique jobs invoiced"
+    },
+    {
+      "label": "Avg Contract Value",
+      "value": "$93,189",
+      "sub": "Per job (deduped)"
+    },
+    {
+      "label": "Median Days to Complete",
+      "value": "53.0d",
+      "sub": "Job-level median"
+    },
+    {
+      "label": "Avg Days to Start",
+      "value": "70.0d",
+      "sub": "Sale to crew on-site"
+    },
+    {
+      "label": "Multi-Trade Jobs",
+      "value": "10",
+      "sub": "10.0% of book"
+    },
+    {
+      "label": "Single-Trade Jobs",
+      "value": "90",
+      "sub": "90.0% of book"
+    }
+  ],
+  "kpisMultiTrade": [
+    {
+      "label": "Multi-Trade Avg Contract",
+      "value": "$150,158",
+      "sub": "+72.9% vs single-trade"
+    },
+    {
+      "label": "Single-Trade Avg Contract",
+      "value": "$86,859",
+      "sub": "Baseline ticket"
+    },
+    {
+      "label": "Completion Time Gap",
+      "value": "+15.9d",
+      "sub": "MT 67.4d vs ST 51.5d"
+    }
+  ],
+  "monthly": [
+    {
+      "m": "2026-01",
+      "label": "January",
+      "key": "2026-01",
+      "rev": 959133.87,
+      "jobs": 14,
+      "med": 71.1,
+      "start": 51.7
+    },
+    {
+      "m": "2026-02",
+      "label": "February",
+      "key": "2026-02",
+      "rev": 321676.41,
+      "jobs": 11,
+      "med": 49.7,
+      "start": 89.5
+    },
+    {
+      "m": "2026-03",
+      "label": "March",
+      "key": "2026-03",
+      "rev": 4022615.43,
+      "jobs": 35,
+      "med": 60.3,
+      "start": 72.8
+    },
+    {
+      "m": "2026-04",
+      "label": "April",
+      "key": "2026-04",
+      "rev": 3716435.93,
+      "jobs": 36,
+      "med": 45.9,
+      "start": 65.1
+    },
+    {
+      "m": "2026-05",
+      "label": "May",
+      "key": "2026-05",
+      "rev": 299045.6,
+      "jobs": 4,
+      "med": 41.3,
+      "start": 110.8
+    }
+  ],
+  "charts": [
+    {
+      "id": "ch_monthly",
+      "labels": [
+        "2026-01",
+        "2026-02",
+        "2026-03",
+        "2026-04",
+        "2026-05"
+      ],
+      "datasets": [
+        {
+          "label": "Revenue",
+          "data": [
+            959133.87,
+            321676.41,
+            4022615.43,
+            3716435.93,
+            299045.6
+          ]
+        },
+        {
+          "label": "Jobs",
+          "data": [
+            14,
+            11,
+            35,
+            36,
+            4
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ch_efficiency",
+      "labels": [
+        "2026-01",
+        "2026-02",
+        "2026-03",
+        "2026-04",
+        "2026-05"
+      ],
+      "datasets": [
+        {
+          "label": "Median Days to Complete",
+          "data": [
+            71.1,
+            49.7,
+            60.3,
+            45.9,
+            41.3
+          ]
+        },
+        {
+          "label": "Avg Days to Start",
+          "data": [
+            51.7,
+            89.5,
+            72.8,
+            65.1,
+            110.8
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ch_jobmix",
+      "labels": [
+        "Job Mix"
+      ],
+      "datasets": [
+        {
+          "label": "Multi-Trade",
+          "data": [
+            10
+          ]
+        },
+        {
+          "label": "Single-Trade",
+          "data": [
+            90
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ch_combos",
+      "labels": [
+        "Gutters + Roofing",
+        "Gutters + Roofing + Siding",
+        "Siding + Windows"
+      ],
+      "datasets": [
+        {
+          "label": "Jobs",
+          "data": [
+            8,
+            1,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ch_mt_by_market",
+      "labels": [
+        "Columbus",
+        "Raleigh",
+        "Detroit Metro",
+        "Cleveland",
+        "Cincinnati",
+        "Nashville",
+        "DC Metro",
+        "Dayton",
+        "Indianapolis",
+        "Richmond",
+        "Knoxville"
+      ],
+      "datasets": [
+        {
+          "label": "MT %",
+          "data": [
+            17.6,
+            0,
+            5.3,
+            0,
+            33.3,
+            0,
+            40,
+            0,
+            0,
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ch_mt_vs_st",
+      "labels": [
+        "Columbus",
+        "Raleigh",
+        "Detroit Metro",
+        "Cleveland",
+        "Cincinnati",
+        "Nashville",
+        "DC Metro",
+        "Dayton",
+        "Indianapolis",
+        "Richmond",
+        "Knoxville"
+      ],
+      "datasets": [
+        {
+          "label": "MT Median",
+          "data": [
+            56.5,
+            0,
+            138.4,
+            0,
+            67.9,
+            0,
+            67.4,
+            0,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "label": "ST Median",
+          "data": [
+            66,
+            53.9,
+            44.3,
+            52.5,
+            108.4,
+            36.7,
+            0.6,
+            51.4,
+            29.9,
+            43.5,
+            34.9
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ch_mk_rev",
+      "labels": [
+        "Columbus",
+        "Raleigh",
+        "Detroit Metro",
+        "Cleveland",
+        "Cincinnati",
+        "Nashville",
+        "DC Metro",
+        "Dayton",
+        "Indianapolis",
+        "Richmond",
+        "Knoxville"
+      ],
+      "datasets": [
+        {
+          "label": "Revenue",
+          "data": [
+            3560699.14,
+            1747911.6,
+            1628236.07,
+            601530.71,
+            492309.23,
+            469488.37,
+            344556,
+            186672,
+            148724,
+            84529.44,
+            54250.68
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ch_mk_days",
+      "labels": [
+        "Columbus",
+        "Raleigh",
+        "Detroit Metro",
+        "Cleveland",
+        "Cincinnati",
+        "Nashville",
+        "DC Metro",
+        "Dayton",
+        "Indianapolis",
+        "Richmond",
+        "Knoxville"
+      ],
+      "datasets": [
+        {
+          "label": "Median Days",
+          "data": [
+            61.3,
+            53.9,
+            44.4,
+            52.5,
+            88.9,
+            36.7,
+            48.5,
+            51.4,
+            29.9,
+            43.5,
+            34.9
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ch_pm_top",
+      "labels": [
+        "Brian Walker",
+        "Bryan Paquin",
+        "Jeremy Wolfe",
+        "Ryan Wolf",
+        "Wayne Iles",
+        "James Foky",
+        "Rob Vanderlinden",
+        "(Unassigned)",
+        "Erik Patla"
+      ],
+      "datasets": [
+        {
+          "label": "Fractional Revenue",
+          "data": [
+            2917834.41,
+            1501316.4,
+            862181.03,
+            781785.93,
+            704992.37,
+            694090.71,
+            587513.9,
+            379588.98,
+            343456
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ch_pm_scatter",
+      "labels": [
+        "Brian Walker",
+        "Bryan Paquin",
+        "Jeremy Wolfe",
+        "Ryan Wolf",
+        "Wayne Iles",
+        "James Foky",
+        "Rob Vanderlinden",
+        "(Unassigned)",
+        "Erik Patla"
+      ],
+      "datasets": [
+        {
+          "label": "PMs",
+          "data": [
+            {
+              "x": 56.5,
+              "y": 2917834.41,
+              "wos": 49,
+              "name": "Brian Walker"
+            },
+            {
+              "x": 54.4,
+              "y": 1501316.4,
+              "wos": 41,
+              "name": "Bryan Paquin"
+            },
+            {
+              "x": 51.4,
+              "y": 862181.03,
+              "wos": 24,
+              "name": "Jeremy Wolfe"
+            },
+            {
+              "x": 43.5,
+              "y": 781785.93,
+              "wos": 17,
+              "name": "Ryan Wolf"
+            },
+            {
+              "x": 65.4,
+              "y": 704992.37,
+              "wos": 22,
+              "name": "Wayne Iles"
+            },
+            {
+              "x": 73.4,
+              "y": 694090.71,
+              "wos": 15,
+              "name": "James Foky"
+            },
+            {
+              "x": 103.8,
+              "y": 587513.9,
+              "wos": 5,
+              "name": "Rob Vanderlinden"
+            },
+            {
+              "x": 35.5,
+              "y": 379588.98,
+              "wos": 14,
+              "name": "(Unassigned)"
+            },
+            {
+              "x": 57.5,
+              "y": 343456,
+              "wos": 12,
+              "name": "Erik Patla"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ch_wt_pie",
+      "labels": [
+        "Roofing",
+        "Gutters",
+        "Siding",
+        "Windows",
+        "Other"
+      ],
+      "datasets": [
+        {
+          "label": "Revenue",
+          "data": [
+            7669236.12,
+            717337.56,
+            690751.83,
+            208581.73,
+            33000
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ch_wt_days",
+      "labels": [
+        "Roofing",
+        "Gutters",
+        "Siding",
+        "Windows",
+        "Other"
+      ],
+      "datasets": [
+        {
+          "label": "Median Days",
+          "data": [
+            55,
+            61.3,
+            197.4,
+            180.5,
+            18.5
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ch_cb_vol",
+      "labels": [
+        "Lisa Gibson",
+        "RaShauna Watts",
+        "Jamie Sanders",
+        "Kristi Mitchell",
+        "Lisa Stachura"
+      ],
+      "datasets": [
+        {
+          "label": "Jobs",
+          "data": [
+            66,
+            29,
+            3,
+            1,
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ch_cb_eff",
+      "labels": [
+        "Lisa Gibson",
+        "RaShauna Watts",
+        "Jamie Sanders",
+        "Kristi Mitchell",
+        "Lisa Stachura"
+      ],
+      "datasets": [
+        {
+          "label": "Median Complete",
+          "data": [
+            53.8,
+            48.5,
+            351.4,
+            46.4,
+            71.6
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ch_cb_mt",
+      "labels": [
+        "Lisa Gibson",
+        "RaShauna Watts",
+        "Jamie Sanders",
+        "Kristi Mitchell",
+        "Lisa Stachura"
+      ],
+      "datasets": [
+        {
+          "label": "MT %",
+          "data": [
+            10.6,
+            10.3,
+            0,
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ch_cb_scatter",
+      "labels": [
+        "Lisa Gibson",
+        "RaShauna Watts",
+        "Jamie Sanders",
+        "Kristi Mitchell",
+        "Lisa Stachura"
+      ],
+      "datasets": [
+        {
+          "label": "Creators",
+          "data": [
+            {
+              "x": 53.8,
+              "y": 115874.32,
+              "jobs": 66,
+              "name": "Lisa Gibson"
+            },
+            {
+              "x": 48.5,
+              "y": 52861.79,
+              "jobs": 29,
+              "name": "RaShauna Watts"
+            },
+            {
+              "x": 351.4,
+              "y": 45459.67,
+              "jobs": 3,
+              "name": "Jamie Sanders"
+            },
+            {
+              "x": 46.4,
+              "y": 1481,
+              "jobs": 1,
+              "name": "Kristi Mitchell"
+            },
+            {
+              "x": 71.6,
+              "y": 350,
+              "jobs": 1,
+              "name": "Lisa Stachura"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "tables": [
+    {
+      "id": "tbl_markets",
+      "title": "All markets",
+      "headers": [
+        "Market",
+        "Jobs",
+        "Revenue",
+        "Avg Contract",
+        "Median Complete",
+        "Avg Start",
+        "MT %",
+        "MT Median",
+        "ST Median"
+      ],
+      "rows": [
+        [
+          "Columbus",
+          17,
+          3560699.14,
+          209452.89,
+          61.3,
+          58.7,
+          17.6,
+          56.5,
+          66
+        ],
+        [
+          "Raleigh",
+          26,
+          1747911.6,
+          67227.37,
+          53.9,
+          76.2,
+          0,
+          0,
+          53.9
+        ],
+        [
+          "Detroit Metro",
+          19,
+          1628236.07,
+          85696.64,
+          44.4,
+          71.2,
+          5.3,
+          138.4,
+          44.3
+        ],
+        [
+          "Cleveland",
+          7,
+          601530.71,
+          85932.96,
+          52.5,
+          90.7,
+          0,
+          0,
+          52.5
+        ],
+        [
+          "Cincinnati",
+          12,
+          492309.23,
+          41025.77,
+          88.9,
+          91.3,
+          33.3,
+          67.9,
+          108.4
+        ],
+        [
+          "Nashville",
+          7,
+          469488.37,
+          67069.77,
+          36.7,
+          40,
+          0,
+          0,
+          36.7
+        ],
+        [
+          "DC Metro",
+          5,
+          344556,
+          68911.2,
+          48.5,
+          51.6,
+          40,
+          67.4,
+          0.6
+        ],
+        [
+          "Dayton",
+          2,
+          186672,
+          93336,
+          51.4,
+          37.6,
+          0,
+          0,
+          51.4
+        ],
+        [
+          "Indianapolis",
+          2,
+          148724,
+          74362,
+          29.9,
+          25,
+          0,
+          0,
+          29.9
+        ],
+        [
+          "Richmond",
+          1,
+          84529.44,
+          84529.44,
+          43.5,
+          35.5,
+          0,
+          0,
+          43.5
+        ],
+        [
+          "Knoxville",
+          2,
+          54250.68,
+          27125.34,
+          34.9,
+          28.4,
+          0,
+          0,
+          34.9
+        ]
+      ]
+    },
+    {
+      "id": "tbl_pms",
+      "title": "All PMs (5+ work orders)",
+      "headers": [
+        "PM",
+        "WOs",
+        "Jobs",
+        "Fractional Revenue",
+        "Rev / WO",
+        "Median Complete",
+        "Avg Start"
+      ],
+      "rows": [
+        [
+          "Brian Walker",
+          49,
+          11,
+          2917834.41,
+          59547.64,
+          56.5,
+          56.9
+        ],
+        [
+          "Bryan Paquin",
+          41,
+          17,
+          1501316.4,
+          36617.47,
+          54.4,
+          68.8
+        ],
+        [
+          "Jeremy Wolfe",
+          24,
+          9,
+          862181.03,
+          35924.21,
+          51.4,
+          70.5
+        ],
+        [
+          "Ryan Wolf",
+          17,
+          10,
+          781785.93,
+          45987.41,
+          43.5,
+          90.5
+        ],
+        [
+          "Wayne Iles",
+          22,
+          15,
+          704992.37,
+          32045.11,
+          65.4,
+          83.6
+        ],
+        [
+          "James Foky",
+          15,
+          8,
+          694090.71,
+          46272.71,
+          73.4,
+          90.5
+        ],
+        [
+          "Rob Vanderlinden",
+          5,
+          4,
+          587513.9,
+          117502.78,
+          103.8,
+          49.7
+        ],
+        [
+          "(Unassigned)",
+          14,
+          14,
+          379588.98,
+          27113.5,
+          35.5,
+          42.3
+        ],
+        [
+          "Erik Patla",
+          12,
+          4,
+          343456,
+          28621.33,
+          57.5,
+          51.6
+        ]
+      ]
+    },
+    {
+      "id": "tbl_worktypes",
+      "title": "Work type detail",
+      "headers": [
+        "Service Object",
+        "WOs",
+        "Fractional Revenue",
+        "Avg Contract / WO",
+        "Median Complete"
+      ],
+      "rows": [
+        [
+          "Roofing",
+          186,
+          7669236.12,
+          41232.45,
+          55
+        ],
+        [
+          "Gutters",
+          21,
+          717337.56,
+          34158.93,
+          61.3
+        ],
+        [
+          "Siding",
+          7,
+          690751.83,
+          98678.83,
+          197.4
+        ],
+        [
+          "Windows",
+          2,
+          208581.73,
+          104290.87,
+          180.5
+        ],
+        [
+          "Other",
+          1,
+          33000,
+          33000,
+          18.5
+        ]
+      ]
+    },
+    {
+      "id": "tbl_creators",
+      "title": "Creator detail",
+      "headers": [
+        "Creator",
+        "Jobs",
+        "Revenue",
+        "Avg Contract",
+        "Median Complete",
+        "Avg Start",
+        "MT %",
+        "Rev / Job"
+      ],
+      "rows": [
+        [
+          "Lisa Gibson",
+          66,
+          7647705.33,
+          115874.32,
+          "53.8d",
+          "73.8d",
+          10.6,
+          115874.32
+        ],
+        [
+          "RaShauna Watts",
+          29,
+          1532991.91,
+          52861.79,
+          "48.5d",
+          "56.2d",
+          10.3,
+          52861.79
+        ],
+        [
+          "Jamie Sanders",
+          3,
+          136379,
+          45459.67,
+          "351.4d",
+          "140.9d",
+          0,
+          45459.67
+        ],
+        [
+          "Kristi Mitchell",
+          1,
+          1481,
+          1481,
+          "46.4d",
+          "34.4d",
+          0,
+          1481
+        ],
+        [
+          "Lisa Stachura",
+          1,
+          350,
+          350,
+          "71.6d",
+          "22.5d",
+          0,
+          350
+        ]
+      ]
+    },
+    {
+      "id": "creatorMarketHeatmap",
+      "title": "Creator x Market Volume Heatmap (Jobs)",
+      "headers": [
+        "Creator",
+        "Cincinnati",
+        "Cleveland",
+        "Columbus",
+        "DC Metro",
+        "Dayton",
+        "Detroit Metro",
+        "Indianapolis",
+        "Knoxville",
+        "Nashville",
+        "Raleigh",
+        "Richmond",
+        "Total"
+      ],
+      "rows": [
+        [
+          "Jamie Sanders",
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          3
+        ],
+        [
+          "Kristi Mitchell",
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1
+        ],
+        [
+          "Lisa Gibson",
+          8,
+          5,
+          13,
+          3,
+          1,
+          18,
+          1,
+          0,
+          4,
+          13,
+          0,
+          66
+        ],
+        [
+          "Lisa Stachura",
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1
+        ],
+        [
+          "RaShauna Watts",
+          3,
+          2,
+          2,
+          2,
+          1,
+          1,
+          1,
+          2,
+          3,
+          11,
+          1,
+          29
+        ],
+        [
+          "Total",
+          12,
+          7,
+          17,
+          5,
+          2,
+          19,
+          2,
+          2,
+          7,
+          26,
+          1,
+          100
+        ]
+      ]
+    }
+  ],
+  "commentary": {
+    "areasOfConcern": [],
+    "watchList": [
+      "Gutters-only work runs at 61.3-day median complete versus 55.0 days for roofing, 12% slower cycle on the lowest-priced trade."
+    ],
+    "positivesToBuildOn": [
+      "March delivered $4.02M across 35 invoiced jobs at 60.3-day median complete, the highest revenue month and one of the fastest cycles of the year.",
+      "Raleigh hits 53.9-day median complete and a $67,227 average contract on 26 jobs.",
+      "Multi-trade jobs carry a $150,158 average contract versus $86,859 for single-trade, a 73% revenue lift per job."
+    ]
+  }
+}
