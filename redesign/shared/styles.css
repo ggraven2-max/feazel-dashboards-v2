@@ -78,9 +78,9 @@
   --shadow-3: 0 8px 24px rgba(31,45,75,0.12), 0 2px 4px rgba(31,45,75,0.06);
 
   /* ---------- LAYOUT ---------- */
-  --sidebar-w: 264px;
+  --sidebar-w: 296px;
   --header-h: 64px;
-  --subnav-h: 56px;
+  --subnav-h: 40px;
 
   /* ---------- MOTION ---------- */
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
@@ -269,17 +269,21 @@ a:hover { color: var(--feazel-blue-hover); text-decoration: underline; text-unde
   background: var(--surface);
   border-bottom: 1px solid var(--line);
 }
-/* When inside the header stack, the topbar drops its own sticky/border so
-   the two pieces render as a single header chrome — breadcrumbs above, tabs
-   below — sitting flush together right at the top of the viewport. */
+/* When inside the header stack, the topbar and subnav both drop their own
+   sticky/border/box-shadow so the two pieces render as a single header chrome
+   — breadcrumbs above, tabs below — bumped flush together with no dead space
+   between them. The header-stack itself owns the bottom border. */
 .header-stack .topbar {
   position: static;
   border-bottom: 1px solid var(--line);
+  margin: 0;
 }
 .header-stack .subnav {
   position: static;
   top: auto;
   border-bottom: none;
+  box-shadow: none;
+  margin: 0;
 }
 
 /* ---- TOP HEADER ---- */
@@ -383,7 +387,7 @@ a:hover { color: var(--feazel-blue-hover); text-decoration: underline; text-unde
   align-items: center;
   gap: 6px;
   padding: 0 13px;
-  height: 34px;
+  height: 28px;
   font-size: 12.5px;
   font-weight: var(--fw-semibold);
   color: var(--fg-2);
@@ -1305,12 +1309,9 @@ a:hover { color: var(--feazel-blue-hover); text-decoration: underline; text-unde
 }
 
 /* ----- Page head: give the eyebrow + title clear breathing room ----- */
-/* The topbar (64px) + subnav (56px) stick to the top. When content scrolls
-   under that 120px band, the page-head needs enough top buffer that the
+/* The topbar (64px) + subnav (40px) stick to the top. When content scrolls
+   under that 104px band, the page-head needs enough top buffer that the
    eyebrow doesn't visually touch the bottom of the sticky subnav. */
-html { scroll-padding-top: 132px; }   /* topbar + subnav + 12px buffer */
+html { scroll-padding-top: 116px; }   /* topbar + subnav + 12px buffer */
 .page { padding-top: var(--space-6); }
 .page-head { padding-top: var(--space-3); }   /* 12px extra buffer above eyebrow */
-
-/* Slight separator under the subnav so the sticky band has a clear edge */
-.subnav { box-shadow: 0 1px 0 var(--line); }

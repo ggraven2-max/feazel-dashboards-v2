@@ -26,21 +26,55 @@ window.FZ.renderShell = function (opts) {
   var atRoot = opts.atRoot === true;
   // Detect Line of Business from URL: /mobile/<lob>/...
   var lob = opts.lob || (function () {
-    var match = window.location.pathname.match(/\/mobile\/(residential|multi-family)\//);
+    var match = window.location.pathname.match(/\/mobile\/(residential|multi-family|service)\//);
     return match ? match[1] : 'residential';
   })();
-  var otherLob = (lob === 'residential') ? 'multi-family' : 'residential';
+
+  // Filter dashboards by LOB. Service ships with Revenue Forecast plus a
+  // synthetic Service Calls dashboard that doesn't live in the shared registry.
   var dashboards = window.FZ.dashboards;
+  if (lob === 'service') {
+    dashboards = dashboards.filter(function (d) { return d.folder === 'revenue-forecast'; });
+    dashboards = dashboards.concat([
+      { id: 'service-calls', folder: 'service-calls', short: 'Service Calls',
+        title: 'Service Calls YTD', icon: 'check-circle',
+        pages: [
+          { slug: 'index',         label: 'Executive',     short: 'Executive' },
+          { slug: 'appointments',  label: 'Appointments',  short: 'Appointments' },
+          { slug: 'accounts',      label: 'Accounts',      short: 'Accounts' },
+          { slug: 'branches',      label: 'Branches',      short: 'Branches' },
+          { slug: 'techs',         label: 'Techs',         short: 'Techs' },
+          { slug: 'aging',         label: 'Aging',         short: 'Aging' },
+          { slug: 'findings',      label: 'Findings',      short: 'Findings' }
+        ] }
+    ]);
+  }
 
   var current          = (folder && slug !== 'index') ? window.FZ.findPage(folder, slug) : null;
   var currentDashboard = folder ? window.FZ.findDashboard(folder) : null;
-
-  // Compute the parallel URL in the other LOB
-  var lobSwitchPrefix = atRoot ? ('../' + otherLob + '/') : ('../../' + otherLob + '/');
-  var otherLobUrl = lobSwitchPrefix + 'index.html';
-  if (folder) {
-    otherLobUrl = lobSwitchPrefix + folder + '/' + (slug === 'index' ? 'index.html' : slug + '.html');
+  // Synthetic dashboard for Service Calls (not in shared registry).
+  if (!currentDashboard && lob === 'service' && folder === 'service-calls') {
+    currentDashboard = dashboards[dashboards.length - 1];
   }
+
+  // Folder allowlists for cross-LOB navigation. Service only has these two
+  // folders; Res/MF have four. When the user taps a different LOB from a
+  // page that doesn't exist there, fall through to that LOB's hub.
+  var SERVICE_FOLDERS = { 'revenue-forecast': true, 'service-calls': true };
+  var RES_MF_FOLDERS  = { 'sales-overview': true, 'revenue-forecast': true, 'backlog': true, 'installs-ytd': true };
+  function urlForLob (target) {
+    var prefix = atRoot ? ('../' + target + '/') : ('../../' + target + '/');
+    if (target === lob) return '#';
+    if (folder) {
+      if (target === 'service' && !SERVICE_FOLDERS[folder]) return prefix + 'index.html';
+      if ((target === 'residential' || target === 'multi-family') && !RES_MF_FOLDERS[folder]) return prefix + 'index.html';
+      return prefix + folder + '/' + (slug === 'index' ? 'index.html' : slug + '.html');
+    }
+    return prefix + 'index.html';
+  }
+  var resUrl = urlForLob('residential');
+  var mfUrl  = urlForLob('multi-family');
+  var svcUrl = urlForLob('service');
 
   // ---- TOP BAR ----
   // Crumbs collapse to a single label on mobile via CSS; we still emit the
@@ -78,8 +112,9 @@ window.FZ.renderShell = function (opts) {
   // ---- LOB switcher (segmented control just below the topbar) ----
   var lobSwitchHTML = ''
     + '<div class="lob-switch">'
-    +   '<a href="' + (lob === 'residential' ? '#' : otherLobUrl) + '"' + (lob === 'residential' ? ' class="is-active"' : '') + '>Residential</a>'
-    +   '<a href="' + (lob === 'multi-family' ? '#' : otherLobUrl) + '"' + (lob === 'multi-family' ? ' class="is-active"' : '') + '>Multi-Family</a>'
+    +   '<a href="' + resUrl + '"' + (lob === 'residential' ? ' class="is-active"' : '') + '>Residential</a>'
+    +   '<a href="' + mfUrl  + '"' + (lob === 'multi-family' ? ' class="is-active"' : '') + '>Multi-Family</a>'
+    +   '<a href="' + svcUrl + '"' + (lob === 'service' ? ' class="is-active"' : '') + '>Service</a>'
     + '</div>';
 
   // ---- SUB-NAV (only on dashboard pages, not the hub) ----

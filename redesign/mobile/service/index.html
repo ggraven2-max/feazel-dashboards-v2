@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Feazel Command Center · Service · Mobile</title>
+<link rel="stylesheet" href="../../shared/styles.css">
+<link rel="stylesheet" href="../shared/styles-mobile.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='16' fill='%231f2d4b'/><text x='50' y='66' text-anchor='middle' font-family='Arial' font-size='52' font-weight='800' fill='white'>F</text></svg>">
+</head>
+<body data-lob="service">
+
+<div id="app-host"></div>
+
+<template id="page-tpl">
+
+  <section class="hub-hero">
+    <span class="eyebrow">FEAZEL ROOFING · COO OFFICE · SERVICE</span>
+    <h1>Command Center</h1>
+    <p>Where the Service book stands today: NetSuite invoiced revenue against the 2026 Service Budget plan, plus install-to-service overlap and the live service-call queue.</p>
+    <div class="hub-hero-stats">
+      <div class="hub-hero-stat">
+        <div class="l">2026 Service Target</div>
+        <div class="v" data-bind="hero.target">—</div>
+        <div class="s">Service plan from 2026 Service Budget XLSX</div>
+      </div>
+      <div class="hub-hero-stat">
+        <div class="l">Invoiced YTD</div>
+        <div class="v" data-bind="hero.invoiced">—</div>
+        <div class="s" data-bind="hero.invoicedSub">NetSuite AR</div>
+      </div>
+      <div class="hub-hero-stat">
+        <div class="l">Annualized Pace</div>
+        <div class="v" data-bind="hero.pace">—</div>
+        <div class="s" data-bind="hero.paceSub">vs plan</div>
+      </div>
+      <div class="hub-hero-stat">
+        <div class="l">Combined GM</div>
+        <div class="v" data-bind="hero.gm">—</div>
+        <div class="s" data-bind="hero.gmSub">cost-tracked jobs</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="callout">
+      <span class="callout-title">Where it stands</span>
+      Service is fee-for-service, short-cycle, concentrated in a handful of top branches. The forecast anchors on the annualized run-rate vs the 2026 Service Budget; profitability comes from the same NetSuite cost-mix CSV the residential and MF books use.
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head"><h2>Dashboards</h2></div>
+    <div class="grid">
+
+      <a class="tile" href="./revenue-forecast/index.html">
+        <span class="eyebrow">SERVICE-V1 · 2026 OUTLOOK</span>
+        <h2 style="margin-top:2px;">Revenue Forecast</h2>
+        <p>Per-month invoiced revenue vs the Service Budget plan. Profitability, recovery, and install-to-service overlap.</p>
+        <div class="tile-stats">
+          <div class="tile-stat"><div class="l">Plan</div><div class="v" data-bind="tile.svc.plan">—</div></div>
+          <div class="tile-stat"><div class="l">Invoiced</div><div class="v" data-bind="tile.svc.invoiced">—</div></div>
+          <div class="tile-stat"><div class="l">Pace</div><div class="v" data-bind="tile.svc.pace">—</div></div>
+          <div class="tile-stat"><div class="l">FY26 GM</div><div class="v" data-bind="tile.svc.gm">—</div></div>
+        </div>
+        <span class="tile-cta">Open dashboard →</span>
+      </a>
+
+      <a class="tile" href="./service-calls/index.html">
+        <span class="eyebrow">LIVE OPS</span>
+        <h2 style="margin-top:2px;">Service Calls YTD</h2>
+        <p>Appointments, accounts, branches, techs, aging, and findings.</p>
+        <div class="tile-stats">
+          <div class="tile-stat"><div class="l">Apps YTD</div><div class="v" data-bind="tile.sc.apps">—</div></div>
+          <div class="tile-stat"><div class="l">Billed</div><div class="v" data-bind="tile.sc.billed">—</div></div>
+          <div class="tile-stat"><div class="l">In Progress 14+</div><div class="v" data-bind="tile.sc.inProg">—</div></div>
+          <div class="tile-stat"><div class="l">Techs</div><div class="v" data-bind="tile.sc.techs">—</div></div>
+        </div>
+        <span class="tile-cta">Open dashboard →</span>
+      </a>
+
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="grid">
+      <div class="card">
+        <span class="eyebrow">METHODOLOGY</span>
+        <h3 style="margin-top:6px;">Forecast Service-v1 Locked</h3>
+        <p style="margin-top:8px; font-size:12px;">Annualized run-rate model anchored to the 2026 Service Budget. Revenue from NetSuite invoiced (Type = Invoice).</p>
+      </div>
+      <div class="card">
+        <span class="eyebrow">DATA FRESHNESS</span>
+        <h3 style="margin-top:6px;" data-bind="freshness.headline">As of —</h3>
+        <p style="margin-top:8px; font-size:12px;">Refreshed <strong data-bind="freshness.stamp">—</strong>.</p>
+      </div>
+    </div>
+  </section>
+
+</template>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="../../shared/chart-theme.js"></script>
+<script src="../../service/shared/data.js"></script>
+<script src="../../shared/pages.js"></script>
+<script src="../shared/layout-mobile.js"></script>
+<script>
+  FZ.renderShell({ atRoot: true, lob: 'service' });
+
+  (function bindServiceHub () {
+    var data = window.FZ && window.FZ.data;
+    if (!data) return;
+    var RF = data.REVENUE_FORECAST || {};
+    var SC = data.SERVICE_CALLS || {};
+    var es = RF.execSummary || {};
+    var ps = RF.profitabilitySummary || {};
+    function kpi (list, label) { return Array.isArray(list) ? list.find(function (k) { return k.label === label; }) || null : null; }
+    function val (o, dash) { return o && o.value ? o.value : (dash || '—'); }
+
+    var rfInvoiced = kpi(RF.kpis, 'Invoiced YTD');
+    var rfPace     = kpi(RF.kpis, 'Annualized Pace');
+    var rfBudget   = es.budget || 0;
+
+    var fmtBigMoney = function (v) {
+      if (!v || isNaN(v)) return '—';
+      if (v >= 1e9) return '$' + (v / 1e9).toFixed(1).replace(/\.0$/, '') + 'B';
+      if (v >= 1e6) return '$' + (v / 1e6).toFixed(2).replace(/\.?0+$/, '') + 'M';
+      if (v >= 1e3) return '$' + (v / 1e3).toFixed(0) + 'K';
+      return '$' + Math.round(v).toLocaleString('en-US');
+    };
+
+    var scApps   = kpi(SC.kpis, 'Total Appointments') || kpi(SC.kpis, 'Appointments YTD');
+    var scBilled = kpi(SC.kpis, 'Billed Revenue') || kpi(SC.kpis, 'True Revenue');
+    var scInProg = kpi(SC.kpisAging || [], 'In Progress 14+ Days') || kpi(SC.kpisAging || [], 'In Progress 60+ Days');
+    var scTechs  = kpi(SC.kpis, 'Active Techs') || kpi(SC.kpis, 'Techs');
+
+    var binds = {
+      'hero.target':      fmtBigMoney(rfBudget),
+      'hero.invoiced':    val(rfInvoiced),
+      'hero.invoicedSub': rfInvoiced ? rfInvoiced.sub : '',
+      'hero.pace':        val(rfPace),
+      'hero.paceSub':     rfPace ? rfPace.sub : '',
+      'hero.gm':          ps.combinedGP_pct ? ps.combinedGP_pct.toFixed(1) + '%' : '—',
+      'hero.gmSub':       ps.jobsParsed ? (ps.jobsParsed + ' cost-tracked jobs') : '',
+      'tile.svc.plan':     fmtBigMoney(rfBudget),
+      'tile.svc.invoiced': val(rfInvoiced),
+      'tile.svc.pace':     val(rfPace),
+      'tile.svc.gm':       ps.y2026_GP_pct ? ps.y2026_GP_pct.toFixed(1) + '%' : '—',
+      'tile.sc.apps':      val(scApps, '—'),
+      'tile.sc.billed':    val(scBilled, '—'),
+      'tile.sc.inProg':    val(scInProg, '—'),
+      'tile.sc.techs':     val(scTechs, '—'),
+      'freshness.headline': 'As of ' + (window.FZ.formatBuiltAt ? window.FZ.formatBuiltAt({ dateOnly: true }) : '—'),
+      'freshness.stamp':    window.FZ.formatBuiltAt ? window.FZ.formatBuiltAt() : '—'
+    };
+    Object.keys(binds).forEach(function (key) {
+      var el = document.querySelector('[data-bind="' + key + '"]');
+      if (el) el.textContent = binds[key];
+    });
+  })();
+</script>
+</body>
+</html>
