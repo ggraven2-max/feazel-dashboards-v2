@@ -1401,6 +1401,13 @@ html { scroll-padding-top: 116px; }   /* topbar + subnav + 12px buffer */
   --shadow-3: 0 12px 28px rgba(0,0,0,0.40);
 }
 
+/* Paint the navy mesh on BOTH html and body. If a higher-specificity rule
+   later sets body { background: ... } to transparent (e.g. via var(--bg)
+   which we rebound to transparent), the html mesh stays visible behind
+   it. This is what protected against a regression where the public
+   mobile site rendered white because styles-mobile.css overrode the body
+   background. */
+html,
 body {
   background:
     radial-gradient(circle at 18% 18%, rgba(94,130,188,0.36), transparent 50%),

@@ -22,8 +22,12 @@
    ============================================================ */
 body {
   font-size: 15px;        /* base unchanged, but content scales below */
-  background: var(--bg);
   -webkit-tap-highlight-color: transparent;
+  /* No background override here — the dark navy mesh defined in
+     shared/styles.css must win. Earlier this rule said
+     "background: var(--bg)" which (after the dark-theme token rebind)
+     resolves to transparent and let the browser-default white html bg
+     bleed through, breaking the mobile site rendering. */
 }
 
 h1 { font-size: 22px; line-height: 1.18; letter-spacing: -0.01em; }
