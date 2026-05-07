@@ -577,10 +577,52 @@ html.embed-mode .hub-hero {
    becomes the first chrome the user sees once topbar + LOB switcher are
    gone. Pin it to the very top of the WebView with no sticky offset so
    it sits flush against the bottom of the native iOS header (instead of
-   leaving the 70px gap that the desktop sticky-offset assumes). */
+   leaving the 70px gap that the desktop sticky-offset assumes). Restyle
+   to mirror the floating dark pill bar at the bottom of the iOS app
+   (bottom tab bar in App.js: rgba(22,32,58,0.82) bg, blue-to-gold active
+   indicator, white-on-navy text). */
 html.embed-mode .subnav {
   top: 0 !important;
-  margin-top: 0 !important;
+  margin: 12px 12px 8px !important;          /* float-style outer gutters */
+  padding: 6px 8px !important;               /* matches tabBarInner padding */
+  height: auto !important;
+  background: rgba(22, 32, 58, 0.92) !important;
+  border: 1px solid rgba(255, 255, 255, 0.10) !important;
+  border-radius: 22px !important;            /* matches App.js tabBarPill */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.10) !important;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.35);
+  gap: 4px !important;
+}
+
+/* Inactive sub-nav pills: muted white text, transparent fill. */
+html.embed-mode .subnav a {
+  background: transparent !important;
+  color: rgba(255, 255, 255, 0.55) !important;
+  border: 0 !important;
+  border-radius: 16px !important;             /* matches tabIndicator */
+  padding: 8px 14px !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.2px !important;
+  text-transform: none;
+}
+
+/* Active pill: blue-to-gold gradient, white bold label.
+   Mirrors App.js LinearGradient colors={[BLUE (#5e82bc), GOLD (#d4a857)]} */
+html.embed-mode .subnav a.is-active {
+  background: linear-gradient(135deg, #5e82bc 0%, #d4a857 100%) !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  border: 0 !important;
+  box-shadow: 0 2px 8px rgba(94, 130, 188, 0.35);
+}
+
+/* Hover/pressed state on inactive pills (subtle highlight, no jarring color
+   shift since the bar already lives on a dark background). */
+html.embed-mode .subnav a:not(.is-active):hover,
+html.embed-mode .subnav a:not(.is-active):active {
+  background: rgba(255, 255, 255, 0.06) !important;
+  color: rgba(255, 255, 255, 0.85) !important;
 }
 
 /* Belt-and-suspenders: zero out any inherited margin/padding on the app
