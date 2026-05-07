@@ -559,3 +559,26 @@ small { font-size: 11px; }
 .topbar-home:active { transform: scale(0.94); }
 .topbar-home svg { opacity: 0.9; }
 .topbar-home .lbl { line-height: 1; }
+
+/* ============================================================
+   EMBED MODE — page is loaded inside the iOS app via WebView
+   with ?embed=1. The native shell already provides the topbar,
+   the freshness stamp, the LOB tab bar, and a themed splash
+   header. Hide the duplicate web chrome and let the Command
+   Center hub-hero sit flush against the native header above.
+   ============================================================ */
+html.embed-mode .topbar,
+html.embed-mode .lob-switch,
+html.embed-mode .page-foot {
+  display: none !important;
+}
+/* Pull the hub-hero up so it touches the native header. The page
+   normally has var(--m-pad) of top padding; remove it in embed mode
+   so the navy hub-hero is flush, no gap. */
+html.embed-mode .page { padding-top: 0; }
+html.embed-mode .page > .hub-hero:first-child,
+html.embed-mode .page > section.hub-hero:first-child {
+  margin-top: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}

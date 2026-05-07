@@ -30,6 +30,21 @@ window.FZ.renderShell = function (opts) {
     return match ? match[1] : 'residential';
   })();
 
+  // Embed mode: when the page is loaded inside the iOS app via WebView with
+  // ?embed=1, the native shell already provides the topbar, LOB switcher,
+  // and tab navigation. Hide the duplicate web chrome so the native header
+  // sits flush against the Command Center hub-hero, with no redundant rows.
+  var embedMode = (function () {
+    try {
+      if (/[?&]embed=1\b/.test(window.location.search || '')) return true;
+    } catch (e) {}
+    return false;
+  })();
+  if (embedMode) {
+    document.documentElement.classList.add('embed-mode');
+    if (document.body) document.body.classList.add('embed-mode');
+  }
+
   // Filter dashboards by LOB. Service ships with Revenue Forecast plus a
   // synthetic Service Calls dashboard that doesn't live in the shared registry.
   var dashboards = window.FZ.dashboards;
@@ -147,14 +162,21 @@ window.FZ.renderShell = function (opts) {
 
   var appHost = document.getElementById('app-host');
   if (appHost) {
+    // In embed mode the iOS app provides its own native topbar, freshness
+    // stamp, and LOB tabs. Strip the duplicate web chrome so the page
+    // begins directly with the Command Center hub-hero — that hub-hero
+    // sits flush against the bottom of the native header.
+    var topbarOut    = embedMode ? '' : topbarHTML;
+    var lobSwitchOut = embedMode ? '' : lobSwitchHTML;
+    var footerOut    = embedMode ? '' : footerHTML;
     appHost.outerHTML =
       '<div class="app">'
       + '<div class="main">'
-      +   topbarHTML
-      +   lobSwitchHTML
+      +   topbarOut
+      +   lobSwitchOut
       +   subnavHTML
       +   '<main class="page" id="page-content"></main>'
-      +   footerHTML
+      +   footerOut
       + '</div>'
       + '</div>';
   }
