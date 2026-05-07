@@ -107,7 +107,7 @@ body {
 
 h1, h2, h3, h4, h5 {
   font-family: var(--font-sans);
-  color: var(--feazel-navy);
+  color: var(--fg-1);
   margin: 0;
   font-weight: var(--fw-bold);
   letter-spacing: -0.01em;
@@ -315,7 +315,7 @@ a:hover { color: var(--feazel-blue-hover); text-decoration: underline; text-unde
   font-weight: var(--fw-regular);
   letter-spacing: 0;
 }
-.topbar-crumbs .crumb-current { color: var(--feazel-navy); }
+.topbar-crumbs .crumb-current { color: var(--fg-1); }
 .topbar-crumbs a { color: inherit; }
 .topbar-crumbs a:hover { color: var(--feazel-blue); text-decoration: none; }
 .topbar-right {
@@ -398,7 +398,7 @@ a:hover { color: var(--feazel-blue-hover); text-decoration: underline; text-unde
   transition: background var(--dur-1), color var(--dur-1);
   text-decoration: none;
 }
-.subnav a:hover { background: var(--bg-2); color: var(--feazel-navy); text-decoration: none; }
+.subnav a:hover { background: var(--bg-2); color: var(--fg-1); text-decoration: none; }
 .subnav a.is-active {
   background: var(--feazel-blue-tint);
   color: var(--feazel-blue-press);
@@ -482,7 +482,7 @@ a:hover { color: var(--feazel-blue-hover); text-decoration: underline; text-unde
 }
 .section-head h2 {
   font-size: 17px;
-  color: var(--feazel-navy);
+  color: var(--fg-1);
   font-weight: var(--fw-semibold);
   letter-spacing: -0.005em;
   line-height: 1.2;
@@ -583,7 +583,7 @@ a:hover { color: var(--feazel-blue-hover); text-decoration: underline; text-unde
 .kpi-value {
   font-size: 28px;
   font-weight: var(--fw-bold);
-  color: var(--feazel-navy);
+  color: var(--fg-1);
   line-height: 1.05;
   letter-spacing: -0.018em;
   font-variant-numeric: tabular-nums;
@@ -700,7 +700,7 @@ a:hover { color: var(--feazel-blue-hover); text-decoration: underline; text-unde
   padding: 10px 12px;
   background: var(--bg-2);
   font-weight: var(--fw-semibold);
-  color: var(--feazel-navy);
+  color: var(--fg-1);
   border-top: 2px solid var(--line-strong);
 }
 .tbl-compact tbody td, .tbl-compact thead th { padding: 7px 10px; }
@@ -764,7 +764,7 @@ a:hover { color: var(--feazel-blue-hover); text-decoration: underline; text-unde
   border-radius: 0 var(--radius-md) var(--radius-md) 0;
   font-size: 13.5px;
   line-height: 1.55;
-  color: var(--feazel-navy);
+  color: var(--fg-1);
 }
 .callout-success { border-color: var(--success); background: var(--success-tint); color: #1e5238; }
 .callout-warn { border-color: var(--warning); background: var(--warning-tint); color: #7a4a0f; }
@@ -850,7 +850,7 @@ a:hover { color: var(--feazel-blue-hover); text-decoration: underline; text-unde
   flex-shrink: 0;
 }
 .tile h2 {
-  color: var(--feazel-navy);
+  color: var(--fg-1);
   font-size: 21px;
   font-weight: var(--fw-bold);
   margin: 4px 0 0;
@@ -883,7 +883,7 @@ a:hover { color: var(--feazel-blue-hover); text-decoration: underline; text-unde
 .tile-stat .v {
   font-size: 18px;
   font-weight: var(--fw-bold);
-  color: var(--feazel-navy);
+  color: var(--fg-1);
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.01em;
   line-height: 1.1;
@@ -981,7 +981,7 @@ a:hover { color: var(--feazel-blue-hover); text-decoration: underline; text-unde
 .prose { color: var(--fg-2); font-size: 13.5px; line-height: 1.6; }
 .prose p { margin: 0 0 10px; text-wrap: pretty; }
 .prose p:last-child { margin-bottom: 0; }
-.prose strong { color: var(--feazel-navy); font-weight: var(--fw-semibold); }
+.prose strong { color: var(--fg-1); font-weight: var(--fw-semibold); }
 .prose ul { padding-left: 18px; margin: 0 0 12px; }
 .prose ul li { margin-bottom: 6px; }
 
@@ -1006,7 +1006,7 @@ a:hover { color: var(--feazel-blue-hover); text-decoration: underline; text-unde
 .summary-bar .item .v {
   font-size: 18px;
   font-weight: var(--fw-bold);
-  color: var(--feazel-navy);
+  color: var(--fg-1);
   font-variant-numeric: tabular-nums;
 }
 
@@ -1363,6 +1363,44 @@ html { scroll-padding-top: 116px; }   /* topbar + subnav + 12px buffer */
    html.embed-mode because they are iOS-app-specific.
    ============================================================ */
 
+/* Re-tune the neutral design tokens for the dark canvas. Existing rules
+   throughout the file use var(--fg-1), var(--fg-2), var(--fg-3),
+   var(--surface), var(--bg-*), var(--line) — re-aliasing these to the
+   dark-mode equivalents flips the whole stylesheet at once instead of
+   needing per-rule overrides everywhere. Brand tokens (--feazel-navy,
+   --feazel-blue, --gold) are intentionally NOT changed; they still serve
+   as the navy backgrounds on the topbar, sidebar, and LOB switcher. */
+:root {
+  /* Backgrounds: transparent or near-transparent so the body mesh shows. */
+  --bg:        transparent;
+  --bg-2:      rgba(255,255,255,0.04);
+  --bg-3:      rgba(255,255,255,0.08);
+  --surface:   rgba(255,255,255,0.04);
+  --surface-2: rgba(255,255,255,0.02);
+
+  /* Hairlines: 1-px white-alpha. */
+  --line:        rgba(255,255,255,0.10);
+  --line-strong: rgba(255,255,255,0.18);
+
+  /* Text scale: white → 78% → 55%. Replaces the dark-on-light scale. */
+  --fg-1: #ffffff;
+  --fg-2: rgba(255,255,255,0.78);
+  --fg-3: rgba(255,255,255,0.55);
+
+  /* Semantic tints: brighter on dark so they still register. */
+  --success:      #4ade80;
+  --success-tint: rgba(74,222,128,0.18);
+  --warning:      #fbbf24;
+  --warning-tint: rgba(251,191,36,0.20);
+  --danger:       #f87171;
+  --danger-tint:  rgba(248,113,113,0.18);
+
+  /* Elevation: lighter so it does not vanish on the navy. */
+  --shadow-1: 0 1px 2px rgba(0,0,0,0.30);
+  --shadow-2: 0 4px 12px rgba(0,0,0,0.32);
+  --shadow-3: 0 12px 28px rgba(0,0,0,0.40);
+}
+
 body {
   background:
     radial-gradient(circle at 18% 18%, rgba(94,130,188,0.36), transparent 50%),
@@ -1423,13 +1461,22 @@ p, .prose, .prose p, small, .caption {
   color: rgba(255,255,255,0.70);
 }
 
-/* Mini stats inside tiles + hub-hero stats. */
-.tile-stat,
-.hub-hero-stat {
+/* Mini stats inside tiles: tight, no card chrome (the parent .tile is the
+   card). The hub-hero-stat blocks DO get their own card chrome so they
+   stay readable on the dark mesh — keep the dark-theme card recipe but
+   preserve the original 10-px inner padding so labels and values do not
+   crash into the edges. */
+.tile-stat {
   background: transparent;
   border: 0;
   border-radius: 0;
   padding: 0;
+}
+.hub-hero-stat {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: 10px;
+  padding: 10px 12px;
 }
 .tile-stat .l,
 .hub-hero-stat .l {

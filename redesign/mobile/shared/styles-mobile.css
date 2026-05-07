@@ -334,7 +334,7 @@ h3 { font-size: 14px; line-height: 1.3; }
 .card-navy h3 { color: var(--fg-on-navy); }
 .prose { font-size: 13px; line-height: 1.5; }
 .prose p { margin: 8px 0; }
-.prose strong { color: var(--feazel-navy); }
+.prose strong { color: var(--fg-1); }
 .insights { padding: 0; margin: 0; list-style: none; }
 .insights li {
   display: flex;
@@ -473,7 +473,7 @@ h3 { font-size: 14px; line-height: 1.3; }
   margin-top: 12px;
 }
 .tile-stat .l { font-size: 10px; color: var(--fg-3); text-transform: uppercase; letter-spacing: 0.04em; }
-.tile-stat .v { font-size: 15px; font-weight: var(--fw-bold); color: var(--feazel-navy); margin-top: 2px; }
+.tile-stat .v { font-size: 15px; font-weight: var(--fw-bold); color: var(--fg-1); margin-top: 2px; }
 .tile-cta {
   display: inline-flex;
   align-items: center;
