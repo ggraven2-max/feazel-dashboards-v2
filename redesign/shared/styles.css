@@ -1445,6 +1445,19 @@ p, .prose, .prose p, small, .caption {
   box-shadow: none;
 }
 
+/* .page-head historically had no padding (it was a flex row, not a card).
+   Now that the dark theme renders it as a frosted card, give the eyebrow
+   + title + description their own breathing room inside the frame so
+   the text does not hug the left edge. Mobile gets a slightly tighter
+   inset; desktop gets a more generous one to match the rest of the
+   .card padding scale. */
+.page-head {
+  padding: 18px 20px;
+}
+@media (max-width: 768px) {
+  .page-head { padding: 14px 16px; }
+}
+
 /* Tile (LOB hub dashboard cards): brighter top fade, press-state shrink. */
 .tile {
   background: linear-gradient(180deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 100%);
