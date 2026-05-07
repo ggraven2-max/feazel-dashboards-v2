@@ -107,25 +107,31 @@ function subPageHTML (lob, folder, slug, label, dashTitle) {
 `;
 }
 
-// LOB-specific copy for the mobile Command Center hub
+// LOB-specific copy for the mobile Command Center hub.
+// Title / tagline / eyebrow mirror the iOS app's native LOB headers
+// (App.js ResidentialHeader / MultiFamilyHeader / ServiceHeader) so the
+// public mobile site reads as one cohesive surface with the iOS app.
 const LOB_COPY = {
   'residential': {
-    title: 'Command Center',
-    eyebrow: 'FEAZEL ROOFING · COO OFFICE · RESIDENTIAL',
+    title: 'Residential',
+    tagline: 'Doors knocked. Roofs sold.',
+    eyebrow: 'RESIDENTIAL · 13 MARKETS',
     intro: 'Where the residential business stands today: signed contracts, the revenue forecast against $125.6M, the open backlog, and what is actually invoicing.',
     target: '$185M',
     targetSub: '$125.6M residential'
   },
   'multi-family': {
-    title: 'Command Center',
-    eyebrow: 'FEAZEL ROOFING · COO OFFICE · MULTI-FAMILY',
+    title: 'Multi-Family',
+    tagline: 'By the building. By the block.',
+    eyebrow: 'MULTI-FAMILY · COMMERCIAL',
     intro: 'Where the multi-family and commercial book stands today: signed contracts, revenue projection, open backlog, and invoiced production.',
     target: '$185M',
     targetSub: '$59.4M commercial'
   },
   'service': {
-    title: 'Command Center',
-    eyebrow: 'FEAZEL ROOFING · COO OFFICE · SERVICE',
+    title: 'Service',
+    tagline: 'Always on. Always Feazel.',
+    eyebrow: 'SERVICE · FEE-FOR-SERVICE',
     intro: 'Where the Service book stands today: NetSuite invoiced revenue against the 2026 Service Budget plan, plus install-to-service overlap and the live service-call queue.',
     target: '$6.8M',
     targetSub: '2026 Service plan'
@@ -143,7 +149,7 @@ function serviceHubHTML () {
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Feazel ${escape(copy.title)} · Service · Mobile</title>
+<title>Feazel Service · Command Center · Mobile</title>
 <link rel="stylesheet" href="../../shared/styles.css">
 <link rel="stylesheet" href="../shared/styles-mobile.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='16' fill='%231f2d4b'/><text x='50' y='66' text-anchor='middle' font-family='Arial' font-size='52' font-weight='800' fill='white'>F</text></svg>">
@@ -154,10 +160,11 @@ function serviceHubHTML () {
 
 <template id="page-tpl">
 
-  <section class="hub-hero">
+  <section class="hub-hero" data-lob="service">
     <span class="eyebrow">${escape(copy.eyebrow)}</span>
     <h1>${escape(copy.title)}</h1>
-    <p>${escape(copy.intro)}</p>
+    <p class="hero-tagline">${escape(copy.tagline)}</p>
+    <p class="hero-narrative">${escape(copy.intro)}</p>
     <div class="hub-hero-stats">
       <div class="hub-hero-stat">
         <div class="l">2026 Service Target</div>
@@ -312,7 +319,7 @@ function commandCenterHTML (lob) {
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Feazel ${escape(copy.title)} · ${lobBrandLabel(lob)} · Mobile</title>
+<title>Feazel ${lobBrandLabel(lob)} · Command Center · Mobile</title>
 <link rel="stylesheet" href="../../shared/styles.css">
 <link rel="stylesheet" href="../shared/styles-mobile.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='16' fill='%231f2d4b'/><text x='50' y='66' text-anchor='middle' font-family='Arial' font-size='52' font-weight='800' fill='white'>F</text></svg>">
@@ -323,10 +330,11 @@ function commandCenterHTML (lob) {
 
 <template id="page-tpl">
 
-  <section class="hub-hero">
+  <section class="hub-hero" data-lob="${escape(lob)}">
     <span class="eyebrow">${escape(copy.eyebrow)}</span>
     <h1>${escape(copy.title)}</h1>
-    <p>${escape(copy.intro)}</p>
+    <p class="hero-tagline">${escape(copy.tagline)}</p>
+    <p class="hero-narrative">${escape(copy.intro)}</p>
     <div class="hub-hero-stats">
       <div class="hub-hero-stat">
         <div class="l">${lob === 'multi-family' ? '2026 MF Target' : '2026 Residential Target'}</div>
