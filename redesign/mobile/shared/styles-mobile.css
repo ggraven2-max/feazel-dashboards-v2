@@ -372,12 +372,15 @@ h3 { font-size: 14px; line-height: 1.3; }
    COMMAND CENTER (mobile hub)
    Hero, tiles, freshness card.
    ============================================================ */
-.hub-hero {
+/* Note: selector is intentionally ".page .hub-hero" (specificity 0,2,0)
+   so it beats the later-defined ".page * { max-width: 100% !important }"
+   rule which would otherwise cap the hero at the parent's content-box and
+   prevent the negative margin from extending it to the viewport edges. */
+.page .hub-hero {
   /* Extend the hero to the full viewport width regardless of the parent
-     .page's padding or any max-width caps applied to descendants of .page.
-     Using viewport units + a symmetric margin trick guarantees the box is
-     centered horizontally and not subject to the global
-     ".page * { max-width: 100% !important }" rule. */
+     .page's padding. Using viewport units + a symmetric margin trick
+     guarantees the box is centered horizontally and not subject to the
+     global ".page * { max-width: 100% !important }" rule. */
   width: 100vw;
   max-width: none !important;
   margin-left: calc(50% - 50vw);
