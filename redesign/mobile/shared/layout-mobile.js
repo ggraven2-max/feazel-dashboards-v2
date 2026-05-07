@@ -34,13 +34,25 @@ window.FZ.renderShell = function (opts) {
   // ?embed=1, the native shell already provides the topbar, LOB switcher,
   // and tab navigation. Hide the duplicate web chrome so the native header
   // sits flush against the Command Center hub-hero, with no redundant rows.
+  //
+  // Detection is belt-and-suspenders. The iOS app injects `__FZ_EMBED__` at
+  // document-start (App.js EMBED_INJECT), but a public web user can still
+  // append ?embed=1 manually, and an internal navigation inside the iOS
+  // WebView might drop the query string while keeping the global flag. We
+  // honor either signal, plus a sticky localStorage flag so once embed mode
+  // has been seen in this WebView session every subsequent page load stays
+  // embedded even if a relative <a href> navigation drops the query string.
   var embedMode = (function () {
     try {
+      if (window.__FZ_EMBED__) return true;
       if (/[?&]embed=1\b/.test(window.location.search || '')) return true;
+      if (window.localStorage && window.localStorage.getItem('FZ_EMBED') === '1') return true;
     } catch (e) {}
     return false;
   })();
   if (embedMode) {
+    try { window.__FZ_EMBED__ = true; } catch (e) {}
+    try { if (window.localStorage) window.localStorage.setItem('FZ_EMBED', '1'); } catch (e) {}
     document.documentElement.classList.add('embed-mode');
     if (document.body) document.body.classList.add('embed-mode');
   }

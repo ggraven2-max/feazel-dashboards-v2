@@ -487,13 +487,21 @@
 
 <script>
 (function () {
-  // Embed mode: when this page is loaded inside the iOS app via WebView with
-  // ?embed=1, the native shell already provides the Feazel logo, "One picture
-  // across 13 markets" headline, the LOB rollup chips, and the market ticker.
-  // Tag the document so the matching CSS hides the duplicate web hero. The
-  // public web view at feazelcommandcenter.com/mobile/ keeps the full hero.
+  // Embed mode: when this page is loaded inside the iOS app via WebView, the
+  // native shell already provides the Feazel logo, "One picture across 13
+  // markets" headline, the LOB rollup chips, and the market ticker. Tag the
+  // document so the matching CSS hides the duplicate web hero. The public
+  // web view at feazelcommandcenter.com/mobile/ keeps the full hero.
+  // Detection is belt-and-suspenders: the iOS app injects __FZ_EMBED__ at
+  // document-start, but a public viewer can also opt in via ?embed=1.
   try {
-    if (/[?&]embed=1\b/.test(window.location.search || '')) {
+    var inEmbed =
+      window.__FZ_EMBED__ === true ||
+      /[?&]embed=1\b/.test(window.location.search || '') ||
+      (window.localStorage && window.localStorage.getItem('FZ_EMBED') === '1');
+    if (inEmbed) {
+      try { window.__FZ_EMBED__ = true; } catch (e) {}
+      try { if (window.localStorage) window.localStorage.setItem('FZ_EMBED', '1'); } catch (e) {}
       document.documentElement.classList.add('embed-mode');
       if (document.body) document.body.classList.add('embed-mode');
     }

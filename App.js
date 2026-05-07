@@ -90,6 +90,32 @@ const Tab = createBottomTabNavigator();
 const SESSION_TS = Date.now();
 const { width: SCREEN_W } = Dimensions.get('window');
 
+// Belt-and-suspenders embed signal injected into every WebView. The page's
+// layout-mobile.js also detects embed mode via ?embed=1 in the URL, but
+// query strings can get dropped by internal tile-link navigation, redirects,
+// or SPA-style hops. Injecting a global flag and tagging the document at
+// document-start guarantees the page renders in embed mode regardless of how
+// the WebView arrived at the URL or whether the JS bundle was cached.
+const EMBED_INJECT = `
+  (function () {
+    window.__FZ_EMBED__ = true;
+    function tag () {
+      try {
+        if (document && document.documentElement) {
+          document.documentElement.classList.add('embed-mode');
+        }
+        if (document && document.body) {
+          document.body.classList.add('embed-mode');
+        }
+      } catch (e) {}
+    }
+    tag();
+    document.addEventListener('readystatechange', tag, false);
+    document.addEventListener('DOMContentLoaded', tag, false);
+  })();
+  true;
+`;
+
 // ============================================================
 // LIVE DATA CONTEXT (data.json fetched once on boot)
 // ============================================================
@@ -376,6 +402,8 @@ function HomeScreen({ navigation }) {
             cacheEnabled={false}
             cacheMode="LOAD_NO_CACHE"
             incognito
+            injectedJavaScriptBeforeContentLoaded={EMBED_INJECT}
+            injectedJavaScript={EMBED_INJECT}
             onLoadStart={() => setLoading(true)}
             onLoadEnd={() => setLoading(false)}
             onError={() => { setLoading(false); setErrored(true); }}
@@ -654,9 +682,6 @@ function ServiceHeader() {
   );
 }
 
-// ============================================================
-// LOB SCREEN — themed header on top, webview below
-// ============================================================
 function makeLobScreen(lob, label, HeaderCmp) {
   return function LobScreen() {
     const [loading, setLoading] = useState(true);
@@ -680,6 +705,8 @@ function makeLobScreen(lob, label, HeaderCmp) {
               cacheEnabled={false}
               cacheMode="LOAD_NO_CACHE"
               incognito
+              injectedJavaScriptBeforeContentLoaded={EMBED_INJECT}
+              injectedJavaScript={EMBED_INJECT}
               onLoadStart={() => setLoading(true)}
               onLoadEnd={() => setLoading(false)}
               onError={() => { setLoading(false); setErrored(true); }}
