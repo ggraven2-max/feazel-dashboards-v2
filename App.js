@@ -402,16 +402,27 @@ function RooftopBackground() {
   );
 }
 
+// fmtBigMoney: format a raw dollar number (e.g. 125615037) as $125.6M / $6.8M etc.
+function fmtBigMoney(v) {
+  if (!v || isNaN(v)) return '—';
+  if (v >= 1e9) return '$' + (v / 1e9).toFixed(1).replace(/\.0$/, '') + 'B';
+  if (v >= 1e6) return '$' + (v / 1e6).toFixed(2).replace(/\.?0+$/, '') + 'M';
+  if (v >= 1e3) return '$' + Math.round(v / 1e3) + 'K';
+  return '$' + Math.round(v).toLocaleString('en-US');
+}
+
 function ResidentialHeader() {
   const insets = useSafeAreaInsets();
   const data = useLobData('residential');
   const intro = useFadeUp([data?.revenue?.kpis?.length]);
   const rf = data?.revenue?.kpis || [];
   const so = data?.sales?.kpis || [];
+  const bl = data?.backlog || {};
+  const targetRaw = (data?.revenue?.execSummary && data.revenue.execSummary.budget) || 0;
+  const target   = fmtBigMoney(targetRaw);
   const signed   = val(findKpi(so, 'Signed Contracts YTD'));
   const invoiced = val(findKpi(rf, 'Invoiced YTD'));
-  const fcst     = val(findKpi(rf, 'Annual Forecast'));
-  const pace     = val(findKpi(rf, '4-Week'));
+  const backlog  = val(findKpi(bl.kpisExecutive || [], 'Total Portfolio Value'));
   return (
     <View style={[styles.lobHeaderWrap, { paddingTop: insets.top + 6 }]}>
       <RooftopBackground />
@@ -424,10 +435,10 @@ function ResidentialHeader() {
         <Text style={[styles.lobTagline, { color: BLUE_SOFT }]}>Doors knocked. Roofs sold.</Text>
       </Animated.View>
       <Animated.View style={[styles.kpiRowFour, intro]}>
-        <KpiChip label="SIGNED YTD"      value={signed}   accent={BLUE_SOFT} />
-        <KpiChip label="INVOICED YTD"    value={invoiced} accent={'#fff'} />
-        <KpiChip label="ANNUAL FORECAST" value={fcst}     accent={GOLD} />
-        <KpiChip label="WK PACE"         value={pace}     accent={'#fff'} />
+        <KpiChip label="2026 TARGET"  value={target}   accent={GOLD} />
+        <KpiChip label="SIGNED YTD"   value={signed}   accent={BLUE_SOFT} />
+        <KpiChip label="INVOICED YTD" value={invoiced} accent={'#fff'} />
+        <KpiChip label="OPEN BACKLOG" value={backlog}  accent={'#fff'} />
       </Animated.View>
     </View>
   );
@@ -482,10 +493,12 @@ function MultiFamilyHeader() {
   const intro = useFadeUp([data?.revenue?.kpis?.length]);
   const rf = data?.revenue?.kpis || [];
   const so = data?.sales?.kpis || [];
+  const bl = data?.backlog || {};
+  const targetRaw = (data?.revenue?.execSummary && data.revenue.execSummary.budget) || 0;
+  const target   = fmtBigMoney(targetRaw);
   const signed   = val(findKpi(so, 'Signed Contracts YTD'));
   const invoiced = val(findKpi(rf, 'Invoiced YTD'));
-  const plan     = val(findKpi(rf, 'Annual Budget'));
-  const pace     = val(findKpi(rf, 'YTD vs Plan'));
+  const backlog  = val(findKpi(bl.kpisExecutive || [], 'Total Portfolio Value'));
   return (
     <View style={[styles.lobHeaderWrap, { paddingTop: insets.top + 6 }]}>
       <BlocksBackground />
@@ -498,10 +511,10 @@ function MultiFamilyHeader() {
         <Text style={[styles.lobTagline, { color: GOLD_SOFT }]}>By the building. By the block.</Text>
       </Animated.View>
       <Animated.View style={[styles.kpiRowFour, intro]}>
-        <KpiChip label="SIGNED YTD"   value={signed}   accent={GOLD} />
-        <KpiChip label="INVOICED YTD" value={invoiced} accent={'#fff'} />
-        <KpiChip label="ANNUAL PLAN"  value={plan}     accent={GOLD_SOFT} />
-        <KpiChip label="VS PLAN"      value={pace}     accent={'#fff'} />
+        <KpiChip label="2026 MF TARGET" value={target}   accent={GOLD} />
+        <KpiChip label="SIGNED YTD"     value={signed}   accent={GOLD_SOFT} />
+        <KpiChip label="INVOICED YTD"   value={invoiced} accent={'#fff'} />
+        <KpiChip label="OPEN BACKLOG"   value={backlog}  accent={'#fff'} />
       </Animated.View>
     </View>
   );
@@ -585,11 +598,12 @@ function ServiceHeader() {
   const data = useLobData('service');
   const intro = useFadeUp([data?.revenue?.kpis?.length]);
   const rf = data?.revenue?.kpis || [];
-  const sc = data?.service?.kpis || [];
-  const calls    = val(findKpi(sc, 'Appointments YTD'));
-  const techs    = val(findKpi(sc, 'Service Techs'));
+  const ps = data?.revenue?.profitabilitySummary || {};
+  const targetRaw = (data?.revenue?.execSummary && data.revenue.execSummary.budget) || 0;
+  const target   = fmtBigMoney(targetRaw);
+  const invoiced = val(findKpi(rf, 'Invoiced YTD'));
   const pace     = val(findKpi(rf, 'Annualized Pace'));
-  const plan     = val(findKpi(rf, 'Annual Budget'));
+  const gm       = ps.combinedGP_pct ? ps.combinedGP_pct.toFixed(1) + '%' : '—';
   return (
     <View style={[styles.lobHeaderWrap, { paddingTop: insets.top + 6 }]}>
       <RadarBackground />
@@ -602,10 +616,10 @@ function ServiceHeader() {
         <Text style={[styles.lobTagline, { color: TEAL }]}>Always on. Always Feazel.</Text>
       </Animated.View>
       <Animated.View style={[styles.kpiRowFour, intro]}>
-        <KpiChip label="CALLS YTD" value={calls} accent={TEAL} />
-        <KpiChip label="TECHS"     value={techs} accent={'#fff'} />
-        <KpiChip label="PACE"      value={pace}  accent={GOLD_SOFT} />
-        <KpiChip label="PLAN"      value={plan}  accent={'#fff'} />
+        <KpiChip label="2026 TARGET"  value={target}   accent={GOLD} />
+        <KpiChip label="INVOICED YTD" value={invoiced} accent={TEAL} />
+        <KpiChip label="PACE"         value={pace}     accent={'#fff'} />
+        <KpiChip label="COMBINED GM"  value={gm}       accent={'#fff'} />
       </Animated.View>
     </View>
   );

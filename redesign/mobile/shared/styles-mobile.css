@@ -569,19 +569,14 @@ small { font-size: 11px; }
    ============================================================ */
 html.embed-mode .topbar,
 html.embed-mode .lob-switch,
-html.embed-mode .page-foot {
+html.embed-mode .page-foot,
+html.embed-mode .hub-hero {
   display: none !important;
 }
-/* Pull the hub-hero up so it touches the native header. The page
-   normally has var(--m-pad) of top padding; remove it in embed mode
-   so the navy hub-hero is flush, no gap. */
-html.embed-mode .page { padding-top: 0; }
-html.embed-mode .page > .hub-hero:first-child,
-html.embed-mode .page > section.hub-hero:first-child {
-  margin-top: 0;
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
-}
+/* The hub-hero is hidden in embed mode (its KPIs now live in the native
+   header chips). Give the next visible section a small top padding so
+   it doesn't slam right against the native header. */
+html.embed-mode .page { padding-top: var(--m-pad); }
 
 /* Bottom breathing room. The native floating pill tab bar (≈64px high,
    plus the iPhone home-indicator safe area, plus a 12px gutter) sits
