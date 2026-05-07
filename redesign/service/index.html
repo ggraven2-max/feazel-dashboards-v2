@@ -52,7 +52,7 @@
   <section class="section">
     <div class="section-head">
       <h2>Dashboards</h2>
-      <small>Click into the Revenue Forecast for the full sub-tab navigation</small>
+      <small>Click into either dashboard for the full sub-tab navigation</small>
     </div>
     <div class="grid grid-2">
       <a class="tile" href="./revenue-forecast/index.html">
@@ -71,6 +71,26 @@
           <div class="tile-stat"><div class="l">Invoiced YTD</div><div class="v" data-bind="tile.svc.invoiced">—</div></div>
           <div class="tile-stat"><div class="l">Pace</div><div class="v" data-bind="tile.svc.pace">—</div></div>
           <div class="tile-stat"><div class="l">FY26 GM</div><div class="v" data-bind="tile.svc.gm">—</div></div>
+        </div>
+        <span class="tile-cta">Open dashboard <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
+      </a>
+
+      <a class="tile" href="./service-calls/index.html">
+        <div style="display:flex; gap:14px; align-items:flex-start;">
+          <div class="tile-mark">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+          <div>
+            <span class="eyebrow">LIVE OPS</span>
+            <h2 style="margin-top:2px;">Service Calls YTD</h2>
+            <p>Service Appointment book by tech, branch, account, and aging. Aging tab flags WOs in progress 14+ days and not-started backlog. Findings tab surfaces tech outliers and disproportionate hours-to-contract WOs.</p>
+          </div>
+        </div>
+        <div class="tile-stats">
+          <div class="tile-stat"><div class="l">Apps YTD</div><div class="v" data-bind="tile.sc.apps">—</div></div>
+          <div class="tile-stat"><div class="l">Techs</div><div class="v" data-bind="tile.sc.techs">—</div></div>
+          <div class="tile-stat"><div class="l">Hours</div><div class="v" data-bind="tile.sc.hours">—</div></div>
+          <div class="tile-stat"><div class="l">Contract $</div><div class="v" data-bind="tile.sc.contract">—</div></div>
         </div>
         <span class="tile-cta">Open dashboard <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
       </a>
@@ -110,6 +130,7 @@
     var data = window.FZ && window.FZ.data;
     if (!data) return;
     var RF = data.REVENUE_FORECAST || {};
+    var SC = data.SERVICE_CALLS || {};
     var es = RF.execSummary || {};
     var ps = RF.profitabilitySummary || {};
     function kpi (list, label) { return Array.isArray(list) ? list.find(function (k) { return k.label === label; }) || null : null; }
@@ -118,6 +139,12 @@
     var rfInvoiced = kpi(RF.kpis, 'Invoiced YTD');
     var rfPace     = kpi(RF.kpis, 'Annualized Pace');
     var rfBudget   = es.budget || 0;
+
+    // Service Calls KPIs (parallel to mobile/service/index.html bindings).
+    var scApps     = kpi(SC.kpis, 'Appointments YTD');
+    var scTechs    = kpi(SC.kpis, 'Service Techs');
+    var scHours    = kpi(SC.kpis, 'Total Hours');
+    var scContract = kpi(SC.kpis, 'Contract $ on Calls');
 
     var fmtBigMoney = function (v) {
       if (!v || isNaN(v)) return '—';
@@ -139,6 +166,10 @@
       'tile.svc.invoiced': val(rfInvoiced),
       'tile.svc.pace':     val(rfPace),
       'tile.svc.gm':       ps.y2026_GP_pct ? ps.y2026_GP_pct.toFixed(1) + '%' : '—',
+      'tile.sc.apps':      val(scApps, '—'),
+      'tile.sc.techs':     val(scTechs, '—'),
+      'tile.sc.hours':     val(scHours, '—'),
+      'tile.sc.contract':  val(scContract, '—'),
       'freshness.headline': 'As of ' + (window.FZ.formatBuiltAt ? window.FZ.formatBuiltAt({ dateOnly: true }) : '—'),
       'freshness.stamp':    window.FZ.formatBuiltAt ? window.FZ.formatBuiltAt() : '—'
     };
