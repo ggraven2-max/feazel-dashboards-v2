@@ -102,10 +102,15 @@ function writeLobOutputs(lob, combined) {
 }
 
 function writeCombinedDataJson(allLobOutputs) {
-  // data/data.json gets the per-LOB structure, useful for the iOS app or any
-  // consumer that wants both LOBs in one fetch.
-  const dataDir = path.join(ROOT, 'data');
-  fs.mkdirSync(dataDir, { recursive: true });
+  // The combined per-LOB document is the canonical iOS-app input. The iOS
+  // shell fetches https://feazelcommandcenter.com/data/data.json on launch
+  // and feeds it into DataContext, which drives the native header chips.
+  //
+  // Netlify publishes the `redesign/` tree as the site root, so we must
+  // write the JSON inside that tree for the URL to resolve. We also keep a
+  // copy at the repo-root `data/` location for local consumers and for
+  // backwards compatibility with anything that imported by file path before
+  // the publish-path move.
   const combined = {
     _meta: {
       builtAt: timestamp(),
@@ -118,9 +123,21 @@ function writeCombinedDataJson(allLobOutputs) {
     const camelKey = lob.replace(/-([a-z])/g, function (_, c) { return c.toUpperCase(); });
     combined[camelKey] = allLobOutputs[lob];
   });
-  const jsonPath = path.join(dataDir, 'data.json');
-  fs.writeFileSync(jsonPath, JSON.stringify(combined, null, 2));
-  console.log('\n✓ Wrote combined ' + path.relative(ROOT, jsonPath));
+  const payload = JSON.stringify(combined, null, 2);
+
+  // Repo-root /data/ (gitignored, local-only)
+  const dataDir = path.join(ROOT, 'data');
+  fs.mkdirSync(dataDir, { recursive: true });
+  const localPath = path.join(dataDir, 'data.json');
+  fs.writeFileSync(localPath, payload);
+  console.log('\n✓ Wrote combined ' + path.relative(ROOT, localPath));
+
+  // Published path the iOS app fetches (under the Netlify publish root)
+  const publishedDir = path.join(ROOT, 'redesign', 'data');
+  fs.mkdirSync(publishedDir, { recursive: true });
+  const publishedPath = path.join(publishedDir, 'data.json');
+  fs.writeFileSync(publishedPath, payload);
+  console.log('✓ Wrote combined ' + path.relative(ROOT, publishedPath) + ' (Netlify-served)');
 }
 
 function buildLob(lob, projectsToRun) {
