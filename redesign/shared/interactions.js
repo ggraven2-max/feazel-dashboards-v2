@@ -183,15 +183,30 @@
   }
 
   // ---------- Topbar glass effect on scroll ----------
+  // Hysteresis: enter scrolled state above 24px, exit below 4px. The gap
+  // prevents the class from flipping on and off when scrollY hovers near
+  // a single threshold (which caused a visible twitch). rAF-batched so we
+  // never write the class more than once per frame.
   function setupStickyTopbar() {
     const topbar = document.querySelector('.topbar');
     if (!topbar) return;
-    const tick = () => {
-      if (window.scrollY > 8) topbar.classList.add('is-scrolled');
-      else topbar.classList.remove('is-scrolled');
+    const ENTER = 24, EXIT = 4;
+    let scrolled = false;
+    let raf = null;
+    const apply = () => {
+      raf = null;
+      const y = window.scrollY;
+      const next = scrolled ? (y > EXIT) : (y > ENTER);
+      if (next !== scrolled) {
+        scrolled = next;
+        topbar.classList.toggle('is-scrolled', scrolled);
+      }
     };
-    window.addEventListener('scroll', tick, { passive: true });
-    tick();
+    const onScroll = () => {
+      if (raf == null) raf = requestAnimationFrame(apply);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    apply();
   }
 
   // ---------- Click ripples on tiles + subnav ----------

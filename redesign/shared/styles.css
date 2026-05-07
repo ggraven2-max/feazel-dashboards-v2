@@ -1149,6 +1149,39 @@ a:hover { color: var(--feazel-blue-hover); text-decoration: underline; text-unde
   border-bottom-color: rgba(255,255,255,0.10);
   box-shadow: 0 4px 24px -8px rgba(0,0,0,0.28);
 }
+/* When the topbar is in its scrolled navy state, flip every interior text
+   element to a light treatment so it stays readable against the dark glass.
+   Defaults are tuned for a white surface; without this override the
+   breadcrumbs and user name disappear into the navy background. */
+.topbar.is-scrolled,
+.topbar.is-scrolled * { color: rgba(255,255,255,0.92); }
+.topbar.is-scrolled .topbar-crumbs { color: rgba(255,255,255,0.62); }
+.topbar.is-scrolled .topbar-crumbs .crumb-current { color: #ffffff; }
+.topbar.is-scrolled .topbar-crumbs span + span::before { color: rgba(255,255,255,0.32); }
+.topbar.is-scrolled .topbar-crumbs a { color: rgba(255,255,255,0.62); }
+.topbar.is-scrolled .topbar-crumbs a:hover { color: #ffffff; }
+.topbar.is-scrolled .topbar-right { color: rgba(255,255,255,0.72); }
+.topbar.is-scrolled .topbar-right .stamp {
+  background: rgba(255,255,255,0.10);
+  color: #ffffff;
+  border: 1px solid rgba(255,255,255,0.14);
+}
+.topbar.is-scrolled .topbar-user { color: #ffffff; }
+.topbar.is-scrolled .topbar-user .avatar {
+  background: var(--feazel-blue);
+  color: #ffffff;
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.18);
+}
+/* Smooth the color flip so it doesn't snap when the glass state toggles. */
+.topbar .topbar-crumbs,
+.topbar .topbar-crumbs .crumb-current,
+.topbar .topbar-crumbs a,
+.topbar .topbar-right,
+.topbar .topbar-right .stamp,
+.topbar .topbar-user,
+.topbar .topbar-user .avatar {
+  transition: color 220ms ease, background 220ms ease, border-color 220ms ease;
+}
 
 /* ----- KPI value: click to copy flash ----- */
 .kpi-value { position: relative; }
