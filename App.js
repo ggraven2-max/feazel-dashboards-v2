@@ -402,6 +402,7 @@ function HomeScreen({ navigation }) {
             cacheEnabled={false}
             cacheMode="LOAD_NO_CACHE"
             incognito
+            allowsBackForwardNavigationGestures
             injectedJavaScriptBeforeContentLoaded={EMBED_INJECT}
             injectedJavaScript={EMBED_INJECT}
             onLoadStart={() => setLoading(true)}

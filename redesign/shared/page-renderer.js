@@ -295,6 +295,47 @@
     return wrap;
   }
 
+  // ---------- Empty-section detection ----------
+  // Skip rendering a section that has no useful payload to avoid empty cards
+  // and "—" boxes on dashboards where the underlying data feed isn't
+  // available (e.g., MF profitability before the cost-mix CSV lands).
+  function isSectionEmpty(s) {
+    if (!s || !s.kind) return true;
+    switch (s.kind) {
+      case 'kpi-row':
+        if (!s.items || !s.items.length) return true;
+        // Also skip if EVERY KPI value is empty/dash/zero — pages with
+        // section.items: [] aren't the only empty case; some come back as
+        // [{ value: '—' }, { value: '—' }, ...]
+        return s.items.every(function (k) {
+          var v = (k && k.value != null) ? String(k.value).trim() : '';
+          return v === '' || v === '—' || v === '-' || v === '$0' || v === '0';
+        });
+      case 'chart-grid':
+        if (!s.charts || !s.charts.length) return true;
+        // Skip if every chart's dataset is empty.
+        return s.charts.every(function (c) {
+          var datasets = c && c.config && c.config.data && c.config.data.datasets;
+          if (!Array.isArray(datasets) || datasets.length === 0) return true;
+          return datasets.every(function (d) {
+            return !d || !Array.isArray(d.data) || d.data.length === 0
+              || d.data.every(function (v) { return v == null || v === 0; });
+          });
+        });
+      case 'table':
+        return !s.rows || !s.rows.length;
+      case 'prose':
+        return !s.body && !s.html && !(s.items && s.items.length);
+      case 'callout':
+        return !s.body && !s.text && !s.html;
+      case 'two-col':
+        var l = s.left, r = s.right;
+        return isSectionEmpty(l) && isSectionEmpty(r);
+      default:
+        return false;
+    }
+  }
+
   // ---------- Top-level render ----------
   P.renderPage = function (def) {
     var slot = document.getElementById('page-content');
@@ -306,6 +347,7 @@
     slot.appendChild(renderHead(def));
 
     (def.sections || []).forEach(function (s, idx) {
+      if (isSectionEmpty(s)) return;            // skip empty/no-data sections
       if (s.kind === 'kpi-row') slot.appendChild(renderKpiRow(s));
       else if (s.kind === 'chart-grid') slot.appendChild(renderChartGrid(s, idx));
       else if (s.kind === 'table') slot.appendChild(renderTable(s));

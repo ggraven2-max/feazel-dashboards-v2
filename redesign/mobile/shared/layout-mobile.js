@@ -61,8 +61,26 @@ window.FZ.renderShell = function (opts) {
   // synthetic Service Calls dashboard that doesn't live in the shared registry.
   var dashboards = window.FZ.dashboards;
   if (lob === 'service') {
-    dashboards = dashboards.filter(function (d) { return d.folder === 'revenue-forecast'; });
-    dashboards = dashboards.concat([
+    // Service has its OWN, smaller revenue-forecast page list (9 pages), not
+    // the residential 13-page list from the shared registry. Using the shared
+    // registry directly produces sub-nav links to job-types / pipeline /
+    // cycle / weekly-targets / production — none of which the Service
+    // build-mobile.js generator emits, so taps land on 404.
+    // Mirror SERVICE_DASHBOARDS from redesign/mobile/build-mobile.js exactly.
+    dashboards = [
+      { id: 'revenue-forecast', folder: 'revenue-forecast', short: 'Revenue Forecast',
+        title: 'Service Revenue Forecast', icon: 'line-chart',
+        pages: [
+          { slug: 'index',           label: 'Hub',                 short: 'Hub' },
+          { slug: 'executive',       label: 'Executive',           short: 'Executive' },
+          { slug: 'projection',      label: 'Projection',          short: 'Projection' },
+          { slug: 'monthly',         label: 'Monthly',             short: 'Monthly' },
+          { slug: 'budget',          label: 'Budget',              short: 'Budget' },
+          { slug: 'profitability',   label: 'Profitability',       short: 'Profitability' },
+          { slug: 'budget-recovery', label: 'Budget Recovery',     short: 'Recovery' },
+          { slug: 'recommendations', label: 'Recommendations',     short: 'Recs' },
+          { slug: 'install-service', label: 'Install ↔ Service',   short: 'Install/Svc' }
+        ] },
       { id: 'service-calls', folder: 'service-calls', short: 'Service Calls',
         title: 'Service Calls YTD', icon: 'check-circle',
         pages: [
@@ -74,15 +92,20 @@ window.FZ.renderShell = function (opts) {
           { slug: 'aging',         label: 'Aging',         short: 'Aging' },
           { slug: 'findings',      label: 'Findings',      short: 'Findings' }
         ] }
-    ]);
+    ];
   }
 
-  var current          = (folder && slug !== 'index') ? window.FZ.findPage(folder, slug) : null;
-  var currentDashboard = folder ? window.FZ.findDashboard(folder) : null;
-  // Synthetic dashboard for Service Calls (not in shared registry).
-  if (!currentDashboard && lob === 'service' && folder === 'service-calls') {
-    currentDashboard = dashboards[dashboards.length - 1];
-  }
+  // Look up the current dashboard from the LOB-AWARE local `dashboards`
+  // array, not the shared FZ.findDashboard helper. The shared registry only
+  // knows the residential page lists; using it for Service produced a
+  // sub-nav with 13 pages (job-types / pipeline / cycle / weekly-targets /
+  // production) that don't exist for Service, so taps 404'd.
+  var currentDashboard = folder
+    ? (dashboards.find(function (d) { return d.folder === folder; }) || null)
+    : null;
+  var current = (currentDashboard && slug !== 'index')
+    ? (currentDashboard.pages.find(function (p) { return p.slug === slug; }) || null)
+    : null;
 
   // Folder allowlists for cross-LOB navigation. Service only has these two
   // folders; Res/MF have four. When the user taps a different LOB from a
