@@ -95,14 +95,17 @@ function endOfMonth(year, monthIdx) {
 
 // ---------- input discovery ----------
 function findFiles(inputDir) {
+  // io.listInputs returns newest-first by mtime, so take the FIRST match
+  // for each role. Without the !out.X guards this loop would overwrite with
+  // every subsequent (older) match and end up holding yesterday's files.
   const all = io.listInputs(inputDir);
   const out = { forecast: null, budget: null, contracts: null, profitability: null };
   for (const f of all) {
     const lower = f.name.toLowerCase();
-    if (lower.includes('forecasting report') && /\.xlsx?$/i.test(lower)) out.forecast = f;
-    else if (lower.includes('budget') && /\.xlsx?$/i.test(lower)) out.budget = f;
-    else if (lower.includes('contracts signed') && /\.xlsx?$/i.test(lower)) out.contracts = f;
-    else if (lower.includes('profitability') && /\.csv$/i.test(lower)) out.profitability = f;
+    if (!out.forecast && lower.includes('forecasting report') && /\.xlsx?$/i.test(lower)) out.forecast = f;
+    else if (!out.budget && lower.includes('budget') && /\.xlsx?$/i.test(lower)) out.budget = f;
+    else if (!out.contracts && lower.includes('contracts signed') && /\.xlsx?$/i.test(lower)) out.contracts = f;
+    else if (!out.profitability && lower.includes('profitability') && /\.csv$/i.test(lower)) out.profitability = f;
   }
   return out;
 }

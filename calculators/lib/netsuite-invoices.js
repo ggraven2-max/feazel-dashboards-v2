@@ -32,9 +32,19 @@ const BRANCH_REMAP = {
 
 function findInvoiceFile(inputDir) {
   if (!fs.existsSync(inputDir)) return null;
-  const files = fs.readdirSync(inputDir);
-  const match = files.find(f => /invoicedytd/i.test(f) && /\.csv$/i.test(f));
-  return match ? path.join(inputDir, match) : null;
+  // Pick the newest matching file by mtime so a fresh ResInvoicedYTDResults***.csv
+  // wins over yesterday's copy when both are present in the inputs folder.
+  // (FORECASTING_RULES.md spec: "the pipeline picks the most recently modified match.")
+  const matches = fs.readdirSync(inputDir)
+    .filter(f => /invoicedytd/i.test(f) && /\.csv$/i.test(f))
+    .map(f => {
+      const full = path.join(inputDir, f);
+      let mtime = 0;
+      try { mtime = fs.statSync(full).mtimeMs; } catch (e) {}
+      return { name: f, full: full, mtime: mtime };
+    })
+    .sort(function (a, b) { return b.mtime - a.mtime; });
+  return matches.length ? matches[0].full : null;
 }
 
 function parsePeriod(periodStr) {

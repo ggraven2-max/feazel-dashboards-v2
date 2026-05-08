@@ -58,13 +58,15 @@ function round1(v) { return Math.round(v * 10) / 10; }
 
 // ---------- input discovery ----------
 function findFiles(inputDir) {
+  // io.listInputs returns newest-first by mtime; take the FIRST match for
+  // each role so a fresh upload supersedes yesterday's file.
   const all = io.listInputs(inputDir);
   const out = { budget: null, profitability: null, jobsWosSas: null };
   for (const f of all) {
     const lower = f.name.toLowerCase();
-    if (lower.includes('budget') && /\.xlsx?$/i.test(lower)) out.budget = f;
-    else if (lower.includes('profitability') && /\.csv$/i.test(lower)) out.profitability = f;
-    else if (lower.includes('jobs with wos') && /\.xlsx?$/i.test(lower)) out.jobsWosSas = f;
+    if (!out.budget && lower.includes('budget') && /\.xlsx?$/i.test(lower)) out.budget = f;
+    else if (!out.profitability && lower.includes('profitability') && /\.csv$/i.test(lower)) out.profitability = f;
+    else if (!out.jobsWosSas && lower.includes('jobs with wos') && /\.xlsx?$/i.test(lower)) out.jobsWosSas = f;
   }
   return out;
 }

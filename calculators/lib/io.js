@@ -5,17 +5,30 @@
 const fs = require('fs');
 const path = require('path');
 
-/** Synchronously read all files in a folder. Returns [{name, ext, fullPath}]. */
+/** Synchronously read all files in a folder, SORTED NEWEST-FIRST by mtime.
+ *  FORECASTING_RULES.md spec: "the pipeline picks the most recently modified
+ *  match." Calculators do `files.find(pred)`, which returns the first match;
+ *  with this sort, the newest dated XLSX wins when older copies are still
+ *  on disk (e.g., yesterday's "...2026-05-07-..." file alongside today's
+ *  "...2026-05-08-..." file).
+ *  Returns [{name, ext, fullPath, mtime}]. */
 function listInputs(dir) {
   if (!fs.existsSync(dir)) return [];
   return fs.readdirSync(dir)
     .filter(f => !f.startsWith('.') && !/\.(md|gitkeep|README)$/i.test(f))
-    .map(f => ({
-      name: f,
-      ext: path.extname(f).toLowerCase().replace('.', ''),
-      fullPath: path.join(dir, f)
-    }))
-    .filter(f => ['csv', 'xlsx', 'xls', 'json', 'tsv'].includes(f.ext));
+    .map(f => {
+      const fullPath = path.join(dir, f);
+      let mtime = 0;
+      try { mtime = fs.statSync(fullPath).mtimeMs; } catch (e) {}
+      return {
+        name: f,
+        ext: path.extname(f).toLowerCase().replace('.', ''),
+        fullPath: fullPath,
+        mtime: mtime
+      };
+    })
+    .filter(f => ['csv', 'xlsx', 'xls', 'json', 'tsv'].includes(f.ext))
+    .sort(function (a, b) { return b.mtime - a.mtime; });
 }
 
 /** Read a CSV file and return an array of row objects. */

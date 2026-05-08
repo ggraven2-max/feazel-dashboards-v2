@@ -170,17 +170,20 @@ function copyOrLink(srcDir, files, destDir) {
  * we can pass explicit paths instead of relying on glob lookups.
  */
 function classifyInputs(files) {
+  // `files` arrives newest-first from io.listInputs, so take the FIRST match
+  // for each role. The unguarded version was overwriting with each later
+  // (older) file and ending up with yesterday's data.
   const cfg = {};
   for (const f of files) {
     const lower = f.name.toLowerCase();
     const full = f.fullPath;
-    if (lower.includes('forecasting report')) cfg.forecast_report = full;
-    else if (lower.includes('sold not processed')) cfg.snp = full;
-    else if (lower.includes('contracts signed')) cfg.contracts_ytd = full;
-    else if (lower.includes('residential budget') || lower.includes('budget')) {
-      cfg.budget = cfg.budget || full;
+    if (!cfg.forecast_report && lower.includes('forecasting report')) cfg.forecast_report = full;
+    else if (!cfg.snp && lower.includes('sold not processed')) cfg.snp = full;
+    else if (!cfg.contracts_ytd && lower.includes('contracts signed')) cfg.contracts_ytd = full;
+    else if (!cfg.budget && (lower.includes('residential budget') || lower.includes('budget'))) {
+      cfg.budget = full;
     }
-    else if (lower.includes('profitability')) cfg.profitability = full;
+    else if (!cfg.profitability && lower.includes('profitability')) cfg.profitability = full;
   }
   return cfg;
 }
