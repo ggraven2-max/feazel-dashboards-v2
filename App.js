@@ -376,16 +376,16 @@ function HomeScreen({ navigation }) {
   const [reloadKey, setReloadKey] = useState(Date.now());
   const url = `${MOBILE_BASE}/?embed=1&t=${SESSION_TS}_${reloadKey}`;
 
-  // Tapping the Home tab while already focused → fresh-load the Home hub.
+  // Always land on the Home hub when the tab becomes active or is re-tapped
+  // while focused. Same two-listener pattern as LobScreen.
   useEffect(() => {
     if (!navigation || !navigation.addListener) return;
-    const unsub = navigation.addListener('tabPress', () => {
-      if (navigation.isFocused()) {
-        setLoading(true);
-        setReloadKey(Date.now());
-      }
+    const reset = () => { setLoading(true); setReloadKey(Date.now()); };
+    const unsubFocus = navigation.addListener('focus', reset);
+    const unsubTabPress = navigation.addListener('tabPress', () => {
+      if (navigation.isFocused()) reset();
     });
-    return unsub;
+    return () => { unsubFocus(); unsubTabPress(); };
   }, [navigation]);
 
   const onShouldStartLoad = useCallback((req) => {
@@ -703,20 +703,23 @@ function makeLobScreen(lob, label, HeaderCmp) {
     const reload = useCallback(() => { setErrored(false); setLoading(true); setReloadKey(Date.now()); }, []);
     const url = `${MOBILE_BASE}/${lob}/?embed=1&t=${SESSION_TS}_${reloadKey}`;
 
-    // When the user taps the LOB tab while it's already focused (e.g., they
-    // are deep inside Sales Overview / Sales Dashboard and want to go back
-    // to the Residential hub), force the WebView to reload by bumping
-    // reloadKey. Without this, repeating-tab does nothing and there is no
-    // built-in way to reach the LOB hub from inside a dashboard.
+    // Always land on the LOB hub when the tab becomes active or is re-tapped
+    // while focused. Two listeners cover both cases:
+    //   - 'focus'    fires when this screen becomes the active tab (e.g.,
+    //                user switches from Residential to Multi-Family). The
+    //                WebView resets so the new LOB shows its hub instead
+    //                of whatever sub-page it last had.
+    //   - 'tabPress' with isFocused() fires when the user taps the tab
+    //                they are already on (e.g., deep inside a dashboard,
+    //                they tap Residential to go back to the LOB hub).
     useEffect(() => {
       if (!navigation || !navigation.addListener) return;
-      const unsub = navigation.addListener('tabPress', () => {
-        if (navigation.isFocused()) {
-          setLoading(true);
-          setReloadKey(Date.now());
-        }
+      const reset = () => { setLoading(true); setReloadKey(Date.now()); };
+      const unsubFocus = navigation.addListener('focus', reset);
+      const unsubTabPress = navigation.addListener('tabPress', () => {
+        if (navigation.isFocused()) reset();
       });
-      return unsub;
+      return () => { unsubFocus(); unsubTabPress(); };
     }, [navigation]);
 
     return (

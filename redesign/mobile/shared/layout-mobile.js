@@ -107,19 +107,13 @@ window.FZ.renderShell = function (opts) {
     ? (currentDashboard.pages.find(function (p) { return p.slug === slug; }) || null)
     : null;
 
-  // Folder allowlists for cross-LOB navigation. Service only has these two
-  // folders; Res/MF have four. When the user taps a different LOB from a
-  // page that doesn't exist there, fall through to that LOB's hub.
-  var SERVICE_FOLDERS = { 'revenue-forecast': true, 'service-calls': true };
-  var RES_MF_FOLDERS  = { 'sales-overview': true, 'revenue-forecast': true, 'backlog': true, 'installs-ytd': true };
+  // Switching LOBs always lands on the new LOB's hub — never on the
+  // corresponding sub-page. Avoids the awkward case where you're deep in
+  // Residential → Sales Overview → Trends, tap Multi-Family, and land on
+  // a deep MF sub-page you didn't ask for. Greg's spec.
   function urlForLob (target) {
-    var prefix = atRoot ? ('../' + target + '/') : ('../../' + target + '/');
     if (target === lob) return '#';
-    if (folder) {
-      if (target === 'service' && !SERVICE_FOLDERS[folder]) return prefix + 'index.html';
-      if ((target === 'residential' || target === 'multi-family') && !RES_MF_FOLDERS[folder]) return prefix + 'index.html';
-      return prefix + folder + '/' + (slug === 'index' ? 'index.html' : slug + '.html');
-    }
+    var prefix = atRoot ? ('../' + target + '/') : ('../../' + target + '/');
     return prefix + 'index.html';
   }
   var resUrl = urlForLob('residential');

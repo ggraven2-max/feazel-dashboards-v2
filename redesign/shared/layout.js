@@ -67,18 +67,13 @@ window.FZ.renderShell = function (opts) {
   // Service hub. Likewise, MF/Residential links from a Service folder also
   // fall through to the LOB hub when the folder doesn't exist there.
   var ALL_LOBS = ['residential', 'multi-family', 'service'];
-  // Folders supported per LOB (for cross-LOB sidebar links to fall through
-  // gracefully to the LOB hub instead of 404ing on a non-existent folder).
-  var SERVICE_FOLDERS = { 'revenue-forecast': true, 'service-calls': true };
-  var RES_MF_FOLDERS  = { 'sales-overview': true, 'revenue-forecast': true, 'backlog': true, 'installs-ytd': true };
+  // Switching LOBs always lands on that LOB's hub — never on the
+  // corresponding sub-page in the new LOB. This avoids the awkward case
+  // where you're deep inside Residential → Sales Overview → Trends, tap
+  // Multi-Family, and end up on a deep MF page you didn't ask for.
   function urlForLob (target) {
-    var prefixToTarget = atRoot ? ('../' + target + '/') : ('../../' + target + '/');
     if (target === lob) return '#';
-    if (folder) {
-      if (target === 'service' && !SERVICE_FOLDERS[folder]) return prefixToTarget + 'index.html';
-      if ((target === 'residential' || target === 'multi-family') && !RES_MF_FOLDERS[folder]) return prefixToTarget + 'index.html';
-      return prefixToTarget + folder + '/' + (slug === 'index' ? 'index.html' : slug + '.html');
-    }
+    var prefixToTarget = atRoot ? ('../' + target + '/') : ('../../' + target + '/');
     return prefixToTarget + 'index.html';
   }
   var sidebarHTML = ''
