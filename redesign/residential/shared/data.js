@@ -1,8 +1,8 @@
-/* AUTO-GENERATED — do not edit. Generated 2026-05-08T11:05:24.149Z (residential) */
+/* AUTO-GENERATED — do not edit. Generated 2026-05-08T19:11:04.677Z (residential) */
 window.FZ = window.FZ || {};
 window.FZ.data = {
   "_meta": {
-    "builtAt": "2026-05-08T11:05:24.149Z",
+    "builtAt": "2026-05-08T19:11:04.677Z",
     "pipelineVersion": "2.0.0",
     "lob": "residential",
     "lastBuiltProjects": [
@@ -15,26 +15,26 @@ window.FZ.data = {
       {
         "id": "installs-ytd",
         "version": "1.0-rules-encoded",
-        "elapsedMs": 63,
-        "builtAt": "2026-05-08T11:05:24.149Z"
+        "elapsedMs": 80,
+        "builtAt": "2026-05-08T19:11:04.677Z"
       },
       {
         "id": "sales-overview",
         "version": "1.0-rules-encoded",
-        "elapsedMs": 452,
-        "builtAt": "2026-05-08T11:05:24.149Z"
+        "elapsedMs": 420,
+        "builtAt": "2026-05-08T19:11:04.677Z"
       },
       {
         "id": "revenue-forecast",
         "version": "V5-baseline-2026-05-04-shell-1.1",
-        "elapsedMs": 3,
-        "builtAt": "2026-05-08T11:05:24.149Z"
+        "elapsedMs": 15,
+        "builtAt": "2026-05-08T19:11:04.677Z"
       },
       {
         "id": "backlog",
         "version": "1.0-rules-encoded",
-        "elapsedMs": 32,
-        "builtAt": "2026-05-08T11:05:24.149Z"
+        "elapsedMs": 49,
+        "builtAt": "2026-05-08T19:11:04.677Z"
       }
     ]
   },
@@ -53,7 +53,7 @@ window.FZ.data = {
       "multiTradeJobs": 325,
       "singleTradeJobs": 825,
       "multiTradePct": 28.3,
-      "lastBuild": "2026-05-08T11:05:24.149Z"
+      "lastBuild": "2026-05-08T19:11:04.677Z"
     },
     "tabs": [
       {
@@ -138,7 +138,7 @@ window.FZ.data = {
       },
       {
         "label": "Completion Time Gap",
-        "value": "+27.9d",
+        "value": "+27.8d",
         "sub": "MT 45.4d vs ST 17.5d"
       }
     ],
@@ -366,13 +366,13 @@ window.FZ.data = {
             "data": [
               65.6,
               44.1,
-              26.6,
+              26.5,
               36.7,
               50.1,
               54.7,
               64.4,
-              56.5,
-              28.6,
+              56.4,
+              28.5,
               30.4,
               38,
               66.6,
@@ -387,7 +387,7 @@ window.FZ.data = {
               21.5,
               18.5,
               22.6,
-              20.2,
+              20.1,
               25.6,
               21.5,
               10.6,
@@ -463,7 +463,7 @@ window.FZ.data = {
           {
             "label": "Median Days",
             "data": [
-              17.7,
+              17.6,
               27.7,
               21.6,
               25.4,
@@ -560,7 +560,7 @@ window.FZ.data = {
             "label": "PMs",
             "data": [
               {
-                "x": 29.6,
+                "x": 29.5,
                 "y": 1572998.11,
                 "wos": 76,
                 "name": "Eric Isakov"
@@ -686,7 +686,7 @@ window.FZ.data = {
                 "name": "Chad Williams"
               },
               {
-                "x": 67.6,
+                "x": 67.5,
                 "y": 375543.42,
                 "wos": 39,
                 "name": "Daniel Galli"
@@ -722,7 +722,7 @@ window.FZ.data = {
                 "name": "Justin Milliron"
               },
               {
-                "x": 63,
+                "x": 62.9,
                 "y": 25111,
                 "wos": 6,
                 "name": "Chris Atkins"
@@ -795,8 +795,8 @@ window.FZ.data = {
             "data": [
               22.7,
               33.6,
-              59.1,
-              148.7,
+              59,
+              148.6,
               84,
               105.6,
               58.7,
@@ -806,7 +806,7 @@ window.FZ.data = {
               84.7,
               43.7,
               84.4,
-              67.6
+              67.5
             ]
           }
         ]
@@ -855,13 +855,13 @@ window.FZ.data = {
           {
             "label": "Median Complete",
             "data": [
-              31.7,
+              31.6,
               22.4,
               11.7,
               27,
               25.6,
               117.4,
-              103.1,
+              103.2,
               25.4
             ]
           }
@@ -912,7 +912,7 @@ window.FZ.data = {
             "label": "Creators",
             "data": [
               {
-                "x": 31.7,
+                "x": 31.6,
                 "y": 19666.85,
                 "jobs": 355,
                 "name": "Brandon Vera"
@@ -948,7 +948,7 @@ window.FZ.data = {
                 "name": "Morgan Valois"
               },
               {
-                "x": 103.1,
+                "x": 103.2,
                 "y": 30826.69,
                 "jobs": 6,
                 "name": "Kayla Wright"
@@ -985,7 +985,7 @@ window.FZ.data = {
             377,
             6249230.13,
             16576.21,
-            17.7,
+            17.6,
             34.4,
             25.5,
             65.6,
@@ -1010,7 +1010,7 @@ window.FZ.data = {
             21.6,
             18.3,
             31.6,
-            26.6,
+            26.5,
             18.5
           ],
           [
@@ -1033,7 +1033,7 @@ window.FZ.data = {
             25.7,
             29.4,
             50.1,
-            20.2
+            20.1
           ],
           [
             "Dayton",
@@ -1065,7 +1065,7 @@ window.FZ.data = {
             20.7,
             16.4,
             34.4,
-            56.5,
+            56.4,
             10.6
           ],
           [
@@ -1076,7 +1076,7 @@ window.FZ.data = {
             23.1,
             19.6,
             35.2,
-            28.6,
+            28.5,
             17.5
           ],
           [
@@ -1155,7 +1155,7 @@ window.FZ.data = {
             64,
             1572998.11,
             20697.34,
-            29.6,
+            29.5,
             33.1
           ],
           [
@@ -1291,7 +1291,7 @@ window.FZ.data = {
             768781.95,
             19712.36,
             26.7,
-            21.5
+            21.4
           ],
           [
             "Jason Andrews",
@@ -1344,8 +1344,8 @@ window.FZ.data = {
             27,
             375543.42,
             9629.32,
-            67.6,
-            43.7
+            67.5,
+            43.6
           ],
           [
             "Adam Marrero",
@@ -1390,7 +1390,7 @@ window.FZ.data = {
             68552.43,
             7616.94,
             107.5,
-            70.8
+            70.9
           ],
           [
             "Chris Atkins",
@@ -1398,7 +1398,7 @@ window.FZ.data = {
             4,
             25111,
             4185.17,
-            63,
+            62.9,
             43.8
           ]
         ]
@@ -1433,14 +1433,14 @@ window.FZ.data = {
             98,
             946883.47,
             9662.08,
-            59.1
+            59
           ],
           [
             "Metal",
             21,
             378035.09,
             18001.67,
-            148.7
+            148.6
           ],
           [
             "Windows",
@@ -1510,7 +1510,7 @@ window.FZ.data = {
             1,
             2303.15,
             2303.15,
-            67.6
+            67.5
           ]
         ]
       },
@@ -1533,7 +1533,7 @@ window.FZ.data = {
             355,
             6981730.98,
             19666.85,
-            "31.7d",
+            "31.6d",
             "27.6d",
             34.6,
             19666.85
@@ -1593,7 +1593,7 @@ window.FZ.data = {
             6,
             184960.11,
             30826.69,
-            "103.1d",
+            "103.2d",
             "17.5d",
             33.3,
             30826.69
@@ -1799,8 +1799,8 @@ window.FZ.data = {
     ],
     "commentary": {
       "areasOfConcern": [
-        "Daniel Galli: 39 WOs, $376K revenue, 67.6-day median complete, top-volume PM with the slowest cycle in the network.",
-        "Multi-trade penalty is severe in 3 markets: Columbus MT 65.6d vs ST 12.4d, Richmond MT 56.5d vs ST 10.6d, Raleigh MT 64.4d vs ST 21.5d.",
+        "Daniel Galli: 39 WOs, $376K revenue, 67.5-day median complete, top-volume PM with the slowest cycle in the network.",
+        "Multi-trade penalty is severe in 3 markets: Columbus MT 65.6d vs ST 12.4d, Richmond MT 56.4d vs ST 10.6d, Raleigh MT 64.4d vs ST 21.5d.",
         "Days to Start averages 28.0 days company-wide and 37.7 days in Detroit Metro (a sold job sits weeks before a crew touches it)."
       ],
       "watchList": [
@@ -1810,9 +1810,9 @@ window.FZ.data = {
       ],
       "positivesToBuildOn": [
         "April delivered $7.86M across 442 invoiced jobs at 17.6-day median complete, the highest revenue month and one of the fastest cycles of the year.",
-        "Columbus hits 17.7-day median complete and a $16,576 average contract on 377 jobs.",
+        "Columbus hits 17.6-day median complete and a $16,576 average contract on 377 jobs.",
         "Multi-trade jobs carry a $25,809 average contract versus $15,622 for single-trade, a 65% revenue lift per job.",
-        "Columbus is the best-balanced market: 17.7-day median complete, 25.5% multi-trade attach, $16,576 average contract on 377 jobs."
+        "Columbus is the best-balanced market: 17.6-day median complete, 25.5% multi-trade attach, $16,576 average contract on 377 jobs."
       ]
     }
   },
@@ -1821,7 +1821,7 @@ window.FZ.data = {
     "title": "Residential Sales Overview",
     "subtitle": "YTD 2026",
     "lastSigned": "2026-05-28",
-    "ytdDays": 127,
+    "ytdDays": 128,
     "rowCount": 1776,
     "tabs": [
       {
@@ -1917,8 +1917,8 @@ window.FZ.data = {
       },
       {
         "label": "Annualized Sales Rate",
-        "value": "~$79.63M",
-        "sub": "Based on 127 days YTD"
+        "value": "~$79.00M",
+        "sub": "Based on 128 days YTD"
       },
       {
         "label": "Install vs Repair",
@@ -4327,7 +4327,7 @@ window.FZ.data = {
     },
     "commentary": {
       "whatsWorking": [
-        "Sales Trajectory: Monthly sales moved from January $3.26M to May $1.52M (-53%). Annualized run rate: $79.63M.",
+        "Sales Trajectory: Monthly sales moved from January $3.26M to May $1.52M (-53%). Annualized run rate: $79.00M.",
         "Premium Deal Types: Insurance averages $19,936 per deal. Retail-Financing averages $20,732 (highest per-deal value). Retail-No Financing averages $11,618 (the volume engine).",
         "Sold Conversion: 1,590 of 1,776 signed contracts (89.5%) have made it to Sold status for $24.32M in confirmed sales."
       ],
@@ -6760,7 +6760,7 @@ window.FZ.data = {
       "totalWOs": 774,
       "portfolioValue": 11375088.18,
       "avgDaysInStatus": 12,
-      "lastBuild": "2026-05-08T11:05:24.085Z"
+      "lastBuild": "2026-05-08T19:11:04.596Z"
     },
     "tabs": [
       {
