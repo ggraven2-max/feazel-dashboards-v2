@@ -376,6 +376,18 @@ function HomeScreen({ navigation }) {
   const [reloadKey, setReloadKey] = useState(Date.now());
   const url = `${MOBILE_BASE}/?embed=1&t=${SESSION_TS}_${reloadKey}`;
 
+  // Tapping the Home tab while already focused → fresh-load the Home hub.
+  useEffect(() => {
+    if (!navigation || !navigation.addListener) return;
+    const unsub = navigation.addListener('tabPress', () => {
+      if (navigation.isFocused()) {
+        setLoading(true);
+        setReloadKey(Date.now());
+      }
+    });
+    return unsub;
+  }, [navigation]);
+
   const onShouldStartLoad = useCallback((req) => {
     const u = req.url || '';
     if (!u.startsWith(SITE)) return false;
@@ -684,12 +696,29 @@ function ServiceHeader() {
 }
 
 function makeLobScreen(lob, label, HeaderCmp) {
-  return function LobScreen() {
+  return function LobScreen({ navigation }) {
     const [loading, setLoading] = useState(true);
     const [errored, setErrored] = useState(false);
     const [reloadKey, setReloadKey] = useState(Date.now());
     const reload = useCallback(() => { setErrored(false); setLoading(true); setReloadKey(Date.now()); }, []);
     const url = `${MOBILE_BASE}/${lob}/?embed=1&t=${SESSION_TS}_${reloadKey}`;
+
+    // When the user taps the LOB tab while it's already focused (e.g., they
+    // are deep inside Sales Overview / Sales Dashboard and want to go back
+    // to the Residential hub), force the WebView to reload by bumping
+    // reloadKey. Without this, repeating-tab does nothing and there is no
+    // built-in way to reach the LOB hub from inside a dashboard.
+    useEffect(() => {
+      if (!navigation || !navigation.addListener) return;
+      const unsub = navigation.addListener('tabPress', () => {
+        if (navigation.isFocused()) {
+          setLoading(true);
+          setReloadKey(Date.now());
+        }
+      });
+      return unsub;
+    }, [navigation]);
+
     return (
       <View style={styles.screenDark}>
         <HeaderCmp />
@@ -706,6 +735,7 @@ function makeLobScreen(lob, label, HeaderCmp) {
               cacheEnabled={false}
               cacheMode="LOAD_NO_CACHE"
               incognito
+              allowsBackForwardNavigationGestures
               injectedJavaScriptBeforeContentLoaded={EMBED_INJECT}
               injectedJavaScript={EMBED_INJECT}
               onLoadStart={() => setLoading(true)}
