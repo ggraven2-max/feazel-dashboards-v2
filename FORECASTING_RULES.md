@@ -1,7 +1,7 @@
 # Residential Revenue Forecast: Operating Rules
 
 Owner: Greg Graven, COO, Feazel Roofing
-Last revised: 2026-05-04 (post-automation)
+Last revised: 2026-05-08 (V5-first pipeline, full-month forecast bridge)
 Audience: Claude agents and human collaborators working on Feazel residential revenue forecasting in any project context.
 
 ## Executive summary
@@ -20,9 +20,9 @@ The forecast feeds Greg's weekly PE board book and informs branch-level operatin
 
 The pipelines auto-detect the latest file matching each pattern in the uploads directory. File names use Salesforce report timestamps; the pipeline picks the most recently modified match.
 
-### 2.1 Greg Forecasting Report
+### 2.1 Forecasting Report
 
-Pattern: `Greg Forecasting Report*.xlsx`
+Pattern: `Greg Forecasting Report*.xlsx` OR `Residential Forecasting Report*.xlsx` (the report was renamed in 2026-05; both patterns are accepted).
 Source: Salesforce production report, exported by Greg or operations.
 Granularity: One row per work order (jobs may appear multiple times).
 Required columns: `Job Number`, `NetSuite Contract Number`, `Account Name`, `Contract Signed On Date`, `Created Date`, `Scheduled Start`, `Start Date`, `Date Moved to In Progress`, `Date Moved to Completed`, `Date Moved to Invoiced`, `Department`, `Job Type`, `Service Type`, `Billing Type`, `Record Type`, `Branch Location to Service`, `Final Contract Amount`, `Job Status`, `Job Sub-Status`, `Work Order Number`, `Status`, `Sub-Status`, `Service Object`, `Work Order Count`.
@@ -33,7 +33,7 @@ Not used for: invoiced revenue (since 2026-05-04, NetSuite is canonical for that
 
 ### 2.2 Contracts Signed YTD
 
-Pattern: `Contracts Signed YTD*.xlsx`
+Pattern: `Contracts Signed YTD*.xlsx` (matches both the original `Contracts Signed YTD-*.xlsx` and the renamed `Contracts Signed YTD - Residential-*.xlsx`).
 Source: Salesforce opportunities feed.
 Granularity: One row per signed contract.
 Required columns: `Department`, `Branch Location to Service`, `Opportunity Owner`, `Account Name`, `Opportunity Name`, `Stage`, `Sold Job Department`, `Amount $`, `Lead Source`, `Created Date`, `Date Moved to Sales Action Required`, `Date Moved to Pending PM Review`, `Contract signed on`.
@@ -52,7 +52,7 @@ Branch remap: `NOVA` → `DC Metro` (DC Metro consolidation effective 2026-04).
 
 ### 2.4 Greg Profitability Results
 
-Pattern: `GregProfitabilityResults*.csv`
+Pattern: `GregProfitabilityResults*.csv` OR `GregProfitabilityResResults*.csv` (the saved search filename has appeared in both spellings; both are accepted).
 Source: NetSuite saved search export, GP/GM by job.
 Granularity: One row per job (Internal ID), or `*` rows that mark Sales Effective Date cohorts.
 Required columns: `Internal ID`, `Feazel Status`, `Date`, `Name`, `Document Number`, `Class`, `Location`, `Trade`, `Type`, `Primary Sales Rep`, `*`, `Contract Amount`, `Revenue (Stored)`, `Total Expenses (Stored)`, `Material Expenses (stored)`, `Labor Expenses (stored)`, `Other Expenses (stored)`, `Non-GL Expenses (stored)`, `Cap-Out Approved`, `Sales Effective Date`, `Commission (Rep 1)`, `Commission (Rep 2)`.
@@ -96,7 +96,7 @@ Built by `build_refresh_v2.py` (canonical pipeline since 2026-04-30).
 Output filename: `Residential Revenue Forecast.html` (always this name, written to the working folder).
 Tabs (12 total, IDs `tab0` through `tab11`):
 
-0. Executive Summary: KPI tiles (YTD Sales Created, Invoiced YTD, 4-Week Avg Weekly Sales, Current Week Projected); May Forecast (Active) box; May Sales (MTD) box; April Final (Closed) box; April Sales (Closed) box; Budget vs Model Revenue chart; Job Type Impact table.
+0. Executive Summary: KPI tiles (YTD Sales Created, Invoiced YTD, 4-Week Avg Weekly Sales, Current Week Projected); active-month Revenue Forecast box (full-month forecast pulled from V5's `v5_forecast_summary.json`, MTD reference shown in footnote); active-month Sales (MTD) box; closed-month Final box; closed-month Sales (Closed) box; Budget vs Model Revenue chart; Job Type Impact table.
 1. Sales Projection: weekly sales chart, weekly sales history table, by Lead Source.
 2. Monthly Forecast: budget vs forecast by month with variance.
 3. Budget Requirements: budget targets, what's needed.
@@ -133,9 +133,11 @@ Sheets (12):
 
 Pipeline writes intermediate pickles (`v5_dashboard_data.pkl`, `v5_budget_solve.pkl`, `v5_forecast_detail.pkl`, `v5_hist_jobs.pkl`, `v5_conv_by_type.pkl`) consumed by `build_excel_v5.py`. Both scripts must run from the same working directory so relative pickle paths resolve.
 
+`refresh_v5.py` also writes a small JSON bridge file `v5_forecast_summary.json` to the working folder. This contains the closed-month and active-month full-month forecasts that the HTML pipeline reads for the active-month Revenue Forecast box. See Section 7.4 for the schema.
+
 ## 4. Methodology (rules and locks)
 
-### 4.1 Current state (as of 2026-05-04)
+### 4.1 Current state (as of 2026-05-08)
 
 | Element | Source | Locked? | Notes |
 |---|---|---|---|
@@ -158,6 +160,9 @@ Anything in the locked column above stays locked until Greg approves a change ex
 - 2026-04-30: V5 methodology unlocked. WIP/MMU/cycle/conversion no longer locked. MMU removed entirely. Cycle is now four-stage, recomputed YTD each refresh. Conversion is now sales-cohort YTD, recomputed each refresh.
 - 2026-04-30: Pipeline ownership locked. `build_refresh_v2.py` is the canonical HTML build. Auto-globs latest inputs. Format locked, no surgical HTML edits.
 - 2026-05-04: NetSuite invoicing CSV (`ResInvoicedYTDResults*.csv`) adopted as canonical source for invoiced revenue in both deliverables. April closed, May became active forecast month.
+- 2026-05-04 (post-automation): `TODAY` in `build_refresh_v2.py` auto-set to today's calendar date. Subtitle "Data as of" auto-populates from max date across uploaded inputs. `_auto_overlay_netsuite_actuals()` added to `refresh_v5.py` so the Actual tab is recomputed each refresh from NetSuite, with closed months auto-detected. Closed-month lock generalized to whichever month is most recently closed.
+- 2026-05-05: Glob patterns made flexible to handle source-system renames. `Greg Forecasting Report*` and `Residential Forecasting Report*` both accepted. `GregProfitabilityResults*` and `GregProfitabilityResResults*` both accepted. `Contracts Signed YTD*` continues to match including the `- Residential` suffix.
+- 2026-05-05: Pipeline order locked V5-first. `refresh_v5.py` writes `v5_forecast_summary.json` containing closed-month and active-month full-month forecasts. `build_refresh_v2.py` reads that file and uses V5's full-month forecast in the active-month Revenue Forecast box (MTD shown in footnote). Standard refresh order is `refresh_v5.py` → `build_excel_v5.py` → `build_refresh_v2.py`.
 
 ### 4.4 Cycle time stages
 
@@ -234,10 +239,12 @@ Both pipelines auto-glob the latest matching file from the uploads directory by 
 
 ### 6.3 Standard refresh sequence
 
+V5 must run before HTML so the HTML can read the V5 full-month forecast bridge (`v5_forecast_summary.json`).
+
 1. Read each new file with pandas, confirm column-to-tab mapping matches Section 2.
-2. Update HTML pipeline first: `python3 build_refresh_v2.py`. Pipeline does its own dedupe and date parsing. Output: `Residential Revenue Forecast.html`.
-3. If the budget is fresh or the Actual tab needs to be re-overlaid with NetSuite Jan-Apr figures, regenerate `Residential Budget 2026.xlsx` (Section 8.1).
-4. Run V5 pipeline: `python3 refresh_v5.py` followed by `python3 build_excel_v5.py`. Output: `Revenue Forecast Model.xlsx`.
+2. Run V5 pipeline: `python3 refresh_v5.py`. Outputs intermediate pickles, `v5_forecast_summary.json` (working folder), and overlays the Actual tab from NetSuite automatically.
+3. Build the V5 Excel: `python3 build_excel_v5.py`. Output: `Revenue Forecast Model.xlsx`.
+4. Build the HTML dashboard: `python3 build_refresh_v2.py`. Reads `v5_forecast_summary.json` for the active-month full-month forecast in the Tab 0 box. Output: `Residential Revenue Forecast.html`.
 5. Verify outputs (Section 6.5).
 6. Surface KPIs to Greg in chat. Confidentiality rule: do not include Profitability or Budget Recovery numbers in chat (see Section 9). Embed them in the HTML, confirm regeneration is complete.
 
@@ -271,11 +278,12 @@ Constants:
 The `latest()` helper picks the newest matching file by mtime in `UP`. Cross-session resilience: the path-resolution preamble lets the same script run in any Cowork session without a manual edit.
 
 Key sections:
-1. Load and dedupe (Forecasting Report, Contracts, SNP, Profitability, NetSuite invoicing).
-2. Compute metrics (YTD invoiced from NetSuite, sales from Contracts Signed, weekly rollup, slope, April / May invoiced, WIP at 3/31 vs 4/30 vs TODAY).
-3. Format helpers, methodology JSON dump, KPI computations.
-4. Per-tab HTML generation (Tab 0 through Tab 11).
-5. Final subtitle string and HTML write.
+1. Load and dedupe (Forecasting Report, Contracts, SNP, Profitability, NetSuite invoicing). Forecasting Report glob accepts both `Greg Forecasting Report*` and `Residential Forecasting Report*`. Profitability glob accepts both `GregProfitabilityResults*` and `GregProfitabilityResResults*`.
+2. Optionally read `v5_forecast_summary.json` from the working folder. If present, use V5's active-month full-month forecast values in the Tab 0 active-month box (with MTD shown in the footnote). If absent, fall back to MTD-only display.
+3. Compute metrics (YTD invoiced from NetSuite, sales from Contracts Signed, weekly rollup, slope, MTD invoiced for active month, WIP at month-end snapshots).
+4. Format helpers, methodology JSON dump, KPI computations.
+5. Per-tab HTML generation (Tab 0 through Tab 11).
+6. Final subtitle string and HTML write.
 
 Output: writes `Residential Revenue Forecast.html` (~740KB with embedded base64 banner).
 
@@ -283,10 +291,12 @@ Output: writes `Residential Revenue Forecast.html` (~740KB with embedded base64 
 
 Path: `<working folder>/refresh_v5.py`.
 Reads:
-- Forecasting Report, SNP, Contracts Signed YTD: via auto-glob in `mnt/uploads`.
-- Budget: `Residential Budget 2026.xlsx` (working folder), passed via `forecast_config.json` or auto-detected as `*Residential Budget*` or `*Budget*` in uploads.
-- Profitability: optional, picked up if present.
-- NetSuite invoicing: `ResInvoicedYTDResults*.csv` from uploads, used to override `invoiced_ytd` and Actual tab Jan-Apr 40001 - Sales values.
+- Forecasting Report: glob `*Forecasting Report*.xlsx` (matches both Greg and Residential variants).
+- SNP: glob `*Sold Not Processed*.xlsx`.
+- Contracts Signed YTD: glob `*Contracts Signed*.xlsx`.
+- Budget: `Residential Budget 2026.xlsx` (working folder), passed via `forecast_config.json` or auto-detected as `*Residential Budget*.xlsx` or `*Budget*.xlsx` in uploads.
+- Profitability: glob set `*Profitability*Results*.csv|xlsx|xls` (optional, picked up if present).
+- NetSuite invoicing: `ResInvoicedYTDResults*.csv` from uploads. Used to override `invoiced_ytd`, auto-overlay the Actual tab Jan-through-closed-month 40001 - Sales values, and lock those months in the model.
 
 Config file: `forecast_config.json` may be placed in the working directory to override file paths. Schema:
 ```json
@@ -327,7 +337,29 @@ Writes: `mnt/Forecasting Process/Revenue Forecast Model.xlsx`.
 
 Styling: Arial font, blue (#2F5496) headers, green (#E2EFDA) actual fills, red (#FCE4EC) warn fills, yellow (#FFF2CC) highlight fills. Currency format `$#,##0;($#,##0);"-"`. Percent format `0.0%`. Ratio format `0.00"x"`.
 
-### 7.4 Working folder layout
+### 7.4 v5_forecast_summary.json bridge file
+
+Written by `refresh_v5.py` at the end of its run, into the working folder. Read by `build_refresh_v2.py` at startup. Schema:
+
+```json
+{
+  "as_of": "YYYY-MM-DD",
+  "closed_month_label": "Apr 2026",
+  "closed_month_inv_total": 8413545.0,
+  "closed_month_wip_change": -204234.75,
+  "closed_month_net_rev": 8209310.21,
+  "active_month_inv_total_full_month": 13825533.02,
+  "active_month_wip_change_full_month": 232525.68,
+  "active_month_net_rev_full_month": 14058058.70,
+  "invoiced_ytd": 21074795.39,
+  "budget_full_year": 121880929.71,
+  "model_full_year": 120611720.27
+}
+```
+
+The HTML uses `active_month_*_full_month` for the Tab 0 active-month Revenue Forecast box. Closed-month values are also available for cross-checking. If the file is absent, the HTML falls back to MTD-only display in the active-month box and prints a note in the footer.
+
+### 7.5 Working folder layout
 
 ```
 <working folder>/
@@ -345,6 +377,7 @@ Styling: Arial font, blue (#2F5496) headers, green (#E2EFDA) actual fills, red (
   brand_banner.png                # banner image (base64 embedded into HTML)
   wip_reference.pkl               # locked WIP baseline
   v5_*.pkl                        # intermediate pickles (regenerated each refresh)
+  v5_forecast_summary.json        # JSON bridge from V5 to HTML (see Section 7.4)
   DASHBOARD_STYLE_GUIDE.md        # mandatory dashboard styling rules
   FORECASTING_RULES.md            # this file
 ```
@@ -457,6 +490,7 @@ Contracts Signed is the source. The FR's contracts cohort is a different populat
 
 ## 13. Change log
 
+- 2026-05-08: Glob patterns made flexible to handle source-system renames (`Greg Forecasting Report*` and `Residential Forecasting Report*` both accepted; `GregProfitabilityResults*` and `GregProfitabilityResResults*` both accepted; `Contracts Signed YTD*` continues to match the `- Residential` suffix variant). Pipeline order locked V5-first. `refresh_v5.py` writes `v5_forecast_summary.json` with closed-month and active-month full-month forecasts. `build_refresh_v2.py` reads that file and uses V5's full-month forecast in the active-month Revenue Forecast box on Tab 0; MTD remains visible in the footnote.
 - 2026-05-04 (post-automation): TODAY in build_refresh_v2.py auto-set to today's calendar date (no manual patch). Subtitle "Data as of" auto-populated from max date across uploaded inputs. V5 auto-overlay function `_auto_overlay_netsuite_actuals()` added — the Actual tab is recomputed each refresh from the latest NetSuite CSV, with closed months auto-detected. The closed-month lock block generalized to whichever month is the most recently closed (no longer hardcoded to April). WORK and UP paths derived from script location for cross-session resilience.
 - 2026-05-04: NetSuite invoicing CSV adopted as canonical for invoiced revenue. April closed and locked. May became active forecast month. April overlay added to V5 Actual tab and to refresh_v5.py `actual_months` list. April-lock override block added to refresh_v5.py.
 - 2026-04-30: Methodology unlocked (cycle, conversion, MMU). MMU removed entirely. Cycle four-stage YTD. Conversion sales-cohort YTD. Pipeline ownership locked to build_refresh_v2.py.
