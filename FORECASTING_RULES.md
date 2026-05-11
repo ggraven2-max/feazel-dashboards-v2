@@ -1,7 +1,7 @@
 # Residential Revenue Forecast: Operating Rules
 
 Owner: Greg Graven, COO, Feazel Roofing
-Last revised: 2026-05-08 (V5-first pipeline, full-month forecast bridge)
+Last revised: 2026-05-11 (required-sales MTD credit, Pass-1)
 Audience: Claude agents and human collaborators working on Feazel residential revenue forecasting in any project context.
 
 ## Executive summary
@@ -465,6 +465,7 @@ Contracts Signed is the source. The FR's contracts cohort is a different populat
 5. Branch remap dictionary is duplicated across pipelines. A future cleanup should centralize it. Not urgent.
 6. V5 internal variable names (`total_inv_apr`, `wip_change_apr`, `inv_may`, etc.) are historical: they actually mean "previous closed month" and "current active month" relative to TODAY. After two more month-closes, refactor to `prev_month_*` and `cur_month_*` for clarity.
 7. The HTML Tab 0 active-month and previous-month box labels and variable names are still hardcoded (May / April). When May closes, Tab 0 needs a manual edit. Roughly 25 lines of the t0 builder. Future enhancement: derive from TODAY.
+8. **Required-sales Pass-2 (structural fix, deferred)**: The current model's `S_known` lumps all of `snp_total` into the April slot (as `apr_with_snp = S_apr + snp_total`). This means May-signed contracts that are now in SNP get attributed to April vintage, not May. The Pass-1 fix (added 2026-05-11) credits current-month MTD actuals against `required_sales` post-hoc via `remaining_required_sales`, but it does not re-architect `S_known`. The full structural fix requires re-attributing SNP by signing month so MTD can be added to `S_known` without double-counting. Defer until Q3 unless required-sales numbers begin to diverge materially from operating reality.
 
 ## 12. Glossary
 
@@ -490,6 +491,7 @@ Contracts Signed is the source. The FR's contracts cohort is a different populat
 
 ## 13. Change log
 
+- 2026-05-11: Required-sales MTD-credit fix (Pass-1). `refresh_v5.py` now computes `remaining_required_sales` by subtracting current-month MTD actual sales from `required_sales` for the active month, and zeroing the closed months. Exposed via `v5_forecast_summary.json` fields `required_sales`, `remaining_required_sales`, `cur_month_idx`, `cur_month_label`, `cur_month_mtd_actual`. HTML Tab 3 (Budget Requirements) now reads V5 live values when present and shows full target / MTD / remaining side by side. HTML Tab 7 (Weekly Sales Targets) computes the implied weekly target as `remaining_required_sales[cur_month] ÷ weeks_left_in_month`. Excel "Monthly Forecast" tab adds three new rows: "Remaining Required Sales (MTD-Credited)", "Active-Month MTD Actual", and "Required Weekly Sales (from Remaining)". Pass-2 (structural fix that re-architects SNP-by-signing-month) is documented in Section 11 gap #8 and is deferred.
 - 2026-05-08: Glob patterns made flexible to handle source-system renames (`Greg Forecasting Report*` and `Residential Forecasting Report*` both accepted; `GregProfitabilityResults*` and `GregProfitabilityResResults*` both accepted; `Contracts Signed YTD*` continues to match the `- Residential` suffix variant). Pipeline order locked V5-first. `refresh_v5.py` writes `v5_forecast_summary.json` with closed-month and active-month full-month forecasts. `build_refresh_v2.py` reads that file and uses V5's full-month forecast in the active-month Revenue Forecast box on Tab 0; MTD remains visible in the footnote.
 - 2026-05-04 (post-automation): TODAY in build_refresh_v2.py auto-set to today's calendar date (no manual patch). Subtitle "Data as of" auto-populated from max date across uploaded inputs. V5 auto-overlay function `_auto_overlay_netsuite_actuals()` added — the Actual tab is recomputed each refresh from the latest NetSuite CSV, with closed months auto-detected. The closed-month lock block generalized to whichever month is the most recently closed (no longer hardcoded to April). WORK and UP paths derived from script location for cross-session resilience.
 - 2026-05-04: NetSuite invoicing CSV adopted as canonical for invoiced revenue. April closed and locked. May became active forecast month. April overlay added to V5 Actual tab and to refresh_v5.py `actual_months` list. April-lock override block added to refresh_v5.py.
