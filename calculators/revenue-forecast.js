@@ -263,7 +263,16 @@ function run(opts) {
   // Stage a work directory: V5 Python source + a forecast_config.json pointing
   // at our uploaded inputs. The Python will read its inputs from the explicit
   // paths in the config rather than the mnt/uploads/ glob.
-  const workDir = makeWorkDir();
+  // If the temp filesystem is full (ENOSPC) or otherwise unwritable, fall
+  // back to the snapshot instead of throwing — the pipeline should never
+  // crash on a tmpdir issue when a valid fallback exists.
+  let workDir;
+  try {
+    workDir = makeWorkDir();
+  } catch (err) {
+    console.log('  [' + PROJECT_ID + '] could not create temp work dir (' + err.code + ' ' + err.message + '). Falling back to extracted-data.json.');
+    return readFromExtracted(snapshotPath);
+  }
   console.log('  [' + PROJECT_ID + '] staging work dir: ' + workDir);
   try {
     // Symlink the Python sources into the work dir so relative imports work.
