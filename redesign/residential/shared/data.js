@@ -1,8 +1,8 @@
-/* AUTO-GENERATED — do not edit. Generated 2026-05-12T14:17:41.916Z (residential) */
+/* AUTO-GENERATED — do not edit. Generated 2026-05-12T14:22:39.893Z (residential) */
 window.FZ = window.FZ || {};
 window.FZ.data = {
   "_meta": {
-    "builtAt": "2026-05-12T14:17:41.916Z",
+    "builtAt": "2026-05-12T14:22:39.893Z",
     "pipelineVersion": "2.0.0",
     "lob": "residential",
     "lastBuiltProjects": [
@@ -15,26 +15,26 @@ window.FZ.data = {
       {
         "id": "installs-ytd",
         "version": "1.0-rules-encoded",
-        "elapsedMs": 85,
-        "builtAt": "2026-05-12T14:17:41.916Z"
+        "elapsedMs": 60,
+        "builtAt": "2026-05-12T14:22:39.893Z"
       },
       {
         "id": "sales-overview",
         "version": "1.0-rules-encoded",
-        "elapsedMs": 651,
-        "builtAt": "2026-05-12T14:17:41.916Z"
+        "elapsedMs": 359,
+        "builtAt": "2026-05-12T14:22:39.893Z"
       },
       {
         "id": "revenue-forecast",
         "version": "V5-baseline-2026-05-04-shell-1.1",
-        "elapsedMs": 15,
-        "builtAt": "2026-05-12T14:17:41.916Z"
+        "elapsedMs": 23,
+        "builtAt": "2026-05-12T14:22:39.893Z"
       },
       {
         "id": "backlog",
         "version": "1.0-rules-encoded",
-        "elapsedMs": 46,
-        "builtAt": "2026-05-12T14:17:41.916Z"
+        "elapsedMs": 37,
+        "builtAt": "2026-05-12T14:22:39.893Z"
       }
     ]
   },
@@ -53,7 +53,7 @@ window.FZ.data = {
       "multiTradeJobs": 338,
       "singleTradeJobs": 858,
       "multiTradePct": 28.3,
-      "lastBuild": "2026-05-12T14:17:41.916Z"
+      "lastBuild": "2026-05-12T14:22:39.893Z"
     },
     "tabs": [
       {
@@ -368,11 +368,11 @@ window.FZ.data = {
               44.6,
               26.5,
               33.5,
-              46.7,
+              46.6,
               50.1,
               64.4,
-              56.5,
-              28.6,
+              56.4,
+              28.5,
               32,
               38,
               66.6,
@@ -384,7 +384,7 @@ window.FZ.data = {
             "label": "ST Median",
             "data": [
               12.4,
-              21.5,
+              21.4,
               19.1,
               21.7,
               25,
@@ -463,7 +463,7 @@ window.FZ.data = {
           {
             "label": "Median Days",
             "data": [
-              18.6,
+              18.5,
               27.7,
               21.6,
               22.6,
@@ -723,13 +723,13 @@ window.FZ.data = {
                 "name": "Justin Milliron"
               },
               {
-                "x": 54.7,
+                "x": 54.6,
                 "y": 39876.17,
                 "wos": 5,
                 "name": "Mike Scott"
               },
               {
-                "x": 63,
+                "x": 62.9,
                 "y": 25111,
                 "wos": 6,
                 "name": "Chris Atkins"
@@ -802,8 +802,8 @@ window.FZ.data = {
             "data": [
               22.6,
               32.6,
-              59.1,
-              148.7,
+              59,
+              148.6,
               84.6,
               93.5,
               58.7,
@@ -813,7 +813,7 @@ window.FZ.data = {
               84.7,
               43.7,
               84.4,
-              67.6
+              67.5
             ]
           }
         ]
@@ -992,7 +992,7 @@ window.FZ.data = {
             392,
             6503279.84,
             16590,
-            18.6,
+            18.5,
             33.8,
             25.8,
             63.6,
@@ -1007,7 +1007,7 @@ window.FZ.data = {
             36.9,
             28.5,
             44.6,
-            21.5
+            21.4
           ],
           [
             "Nashville",
@@ -1039,7 +1039,7 @@ window.FZ.data = {
             27.6,
             23,
             23.8,
-            46.7,
+            46.6,
             25
           ],
           [
@@ -1072,7 +1072,7 @@ window.FZ.data = {
             20.7,
             16.4,
             34.4,
-            56.5,
+            56.4,
             10.6
           ],
           [
@@ -1083,7 +1083,7 @@ window.FZ.data = {
             22.7,
             19.6,
             34.5,
-            28.6,
+            28.5,
             16.5
           ],
           [
@@ -1298,7 +1298,7 @@ window.FZ.data = {
             808004.37,
             19707.42,
             24.6,
-            21.5
+            21.4
           ],
           [
             "Jason Andrews",
@@ -1397,7 +1397,7 @@ window.FZ.data = {
             72439.43,
             7243.94,
             132.4,
-            70.3
+            70.4
           ],
           [
             "Mike Scott",
@@ -1405,7 +1405,7 @@ window.FZ.data = {
             5,
             39876.17,
             7975.23,
-            54.7,
+            54.6,
             10.2
           ],
           [
@@ -1414,7 +1414,7 @@ window.FZ.data = {
             4,
             25111,
             4185.17,
-            63,
+            62.9,
             43.8
           ]
         ]
@@ -1449,14 +1449,14 @@ window.FZ.data = {
             102,
             984471.81,
             9651.68,
-            59.1
+            59
           ],
           [
             "Metal",
             21,
             378035.09,
             18001.67,
-            148.7
+            148.6
           ],
           [
             "Windows",
@@ -1526,7 +1526,7 @@ window.FZ.data = {
             1,
             2303.15,
             2303.15,
-            67.6
+            67.5
           ]
         ]
       },
@@ -1816,7 +1816,7 @@ window.FZ.data = {
     "commentary": {
       "areasOfConcern": [
         "Daniel Galli: 41 WOs, $396K revenue, 69.7-day median complete, top-volume PM with the slowest cycle in the network.",
-        "Multi-trade penalty is severe in 3 markets: Columbus MT 63.6d vs ST 12.4d, Richmond MT 56.5d vs ST 10.6d, Raleigh MT 64.4d vs ST 21.5d.",
+        "Multi-trade penalty is severe in 3 markets: Columbus MT 63.6d vs ST 12.4d, Richmond MT 56.4d vs ST 10.6d, Raleigh MT 64.4d vs ST 21.5d.",
         "Days to Start averages 27.9 days company-wide and 36.9 days in Detroit Metro (a sold job sits weeks before a crew touches it)."
       ],
       "watchList": [
@@ -1826,9 +1826,9 @@ window.FZ.data = {
       ],
       "positivesToBuildOn": [
         "April delivered $7.86M across 442 invoiced jobs at 17.6-day median complete, the highest revenue month and one of the fastest cycles of the year.",
-        "Columbus hits 18.6-day median complete and a $16,590 average contract on 392 jobs.",
+        "Columbus hits 18.5-day median complete and a $16,590 average contract on 392 jobs.",
         "Multi-trade jobs carry a $25,955 average contract versus $15,503 for single-trade, a 67% revenue lift per job.",
-        "Columbus is the best-balanced market: 18.6-day median complete, 25.8% multi-trade attach, $16,590 average contract on 392 jobs."
+        "Columbus is the best-balanced market: 18.5-day median complete, 25.8% multi-trade attach, $16,590 average contract on 392 jobs."
       ]
     }
   },
@@ -1837,7 +1837,7 @@ window.FZ.data = {
     "title": "Residential Sales Overview",
     "subtitle": "YTD 2026",
     "lastSigned": "2026-05-28",
-    "ytdDays": 132,
+    "ytdDays": 131,
     "rowCount": 1839,
     "tabs": [
       {
@@ -1933,8 +1933,8 @@ window.FZ.data = {
       },
       {
         "label": "Annualized Sales Rate",
-        "value": "~$79.59M",
-        "sub": "Based on 132 days YTD"
+        "value": "~$80.20M",
+        "sub": "Based on 131 days YTD"
       },
       {
         "label": "Install vs Repair",
@@ -4524,7 +4524,7 @@ window.FZ.data = {
     },
     "commentary": {
       "whatsWorking": [
-        "Sales Trajectory: Monthly sales moved from January $3.26M to May $2.44M (-25%). Annualized run rate: $79.59M.",
+        "Sales Trajectory: Monthly sales moved from January $3.26M to May $2.44M (-25%). Annualized run rate: $80.20M.",
         "Premium Deal Types: Insurance averages $19,912 per deal. Retail-Financing averages $20,753 (highest per-deal value). Retail-No Financing averages $11,582 (the volume engine).",
         "Sold Conversion: 1,671 of 1,839 signed contracts (90.9%) have made it to Sold status for $25.64M in confirmed sales."
       ],
@@ -6958,7 +6958,7 @@ window.FZ.data = {
       "totalWOs": 789,
       "portfolioValue": 11379350.41,
       "avgDaysInStatus": 12,
-      "lastBuild": "2026-05-12T14:17:41.829Z"
+      "lastBuild": "2026-05-12T14:22:39.832Z"
     },
     "tabs": [
       {
