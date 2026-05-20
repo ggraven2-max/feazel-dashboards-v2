@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "builtAt": "2026-05-18T14:31:42.432Z",
+    "builtAt": "2026-05-20T17:35:36.786Z",
     "pipelineVersion": "2.0.0",
     "lob": "service",
     "lastBuiltProjects": [
@@ -11,22 +11,22 @@
       {
         "id": "revenue-forecast",
         "version": "V5-baseline-2026-05-04-shell-1.1",
-        "elapsedMs": 482,
-        "builtAt": "2026-05-18T14:31:42.432Z"
+        "elapsedMs": 529,
+        "builtAt": "2026-05-20T17:35:36.786Z"
       },
       {
         "id": "service-calls",
         "version": "Service-Calls-v1.1-2026-05-07",
-        "elapsedMs": 673,
-        "builtAt": "2026-05-18T14:31:42.432Z"
+        "elapsedMs": 791,
+        "builtAt": "2026-05-20T17:35:36.786Z"
       }
     ]
   },
   "REVENUE_FORECAST": {
     "_source": "calculator/revenue-forecast-service.js Service-v1.0-2026-05-06",
     "title": "Service Revenue Forecast",
-    "subtitle": "Service-v1 · Budget-anchored forecast · Data through 2026-05-18",
-    "runDate": "2026-05-18",
+    "subtitle": "Service-v1 · Budget-anchored forecast · Data through 2026-05-20",
+    "runDate": "2026-05-20",
     "methodologyLock": {
       "version": "Service-v1.0-2026-05-06",
       "lockedOn": "2026-05-06",
@@ -41,24 +41,24 @@
     "kpis": [
       {
         "label": "Invoiced YTD",
-        "value": "$2.35M",
-        "sub": "5 months elapsed · 2664 invoices"
+        "value": "$2.41M",
+        "sub": "5 months elapsed · 2759 invoices"
       },
       {
         "label": "YTD vs Plan",
-        "value": "$-163,683",
+        "value": "$-96,703",
         "sub": "Plan YTD: $2.51M",
         "trend": "negative"
       },
       {
         "label": "Annualized Pace",
-        "value": "$5.63M",
+        "value": "$5.79M",
         "sub": "YTD × 12/5",
         "trend": "negative"
       },
       {
         "label": "Plan-Rest Forecast",
-        "value": "$6.46M",
+        "value": "$6.52M",
         "sub": "YTD actual + remaining-month plan"
       },
       {
@@ -68,26 +68,26 @@
       },
       {
         "label": "Forecast vs Budget",
-        "value": "$-1,169,994",
-        "sub": "17.2% uplift needed",
+        "value": "$-1,009,242",
+        "sub": "14.8% uplift needed",
         "trend": "negative"
       },
       {
         "label": "Last Month Revenue",
-        "value": "$269K",
+        "value": "$336K",
         "sub": "May 2026"
       },
       {
         "label": "Last Month vs Plan",
-        "value": "$-641,698",
+        "value": "$-574,718",
         "sub": "Plan: $910K"
       }
     ],
     "execSummary": {
       "budget": 6800179.4799999995,
-      "modelAnnualInvoiced": 5630185.967999987,
-      "gap": -1169993.5120000122,
-      "narrative": "5 months of FY2026 Service activity reported, $2.35M invoiced YTD. Run-rate annualizes to $5.63M against the $6.8M plan, a $1.17M shortfall (17.2% uplift needed)."
+      "modelAnnualInvoiced": 5790937.751999989,
+      "gap": -1009241.7280000104,
+      "narrative": "5 months of FY2026 Service activity reported, $2.41M invoiced YTD. Run-rate annualizes to $5.79M against the $6.8M plan, a $1.01M shortfall (14.8% uplift needed)."
     },
     "monthRevenue": {
       "january": {
@@ -116,9 +116,9 @@
       },
       "may": {
         "label": "May",
-        "invoiced": 268708.84,
+        "invoiced": 335688.74999999994,
         "budget": 910406.9363225256,
-        "gap": -641698.0963225255
+        "gap": -574718.1863225256
       },
       "june": {
         "label": "June",
@@ -170,8 +170,8 @@
     },
     "budgetRecoveryHeader": {
       "fullYearBudget": 6800179.4799999995,
-      "gap": 1169993.5120000122,
-      "upliftPct": 17.205332821598002,
+      "gap": 1009241.7280000104,
+      "upliftPct": 14.841398392032007,
       "aprilGap": 132460.09465102846,
       "q1OriginalBudget": 1118550.2246066653,
       "q1Actual": 1464105.0800000005,
@@ -179,52 +179,52 @@
       "recoveryRatio": 0
     },
     "profitabilitySummary": {
-      "combinedGP": 1239891.760000001,
-      "combinedGP_pct": 60.80548028395072,
-      "combinedRevenue": 2039111.8600000003,
+      "combinedGP": 1240683.1600000008,
+      "combinedGP_pct": 60.56539360471241,
+      "combinedRevenue": 2048501.7700000003,
       "y2025_GP_pct": 63.75281444537271,
       "y2025_revenue": 1637844.9000000001,
       "y2025_jobs": 899,
-      "y2026_GP_pct": 48.77539381762207,
-      "y2026_revenue": 401266.96,
-      "y2026_jobs": 303,
-      "materialCost": 269159.3300000002,
-      "laborCost": 515997.1399999999,
+      "y2026_GP_pct": 47.85283148921873,
+      "y2026_revenue": 410656.87000000005,
+      "y2026_jobs": 311,
+      "materialCost": 272071.8000000002,
+      "laborCost": 521677.1999999999,
       "otherCost": 16267.92,
-      "commissions": 68474.65000000004,
-      "materialPctContract": 13.199831518806434,
-      "laborPctContract": 25.304994302764726,
-      "otherPctContract": 0.7977943887786517,
-      "commissionPctContract": 3.3580624654892657,
-      "sourceFile": "GregProfitabilityServiceResults862.csv",
-      "jobsParsed": 1202
+      "commissions": 70327.91000000005,
+      "materialPctContract": 13.281501826576413,
+      "laborPctContract": 25.466280168261697,
+      "otherPctContract": 0.7941374636937707,
+      "commissionPctContract": 3.43313884468843,
+      "sourceFile": "GregProfitabilityServiceResults715.csv",
+      "jobsParsed": 1210
     },
     "profitabilityByJobType": [
       {
         "key": "Repair",
-        "jobs": 150,
-        "revenue": 279147.64,
-        "expenses": 140866.07,
-        "gross_profit": 138281.57,
-        "material": 27462.500000000004,
-        "labor": 107999.65000000001,
+        "jobs": 151,
+        "revenue": 285277.55,
+        "expenses": 145135.24000000002,
+        "gross_profit": 140142.31,
+        "material": 30040.630000000005,
+        "labor": 109684.71,
         "other": 3597,
-        "commission": 12215.97,
-        "contract": 288095.79,
-        "gp_pct": 49.53707292671362
+        "commission": 14069.229999999998,
+        "contract": 294553.37,
+        "gp_pct": 49.12489959339597
       },
       {
         "key": "T&M",
-        "jobs": 148,
-        "revenue": 119769.32,
-        "expenses": 60463.209999999955,
-        "gross_profit": 59306.110000000044,
-        "material": 10953.31000000001,
-        "labor": 49775.9,
+        "jobs": 155,
+        "revenue": 123029.32,
+        "expenses": 64792.54999999995,
+        "gross_profit": 58236.77000000004,
+        "material": 11287.65000000001,
+        "labor": 53770.9,
         "other": 0,
         "commission": 0,
-        "contract": 116769.32,
-        "gp_pct": 49.516946409982154
+        "contract": 120029.32,
+        "gp_pct": 47.33568388413432
       },
       {
         "key": "Warranty",
@@ -243,68 +243,68 @@
     "profitabilityByMarket": [
       {
         "key": "Columbus",
-        "jobs": 104,
-        "revenue": 132713.8,
-        "expenses": 71410.18999999997,
-        "gross_profit": 61303.610000000015,
-        "material": 12998.440000000002,
-        "labor": 56036.350000000006,
+        "jobs": 105,
+        "revenue": 138843.71000000002,
+        "expenses": 77791.87999999999,
+        "gross_profit": 61051.83000000001,
+        "material": 15439.090000000002,
+        "labor": 59971.41,
         "other": 369.28,
-        "commission": 8395.989999999998,
-        "contract": 131673.8,
-        "gp_pct": 46.19234020878012
+        "commission": 9211.789999999997,
+        "contract": 138131.38,
+        "gp_pct": 43.97162104066508
       },
       {
         "key": "Detroit Metro",
-        "jobs": 23,
-        "revenue": 92081.5,
-        "expenses": 54353.47000000001,
-        "gross_profit": 37728.03,
+        "jobs": 24,
+        "revenue": 92481.5,
+        "expenses": 55018.47000000001,
+        "gross_profit": 37463.03,
         "material": 2970.8399999999997,
-        "labor": 51306.4,
+        "labor": 51971.4,
         "other": 0,
         "commission": 172.5,
-        "contract": 100411.5,
-        "gp_pct": 40.97243203032097
+        "contract": 100811.5,
+        "gp_pct": 40.50867470791456
       },
       {
         "key": "Raleigh",
-        "jobs": 48,
-        "revenue": 56112.56,
-        "expenses": 27613.089999999997,
-        "gross_profit": 28499.47,
-        "material": 6392.959999999999,
+        "jobs": 49,
+        "revenue": 57362.56,
+        "expenses": 27723.829999999998,
+        "gross_profit": 29638.73,
+        "material": 6503.699999999999,
         "labor": 18304.8,
         "other": 3027.72,
         "commission": 613.27,
-        "contract": 55772.5,
-        "gp_pct": 50.78982316971459
+        "contract": 57022.5,
+        "gp_pct": 51.669120067165764
       },
       {
         "key": "Cincinnati",
-        "jobs": 76,
-        "revenue": 45695,
-        "expenses": 30054.04,
-        "gross_profit": 15640.96,
+        "jobs": 81,
+        "revenue": 47305,
+        "expenses": 31134.04,
+        "gross_profit": 16170.96,
         "material": 7113.2800000000025,
-        "labor": 23180.760000000002,
+        "labor": 24260.760000000002,
         "other": 0,
         "commission": 117,
-        "contract": 44297,
-        "gp_pct": 34.2290403764088
+        "contract": 45907,
+        "gp_pct": 34.184462530387904
       },
       {
         "key": "Nashville",
         "jobs": 24,
         "revenue": 39806.81,
-        "expenses": 10879.920000000004,
-        "gross_profit": 28926.890000000003,
-        "material": 3925.7000000000003,
+        "expenses": 11241.000000000002,
+        "gross_profit": 28565.81,
+        "material": 4286.780000000002,
         "labor": 6961,
         "other": 100,
-        "commission": 2006.11,
+        "commission": 2712.6299999999997,
         "contract": 39853.020000000004,
-        "gp_pct": 72.66819421099055
+        "gp_pct": 71.76111323665474
       },
       {
         "key": "DC Metro",
@@ -328,7 +328,7 @@
         "material": 1340.91,
         "labor": 400,
         "other": 100,
-        "commission": 221.1,
+        "commission": 552.04,
         "contract": 7488.29,
         "gp_pct": 75.60844999325614
       },
@@ -613,29 +613,29 @@
     "profitabilityByTrade": [
       {
         "key": "Roofing",
-        "jobs": 244,
-        "revenue": 325250.02,
-        "expenses": 161391.2499999999,
-        "gross_profit": 163858.77000000005,
-        "material": 31866.110000000008,
-        "labor": 124255.16,
+        "jobs": 251,
+        "revenue": 333389.93000000005,
+        "expenses": 169706.71999999997,
+        "gross_profit": 163683.21000000005,
+        "material": 34495.53999999999,
+        "labor": 129935.22,
         "other": 3597,
-        "commission": 11389.67,
-        "contract": 323242.96,
-        "gp_pct": 50.37932664846571
+        "commission": 13242.929999999998,
+        "contract": 331710.54000000004,
+        "gp_pct": 49.09662688372142
       },
       {
         "key": "Siding",
         "jobs": 30,
         "revenue": 33084,
-        "expenses": 21085.12,
-        "gross_profit": 11998.88,
-        "material": 2453.7,
+        "expenses": 21257.42,
+        "gross_profit": 11826.579999999998,
+        "material": 2625.9999999999995,
         "labor": 18721,
         "other": 0,
         "commission": 369.15,
         "contract": 42691,
-        "gp_pct": 36.267924072058996
+        "gp_pct": 35.74712852133962
       },
       {
         "key": "Gutters",
@@ -675,6 +675,19 @@
         "commission": 0,
         "contract": 2697,
         "gp_pct": 48.802373007044864
+      },
+      {
+        "key": "Carpentry",
+        "jobs": 1,
+        "revenue": 1250,
+        "expenses": 110.74,
+        "gross_profit": 1139.26,
+        "material": 110.74,
+        "labor": 0,
+        "other": 0,
+        "commission": 0,
+        "contract": 1250,
+        "gp_pct": 91.1408
       }
     ],
     "pipelineSnapshot": {
@@ -684,7 +697,7 @@
     },
     "commentary": {
       "actionableRecommendations": [
-        "Annualized Service pace is $1.17M short of the $6.8M plan. 17.2% uplift needed on remaining months."
+        "Annualized Service pace is $1.01M short of the $6.8M plan. 14.8% uplift needed on remaining months."
       ],
       "strategyHighlights": []
     },
@@ -742,10 +755,10 @@
           ],
           [
             "May",
-            "$269K",
+            "$336K",
             "$910K",
-            "$-641,698",
-            292
+            "$-574,718",
+            387
           ],
           [
             "June",
@@ -815,48 +828,48 @@
         "rows": [
           [
             "Columbus",
-            "$701K",
-            801
+            "$714K",
+            826
           ],
           [
             "Detroit",
-            "$543K",
-            407
+            "$559K",
+            421
           ],
           [
             "Raleigh",
-            "$390K",
-            526
+            "$397K",
+            539
           ],
           [
             "Cincinnati",
-            "$200K",
-            381
+            "$204K",
+            393
           ],
           [
             "DC Metro",
-            "$182K",
-            113
+            "$194K",
+            123
           ],
           [
             "Nashville",
-            "$117K",
-            109
+            "$122K",
+            113
           ],
           [
             "Cleveland",
-            "$113K",
-            200
+            "$116K",
+            204
           ],
           [
             "Richmond",
-            "$41K",
-            36
+            "$45K",
+            42
           ],
           [
             "Dayton",
-            "$37K",
-            63
+            "$39K",
+            70
           ],
           [
             "Indianapolis",
@@ -908,7 +921,7 @@
               412095.43,
               617919.8800000002,
               613096.8999999998,
-              268708.84,
+              335688.74999999994,
               0,
               0,
               0,
@@ -964,7 +977,7 @@
                   412095.43,
                   617919.8800000002,
                   613096.8999999998,
-                  268708.84,
+                  335688.74999999994,
                   0,
                   0,
                   0,
@@ -1033,7 +1046,7 @@
       412095.43,
       617919.8800000002,
       613096.8999999998,
-      268708.84,
+      335688.74999999994,
       0,
       0,
       0,
@@ -1047,7 +1060,7 @@
       412095.43,
       617919.8800000002,
       613096.8999999998,
-      268708.84,
+      335688.74999999994,
       0,
       0,
       0,
@@ -1085,16 +1098,16 @@
       0
     ],
     "netsuiteInvoiced": {
-      "source": "ServiceInvoicedYTDResults804.csv",
+      "source": "ServiceInvoicedYTDResults229.csv",
       "format": "per-invoice",
-      "totalInvoiced": 2345910.8199999947,
-      "invoiceCount": 2664,
+      "totalInvoiced": 2412890.7299999953,
+      "invoiceCount": 2759,
       "monthly": [
         434089.77000000025,
         412095.43,
         617919.8800000002,
         613096.8999999998,
-        268708.84,
+        335688.74999999994,
         0,
         0,
         0,
@@ -1105,44 +1118,44 @@
       ],
       "byBranch": {
         "Cincinnati": {
-          "invoiced": 199717,
-          "count": 381
+          "invoiced": 204275.53,
+          "count": 393
         },
         "Raleigh": {
-          "invoiced": 390471.61999999924,
-          "count": 526
+          "invoiced": 397043.90999999916,
+          "count": 539
         },
         "DC Metro": {
-          "invoiced": 181739.84,
-          "count": 113
+          "invoiced": 194112.84,
+          "count": 123
         },
         "Dayton": {
-          "invoiced": 36625,
-          "count": 63
+          "invoiced": 39150,
+          "count": 70
         },
         "Detroit": {
-          "invoiced": 542806.2,
-          "count": 407
+          "invoiced": 559050.5499999999,
+          "count": 421
         },
         "Columbus": {
-          "invoiced": 701340.2900000002,
-          "count": 801
+          "invoiced": 713795.0300000001,
+          "count": 826
         },
         "Richmond": {
-          "invoiced": 40525,
-          "count": 36
+          "invoiced": 44825,
+          "count": 42
         },
         "Nashville": {
-          "invoiced": 116870.37,
-          "count": 109
+          "invoiced": 122135.37,
+          "count": 113
         },
         "Indianapolis": {
           "invoiced": 18740,
           "count": 19
         },
         "Cleveland": {
-          "invoiced": 112959.31999999999,
-          "count": 200
+          "invoiced": 115646.31999999999,
+          "count": 204
         },
         "Knoxville": {
           "invoiced": 2000,
@@ -1157,20 +1170,20 @@
           "count": 2
         }
       },
-      "latestInvoiceDate": "2026-05-18"
+      "latestInvoiceDate": "2026-05-20"
     },
     "installServiceOverlap": {
-      "sourceFile": "All Jobs with WOs and SAs-2026-05-18-10-22-34.xlsx",
-      "rowCount": 8796,
+      "sourceFile": "All Jobs with WOs and SAs-2026-05-20-13-32-13.xlsx",
+      "rowCount": 9047,
       "totals": {
-        "installJobs": 1863,
-        "installJobsWithSvc": 240,
-        "installAccounts": 1752,
-        "installAccountsWithSvc": 170,
-        "repairWOsAtInstallAccts": 2545,
+        "installJobs": 1943,
+        "installJobsWithSvc": 245,
+        "installAccounts": 1824,
+        "installAccountsWithSvc": 175,
+        "repairWOsAtInstallAccts": 2595,
         "hoursAtInstallAccts": 0,
         "avgHoursPerWO": 0,
-        "repairAmtAtInstallAccts": 1345797
+        "repairAmtAtInstallAccts": 1375012
       },
       "buckets": {
         "<1h": 0,
@@ -1182,75 +1195,75 @@
       "branchRows": [
         {
           "branch": "Columbus",
-          "installJobs": 613,
-          "installJobsWithSvc": 87,
-          "repairWOs": 679,
+          "installJobs": 646,
+          "installJobsWithSvc": 89,
+          "repairWOs": 690,
           "hours": 0,
-          "repairAmt": 311235.94000000006
+          "repairAmt": 325516.38000000006
         },
         {
           "branch": "Raleigh",
           "installJobs": 93,
           "installJobsWithSvc": 28,
-          "repairWOs": 668,
+          "repairWOs": 677,
           "hours": 0,
-          "repairAmt": 332582
+          "repairAmt": 335317
         },
         {
           "branch": "Detroit",
-          "installJobs": 308,
-          "installJobsWithSvc": 26,
-          "repairWOs": 338,
+          "installJobs": 329,
+          "installJobsWithSvc": 27,
+          "repairWOs": 352,
           "hours": 0,
-          "repairAmt": 273320.8
+          "repairAmt": 276520.8
         },
         {
           "branch": "Cleveland",
-          "installJobs": 165,
+          "installJobs": 174,
           "installJobsWithSvc": 24,
-          "repairWOs": 211,
+          "repairWOs": 215,
           "hours": 0,
-          "repairAmt": 98387
+          "repairAmt": 101937
         },
         {
           "branch": "Nashville",
-          "installJobs": 149,
+          "installJobs": 151,
           "installJobsWithSvc": 22,
-          "repairWOs": 44,
+          "repairWOs": 45,
           "hours": 0,
-          "repairAmt": 23624
+          "repairAmt": 24324
         },
         {
           "branch": "Cincinnati",
-          "installJobs": 94,
-          "installJobsWithSvc": 19,
-          "repairWOs": 397,
+          "installJobs": 95,
+          "installJobsWithSvc": 20,
+          "repairWOs": 406,
           "hours": 0,
-          "repairAmt": 114149
+          "repairAmt": 117799
         },
         {
           "branch": "DC Metro",
-          "installJobs": 125,
+          "installJobs": 130,
           "installJobsWithSvc": 16,
           "repairWOs": 58,
           "hours": 0,
-          "repairAmt": 133738
-        },
-        {
-          "branch": "Dayton",
-          "installJobs": 115,
-          "installJobsWithSvc": 7,
-          "repairWOs": 95,
-          "hours": 0,
-          "repairAmt": 30165
+          "repairAmt": 134138
         },
         {
           "branch": "Richmond",
-          "installJobs": 84,
-          "installJobsWithSvc": 6,
-          "repairWOs": 28,
+          "installJobs": 85,
+          "installJobsWithSvc": 7,
+          "repairWOs": 29,
           "hours": 0,
-          "repairAmt": 13845
+          "repairAmt": 14195
+        },
+        {
+          "branch": "Dayton",
+          "installJobs": 117,
+          "installJobsWithSvc": 7,
+          "repairWOs": 96,
+          "hours": 0,
+          "repairAmt": 30515
         },
         {
           "branch": "Indianapolis",
@@ -1262,7 +1275,7 @@
         },
         {
           "branch": "Knoxville",
-          "installJobs": 59,
+          "installJobs": 63,
           "installJobsWithSvc": 2,
           "repairWOs": 1,
           "hours": 0,
@@ -1270,7 +1283,7 @@
         },
         {
           "branch": "Grand Rapids",
-          "installJobs": 23,
+          "installJobs": 24,
           "installJobsWithSvc": 1,
           "repairWOs": 2,
           "hours": 0,
@@ -1278,7 +1291,7 @@
         },
         {
           "branch": "Greenville",
-          "installJobs": 32,
+          "installJobs": 33,
           "installJobsWithSvc": 0,
           "repairWOs": 0,
           "hours": 0,
@@ -1288,27 +1301,27 @@
       "tradeRows": [
         {
           "trade": "Roofing",
-          "installJobs": 1611,
-          "installJobsWithSvc": 182,
-          "repairWOs": 2237,
+          "installJobs": 1675,
+          "installJobsWithSvc": 188,
+          "repairWOs": 2276,
           "hours": 0,
-          "repairAmt": 1136918.7400000002
+          "repairAmt": 1161634.1800000002
         },
         {
           "trade": "Gutters",
-          "installJobs": 112,
+          "installJobs": 116,
           "installJobsWithSvc": 29,
-          "repairWOs": 149,
+          "repairWOs": 154,
           "hours": 0,
-          "repairAmt": 101311
+          "repairAmt": 103611
         },
         {
           "trade": "Siding",
-          "installJobs": 109,
-          "installJobsWithSvc": 23,
-          "repairWOs": 130,
+          "installJobs": 119,
+          "installJobsWithSvc": 22,
+          "repairWOs": 134,
           "hours": 0,
-          "repairAmt": 76540
+          "repairAmt": 78740
         },
         {
           "trade": "Other",
@@ -1320,9 +1333,9 @@
         },
         {
           "trade": "Windows",
-          "installJobs": 15,
+          "installJobs": 16,
           "installJobsWithSvc": 2,
-          "repairWOs": 4,
+          "repairWOs": 6,
           "hours": 0,
           "repairAmt": 850
         },
@@ -1368,7 +1381,7 @@
         },
         {
           "trade": "Metal",
-          "installJobs": 1,
+          "installJobs": 2,
           "installJobsWithSvc": 0,
           "repairWOs": 0,
           "hours": 0,
@@ -1470,7 +1483,7 @@
           "installAmt": 392750,
           "repairWOs": 85,
           "hours": 0,
-          "repairAmt": 38535
+          "repairAmt": 39725
         },
         {
           "account": "Michelle Richardson",
@@ -1580,7 +1593,7 @@
           "account": "Priestley Management Company",
           "installJobs": 2,
           "installAmt": 56240.2,
-          "repairWOs": 206,
+          "repairWOs": 207,
           "hours": 0,
           "repairAmt": 133392
         },
@@ -1625,7 +1638,7 @@
           "installAmt": 239011,
           "acctRepairWOs": 85,
           "acctHours": 0,
-          "acctRepairAmt": 38535
+          "acctRepairAmt": 39725
         },
         {
           "jobNumber": "Job-106790",
@@ -1636,7 +1649,7 @@
           "installAmt": 88501,
           "acctRepairWOs": 85,
           "acctHours": 0,
-          "acctRepairAmt": 38535
+          "acctRepairAmt": 39725
         },
         {
           "jobNumber": "Job-111502",
@@ -1647,7 +1660,7 @@
           "installAmt": 65238,
           "acctRepairWOs": 85,
           "acctHours": 0,
-          "acctRepairAmt": 38535
+          "acctRepairAmt": 39725
         },
         {
           "jobNumber": "Job-106231",
@@ -1656,7 +1669,7 @@
           "trade": "Roofing",
           "salesperson": "Evan Hall",
           "installAmt": 21133.2,
-          "acctRepairWOs": 206,
+          "acctRepairWOs": 207,
           "acctHours": 0,
           "acctRepairAmt": 133392
         },
@@ -1667,7 +1680,7 @@
           "trade": "Roofing",
           "salesperson": "Evan Hall",
           "installAmt": 35107,
-          "acctRepairWOs": 206,
+          "acctRepairWOs": 207,
           "acctHours": 0,
           "acctRepairAmt": 133392
         },
@@ -1768,7 +1781,7 @@
           "installAmt": 8100,
           "acctRepairWOs": 10,
           "acctHours": 0,
-          "acctRepairAmt": 12056.56
+          "acctRepairAmt": 14657
         },
         {
           "jobNumber": "Job-106320",
@@ -1779,7 +1792,7 @@
           "installAmt": 880,
           "acctRepairWOs": 19,
           "acctHours": 0,
-          "acctRepairAmt": 6450
+          "acctRepairAmt": 6800
         },
         {
           "jobNumber": "Job-106324",
@@ -1865,9 +1878,9 @@
           "trade": "Gutters",
           "salesperson": "Evan Hall",
           "installAmt": 1481,
-          "acctRepairWOs": 121,
+          "acctRepairWOs": 124,
           "acctHours": 0,
-          "acctRepairAmt": 52520
+          "acctRepairAmt": 53015
         }
       ]
     },
@@ -1876,57 +1889,57 @@
   "SERVICE_CALLS": {
     "_source": "calculator/service-calls.js Service-Calls-v1.1-2026-05-07",
     "title": "Service Calls YTD",
-    "subtitle": "Service Appointments · 5,966 calls across 61 techs · 2026-01 through 2026-05",
-    "sourceFile": "Service Appointments YTD-2026-05-18-10-22-10.xlsx",
+    "subtitle": "Service Appointments · 6,091 calls across 62 techs · 2026-01 through 2026-05",
+    "sourceFile": "Service Appointments YTD-2026-05-20-13-32-06.xlsx",
     "headerMeta": {
-      "totalAppts": 5966,
-      "uniqTechs": 61,
-      "uniqWOs": 4946,
-      "uniqAccounts": 1966,
-      "uniqJobs": 4742,
-      "totalHours": 9322.5,
-      "totalBillable": 11926,
-      "networkBillRatio": 1.2790000000000001,
-      "totalContract": 2952960.95,
-      "avgMinPerAppt": 94,
-      "aptsCompleted": 3909,
-      "aptsOpen": 2057,
+      "totalAppts": 6091,
+      "uniqTechs": 62,
+      "uniqWOs": 5036,
+      "uniqAccounts": 2006,
+      "uniqJobs": 4830,
+      "totalHours": 9450.6,
+      "totalBillable": 11939,
+      "networkBillRatio": 1.263,
+      "totalContract": 3036722.29,
+      "avgMinPerAppt": 93,
+      "aptsCompleted": 4000,
+      "aptsOpen": 2091,
       "monthsCovered": 5
     },
     "kpis": [
       {
         "label": "Appointments YTD",
-        "value": "5,966",
-        "sub": "5 months · 4,946 work orders",
+        "value": "6,091",
+        "sub": "5 months · 5,036 work orders",
         "tone": "info"
       },
       {
         "label": "Service Techs",
-        "value": "61",
+        "value": "62",
         "sub": "distinct primary resources",
         "tone": "info"
       },
       {
         "label": "Total Hours",
-        "value": "9,322.5 h",
-        "sub": "avg 94 min/appt",
+        "value": "9,450.6 h",
+        "sub": "avg 93 min/appt",
         "tone": "info"
       },
       {
         "label": "Billable Man-Hours",
-        "value": "11,926 h",
+        "value": "11,939 h",
         "sub": "1.30x actual (laborers × time)",
         "tone": "info"
       },
       {
         "label": "Contract $ on Calls",
-        "value": "$2.95M",
-        "sub": "1,966 unique accounts",
+        "value": "$3.04M",
+        "sub": "2,006 unique accounts",
         "tone": "good"
       },
       {
         "label": "Open Appointments",
-        "value": "2,057",
+        "value": "2,091",
         "sub": "no Actual End in Salesforce",
         "tone": "warn"
       }
@@ -1943,10 +1956,10 @@
       {
         "key": "2026-02",
         "label": "2026-02",
-        "count": 1041,
-        "hours": 2550.9,
-        "billable": 3919,
-        "contract": 455525.9
+        "count": 1040,
+        "hours": 2550.4,
+        "billable": 3917,
+        "contract": 451350.68
       },
       {
         "key": "2026-03",
@@ -1954,7 +1967,7 @@
         "count": 1108,
         "hours": 2689.5,
         "billable": 3842,
-        "contract": 536215.38
+        "contract": 534465.38
       },
       {
         "key": "2026-04",
@@ -1962,43 +1975,69 @@
         "count": 952,
         "hours": 1979.3,
         "billable": 2565,
-        "contract": 418143.04
+        "contract": 420825.82
       },
       {
         "key": "2026-05",
         "label": "2026-05",
-        "count": 482,
-        "hours": 1268.2,
-        "billable": 200,
-        "contract": 189637.59
+        "count": 579,
+        "hours": 1396.8,
+        "billable": 215,
+        "contract": 226661.12
       }
     ],
     "techRows": [
       {
         "tech": "(unassigned)",
-        "count": 1050,
+        "count": 1060,
         "hours": 2,
         "billHours": 2,
         "billRatio": 1,
         "avgMinPerAppt": 0,
-        "contract": 444489.18,
+        "contract": 448150.45,
         "avgContract": 423,
-        "jobs": 1023,
-        "accounts": 738,
+        "jobs": 1034,
+        "accounts": 758,
         "branches": "Cincinnati, Cleveland, Columbus, DC Metro, Dayton, Detroit, Grand Rapids, Greenville, Knoxville, Nashville, Raleigh, Richmond"
       },
       {
         "tech": "Darren Vaught",
-        "count": 332,
-        "hours": 365.2,
+        "count": 346,
+        "hours": 372.3,
         "billHours": 488,
-        "billRatio": 1.3359999999999999,
-        "avgMinPerAppt": 66,
-        "contract": 95608.78,
-        "avgContract": 288,
-        "jobs": 305,
-        "accounts": 140,
-        "branches": "Columbus, DC Metro"
+        "billRatio": 1.311,
+        "avgMinPerAppt": 65,
+        "contract": 104003.56,
+        "avgContract": 301,
+        "jobs": 317,
+        "accounts": 145,
+        "branches": "Columbus"
+      },
+      {
+        "tech": "Nick Foster",
+        "count": 307,
+        "hours": 459.9,
+        "billHours": 466,
+        "billRatio": 1.013,
+        "avgMinPerAppt": 90,
+        "contract": 137214,
+        "avgContract": 447,
+        "jobs": 295,
+        "accounts": 71,
+        "branches": "Raleigh"
+      },
+      {
+        "tech": "Chris Coyour",
+        "count": 303,
+        "hours": 825.2,
+        "billHours": 621,
+        "billRatio": 0.753,
+        "avgMinPerAppt": 163,
+        "contract": 162954.02,
+        "avgContract": 538,
+        "jobs": 273,
+        "accounts": 64,
+        "branches": "Greenville, Raleigh"
       },
       {
         "tech": "Kevin Green",
@@ -2014,94 +2053,68 @@
         "branches": "Raleigh"
       },
       {
-        "tech": "Nick Foster",
-        "count": 298,
-        "hours": 452.6,
-        "billHours": 466,
-        "billRatio": 1.03,
-        "avgMinPerAppt": 91,
-        "contract": 135774,
-        "avgContract": 456,
-        "jobs": 286,
-        "accounts": 66,
-        "branches": "Raleigh"
-      },
-      {
-        "tech": "Chris Coyour",
-        "count": 296,
-        "hours": 821,
-        "billHours": 621,
-        "billRatio": 0.7559999999999999,
-        "avgMinPerAppt": 166,
-        "contract": 161659.02,
-        "avgContract": 546,
-        "jobs": 266,
-        "accounts": 62,
-        "branches": "Greenville, Raleigh"
-      },
-      {
         "tech": "Matt Large",
-        "count": 281,
-        "hours": 365.9,
+        "count": 290,
+        "hours": 374.1,
         "billHours": 614.5,
-        "billRatio": 1.679,
-        "avgMinPerAppt": 78,
-        "contract": 114971.59,
-        "avgContract": 409,
-        "jobs": 253,
-        "accounts": 117,
+        "billRatio": 1.643,
+        "avgMinPerAppt": 77,
+        "contract": 115927.37,
+        "avgContract": 400,
+        "jobs": 260,
+        "accounts": 122,
         "branches": "Columbus"
       },
       {
+        "tech": "Randy Pfeiffer",
+        "count": 252,
+        "hours": 380.5,
+        "billHours": 364.5,
+        "billRatio": 0.958,
+        "avgMinPerAppt": 91,
+        "contract": 55643.53,
+        "avgContract": 221,
+        "jobs": 201,
+        "accounts": 102,
+        "branches": "Cincinnati, Columbus, Dayton, Indianapolis"
+      },
+      {
         "tech": "Richard Hoffman",
-        "count": 250,
-        "hours": 971,
+        "count": 252,
+        "hours": 981.2,
         "billHours": 1216.5,
-        "billRatio": 1.253,
-        "avgMinPerAppt": 233,
-        "contract": 109234.61,
-        "avgContract": 437,
-        "jobs": 226,
-        "accounts": 107,
+        "billRatio": 1.24,
+        "avgMinPerAppt": 234,
+        "contract": 110334.61,
+        "avgContract": 438,
+        "jobs": 228,
+        "accounts": 108,
         "branches": "Cincinnati, Cleveland, Columbus, Detroit"
       },
       {
         "tech": "Nick Velazquez",
-        "count": 250,
-        "hours": 378.9,
-        "billHours": 534,
-        "billRatio": 1.41,
-        "avgMinPerAppt": 91,
-        "contract": 91602.82,
-        "avgContract": 366,
-        "jobs": 221,
-        "accounts": 113,
+        "count": 248,
+        "hours": 378.4,
+        "billHours": 532,
+        "billRatio": 1.406,
+        "avgMinPerAppt": 92,
+        "contract": 91552.82,
+        "avgContract": 369,
+        "jobs": 219,
+        "accounts": 112,
         "branches": "Cincinnati, Columbus"
       },
       {
-        "tech": "Randy Pfeiffer",
-        "count": 248,
-        "hours": 367.3,
-        "billHours": 364.5,
-        "billRatio": 0.992,
-        "avgMinPerAppt": 89,
-        "contract": 54593.53,
-        "avgContract": 220,
-        "jobs": 199,
-        "accounts": 100,
-        "branches": "Cincinnati, Columbus, Dayton, Indianapolis"
-      },
-      {
         "tech": "David Frindt",
-        "count": 224,
-        "hours": 308.3,
+        "count": 227,
+        "hours": 316,
         "billHours": 323.5,
-        "billRatio": 1.0490000000000002,
-        "avgMinPerAppt": 83,
-        "contract": 93721.02,
-        "avgContract": 418,
+        "billRatio": 1.024,
+        "avgMinPerAppt": 84,
+        "contract": 94321.02,
+        "avgContract": 416,
         "jobs": 200,
-        "accounts": 101,
+        "accounts": 100,
         "branches": "Cleveland, Columbus"
       },
       {
@@ -2124,8 +2137,8 @@
         "billHours": 376.5,
         "billRatio": 1.506,
         "avgMinPerAppt": 71,
-        "contract": 61893.44,
-        "avgContract": 292,
+        "contract": 62493.44,
+        "avgContract": 295,
         "jobs": 189,
         "accounts": 106,
         "branches": "Cincinnati, Cleveland, Columbus"
@@ -2144,118 +2157,118 @@
         "branches": "Cincinnati, Columbus, Dayton, Indianapolis"
       },
       {
+        "tech": "Edwin Irizarry-Vasquez",
+        "count": 202,
+        "hours": 283.9,
+        "billHours": 543,
+        "billRatio": 1.913,
+        "avgMinPerAppt": 84,
+        "contract": 106302,
+        "avgContract": 526,
+        "jobs": 176,
+        "accounts": 69,
+        "branches": "Detroit, Grand Rapids"
+      },
+      {
+        "tech": "Will Vickers",
+        "count": 198,
+        "hours": 414.5,
+        "billHours": 1177,
+        "billRatio": 2.84,
+        "avgMinPerAppt": 126,
+        "contract": 99132.4,
+        "avgContract": 501,
+        "jobs": 172,
+        "accounts": 66,
+        "branches": "Cleveland, Detroit"
+      },
+      {
         "tech": "Jose Cartagena",
-        "count": 194,
+        "count": 193,
         "hours": 383.5,
         "billHours": 708.5,
         "billRatio": 1.848,
         "avgMinPerAppt": 119,
-        "contract": 70724.2,
-        "avgContract": 365,
+        "contract": 72649.2,
+        "avgContract": 376,
         "jobs": 184,
         "accounts": 117,
         "branches": "Cincinnati, Columbus"
       },
       {
         "tech": "Ricardo Nunez",
-        "count": 191,
-        "hours": 353,
-        "billHours": 657,
-        "billRatio": 1.861,
-        "avgMinPerAppt": 111,
-        "contract": 117632,
+        "count": 192,
+        "hours": 360.9,
+        "billHours": 656,
+        "billRatio": 1.818,
+        "avgMinPerAppt": 113,
+        "contract": 118332,
         "avgContract": 616,
         "jobs": 173,
-        "accounts": 72,
+        "accounts": 71,
         "branches": "Detroit, Grand Rapids"
-      },
-      {
-        "tech": "Edwin Irizarry-Vasquez",
-        "count": 186,
-        "hours": 271.3,
-        "billHours": 543,
-        "billRatio": 2.002,
-        "avgMinPerAppt": 88,
-        "contract": 100602,
-        "avgContract": 541,
-        "jobs": 162,
-        "accounts": 67,
-        "branches": "Detroit, Grand Rapids"
-      },
-      {
-        "tech": "Will Vickers",
-        "count": 186,
-        "hours": 408.2,
-        "billHours": 1177,
-        "billRatio": 2.884,
-        "avgMinPerAppt": 132,
-        "contract": 99232.4,
-        "avgContract": 534,
-        "jobs": 160,
-        "accounts": 63,
-        "branches": "Cleveland, Detroit"
       },
       {
         "tech": "Wilver Velasquez",
-        "count": 120,
-        "hours": 203.9,
+        "count": 122,
+        "hours": 206.1,
         "billHours": 232.5,
-        "billRatio": 1.141,
-        "avgMinPerAppt": 102,
-        "contract": 123892.26,
-        "avgContract": 1032,
+        "billRatio": 1.128,
+        "avgMinPerAppt": 101,
+        "contract": 125687.26,
+        "avgContract": 1030,
         "jobs": 109,
         "accounts": 65,
         "branches": "Columbus, DC Metro, Detroit"
       },
       {
         "tech": "Santos Alfaro-Delcid",
-        "count": 112,
-        "hours": 846.2,
-        "billHours": 650.5,
-        "billRatio": 0.769,
-        "avgMinPerAppt": 453,
-        "contract": 74981.5,
-        "avgContract": 669,
-        "jobs": 95,
+        "count": 113,
+        "hours": 861.7,
+        "billHours": 666.5,
+        "billRatio": 0.774,
+        "avgMinPerAppt": 458,
+        "contract": 73481.5,
+        "avgContract": 650,
+        "jobs": 96,
         "accounts": 70,
         "branches": "DC Metro"
       },
       {
         "tech": "G3 Construction",
-        "count": 109,
+        "count": 110,
         "hours": 1.3,
         "billHours": 2,
         "billRatio": 1.6,
         "avgMinPerAppt": 1,
-        "contract": 17020,
-        "avgContract": 156,
-        "jobs": 109,
-        "accounts": 21,
+        "contract": 17370,
+        "avgContract": 158,
+        "jobs": 110,
+        "accounts": 19,
         "branches": "Cincinnati, Dayton"
       },
       {
         "tech": "Rene Alvarado",
-        "count": 104,
-        "hours": 343.6,
+        "count": 106,
+        "hours": 345.4,
         "billHours": 279,
-        "billRatio": 0.812,
-        "avgMinPerAppt": 198,
-        "contract": 77064.84,
-        "avgContract": 741,
-        "jobs": 90,
-        "accounts": 64,
+        "billRatio": 0.8079999999999999,
+        "avgMinPerAppt": 196,
+        "contract": 77414.84,
+        "avgContract": 730,
+        "jobs": 92,
+        "accounts": 65,
         "branches": "Knoxville, Nashville"
       },
       {
         "tech": "Israel Velasquez",
-        "count": 100,
-        "hours": 330.7,
+        "count": 102,
+        "hours": 336.6,
         "billHours": 314,
-        "billRatio": 0.95,
+        "billRatio": 0.9329999999999999,
         "avgMinPerAppt": 198,
-        "contract": 124370.5,
-        "avgContract": 1244,
+        "contract": 121170.5,
+        "avgContract": 1188,
         "jobs": 84,
         "accounts": 69,
         "branches": "DC Metro, Richmond"
@@ -2274,68 +2287,68 @@
         "branches": "Knoxville, Nashville"
       },
       {
-        "tech": "Ethan Epperson",
-        "count": 80,
-        "hours": 367.5,
-        "billHours": 756.5,
-        "billRatio": 2.059,
-        "avgMinPerAppt": 276,
-        "contract": 43716,
-        "avgContract": 546,
-        "jobs": 79,
-        "accounts": 32,
-        "branches": "Detroit"
-      },
-      {
         "tech": "David Salisbury",
-        "count": 76,
-        "hours": 40.9,
+        "count": 87,
+        "hours": 50.4,
         "billHours": 15,
-        "billRatio": 0.36700000000000005,
-        "avgMinPerAppt": 32,
-        "contract": 28336.45,
-        "avgContract": 373,
-        "jobs": 69,
-        "accounts": 47,
+        "billRatio": 0.298,
+        "avgMinPerAppt": 35,
+        "contract": 46725.45,
+        "avgContract": 537,
+        "jobs": 78,
+        "accounts": 55,
         "branches": "Columbus"
       },
       {
+        "tech": "Ethan Epperson",
+        "count": 81,
+        "hours": 367.5,
+        "billHours": 756.5,
+        "billRatio": 2.059,
+        "avgMinPerAppt": 272,
+        "contract": 46298,
+        "avgContract": 572,
+        "jobs": 80,
+        "accounts": 33,
+        "branches": "Detroit"
+      },
+      {
         "tech": "GGM Guillermo Campuzano",
-        "count": 43,
+        "count": 45,
         "hours": 0,
         "billHours": 0,
         "billRatio": 0,
         "avgMinPerAppt": 0,
-        "contract": 97266.98,
-        "avgContract": 2262,
-        "jobs": 43,
-        "accounts": 40,
+        "contract": 105655.32,
+        "avgContract": 2348,
+        "jobs": 44,
+        "accounts": 41,
         "branches": "Columbus"
       },
       {
         "tech": "Above All Exteriors LLC",
-        "count": 35,
+        "count": 36,
         "hours": 0,
         "billHours": 0,
         "billRatio": 0,
         "avgMinPerAppt": 0,
-        "contract": 96157.25,
-        "avgContract": 2747,
-        "jobs": 35,
+        "contract": 98395.25,
+        "avgContract": 2733,
+        "jobs": 36,
         "accounts": 8,
         "branches": "Detroit"
       },
       {
         "tech": "Alonzie/Lonnie Wright",
-        "count": 34,
+        "count": 33,
         "hours": 3.4,
         "billHours": 7.5,
         "billRatio": 2.217,
         "avgMinPerAppt": 6,
         "contract": 11670,
-        "avgContract": 343,
-        "jobs": 34,
-        "accounts": 21,
+        "avgContract": 354,
+        "jobs": 33,
+        "accounts": 20,
         "branches": "Cincinnati, Columbus, Dayton, Indianapolis"
       },
       {
@@ -2365,30 +2378,56 @@
         "branches": "Richmond"
       },
       {
+        "tech": "Maxwell Sousa",
+        "count": 18,
+        "hours": 9.2,
+        "billHours": 0,
+        "billRatio": 0,
+        "avgMinPerAppt": 31,
+        "contract": 3990,
+        "avgContract": 222,
+        "jobs": 17,
+        "accounts": 12,
+        "branches": "Cincinnati, Dayton, Raleigh"
+      },
+      {
         "tech": "Ignacio Roofing and Siding",
-        "count": 16,
+        "count": 17,
         "hours": 0,
         "billHours": 1,
         "billRatio": 0,
         "avgMinPerAppt": 0,
-        "contract": 43716.83,
-        "avgContract": 2732,
-        "jobs": 16,
-        "accounts": 15,
+        "contract": 47517.05,
+        "avgContract": 2795,
+        "jobs": 17,
+        "accounts": 16,
         "branches": "Columbus"
       },
       {
         "tech": "ASM Construction",
-        "count": 13,
+        "count": 14,
         "hours": 0,
         "billHours": 0,
         "billRatio": 0,
         "avgMinPerAppt": 0,
-        "contract": 24733.15,
-        "avgContract": 1903,
-        "jobs": 13,
+        "contract": 27151.15,
+        "avgContract": 1939,
+        "jobs": 14,
         "accounts": 6,
         "branches": "Detroit"
+      },
+      {
+        "tech": "Rene/Choppo",
+        "count": 7,
+        "hours": 10,
+        "billHours": 10,
+        "billRatio": 1,
+        "avgMinPerAppt": 86,
+        "contract": 7700,
+        "avgContract": 1100,
+        "jobs": 7,
+        "accounts": 6,
+        "branches": "Cincinnati, Dayton, Indianapolis"
       },
       {
         "tech": "PREMIER ROOFING",
@@ -2402,19 +2441,6 @@
         "jobs": 6,
         "accounts": 6,
         "branches": "Cincinnati, Dayton"
-      },
-      {
-        "tech": "Rene/Choppo",
-        "count": 6,
-        "hours": 10,
-        "billHours": 10,
-        "billRatio": 1,
-        "avgMinPerAppt": 100,
-        "contract": 7700,
-        "avgContract": 1283,
-        "jobs": 6,
-        "accounts": 5,
-        "branches": "Cincinnati, Dayton, Indianapolis"
       },
       {
         "tech": "Allied Gutter Company",
@@ -2467,19 +2493,6 @@
         "jobs": 4,
         "accounts": 4,
         "branches": "Columbus"
-      },
-      {
-        "tech": "Maxwell Sousa",
-        "count": 4,
-        "hours": 0,
-        "billHours": 0,
-        "billRatio": 0,
-        "avgMinPerAppt": 0,
-        "contract": 1740,
-        "avgContract": 435,
-        "jobs": 4,
-        "accounts": 3,
-        "branches": "Raleigh"
       },
       {
         "tech": "Skillz Contracting Co",
@@ -2560,6 +2573,19 @@
         "branches": "Nashville"
       },
       {
+        "tech": "JLT Roofing & Construction LLC",
+        "count": 2,
+        "hours": 0,
+        "billHours": 0,
+        "billRatio": 0,
+        "avgMinPerAppt": 0,
+        "contract": 8794.75,
+        "avgContract": 4397,
+        "jobs": 2,
+        "accounts": 2,
+        "branches": "Columbus"
+      },
+      {
         "tech": "HDZ Roofing and Construction",
         "count": 2,
         "hours": 0,
@@ -2633,19 +2659,6 @@
         "avgMinPerAppt": 41,
         "contract": 2700,
         "avgContract": 2700,
-        "jobs": 1,
-        "accounts": 1,
-        "branches": "Columbus"
-      },
-      {
-        "tech": "JLT Roofing & Construction LLC",
-        "count": 1,
-        "hours": 0,
-        "billHours": 0,
-        "billRatio": 0,
-        "avgMinPerAppt": 0,
-        "contract": 7894.75,
-        "avgContract": 7895,
         "jobs": 1,
         "accounts": 1,
         "branches": "Columbus"
@@ -2742,6 +2755,19 @@
         "branches": "DC Metro"
       },
       {
+        "tech": "Cazales Roofing - Alfredo",
+        "count": 1,
+        "hours": 0,
+        "billHours": 0,
+        "billRatio": 0,
+        "avgMinPerAppt": 0,
+        "contract": 17728.95,
+        "avgContract": 17729,
+        "jobs": 1,
+        "accounts": 1,
+        "branches": "Columbus"
+      },
+      {
         "tech": "Confidential Information - Do Not Distribute",
         "count": 1,
         "hours": 0,
@@ -2771,83 +2797,83 @@
     "branchRows": [
       {
         "branch": "Columbus",
-        "count": 2020,
-        "techs": 27,
-        "accounts": 822,
-        "hours": 1864.7,
-        "billHours": 2796,
-        "contract": 903685.46,
+        "count": 2063,
+        "techs": 28,
+        "accounts": 843,
+        "hours": 1897.6,
+        "billHours": 2803,
+        "contract": 941993.8,
         "avgMinPerAppt": 55
       },
       {
         "branch": "Raleigh",
-        "count": 952,
+        "count": 970,
         "techs": 8,
-        "accounts": 141,
-        "hours": 1813.5,
+        "accounts": 145,
+        "hours": 1824.9,
         "billHours": 1544.5,
-        "contract": 457468.06,
-        "avgMinPerAppt": 114
+        "contract": 463433.06,
+        "avgMinPerAppt": 113
       },
       {
         "branch": "Detroit",
-        "count": 869,
+        "count": 894,
         "techs": 13,
-        "accounts": 230,
-        "hours": 1414.7,
-        "billHours": 3174.5,
-        "contract": 594431.8,
-        "avgMinPerAppt": 98
+        "accounts": 236,
+        "hours": 1441.4,
+        "billHours": 3173.5,
+        "contract": 626822.8,
+        "avgMinPerAppt": 97
       },
       {
         "branch": "Cincinnati",
-        "count": 687,
-        "techs": 14,
-        "accounts": 171,
-        "hours": 700,
+        "count": 706,
+        "techs": 15,
+        "accounts": 176,
+        "hours": 721,
         "billHours": 767.5,
-        "contract": 165632.66,
+        "contract": 169782.66,
         "avgMinPerAppt": 61
       },
       {
         "branch": "Cleveland",
-        "count": 526,
+        "count": 534,
         "techs": 6,
         "accounts": 206,
-        "hours": 1277,
+        "hours": 1294.9,
         "billHours": 1532,
-        "contract": 217421.61,
-        "avgMinPerAppt": 146
+        "contract": 221721.61,
+        "avgMinPerAppt": 145
       },
       {
         "branch": "DC Metro",
-        "count": 332,
-        "techs": 7,
+        "count": 336,
+        "techs": 6,
         "accounts": 162,
-        "hours": 1315.3,
-        "billHours": 1158,
-        "contract": 351409,
+        "hours": 1330.3,
+        "billHours": 1165,
+        "contract": 343759,
         "avgMinPerAppt": 238
       },
       {
         "branch": "Nashville",
-        "count": 252,
+        "count": 257,
         "techs": 4,
-        "accounts": 138,
-        "hours": 592.3,
+        "accounts": 141,
+        "hours": 594.2,
         "billHours": 524.5,
-        "contract": 167287.97,
-        "avgMinPerAppt": 141
+        "contract": 172734.97,
+        "avgMinPerAppt": 139
       },
       {
         "branch": "Dayton",
-        "count": 206,
-        "techs": 9,
-        "accounts": 85,
-        "hours": 230,
+        "count": 209,
+        "techs": 10,
+        "accounts": 86,
+        "hours": 231.3,
         "billHours": 288.5,
-        "contract": 39455,
-        "avgMinPerAppt": 67
+        "contract": 39305,
+        "avgMinPerAppt": 66
       },
       {
         "branch": "Richmond",
@@ -2856,7 +2882,7 @@
         "accounts": 29,
         "hours": 44.8,
         "billHours": 46,
-        "contract": 38503.21,
+        "contract": 39503.21,
         "avgMinPerAppt": 41
       },
       {
@@ -2913,143 +2939,143 @@
     "accountRows": [
       {
         "account": "Towne Properties - Columbus",
-        "count": 254,
-        "jobs": 208,
-        "hours": 235.7,
-        "billHours": 382.5,
-        "contract": 127508.28,
+        "count": 258,
+        "jobs": 211,
+        "hours": 238.1,
+        "billHours": 380.5,
+        "contract": 137288.28,
         "branches": "Columbus"
       },
       {
         "account": "Capital Property Solutions",
-        "count": 208,
-        "jobs": 150,
-        "hours": 239.8,
+        "count": 209,
+        "jobs": 151,
+        "hours": 240.5,
         "billHours": 410.5,
-        "contract": 99424.68,
+        "contract": 100374.68,
         "branches": "Columbus"
       },
       {
         "account": "Priestley Management Company",
-        "count": 206,
-        "jobs": 163,
-        "hours": 495.9,
+        "count": 207,
+        "jobs": 164,
+        "hours": 497.3,
         "billHours": 334,
         "contract": 133392,
         "branches": "Raleigh"
       },
       {
         "account": "Towne Properties - East Cincinnati District Office",
-        "count": 174,
-        "jobs": 154,
-        "hours": 218.8,
+        "count": 178,
+        "jobs": 158,
+        "hours": 219.9,
         "billHours": 207,
-        "contract": 52445,
+        "contract": 53645,
         "branches": "Cincinnati"
       },
       {
         "account": "Towne Properties - Cincinnati West District Office",
-        "count": 131,
-        "jobs": 122,
-        "hours": 90.4,
+        "count": 136,
+        "jobs": 125,
+        "hours": 94.7,
         "billHours": 111.5,
-        "contract": 34735,
+        "contract": 36485,
         "branches": "Cincinnati, Dayton"
       },
       {
         "account": "Solomon Organization, LLC",
-        "count": 123,
-        "jobs": 89,
-        "hours": 213.5,
+        "count": 125,
+        "jobs": 91,
+        "hours": 225.8,
         "billHours": 415.5,
-        "contract": 129343,
+        "contract": 133093,
         "branches": "Detroit, Grand Rapids, Cleveland, Columbus, Cincinnati"
       },
       {
         "account": "Charleston Management",
-        "count": 121,
-        "jobs": 98,
-        "hours": 147.4,
+        "count": 124,
+        "jobs": 100,
+        "hours": 149,
         "billHours": 148,
-        "contract": 52520,
+        "contract": 53015,
+        "branches": "Raleigh"
+      },
+      {
+        "account": "Towne Properties - Raleigh District",
+        "count": 121,
+        "jobs": 92,
+        "hours": 182.9,
+        "billHours": 166.5,
+        "contract": 46635,
         "branches": "Raleigh"
       },
       {
         "account": "Associated Property Management, LLC",
-        "count": 118,
-        "jobs": 89,
-        "hours": 379.4,
+        "count": 119,
+        "jobs": 90,
+        "hours": 380.6,
         "billHours": 207.5,
-        "contract": 53641,
+        "contract": 53991,
         "branches": "Cleveland, Dayton, Cincinnati, Columbus"
       },
       {
-        "account": "Towne Properties - Raleigh District",
-        "count": 116,
-        "jobs": 90,
-        "hours": 182.7,
-        "billHours": 166.5,
-        "contract": 45585,
-        "branches": "Raleigh"
+        "account": "Condo Management of Columbus",
+        "count": 112,
+        "jobs": 88,
+        "hours": 165.2,
+        "billHours": 172,
+        "contract": 49306,
+        "branches": "Columbus, Cincinnati"
       },
       {
         "account": "Compass Management Professionals",
-        "count": 109,
-        "jobs": 82,
+        "count": 111,
+        "jobs": 84,
         "hours": 118.7,
         "billHours": 258.5,
         "contract": 77897,
         "branches": "Detroit"
       },
       {
-        "account": "Condo Management of Columbus",
-        "count": 108,
-        "jobs": 85,
-        "hours": 165.2,
-        "billHours": 172,
-        "contract": 48506,
-        "branches": "Columbus, Cincinnati"
-      },
-      {
         "account": "Singh Management",
-        "count": 98,
-        "jobs": 71,
+        "count": 100,
+        "jobs": 72,
         "hours": 399.7,
-        "billHours": 826,
+        "billHours": 825,
         "contract": 93299.8,
         "branches": "Detroit"
       },
       {
         "account": "KS Management",
-        "count": 85,
-        "jobs": 68,
-        "hours": 76.8,
+        "count": 88,
+        "jobs": 71,
+        "hours": 79.8,
         "billHours": 177.5,
-        "contract": 54095,
+        "contract": 54795,
         "branches": "Detroit, Grand Rapids"
       },
       {
         "account": "Professional Properties Management",
         "count": 85,
         "jobs": 74,
-        "hours": 129.2,
+        "hours": 132.3,
         "billHours": 125,
-        "contract": 38535,
+        "contract": 39725,
         "branches": "Raleigh"
       },
       {
         "account": "Towne Properties - Dayton",
-        "count": 81,
-        "jobs": 64,
-        "hours": 80.8,
+        "count": 82,
+        "jobs": 65,
+        "hours": 81.4,
         "billHours": 111,
-        "contract": 26740,
+        "contract": 27090,
         "branches": "Dayton, Cincinnati"
       },
       {
         "account": "RowCal Construction & Maintenance TN, LLC",
-        "count": 55,
-        "jobs": 44,
+        "count": 56,
+        "jobs": 45,
         "hours": 134.6,
         "billHours": 115.5,
         "contract": 19700,
@@ -3057,25 +3083,16 @@
       },
       {
         "account": "Associa On Call",
-        "count": 47,
-        "jobs": 43,
-        "hours": 43.3,
+        "count": 46,
+        "jobs": 42,
+        "hours": 45.6,
         "billHours": 57.5,
-        "contract": 17670,
+        "contract": 18370,
         "branches": "Columbus, Cincinnati, Dayton"
       },
       {
-        "account": "Link Real Estate Group",
-        "count": 38,
-        "jobs": 22,
-        "hours": 39.6,
-        "billHours": 44,
-        "contract": 17000,
-        "branches": "Columbus, Cincinnati"
-      },
-      {
         "account": "Kare Condominium Management Company",
-        "count": 38,
+        "count": 39,
         "jobs": 31,
         "hours": 54.6,
         "billHours": 60.5,
@@ -3084,7 +3101,7 @@
       },
       {
         "account": "Sentry Management - Columbus",
-        "count": 37,
+        "count": 38,
         "jobs": 30,
         "hours": 32.8,
         "billHours": 52,
@@ -3092,22 +3109,22 @@
         "branches": "Columbus"
       },
       {
+        "account": "Link Real Estate Group",
+        "count": 38,
+        "jobs": 22,
+        "hours": 39.6,
+        "billHours": 44,
+        "contract": 18200,
+        "branches": "Columbus, Cincinnati"
+      },
+      {
         "account": "In Rhodes Management, Inc",
         "count": 37,
         "jobs": 27,
-        "hours": 48.2,
+        "hours": 49.7,
         "billHours": 470,
-        "contract": 16772,
+        "contract": 17122,
         "branches": "Detroit, Columbus"
-      },
-      {
-        "account": "Cedar Management Group",
-        "count": 36,
-        "jobs": 30,
-        "hours": 26.1,
-        "billHours": 44,
-        "contract": 16190,
-        "branches": "Columbus, Cleveland, Cincinnati, Knoxville, Raleigh"
       },
       {
         "account": "Greystar Real Estate Management - NC",
@@ -3119,21 +3136,30 @@
         "branches": "Raleigh"
       },
       {
+        "account": "Cedar Management Group",
+        "count": 35,
+        "jobs": 29,
+        "hours": 27,
+        "billHours": 44,
+        "contract": 16190,
+        "branches": "Columbus, Cleveland, Cincinnati, Knoxville, Raleigh"
+      },
+      {
         "account": "Central Buckeye Management and Construction Services, LLC",
         "count": 35,
         "jobs": 26,
-        "hours": 31.9,
+        "hours": 34.2,
         "billHours": 48,
-        "contract": 8700,
+        "contract": 8850,
         "branches": "Columbus"
       },
       {
         "account": "Eclipse Communites Management",
-        "count": 30,
-        "jobs": 25,
-        "hours": 28.9,
+        "count": 31,
+        "jobs": 26,
+        "hours": 30.3,
         "billHours": 37.5,
-        "contract": 9075,
+        "contract": 9575,
         "branches": "Cincinnati"
       }
     ],
@@ -3231,8 +3257,8 @@
           "appointments": 2,
           "hours": 4.1,
           "billHours": 2,
-          "contract": 350,
-          "hoursPer100": 1.2,
+          "contract": 824.78,
+          "hoursPer100": 0.5,
           "oldest": "2026-02-11",
           "newest": "2026-05-04",
           "spanDays": 82
@@ -3357,8 +3383,8 @@
           "appointments": 2,
           "hours": 2.4,
           "billHours": 4,
-          "contract": 400,
-          "hoursPer100": 0.6,
+          "contract": 500,
+          "hoursPer100": 0.5,
           "oldest": "2026-02-25",
           "newest": "2026-05-08",
           "spanDays": 72
@@ -5640,8 +5666,8 @@
           "appointments": 5,
           "hours": 8.7,
           "billHours": 14.5,
-          "contract": 1450,
-          "hoursPer100": 0.6,
+          "contract": 350,
+          "hoursPer100": 2.5,
           "oldest": "2026-02-04",
           "newest": "2026-03-04",
           "spanDays": 28
@@ -5801,6 +5827,20 @@
           "spanDays": 26
         },
         {
+          "wo": "00213981",
+          "account": "Comsource Management, Inc.",
+          "branch": "DC Metro",
+          "tech": "Israel Velasquez",
+          "appointments": 4,
+          "hours": 0,
+          "billHours": 0,
+          "contract": 350,
+          "hoursPer100": 0,
+          "oldest": "2026-05-18",
+          "newest": "2026-05-18",
+          "spanDays": 0
+        },
+        {
           "wo": "00199815",
           "account": "Debra Melbye",
           "branch": "Cleveland",
@@ -5897,20 +5937,6 @@
           "oldest": "2026-02-04",
           "newest": "2026-04-03",
           "spanDays": 58
-        },
-        {
-          "wo": "00200152",
-          "account": "Clayman Property Services",
-          "branch": "Columbus",
-          "tech": "Matt Velazquez",
-          "appointments": 4,
-          "hours": 3.2,
-          "billHours": 7,
-          "contract": 0,
-          "hoursPer100": 0,
-          "oldest": "2026-02-04",
-          "newest": "2026-03-16",
-          "spanDays": 40
         }
       ],
       "disproportionate": [
@@ -6502,50 +6528,51 @@
       }
     ],
     "buckets": {
-      "<30m": 2611,
-      "30-60m": 662,
-      "1-2h": 1507,
-      "2-4h": 895,
-      "4-8h": 211,
+      "<30m": 2660,
+      "30-60m": 690,
+      "1-2h": 1533,
+      "2-4h": 915,
+      "4-8h": 213,
       ">8h": 80
     },
     "findings": {
       "concerns": [
-        "Jose Cartagena bills 1.85x actual hours (network avg 1.25x). Review crew sizing or labor allocation.",
-        "Ricardo Nunez bills 1.86x actual hours (network avg 1.25x). Review crew sizing or labor allocation.",
-        "Edwin Irizarry-Vasquez bills 2.00x actual hours (network avg 1.25x). Review crew sizing or labor allocation.",
-        "Will Vickers bills 2.88x actual hours (network avg 1.25x). Review crew sizing or labor allocation.",
-        "Ethan Epperson bills 2.06x actual hours (network avg 1.25x). Review crew sizing or labor allocation.",
-        "Alonzie/Lonnie Wright bills 2.22x actual hours (network avg 1.25x). Review crew sizing or labor allocation.",
-        "Richard Hoffman averages 233min per appointment vs network 111min. Heavy skew on this tech's book.",
-        "Santos Alfaro-Delcid averages 453min per appointment vs network 111min. Heavy skew on this tech's book.",
-        "Rene Alvarado averages 198min per appointment vs network 111min. Heavy skew on this tech's book.",
+        "Edwin Irizarry-Vasquez bills 1.91x actual hours (network avg 1.23x). Review crew sizing or labor allocation.",
+        "Will Vickers bills 2.84x actual hours (network avg 1.23x). Review crew sizing or labor allocation.",
+        "Jose Cartagena bills 1.85x actual hours (network avg 1.23x). Review crew sizing or labor allocation.",
+        "Ricardo Nunez bills 1.82x actual hours (network avg 1.23x). Review crew sizing or labor allocation.",
+        "Ethan Epperson bills 2.06x actual hours (network avg 1.23x). Review crew sizing or labor allocation.",
+        "Alonzie/Lonnie Wright bills 2.22x actual hours (network avg 1.23x). Review crew sizing or labor allocation.",
+        "Richard Hoffman averages 234min per appointment vs network 111min. Heavy skew on this tech's book.",
+        "Santos Alfaro-Delcid averages 458min per appointment vs network 111min. Heavy skew on this tech's book.",
+        "Rene Alvarado averages 196min per appointment vs network 111min. Heavy skew on this tech's book.",
         "Israel Velasquez averages 198min per appointment vs network 111min. Heavy skew on this tech's book.",
         "Jose Alberto-Amaya averages 167min per appointment vs network 111min. Heavy skew on this tech's book.",
-        "Ethan Epperson averages 276min per appointment vs network 111min. Heavy skew on this tech's book."
+        "Ethan Epperson averages 272min per appointment vs network 111min. Heavy skew on this tech's book."
       ],
       "watch": [
         "144 work orders are In Progress 14+ days. Oldest: WO 00201259 (72 days, Ernest Bedell). Should be closed or escalated.",
         "735 Repair WOs are not yet started; the oldest has been in \"Pending Insurance Claim\" for 120 days (WO 00198032, Associa Tennessee). Slow-scheduling backlog.",
         "22 work orders are eating disproportionate hours vs their contract value. Top offender: WO 00203680 (142.6h on $350 contract).",
-        "2057 appointments have no Actual End — either still in progress or never closed out. Likely a data hygiene problem in Salesforce."
+        "2091 appointments have no Actual End — either still in progress or never closed out. Likely a data hygiene problem in Salesforce."
       ],
       "positives": [
-        "Darren Vaught runs 332 appointments at just 66min avg — efficient dispatch density.",
+        "Darren Vaught runs 346 appointments at just 65min avg — efficient dispatch density.",
+        "Nick Foster runs 307 appointments at just 90min avg — efficient dispatch density.",
         "Kevin Green runs 303 appointments at just 82min avg — efficient dispatch density.",
-        "Nick Foster runs 298 appointments at just 91min avg — efficient dispatch density.",
-        "Matt Large runs 281 appointments at just 78min avg — efficient dispatch density.",
-        "Nick Velazquez runs 250 appointments at just 91min avg — efficient dispatch density.",
-        "Randy Pfeiffer runs 248 appointments at just 89min avg — efficient dispatch density.",
-        "David Frindt runs 224 appointments at just 83min avg — efficient dispatch density.",
+        "Matt Large runs 290 appointments at just 77min avg — efficient dispatch density.",
+        "Randy Pfeiffer runs 252 appointments at just 91min avg — efficient dispatch density.",
+        "Nick Velazquez runs 248 appointments at just 92min avg — efficient dispatch density.",
+        "David Frindt runs 227 appointments at just 84min avg — efficient dispatch density.",
         "Andrew Pruitt runs 212 appointments at just 78min avg — efficient dispatch density.",
         "Matt Velazquez runs 212 appointments at just 71min avg — efficient dispatch density.",
         "Andrii Shvets runs 203 appointments at just 94min avg — efficient dispatch density.",
+        "Edwin Irizarry-Vasquez runs 202 appointments at just 84min avg — efficient dispatch density.",
         "Most service tickets close in a single visit (1.21 appointments per WO on average). Low return-trip rate."
       ]
     },
     "benchmarks": {
-      "avgBillRatio": 1.246,
+      "avgBillRatio": 1.23,
       "avgMinPerAppt": 111
     },
     "tabs": [
