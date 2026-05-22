@@ -175,6 +175,8 @@ Anything marked Locked stays locked until Greg approves a change explicitly in c
 2026-05-05: Glob patterns made flexible. Pipeline order locked V5-first. JSON bridge file `v5_forecast_summary.json` introduced.
 2026-05-11: Required-sales MTD-credit fix (Pass-1). HTML Tab 2 wired to live V5 monthly arrays. CSS specificity fix for right-aligned headers. Forecast tabs (2 and 3) now hide closed months. MARGIN, MATERIAL_PCT, LABOR_PCT, PCT_NEW, PCT_PRIOR, PCT_COMPLETE all dynamized. 2025 sales seed switched to actual hist data. Weeks remaining made dynamic.
 
+2026-05-22: Monthly invoiced revenue now bucketed by NetSuite posting Period (column "Period"), not invoice Date. Applies to all three LOBs (Residential V5, Multi-Family, Service). Section 6.1 updated. Implementation in `calculators/lib/netsuite-invoices.js` (shared parser, all JS calculators) and `refresh_v5.py` (`_auto_overlay_netsuite_actuals` plus Invoiced YTD computation). Credit Memos and non-Invoice AR types now explicitly filtered out of the Residential V5 overlay so they no longer deflate Period totals.
+
 ### 4.4 Cycle time stages
 
 Cycle is computed across four stages on the YTD signed cohort, deduped by Job Number:
@@ -259,6 +261,13 @@ The Pass-1 fix is post-hoc. The cleaner structural fix would re-architect SNP at
 NetSuite `ResInvoicedYTDResults*.csv` is canonical for invoiced revenue in both deliverables, effective 2026-05-04. Do not derive invoicing from the Forecasting Report. The Forecasting Report's `Date Moved to Invoiced` column reflects the Salesforce production-stage transition, which lags or leads NetSuite invoice issuance by hours to days. Salesforce stage transition counts also miss partial billings, change orders, and AJEs that NetSuite captures.
 
 Reconciliation as of 2026-05-04: NetSuite YTD invoiced $20.92M (1,151 invoices) vs FR-derived $20.15M deduped (delta +$776K). The delta is structural and does not need to be reconciled away.
+
+**Monthly bucketing rule (effective 2026-05-22):** Monthly invoiced revenue is bucketed by the NetSuite **posting Period** column (e.g. "May 2026"), NOT by the invoice Date column. Period is the accounting close period and is the source of truth for monthly revenue recognition. The invoice Date is used only to (a) detect data freshness for closed-month overlay (`ns_max` in `refresh_v5.py`) and (b) populate `latestDate` in the shared parser. The Date column is no longer a fallback when Period is missing. Rows with a missing or non-FY Period are skipped and the count, plus a warning, is surfaced to the build log. This rule applies across all three LOBs (Residential V5, Multi-Family, Service) via:
+
+- `calculators/lib/netsuite-invoices.js` (shared per-invoice parser, all LOBs)
+- `refresh_v5.py` `_auto_overlay_netsuite_actuals` and Invoiced YTD computation
+
+The change matters when an invoice dated late in a month posts into the following accounting period, or when a prior-period adjustment posts in a later Period than its Date. On the 2026-05-22 snapshot, Date and Period agreed on every row across all three LOBs, so the rule change had zero impact on that build's numbers; the value is future-proofing for close-cycle adjustments and prior-period revisions.
 
 ### 6.2 Sales-created
 

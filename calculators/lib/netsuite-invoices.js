@@ -161,6 +161,8 @@ function parseInvoices(inputDir) {
   let totalInvoiced = 0;
   let invoiceCount = 0;
   let latestDate = null;
+  let missingPeriodCount = 0;     // 2026-05-22 rule: rows without a valid FY Period
+  let missingPeriodValue = 0;     //   sum of $ on those rows whose Date IS in FY (for surfacing)
 
   for (let r = 1; r < rows.length; r++) {
     const row = rows[r];
@@ -174,14 +176,19 @@ function parseInvoices(inputDir) {
     const period = parsePeriod(row[cPeriod]);
     const branch = normalizeBranch(row[cLocation]);
 
-    // Use Period as the primary month source; Date as fallback
+    // RULE 2026-05-22: monthly revenue is bucketed by NetSuite posting Period only.
+    // Invoice Date is NOT used as a fallback. Period is the accounting close period and
+    // is the source of truth for monthly revenue recognition. If Period is missing or
+    // outside FY, the row is skipped and counted for the warning surface below.
     let monthIdx = null;
     if (period && period.year === FY) {
       monthIdx = period.monthIdx;
-    } else if (date && date.getFullYear() === FY) {
-      monthIdx = date.getMonth();
     } else {
-      continue;   // skip non-FY rows
+      missingPeriodCount++;
+      if (date && date.getFullYear() === FY) {
+        missingPeriodValue += amount;   // value that would have been bucketed under old (Date) rule
+      }
+      continue;   // skip rows without a usable Period
     }
 
     monthly[monthIdx] += amount;
@@ -202,6 +209,12 @@ function parseInvoices(inputDir) {
     if (period) periodsSeen.add(period.monthIdx);
   }
 
+  if (missingPeriodCount > 0) {
+    console.log('  [netsuite-invoices] WARN: ' + missingPeriodCount + ' invoice rows skipped (missing or non-FY Period). ' +
+      'Those rows held $' + Math.round(missingPeriodValue).toLocaleString() + ' that previously would have bucketed by Date. ' +
+      'Source: ' + path.basename(file));
+  }
+
   return {
     fileName: path.basename(file),
     format: 'per-invoice',
@@ -212,7 +225,10 @@ function parseInvoices(inputDir) {
     byBranch: byBranch,
     byMonth: byMonth,
     latestDate: latestDate,
-    monthsWithData: Array.from(periodsSeen).sort((a, b) => a - b)
+    monthsWithData: Array.from(periodsSeen).sort((a, b) => a - b),
+    bucketingRule: 'period-only-v2026-05-22',
+    skippedMissingPeriod: missingPeriodCount,
+    skippedMissingPeriodValue: missingPeriodValue
   };
 }
 
