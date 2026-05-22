@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "builtAt": "2026-05-22T18:35:33.775Z",
+    "builtAt": "2026-05-22T18:54:10.321Z",
     "pipelineVersion": "2.0.0",
     "lobs": [
       "residential",
@@ -10,7 +10,7 @@
   },
   "residential": {
     "_meta": {
-      "builtAt": "2026-05-22T18:35:32.451Z",
+      "builtAt": "2026-05-22T18:54:09.332Z",
       "pipelineVersion": "2.0.0",
       "lob": "residential",
       "lastBuiltProjects": [
@@ -23,26 +23,26 @@
         {
           "id": "installs-ytd",
           "version": "1.0-rules-encoded",
-          "elapsedMs": 80,
-          "builtAt": "2026-05-22T18:35:32.451Z"
+          "elapsedMs": 71,
+          "builtAt": "2026-05-22T18:54:09.332Z"
         },
         {
           "id": "sales-overview",
           "version": "1.0-rules-encoded",
-          "elapsedMs": 537,
-          "builtAt": "2026-05-22T18:35:32.451Z"
+          "elapsedMs": 429,
+          "builtAt": "2026-05-22T18:54:09.332Z"
         },
         {
           "id": "revenue-forecast",
           "version": "V5-baseline-2026-05-04-shell-1.1",
-          "elapsedMs": 555,
-          "builtAt": "2026-05-22T18:35:32.451Z"
+          "elapsedMs": 35,
+          "builtAt": "2026-05-22T18:54:09.332Z"
         },
         {
           "id": "backlog",
           "version": "1.0-rules-encoded",
-          "elapsedMs": 39,
-          "builtAt": "2026-05-22T18:35:32.451Z"
+          "elapsedMs": 38,
+          "builtAt": "2026-05-22T18:54:09.332Z"
         }
       ]
     },
@@ -61,7 +61,7 @@
         "multiTradeJobs": 418,
         "singleTradeJobs": 1005,
         "multiTradePct": 29.4,
-        "lastBuild": "2026-05-22T18:35:32.451Z"
+        "lastBuild": "2026-05-22T18:54:09.332Z"
       },
       "tabs": [
         {
@@ -372,16 +372,16 @@
             {
               "label": "MT Median",
               "data": [
-                43.6,
+                43.5,
                 43.7,
                 21.7,
                 30.4,
-                38.7,
+                38.6,
                 41.5,
                 64.4,
                 53.5,
                 28.4,
-                28.6,
+                28.5,
                 31.1,
                 64.6,
                 31.6,
@@ -812,7 +812,7 @@
                 30.5,
                 50.4,
                 130.7,
-                81.1,
+                81,
                 93.5,
                 78.2,
                 58.7,
@@ -821,7 +821,7 @@
                 67.6,
                 29.5,
                 84.4,
-                67.6
+                67.5
               ]
             }
           ]
@@ -875,7 +875,7 @@
                 13.6,
                 24.5,
                 27.2,
-                126.6,
+                126.5,
                 26.9,
                 43.1
               ]
@@ -957,7 +957,7 @@
                   "name": "Thomas Hayes"
                 },
                 {
-                  "x": 126.6,
+                  "x": 126.5,
                   "y": 26158.96,
                   "jobs": 19,
                   "name": "Morgan Valois"
@@ -1003,7 +1003,7 @@
               19.6,
               31.5,
               27.5,
-              43.6,
+              43.5,
               14.5
             ],
             [
@@ -1047,7 +1047,7 @@
               25.6,
               21.9,
               24,
-              38.7,
+              38.6,
               22.6
             ],
             [
@@ -1102,7 +1102,7 @@
               22.7,
               19,
               32.2,
-              28.6,
+              28.5,
               16.5
             ],
             [
@@ -1234,7 +1234,7 @@
               1315054.92,
               19339.04,
               33.4,
-              40.6
+              40.5
             ],
             [
               "Alejandro Alvarado",
@@ -1471,7 +1471,7 @@
               30,
               385136.59,
               12837.89,
-              81.1
+              81
             ],
             [
               "Masonry",
@@ -1534,7 +1534,7 @@
               1,
               2303.15,
               2303.15,
-              67.6
+              67.5
             ]
           ]
         },
@@ -1607,8 +1607,8 @@
               19,
               497020.32,
               26158.96,
-              "126.6d",
-              "73.3d",
+              "126.5d",
+              "73.2d",
               57.9,
               26158.96
             ],
@@ -6915,7 +6915,7 @@
         "totalWOs": 861,
         "portfolioValue": 12852478.68,
         "avgDaysInStatus": 11,
-        "lastBuild": "2026-05-22T18:35:32.370Z"
+        "lastBuild": "2026-05-22T18:54:09.260Z"
       },
       "tabs": [
         {
@@ -8330,7 +8330,7 @@
   },
   "multiFamily": {
     "_meta": {
-      "builtAt": "2026-05-22T18:35:32.631Z",
+      "builtAt": "2026-05-22T18:54:09.463Z",
       "pipelineVersion": "2.0.0",
       "lob": "multi-family",
       "lastBuiltProjects": [
@@ -8343,26 +8343,26 @@
         {
           "id": "sales-overview",
           "version": "1.0-rules-encoded",
-          "elapsedMs": 27,
-          "builtAt": "2026-05-22T18:35:32.631Z"
+          "elapsedMs": 15,
+          "builtAt": "2026-05-22T18:54:09.463Z"
         },
         {
           "id": "revenue-forecast",
           "version": "V5-baseline-2026-05-04-shell-1.1",
-          "elapsedMs": 114,
-          "builtAt": "2026-05-22T18:35:32.631Z"
+          "elapsedMs": 93,
+          "builtAt": "2026-05-22T18:54:09.463Z"
         },
         {
           "id": "backlog",
           "version": "1.0-rules-encoded",
-          "elapsedMs": 14,
-          "builtAt": "2026-05-22T18:35:32.631Z"
+          "elapsedMs": 11,
+          "builtAt": "2026-05-22T18:54:09.463Z"
         },
         {
           "id": "installs-ytd",
           "version": "1.0-rules-encoded",
-          "elapsedMs": 16,
-          "builtAt": "2026-05-22T18:35:32.631Z"
+          "elapsedMs": 12,
+          "builtAt": "2026-05-22T18:54:09.463Z"
         }
       ]
     },
@@ -11581,7 +11581,7 @@
         "totalWOs": 321,
         "portfolioValue": 16853907,
         "avgDaysInStatus": 43,
-        "lastBuild": "2026-05-22T18:35:32.612Z"
+        "lastBuild": "2026-05-22T18:54:09.451Z"
       },
       "tabs": [
         {
@@ -12790,12 +12790,12 @@
         "uniqueJobs": 132,
         "markets": 11,
         "pms": 9,
-        "medianComplete": 52.7,
+        "medianComplete": 52.6,
         "avgStart": 69.9,
         "multiTradeJobs": 14,
         "singleTradeJobs": 118,
         "multiTradePct": 10.6,
-        "lastBuild": "2026-05-22T18:35:32.631Z"
+        "lastBuild": "2026-05-22T18:54:09.463Z"
       },
       "tabs": [
         {
@@ -12848,7 +12848,7 @@
         },
         {
           "label": "Median Days to Complete",
-          "value": "52.7d",
+          "value": "52.6d",
           "sub": "Job-level median"
         },
         {
@@ -12881,7 +12881,7 @@
         {
           "label": "Completion Time Gap",
           "value": "+16.4d",
-          "sub": "MT 67.5d vs ST 51.1d"
+          "sub": "MT 67.4d vs ST 51.0d"
         }
       ],
       "monthly": [
@@ -12918,7 +12918,7 @@
           "key": "2026-04",
           "rev": 3740488.93,
           "jobs": 36,
-          "med": 46,
+          "med": 45.9,
           "start": 65.1
         },
         {
@@ -12980,7 +12980,7 @@
                 71.1,
                 49.7,
                 60.3,
-                46,
+                45.9,
                 41.4
               ]
             },
@@ -13088,8 +13088,8 @@
               "label": "MT Median",
               "data": [
                 138.4,
-                54.6,
-                67.5,
+                54.5,
+                67.4,
                 0,
                 70.4,
                 0,
@@ -13110,8 +13110,8 @@
                 70.4,
                 41.3,
                 43.2,
-                63.5,
-                30,
+                63.4,
+                29.9,
                 43.5,
                 34.9
               ]
@@ -13171,15 +13171,15 @@
             {
               "label": "Median Days",
               "data": [
-                48.6,
-                54.6,
+                48.5,
+                54.5,
                 40.6,
                 55,
                 70.4,
                 41.3,
                 43.2,
-                63.5,
-                30,
+                63.4,
+                29.9,
                 43.5,
                 34.9
               ]
@@ -13246,7 +13246,7 @@
                   "name": "Brian Walker"
                 },
                 {
-                  "x": 55.6,
+                  "x": 55.5,
                   "y": 2623298.4,
                   "wos": 60,
                   "name": "Bryan Paquin"
@@ -13270,7 +13270,7 @@
                   "name": "Wayne Iles"
                 },
                 {
-                  "x": 52.6,
+                  "x": 52.5,
                   "y": 718290.71,
                   "wos": 22,
                   "name": "James Foky"
@@ -13326,7 +13326,7 @@
             {
               "label": "Median Days",
               "data": [
-                52.7,
+                52.6,
                 58.9,
                 145.9,
                 180.5,
@@ -13370,7 +13370,7 @@
             {
               "label": "Median Complete",
               "data": [
-                53.9,
+                53.8,
                 44.2,
                 351.4,
                 46.4,
@@ -13415,7 +13415,7 @@
               "label": "Creators",
               "data": [
                 {
-                  "x": 53.9,
+                  "x": 53.8,
                   "y": 155896.06,
                   "jobs": 90,
                   "name": "Lisa Gibson"
@@ -13470,8 +13470,8 @@
               22,
               4102203.94,
               186463.82,
-              48.6,
-              73.7,
+              48.5,
+              73.6,
               4.5,
               138.4,
               44.4
@@ -13481,10 +13481,10 @@
               20,
               3684004.45,
               184200.22,
-              54.6,
+              54.5,
               52.8,
               20,
-              54.6,
+              54.5,
               56.4
             ],
             [
@@ -13495,7 +13495,7 @@
               40.6,
               57.9,
               44.4,
-              67.5,
+              67.4,
               34.4
             ],
             [
@@ -13515,7 +13515,7 @@
               676390.55,
               37577.25,
               70.4,
-              91.3,
+              91.2,
               27.8,
               70.4,
               70.4
@@ -13547,22 +13547,22 @@
               3,
               220085,
               73361.67,
-              63.5,
-              37.7,
+              63.4,
+              37.6,
               0,
               0,
-              63.5
+              63.4
             ],
             [
               "Indianapolis",
               2,
               148724,
               74362,
-              30,
-              25.1,
+              29.9,
+              25,
               0,
               0,
-              30
+              29.9
             ],
             [
               "Richmond",
@@ -13608,7 +13608,7 @@
               3255753.79,
               45218.8,
               44.4,
-              88.7
+              88.6
             ],
             [
               "Brian Walker",
@@ -13625,7 +13625,7 @@
               19,
               2623298.4,
               43721.64,
-              55.6,
+              55.5,
               72.2
             ],
             [
@@ -13661,7 +13661,7 @@
               15,
               718290.71,
               32649.58,
-              52.6,
+              52.5,
               90.5
             ],
             [
@@ -13700,7 +13700,7 @@
               286,
               14202816.69,
               49660.2,
-              52.7
+              52.6
             ],
             [
               "Gutters",
@@ -13751,7 +13751,7 @@
               90,
               14030645.55,
               155896.06,
-              "53.9d",
+              "53.8d",
               "75.8d",
               10,
               155896.06
@@ -13916,11 +13916,11 @@
           "Days to Start averages 69.9 days company-wide and 78.2 days in Raleigh (a sold job sits weeks before a crew touches it)."
         ],
         "watchList": [
-          "Gutters-only work runs at 58.9-day median complete versus 52.7 days for roofing, 12% slower cycle on the lowest-priced trade."
+          "Gutters-only work runs at 58.9-day median complete versus 52.6 days for roofing, 12% slower cycle on the lowest-priced trade."
         ],
         "positivesToBuildOn": [
           "May delivered $7.61M across 36 invoiced jobs at 41.4-day median complete, the highest revenue month and one of the fastest cycles of the year.",
-          "Detroit Metro hits 48.6-day median complete and a $186,464 average contract on 22 jobs.",
+          "Detroit Metro hits 48.5-day median complete and a $186,464 average contract on 22 jobs.",
           "Multi-trade jobs carry a $349,275 average contract versus $99,676 for single-trade, a 250% revenue lift per job."
         ]
       }
@@ -13928,7 +13928,7 @@
   },
   "service": {
     "_meta": {
-      "builtAt": "2026-05-22T18:35:33.752Z",
+      "builtAt": "2026-05-22T18:54:10.316Z",
       "pipelineVersion": "2.0.0",
       "lob": "service",
       "lastBuiltProjects": [
@@ -13939,14 +13939,14 @@
         {
           "id": "revenue-forecast",
           "version": "V5-baseline-2026-05-04-shell-1.1",
-          "elapsedMs": 479,
-          "builtAt": "2026-05-22T18:35:33.752Z"
+          "elapsedMs": 357,
+          "builtAt": "2026-05-22T18:54:10.316Z"
         },
         {
           "id": "service-calls",
           "version": "Service-Calls-v1.1-2026-05-07",
-          "elapsedMs": 637,
-          "builtAt": "2026-05-22T18:35:33.752Z"
+          "elapsedMs": 494,
+          "builtAt": "2026-05-22T18:54:10.316Z"
         }
       ]
     },
