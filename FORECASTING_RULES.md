@@ -1,7 +1,7 @@
 # Residential Revenue Forecast: Operating Rules
 
 Owner: Greg Graven, COO, Feazel Roofing
-Last revised: 2026-05-11
+Last revised: 2026-06-12
 Audience: Claude agents and human collaborators working on Feazel residential revenue forecasting in any project context.
 
 ## Executive summary
@@ -156,11 +156,15 @@ Pipeline writes intermediate pickles (`v5_dashboard_data.pkl`, `v5_budget_solve.
 | Weekly sales target (HTML Tab 7) | Derived | Dynamic 2026-05-11 | `remaining_required_sales[active_month] / weeks_left_in_month`. |
 | Weeks remaining (HTML Tab 10) | Derived | Dynamic 2026-05-11 | `(2026-12-31 - TODAY) / 7`. Was hardcoded 35. |
 | 2025 sales seed (Oct/Nov/Dec) | Forecasting Report historical jobs | Dynamic 2026-05-11 | Replaces `est_2025` placeholder. Fallback to placeholder per-month if hist data missing. |
-| WIP reference baseline | wip_reference.pkl | Locked | Conservative cycles, do not regenerate without approval |
+| WIP reference baseline | wip_reference.pkl | Locked, regenerate at month close | Regenerated 2026-06-12 with Greg's approval (prior baseline backed up as wip_reference_backup_2026-04-16.pkl). Regenerate at each month boundary per the maintenance cadence; any off-cycle regeneration still requires explicit approval. |
 | Branch consolidation | NOVA → DC Metro | Locked | Effective 2026-04 |
 | Invoicing source of truth | NetSuite | Adopted 2026-05-04 | Section 6.1 |
 | Optimizer smoothness penalty (`lam`) | n/a | Locked | Tuning parameter (0.05), not a business assumption |
 | MMU (material mark-up) | n/a | Removed 2026-04-30 | Not in either pipeline |
+| Month anchors (closed/active) | ACTIVE_IDX / CLOSED_IDX in refresh_v5.py | Dynamic 2026-06-12 | Closed month = month before TODAY, active = TODAY's month. Replaced hard-coded April/May indices that broke at the June month roll. |
+| Budget displays | Original plan (Residential Budget 2026.xlsx) | Fixed 2026-06-12 | Anything labeled Budget publishes the original plan ($125.89M invoiced / $123.96M net FY2026). The actuals-overlaid blend stays internal (optimizer target, recovery math) and is exposed as `blend_*` keys in the summary JSON. |
+| **Reporting baseline (source of truth)** | **Realistic Forecast** | **Adopted 2026-06-12** | Headline KPIs, variance commentary, and recovery math report against the Realistic landing. Budget remains visible as a reference line on every tab (board commitment). The optimizer and weekly sales/production targets still solve against budget; do not re-solve against Realistic. |
+| Realistic Jun-Dec override table | build_realistic_forecast.py (`_LOCKED_INV_OVERRIDES`, `_LOCKED_SALES_OVERRIDES`) | Locked, monthly recalibration review | Review at each month close against actuals. Any dollar change requires Greg's explicit approval in chat (PE-board-grade assumption). Closed months always take actuals over the override. |
 
 ### 4.2 Lock change protocol
 
@@ -176,6 +180,10 @@ Anything marked Locked stays locked until Greg approves a change explicitly in c
 2026-05-11: Required-sales MTD-credit fix (Pass-1). HTML Tab 2 wired to live V5 monthly arrays. CSS specificity fix for right-aligned headers. Forecast tabs (2 and 3) now hide closed months. MARGIN, MATERIAL_PCT, LABOR_PCT, PCT_NEW, PCT_PRIOR, PCT_COMPLETE all dynamized. 2025 sales seed switched to actual hist data. Weeks remaining made dynamic.
 
 2026-05-22: Monthly invoiced revenue now bucketed by NetSuite posting Period (column "Period"), not invoice Date. Applies to all three LOBs (Residential V5, Multi-Family, Service). Section 6.1 updated. Implementation in `calculators/lib/netsuite-invoices.js` (shared parser, all JS calculators) and `refresh_v5.py` (`_auto_overlay_netsuite_actuals` plus Invoiced YTD computation). Credit Memos and non-Invoice AR types now explicitly filtered out of the Residential V5 overlay so they no longer deflate Period totals.
+
+2026-06-12 (month-roll fix, approved by Greg): closed/active month anchors made dynamic (ACTIVE_IDX/CLOSED_IDX); closed-month WIP windows corrected; Net = Invoiced + WIP change enforced on the closed-month line (model WIP estimate used when GL 40003 is blank, GL wins when present); Realistic builder de-frozen from May 22 (active month dynamic, closed months take actuals, YTD double-count fixed); wip_reference.pkl regenerated.
+2026-06-12 (budget display fix, approved by Greg): Budget labels repointed to the original plan; actuals-overlaid blend kept internal. Tab 10 hard-coded $125.6M and 4/12 plan-to-date replaced with live plan math.
+2026-06-12 (reporting baseline, approved by Greg): Realistic Forecast adopted as the source of truth for reporting. Headline KPIs, variance, and recovery math report against the Realistic landing; budget stays as a reference line everywhere; optimizer and weekly targets continue to solve against budget. Realistic Jun-Dec override tables move to a monthly recalibration review with explicit approval required for changes.
 
 ### 4.4 Cycle time stages
 

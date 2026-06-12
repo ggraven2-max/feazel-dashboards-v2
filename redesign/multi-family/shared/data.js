@@ -1,8 +1,8 @@
-/* AUTO-GENERATED — do not edit. Generated 2026-06-12T18:06:14.058Z (multi-family) */
+/* AUTO-GENERATED — do not edit. Generated 2026-06-12T19:15:13.652Z (multi-family) */
 window.FZ = window.FZ || {};
 window.FZ.data = {
   "_meta": {
-    "builtAt": "2026-06-12T18:06:14.058Z",
+    "builtAt": "2026-06-12T19:15:13.652Z",
     "pipelineVersion": "2.0.0",
     "lob": "multi-family",
     "lastBuiltProjects": [
@@ -15,26 +15,26 @@ window.FZ.data = {
       {
         "id": "sales-overview",
         "version": "1.0-rules-encoded",
-        "elapsedMs": 27,
-        "builtAt": "2026-06-12T18:06:14.058Z"
+        "elapsedMs": 19,
+        "builtAt": "2026-06-12T19:15:13.652Z"
       },
       {
         "id": "revenue-forecast",
         "version": "V5-baseline-2026-05-04-shell-1.1",
-        "elapsedMs": 124,
-        "builtAt": "2026-06-12T18:06:14.058Z"
+        "elapsedMs": 99,
+        "builtAt": "2026-06-12T19:15:13.652Z"
       },
       {
         "id": "backlog",
         "version": "1.0-rules-encoded",
-        "elapsedMs": 16,
-        "builtAt": "2026-06-12T18:06:14.058Z"
+        "elapsedMs": 15,
+        "builtAt": "2026-06-12T19:15:13.652Z"
       },
       {
         "id": "installs-ytd",
         "version": "1.0-rules-encoded",
-        "elapsedMs": 18,
-        "builtAt": "2026-06-12T18:06:14.058Z"
+        "elapsedMs": 15,
+        "builtAt": "2026-06-12T19:15:13.652Z"
       }
     ]
   },
@@ -3415,7 +3415,7 @@ window.FZ.data = {
       "totalWOs": 355,
       "portfolioValue": 17432526.59,
       "avgDaysInStatus": 40,
-      "lastBuild": "2026-06-12T18:06:14.039Z"
+      "lastBuild": "2026-06-12T19:15:13.637Z"
     },
     "tabs": [
       {
@@ -4692,12 +4692,12 @@ window.FZ.data = {
       "uniqueJobs": 141,
       "markets": 11,
       "pms": 9,
-      "medianComplete": 53.4,
+      "medianComplete": 53.3,
       "avgStart": 71.8,
       "multiTradeJobs": 16,
       "singleTradeJobs": 125,
       "multiTradePct": 11.3,
-      "lastBuild": "2026-06-12T18:06:14.058Z"
+      "lastBuild": "2026-06-12T19:15:13.652Z"
     },
     "tabs": [
       {
@@ -4750,7 +4750,7 @@ window.FZ.data = {
       },
       {
         "label": "Median Days to Complete",
-        "value": "53.4d",
+        "value": "53.3d",
         "sub": "Job-level median"
       },
       {
@@ -4783,7 +4783,7 @@ window.FZ.data = {
       {
         "label": "Completion Time Gap",
         "value": "+17.8d",
-        "sub": "MT 69.5d vs ST 51.7d"
+        "sub": "MT 69.4d vs ST 51.7d"
       }
     ],
     "monthly": [
@@ -4820,7 +4820,7 @@ window.FZ.data = {
         "key": "2026-04",
         "rev": 3740488.93,
         "jobs": 36,
-        "med": 46,
+        "med": 45.9,
         "start": 65.1
       },
       {
@@ -4830,7 +4830,7 @@ window.FZ.data = {
         "rev": 8549384.86,
         "jobs": 39,
         "med": 41.4,
-        "start": 74.3
+        "start": 74.2
       },
       {
         "m": "2026-06",
@@ -4895,7 +4895,7 @@ window.FZ.data = {
               71.1,
               49.7,
               60.3,
-              46,
+              45.9,
               41.4,
               66.6
             ]
@@ -4907,7 +4907,7 @@ window.FZ.data = {
               89.5,
               72.8,
               65.1,
-              74.3,
+              74.2,
               107
             ]
           }
@@ -5008,9 +5008,9 @@ window.FZ.data = {
             "data": [
               138.4,
               56.5,
-              67.5,
+              67.4,
               0,
-              70.5,
+              70.4,
               0,
               0,
               0,
@@ -5026,11 +5026,11 @@ window.FZ.data = {
               56.4,
               37.5,
               55,
-              68,
+              67.9,
               41.3,
               43.2,
-              63.5,
-              30,
+              63.4,
+              29.9,
               43.5,
               34.9
             ]
@@ -5097,8 +5097,8 @@ window.FZ.data = {
               70.4,
               41.3,
               43.2,
-              63.5,
-              30,
+              63.4,
+              29.9,
               43.5,
               34.9
             ]
@@ -5165,7 +5165,7 @@ window.FZ.data = {
                 "name": "Brian Walker"
               },
               {
-                "x": 55.6,
+                "x": 55.5,
                 "y": 3191039.4,
                 "wos": 69,
                 "name": "Bryan Paquin"
@@ -5189,7 +5189,7 @@ window.FZ.data = {
                 "name": "Jeremy Wolfe"
               },
               {
-                "x": 52.6,
+                "x": 52.5,
                 "y": 718290.71,
                 "wos": 22,
                 "name": "James Foky"
@@ -5245,9 +5245,9 @@ window.FZ.data = {
           {
             "label": "Median Days",
             "data": [
-              55.6,
-              61.4,
-              94.4,
+              55.5,
+              61.3,
+              94.3,
               180.5,
               18.5
             ]
@@ -5414,7 +5414,7 @@ window.FZ.data = {
             44.5,
             56.7,
             40,
-            67.5,
+            67.4,
             37.5
           ],
           [
@@ -5434,10 +5434,10 @@ window.FZ.data = {
             817365.91,
             40868.3,
             70.4,
-            91.3,
+            91.2,
             30,
-            70.5,
-            68
+            70.4,
+            67.9
           ],
           [
             "Cleveland",
@@ -5466,22 +5466,22 @@ window.FZ.data = {
             3,
             220085,
             73361.67,
-            63.5,
-            37.7,
+            63.4,
+            37.6,
             0,
             0,
-            63.5
+            63.4
           ],
           [
             "Indianapolis",
             2,
             148724,
             74362,
-            30,
-            25.1,
+            29.9,
+            25,
             0,
             0,
-            30
+            29.9
           ],
           [
             "Richmond",
@@ -5544,7 +5544,7 @@ window.FZ.data = {
             21,
             3191039.4,
             46246.95,
-            55.6,
+            55.5,
             69.2
           ],
           [
@@ -5580,7 +5580,7 @@ window.FZ.data = {
             15,
             718290.71,
             32649.58,
-            52.6,
+            52.5,
             90.5
           ],
           [
@@ -5619,21 +5619,21 @@ window.FZ.data = {
             330,
             16510215.47,
             50030.96,
-            55.6
+            55.5
           ],
           [
             "Gutters",
             31,
             1546040.24,
             49872.27,
-            61.4
+            61.3
           ],
           [
             "Siding",
             9,
             701166.33,
             77907.37,
-            94.4
+            94.3
           ],
           [
             "Windows",
@@ -5681,7 +5681,7 @@ window.FZ.data = {
             2682513.46,
             68782.4,
             "48.5d",
-            "54.7d",
+            "54.6d",
             12.8,
             68782.4
           ],
@@ -5832,10 +5832,10 @@ window.FZ.data = {
     "commentary": {
       "areasOfConcern": [
         "Multi-trade penalty is severe in 1 markets: Detroit Metro MT 138.4d vs ST 54.1d.",
-        "Days to Start averages 71.8 days company-wide and 91.3 days in Cincinnati (a sold job sits weeks before a crew touches it)."
+        "Days to Start averages 71.8 days company-wide and 91.2 days in Cincinnati (a sold job sits weeks before a crew touches it)."
       ],
       "watchList": [
-        "Gutters-only work runs at 61.4-day median complete versus 55.6 days for roofing, 10% slower cycle on the lowest-priced trade."
+        "Gutters-only work runs at 61.3-day median complete versus 55.5 days for roofing, 10% slower cycle on the lowest-priced trade."
       ],
       "positivesToBuildOn": [
         "May delivered $8.55M across 39 invoiced jobs at 41.4-day median complete, the highest revenue month and one of the fastest cycles of the year.",
