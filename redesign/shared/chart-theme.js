@@ -208,13 +208,72 @@
     return month + ' ' + day + ', ' + year + ' · ' + hours + ':' + mins + ' ' + ampm;
   };
 
-  // Days elapsed since Jan 1 of the current fiscal year, computed from builtAt.
+  // Days elapsed since Jan 1, computed from the READER'S CLOCK (2026-07-06
+  // decision: pages are clock-driven; data staleness is flagged separately
+  // via FZ.timeContext().staleDays rather than by freezing the calendar).
   window.FZ.daysYTD = function () {
-    var iso = window.FZ.data && window.FZ.data._meta && window.FZ.data._meta.builtAt;
-    var d = iso ? new Date(iso) : new Date();
-    if (isNaN(d.getTime())) d = new Date();
+    var d = new Date();
     var jan1 = new Date(d.getFullYear(), 0, 1);
     return Math.max(1, Math.floor((d - jan1) / 86400000) + 1);
+  };
+
+  // ---- Time context (2026-07-06): single source of truth for "now" ----
+  // Everything date-anchored on a page should derive from this, so month,
+  // quarter, and day roll automatically as the calendar moves, independent
+  // of when the data was last refreshed.
+  window.FZ.timeContext = function () {
+    var MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    var MONTHS_LONG = ['January','February','March','April','May','June','July',
+                       'August','September','October','November','December'];
+    var now = new Date();
+    var jan1 = new Date(now.getFullYear(), 0, 1);
+    var dayOfYear = Math.max(1, Math.floor((now - jan1) / 86400000) + 1);
+    var quarter = Math.floor(now.getMonth() / 3) + 1;
+    var iso = window.FZ.data && window.FZ.data._meta && window.FZ.data._meta.builtAt;
+    var asOf = iso ? new Date(iso) : null;
+    var staleDays = null;
+    if (asOf && !isNaN(asOf.getTime())) {
+      var d0 = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      var a0 = new Date(asOf.getFullYear(), asOf.getMonth(), asOf.getDate());
+      staleDays = Math.max(0, Math.round((d0 - a0) / 86400000));
+    }
+    return {
+      now: now,
+      year: now.getFullYear(),
+      monthIdx: now.getMonth(),
+      monthLabel: MONTHS[now.getMonth()],
+      monthLabelLong: MONTHS_LONG[now.getMonth()],
+      quarter: quarter,
+      quarterLabel: 'Q' + quarter + ' ' + now.getFullYear(),
+      dayOfYear: dayOfYear,
+      asOf: asOf,
+      staleDays: staleDays
+    };
+  };
+
+  // ---- Strict KPI lookup (2026-07-06): pages must NEVER hardcode KPI ----
+  // values. Look tiles up by label from the calculator-built kpis array.
+  // A missing label renders an em dash, never a stale number.
+  window.FZ.kpi = function (block, label) {
+    var list = (block && (block.kpis || block)) || [];
+    if (!Array.isArray(list)) list = [];
+    var want = String(label).toLowerCase();
+    for (var i = 0; i < list.length; i++) {
+      if (String(list[i].label || '').toLowerCase() === want) return list[i];
+    }
+    return { label: label, value: '—', sub: 'not in data payload', _missing: true };
+  };
+
+  // Build a kpi-row items array from labels. toneMap is optional {label: tone}.
+  window.FZ.kpiRow = function (block, labels, toneMap) {
+    toneMap = toneMap || {};
+    return labels.map(function (label) {
+      var k = window.FZ.kpi(block, label);
+      var item = { label: k.label, value: k.value, sub: k.sub };
+      if (toneMap[label]) item.tone = toneMap[label];
+      if (k.trend) item.trend = k.trend;
+      return item;
+    });
   };
 
   // Helper: build a gradient fill on a chart context

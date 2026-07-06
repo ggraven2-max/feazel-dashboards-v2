@@ -18,12 +18,12 @@
     <span class="eyebrow">RESIDENTIAL · 13 MARKETS</span>
     <h1>Residential</h1>
     <p class="hero-tagline">Doors knocked. Roofs sold.</p>
-    <p class="hero-narrative">One view of where the residential business stands today: signed contracts, the revenue forecast against the $125.6M budget, the backlog of work waiting for our crews, and what is actually getting installed and invoiced.</p>
+    <p class="hero-narrative">One view of where the residential business stands today: signed contracts, the Realistic Forecast against the <strong data-bind="narrative.budget">—</strong> budget, the backlog of work waiting for our crews, and what is actually getting installed and invoiced.</p>
     <div class="hub-hero-stats">
       <div class="hub-hero-stat">
-        <div class="l">2026 Residential Target</div>
+        <div class="l" data-bind="hero.targetLabel">Residential Target</div>
         <div class="v" data-bind="hero.target">—</div>
-        <div class="s" data-bind="hero.targetSub">Residential plan from V5</div>
+        <div class="s" data-bind="hero.targetSub">Annual residential budget</div>
       </div>
       <div class="hub-hero-stat">
         <div class="l">Residential Signed YTD</div>
@@ -68,7 +68,7 @@
             <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
           </div>
           <div>
-            <span class="eyebrow">YTD 2026</span>
+            <span class="eyebrow" data-bind="tile.sales.eyebrow">YTD</span>
             <h2 style="margin-top:2px;">Residential Sales Overview</h2>
             <p>Signed contracts, kicked-back rate, branch and rep performance, and the levers to close the gap to plan. 13 dedicated tabs.</p>
           </div>
@@ -88,9 +88,9 @@
             <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-6"/></svg>
           </div>
           <div>
-            <span class="eyebrow">V5 · 2026 OUTLOOK</span>
+            <span class="eyebrow" data-bind="tile.rev.eyebrow">REALISTIC FORECAST</span>
             <h2 style="margin-top:2px;">Residential Revenue Forecast</h2>
-            <p>Projects net invoiced revenue against the $125.6M budget using cycle-aware conversion curves. 12 dedicated tabs.</p>
+            <p>Projects net invoiced revenue against the annual budget using cycle-aware conversion curves. 12 dedicated tabs.</p>
           </div>
         </div>
         <div class="tile-stats">
@@ -150,8 +150,8 @@
     <div class="grid grid-3">
       <div class="card">
         <span class="eyebrow">METHODOLOGY</span>
-        <h3 style="margin-top:6px;">Forecast V5 Locked</h3>
-        <p style="margin-top:8px; font-size:13px;">The Revenue Forecast methodology is locked as of <strong>April 19, 2026</strong>. WIP constants and cycle-time hierarchy are not changed without explicit approval. See Revenue Forecast → Executive Summary for details.</p>
+        <h3 style="margin-top:6px;">Methodology Locked</h3>
+        <p style="margin-top:8px; font-size:13px;">The Revenue Forecast methodology is locked and reports Realistic vs Budget. WIP constants and cycle-time hierarchy are not changed without explicit approval. See Revenue Forecast → Executive Summary for details.</p>
       </div>
       <div class="card">
         <span class="eyebrow">DATA FRESHNESS</span>
@@ -204,6 +204,19 @@
 
   // ---- Live binder: pull values from FZ.data into the Command Center hub ----
   (function bindCommandCenter () {
+    // Year anchors are computed, never hardcoded, and render even when the
+    // data payload is missing.
+    var yr = new Date().getFullYear();
+    var yearBinds = {
+      'hero.targetLabel':   yr + ' Residential Target',
+      'tile.sales.eyebrow': 'YTD ' + yr,
+      'tile.rev.eyebrow':   'REALISTIC FORECAST · ' + yr + ' OUTLOOK'
+    };
+    Object.keys(yearBinds).forEach(function (key) {
+      var el = document.querySelector('[data-bind="' + key + '"]');
+      if (el) el.textContent = yearBinds[key];
+    });
+
     var data = window.FZ && window.FZ.data;
     if (!data) return;
 
@@ -244,7 +257,6 @@
     var blHoldAge  = kpi(BL.kpisHolds   || [], 'Avg Hold Age');
 
     // Annual revenue target sourced from the LOB's Revenue Forecast budget.
-    // Residential: V5 budget (~$125.6M). MF: Commercial Budget XLSX (~$51.67M).
     var rfBudgetRaw = (RF.execSummary && RF.execSummary.budget) || 0;
     var fmtBigMoney = function (v) {
       if (!v || isNaN(v)) return '—';
@@ -257,18 +269,20 @@
     var binds = {
       // Hero
       'hero.target':      fmtBigMoney(rfBudgetRaw),
-      'hero.targetSub':   '$185M total enterprise plan',
+      'hero.targetSub':   'Annual residential budget',
+      'narrative.budget': val(rfBudget, fmtBigMoney(rfBudgetRaw)),
       'hero.signed':      val(soSigned),
       'hero.signedSub':   sub(soSigned, 'across 13 markets'),
       'hero.invoiced':    val(rfInvoiced),
       'hero.invoicedSub': iyRev ? (iyRev.sub || '') : (sub(rfInvoiced)),
       'hero.backlog':     val(blValue),
       'hero.backlogSub':  blValue ? (blValue.sub || '') : (BL.headerMeta ? (BL.headerMeta.totalJobs + ' active jobs') : ''),
-      // Rollup callout
-      'rollup.weeklyPace':    val(rfWeekly, '$2.6M'),
-      'rollup.annualForecast':val(rfFcst, '$119M'),
-      'rollup.budget':        val(rfBudget, '$125.6M'),
-      'rollup.gap':           val(rfGap, '—'),
+      // Rollup callout. No hardcoded fallbacks: missing KPIs render as the
+      // standard '—' placeholder, never a stale number.
+      'rollup.weeklyPace':    val(rfWeekly),
+      'rollup.annualForecast':val(rfFcst),
+      'rollup.budget':        val(rfBudget),
+      'rollup.gap':           val(rfGap),
       // Sales tile
       'tile.sales.signed': val(soSigned),
       'tile.sales.sold':   val(soSold),

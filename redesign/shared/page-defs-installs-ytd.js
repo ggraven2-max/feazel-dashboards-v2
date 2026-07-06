@@ -38,6 +38,77 @@
   var T = {};
   D.tables.forEach(function (t) { T[t.id] = t; });
 
+  // ---- derived context (every figure below comes from the payload) ----
+  var hm = D.headerMeta || {};
+  var totalRev = hm.trueRevenue || 0;
+  var monthly = D.monthly || [];
+  var tc = FZ.timeContext();
+  var mtK = D.kpisMultiTrade || [];
+  var mtLiftTxt = (mtK[0] && mtK[0].sub) || 'lift vs single-trade';
+  var mtGapTxt = (mtK[2] && mtK[2].value) || '—';
+
+  var bestMonth = monthly.slice().sort(function (a, b) { return (b.rev || 0) - (a.rev || 0); })[0] || null;
+  var firstMonth = monthly[0] || null;
+  var fastestMonth = monthly.slice().filter(function (m) { return m.med != null; })
+    .sort(function (a, b) { return a.med - b.med; })[0] || null;
+
+  var mkRows = (T.tbl_markets && T.tbl_markets.rows) || [];
+  var topMkt = mkRows.slice().sort(function (a, b) { return b[2] - a[2]; })[0] || null;
+  var mkEligible = mkRows.filter(function (r) { return r[1] >= 25; });
+  var fastestMkt = mkEligible.slice().sort(function (a, b) { return a[4] - b[4]; })[0] || null;
+  var slowestMkt = mkEligible.slice().sort(function (a, b) { return b[4] - a[4]; })[0] || null;
+  var bigContractMkt = mkEligible.slice().sort(function (a, b) { return b[3] - a[3]; })[0]
+    || mkRows.slice().sort(function (a, b) { return b[3] - a[3]; })[0] || null;
+  var topMktRevShare = (topMkt && totalRev > 0) ? (topMkt[2] / totalRev * 100) : 0;
+  var totalMkJobs = mkRows.reduce(function (s, r) { return s + (r[1] || 0); }, 0);
+  var topMktJobShare = (topMkt && totalMkJobs > 0) ? (topMkt[1] / totalMkJobs * 100) : 0;
+
+  // MT-vs-ST cycle gaps by market (r[7] = MT median, r[8] = ST median)
+  var gapRows = mkEligible.filter(function (r) { return r[7] > 0 && r[8] > 0; })
+    .map(function (r) { return { name: r[0], mt: r[7], st: r[8], gap: r[7] - r[8] }; })
+    .sort(function (a, b) { return b.gap - a.gap; });
+  var worstGaps = gapRows.slice(0, 3);
+  var bestGap = gapRows.length ? gapRows[gapRows.length - 1] : null;
+
+  var pmRows = (T.tbl_pms && T.tbl_pms.rows) || [];
+  var topPm = pmRows[0] || null;
+  var top5PmShare = totalRev > 0
+    ? pmRows.slice(0, 5).reduce(function (s, r) { return s + (r[3] || 0); }, 0) / totalRev * 100 : 0;
+  var byWoVolume = pmRows.slice().sort(function (a, b) { return b[1] - a[1]; });
+  var slowHighVolPm = byWoVolume.slice(0, 5).sort(function (a, b) { return b[5] - a[5]; })[0] || null;
+  var fastHighVolPm = byWoVolume.slice(0, 10).sort(function (a, b) { return a[5] - b[5]; })[0] || null;
+
+  var wtRows = (T.tbl_worktypes && T.tbl_worktypes.rows) || [];
+  var wtTotalRev = wtRows.reduce(function (s, r) { return s + (r[2] || 0); }, 0);
+  var roofRow = wtRows.filter(function (r) { return /roof/i.test(r[0]); })[0] || wtRows[0] || null;
+  var gutterRow = wtRows.filter(function (r) { return /gutter/i.test(r[0]); })[0] || null;
+  var roofShare = (roofRow && wtTotalRev > 0) ? (roofRow[2] / wtTotalRev * 100) : 0;
+  var gutterSlowPct = (roofRow && gutterRow && roofRow[4] > 0)
+    ? ((gutterRow[4] / roofRow[4]) - 1) * 100 : 0;
+
+  var crRows = (T.tbl_creators && T.tbl_creators.rows) || [];
+  var topCr = crRows[0] || null;
+  var top3CrShare = totalRev > 0
+    ? crRows.slice(0, 3).reduce(function (s, r) { return s + (r[2] || 0); }, 0) / totalRev * 100 : 0;
+  var bestMtCr = crRows.slice().sort(function (a, b) { return (b[6] || 0) - (a[6] || 0); })[0] || null;
+
+  var heatHeaders = (T.creatorMarketHeatmap && T.creatorMarketHeatmap.headers) || [];
+  var heatDataRows = ((T.creatorMarketHeatmap && T.creatorMarketHeatmap.rows) || [])
+    .filter(function (r) { return !/^total$/i.test(String(r[0])); });
+  var heatFactsAll = heatDataRows.map(function (r) {
+    var total = Number(r[r.length - 1]) || 0;
+    var maxIdx = 1, maxVal = 0, presence = 0;
+    for (var i = 1; i < r.length - 1; i++) {
+      var v = Number(r[i]) || 0;
+      if (v > 0) presence++;
+      if (v > maxVal) { maxVal = v; maxIdx = i; }
+    }
+    return { name: r[0], total: total, topMarket: heatHeaders[maxIdx] || '', topCount: maxVal,
+             topPct: total > 0 ? maxVal / total * 100 : 0, presence: presence };
+  }).filter(function (f) { return f.total >= 5; });
+  var mostConcentratedCr = heatFactsAll.slice().sort(function (a, b) { return b.topPct - a.topPct; })[0] || null;
+  var mostSpreadCr = heatFactsAll.slice().sort(function (a, b) { return b.presence - a.presence; })[0] || null;
+
   // Heatmap level 0..6 from value vs row max
   function heatLevel(v, rowMax) {
     if (!v || v === 0) return 0;
@@ -57,34 +128,29 @@
   // INDEX (Hub)
   // ============================================================
   pages.index = {
-    eyebrow: 'INVOICED PRODUCTION · YTD 2026',
+    eyebrow: 'INVOICED PRODUCTION · YTD ' + tc.year,
     title: 'Residential Installs YTD',
-    intro: 'What is actually closing. 1,041 unique jobs invoiced for $19.31M, with the cycle compressing from 32 days in January to 16 days in April. The multi-trade premium is real ($26K vs $16K) but pays a 23-day cycle tax. Use the sub-tabs above to drill into PMs, markets, work types, and the creator-by-market network.',
+    intro: 'What is actually closing. ' + fmt.num(hm.uniqueJobs || 0) + ' unique jobs invoiced for ' + fmt.money(totalRev, { short: true })
+      + (firstMonth && fastestMonth && firstMonth.med != null ? ', with the cycle moving from ' + firstMonth.med.toFixed(0) + ' days in ' + firstMonth.label + ' to ' + fastestMonth.med.toFixed(0) + ' days in ' + fastestMonth.label : '')
+      + '. The multi-trade premium is real (' + ((mtK[0] && mtK[0].value) || '—') + ' vs ' + ((mtK[1] && mtK[1].value) || '—') + ') but pays a ' + mtGapTxt + ' cycle tax. Use the sub-tabs above to drill into PMs, markets, work types, and the creator-by-market network.',
     tags: [
-      { kind: 'success', text: 'April: $7.44M / 16d' },
+      bestMonth ? { kind: 'success', text: bestMonth.label + ': ' + fmt.money(bestMonth.rev, { short: true }) + (bestMonth.med != null ? ' / ' + bestMonth.med.toFixed(0) + 'd' : '') } : null,
       { kind: 'info', text: 'Refreshed ' + FZ.formatBuiltAt({ dateOnly: true }) }
-    ],
+    ].filter(Boolean),
     sections: [
       {
         kind: 'kpi-row', cols: 4,
-        items: [
-          { label: 'True Revenue',          value: '$19.31M', sub: '1,041 unique jobs invoiced',     tone: 'navy' },
-          { label: 'Avg Contract Value',     value: '$18,553', sub: 'Per job (deduped)' },
-          { label: 'Median Days to Complete', value: '27.1d',  sub: 'Job-level median',              tone: 'success' },
-          { label: 'Avg Days to Start',      value: '28.2d',  sub: 'Sale to crew on-site',          tone: 'warn' }
-        ]
+        items: FZ.kpiRow(D, ['True Revenue', 'Avg Contract Value', 'Median Days to Complete', 'Avg Days to Start'],
+          { 'True Revenue': 'navy', 'Median Days to Complete': 'success', 'Avg Days to Start': 'warn' })
       },
       {
         kind: 'kpi-row', cols: 3,
-        items: [
-          { label: 'Multi-Trade Avg Contract', value: '$26,191', sub: '+67.9% vs single-trade',       tone: 'success' },
-          { label: 'Single-Trade Avg Contract', value: '$15,604', sub: 'Baseline ticket' },
-          { label: 'MT vs ST Cycle Gap',       value: '+22.8d',  sub: 'MT 44.0d vs ST 21.2d',        tone: 'warn' }
-        ]
+        items: FZ.kpiRow(D.kpisMultiTrade, ['Multi-Trade Avg Contract', 'Single-Trade Avg Contract', 'Completion Time Gap'],
+          { 'Multi-Trade Avg Contract': 'success', 'Completion Time Gap': 'warn' })
       },
       {
         kind: 'chart-grid', cols: 2, heading: 'The Trajectory',
-        caption: 'Revenue and cycle moving together, April was the inflection',
+        caption: 'Revenue and cycle moving together' + (bestMonth ? ', ' + bestMonth.label + ' is the high-water mark' : ''),
         charts: [
           {
             title: 'Revenue & Job Volume by Month',
@@ -130,7 +196,7 @@
         charts: [
           {
             title: 'Revenue by Market (Top 12)',
-            sub: 'Columbus carries 30% of YTD revenue',
+            sub: topMkt ? topMkt[0] + ' carries ' + topMktRevShare.toFixed(0) + '% of YTD revenue' : 'Ranked by invoiced dollars',
             height: 320,
             config: {
               type: 'bar',
@@ -143,7 +209,7 @@
           },
           {
             title: 'Revenue by Work Type',
-            sub: 'Roofing is the dominant pillar at 75% of revenue',
+            sub: roofRow ? roofRow[0] + ' is the dominant pillar at ' + roofShare.toFixed(0) + '% of revenue' : 'Revenue mix by trade',
             height: 320,
             config: {
               type: 'doughnut',
@@ -169,9 +235,18 @@
       {
         kind: 'prose', heading: 'Headlines',
         cards: [
-          { kind: 'tint', eyebrow: 'WHAT IS WORKING', title: 'April delivered the playbook', body: '<p>April invoiced <strong>$7.44M across 420 jobs</strong> at a <strong>16.2-day median</strong>: highest revenue month, fastest cycle of the year. Cycle compressed from 32 days in January to 16 days in April as monthly volume tripled. Codify and run as the Q2/Q3 production playbook.</p>' },
-          { eyebrow: 'WHERE IT BREAKS', title: 'Columbus cycle drag', body: '<p>Columbus produces <strong>33% of jobs</strong> and <strong>30% of revenue</strong>, but its 42.0-day median complete is well above the 27.1-day company median. The multi-trade gap there is 47 days (75.2d MT vs 28.0d ST). Mason Bryant carries 89 WOs at 74.2-day median, top-3 PM by volume, slowest by cycle. This is sequencing, not workload.</p>' },
-          { kind: 'navy', eyebrow: 'NEXT MOVES', title: 'Three pairings to chase', body: '<p>Pair Mason Bryant\'s book to Brandon Vera + Alejandro Alvarado in a structured shadow-then-handoff (their 53 jobs in Columbus run at 13.2-day median). Pilot a dedicated gutter rotation in Columbus and Detroit. Decode and replicate Greenville (13.0d, $28,747 avg) in Knoxville.</p>' }
+          { kind: 'tint', eyebrow: 'WHAT IS WORKING', title: (bestMonth ? bestMonth.label : 'The best month') + ' delivered the playbook',
+            body: '<p>' + (bestMonth ? bestMonth.label + ' invoiced <strong>' + fmt.money(bestMonth.rev, { short: true }) + ' across ' + bestMonth.jobs + ' jobs</strong>' + (bestMonth.med != null ? ' at a <strong>' + bestMonth.med.toFixed(1) + '-day median</strong>' : '') + ': the strongest revenue month in the book. ' : '')
+              + (firstMonth && fastestMonth && firstMonth.med != null ? 'The cycle moved from ' + firstMonth.med.toFixed(0) + ' days in ' + firstMonth.label + ' to ' + fastestMonth.med.toFixed(0) + ' days in ' + fastestMonth.label + ' as monthly volume grew. ' : '')
+              + 'Codify and run it as the forward production playbook.</p>' },
+          { eyebrow: 'WHERE IT BREAKS', title: (slowestMkt ? slowestMkt[0] : 'Slowest market') + ' cycle drag',
+            body: '<p>' + (slowestMkt ? slowestMkt[0] + ' runs a <strong>' + slowestMkt[4] + '-day median complete</strong> on ' + slowestMkt[1] + ' jobs, well above the ' + (hm.medianComplete || 0) + '-day company median. Its multi-trade gap is ' + (slowestMkt[7] && slowestMkt[8] ? (slowestMkt[7] - slowestMkt[8]).toFixed(1) + ' days (' + slowestMkt[7] + 'd MT vs ' + slowestMkt[8] + 'd ST). ' : 'wide. ') : '')
+              + (slowHighVolPm ? slowHighVolPm[0] + ' carries ' + slowHighVolPm[1] + ' WOs at a ' + slowHighVolPm[5] + '-day median, top-volume PM, slowest by cycle. ' : '')
+              + 'This is sequencing, not workload.</p>' },
+          { kind: 'navy', eyebrow: 'NEXT MOVES', title: 'Three pairings to chase',
+            body: '<p>' + (slowHighVolPm && fastHighVolPm && slowHighVolPm[0] !== fastHighVolPm[0] ? 'Pair ' + slowHighVolPm[0] + '\'s book to ' + fastHighVolPm[0] + ' (' + fastHighVolPm[5] + 'd median on ' + fastHighVolPm[1] + ' WOs) in a structured shadow-then-handoff. ' : 'Pair the slowest high-volume PM book to the fastest one in a structured shadow-then-handoff. ')
+              + (gutterRow ? 'Pilot a dedicated ' + gutterRow[0].toLowerCase() + ' rotation in the highest-volume markets. ' : '')
+              + (fastestMkt ? 'Decode and replicate ' + fastestMkt[0] + ' (' + fastestMkt[4] + 'd median, ' + fmt.money(fastestMkt[3]) + ' avg contract) in the slower markets.' : '') + '</p>' }
         ]
       }
     ]
@@ -209,15 +284,15 @@
         charts: [
           {
             title: 'Multi-Trade vs Single-Trade Job Count',
-            sub: '290 multi-trade jobs (27.9%), 751 single-trade (72.1%)',
+            sub: fmt.num(hm.multiTradeJobs || 0) + ' multi-trade jobs (' + fmt.pct(hm.multiTradePct || 0) + '), ' + fmt.num(hm.singleTradeJobs || 0) + ' single-trade',
             height: 120,
             config: {
               type: 'bar',
               data: {
                 labels: ['YTD Job Mix'],
                 datasets: [
-                  { label: 'Multi-Trade', data: [290], backgroundColor: pal.navy, stack: 'a' },
-                  { label: 'Single-Trade', data: [751], backgroundColor: pal.blue, stack: 'a' }
+                  { label: 'Multi-Trade', data: [hm.multiTradeJobs || 0], backgroundColor: pal.navy, stack: 'a' },
+                  { label: 'Single-Trade', data: [hm.singleTradeJobs || 0], backgroundColor: pal.blue, stack: 'a' }
                 ]
               },
               options: withOpts({
@@ -231,7 +306,10 @@
       {
         kind: 'callout',
         title: 'Reading these together',
-        body: 'The 27.1-day median completes against an industry expectation of 21–28 days for residential roofing. We are operating in-band, but with a wide variance: April hits 16d while Columbus drags the median up to 27. The multi-trade lift is the largest single revenue lever we are not pulling intentionally.'
+        body: 'The ' + (hm.medianComplete || 0) + '-day median completes against an industry expectation of 21 to 28 days for residential roofing. The variance is wide: '
+          + (fastestMonth && fastestMonth.med != null ? fastestMonth.label + ' ran a ' + fastestMonth.med.toFixed(0) + 'd median' : 'the fastest month runs well under the median')
+          + (slowestMkt ? ' while ' + slowestMkt[0] + ' sits at ' + slowestMkt[4] + 'd' : '')
+          + '. The multi-trade lift is the largest single revenue lever we are not pulling intentionally.'
       }
     ]
   };
@@ -242,17 +320,19 @@
   pages.trends = {
     eyebrow: 'MONTHLY TRENDS',
     title: 'Monthly Trends',
-    intro: 'Four months of invoiced production. The story is volume up, cycle down, all in the same window.',
+    intro: monthly.length + ' months of invoiced production. The story is volume up, cycle down, all in the same window.',
     sections: [
-      {
-        kind: 'kpi-row', cols: 4,
-        items: [
-          { label: 'January',  value: fmt.money(C.ch_monthly.datasets[0].data[0], { short: true }), sub: C.ch_monthly.datasets[1].data[0] + ' jobs · 32d median' },
-          { label: 'February', value: fmt.money(C.ch_monthly.datasets[0].data[1], { short: true }), sub: C.ch_monthly.datasets[1].data[1] + ' jobs · 25d median' },
-          { label: 'March',    value: fmt.money(C.ch_monthly.datasets[0].data[2], { short: true }), sub: C.ch_monthly.datasets[1].data[2] + ' jobs · 22d median' },
-          { label: 'April',    value: fmt.money(C.ch_monthly.datasets[0].data[3], { short: true }), sub: C.ch_monthly.datasets[1].data[3] + ' jobs · 16d median', tone: 'success' }
-        ]
-      },
+      monthly.length ? {
+        kind: 'kpi-row', cols: Math.min(monthly.length, 4),
+        items: monthly.map(function (m) {
+          return {
+            label: m.label,
+            value: fmt.money(m.rev || 0, { short: true }),
+            sub: (m.jobs || 0) + ' jobs' + (m.med != null ? ' · ' + m.med.toFixed(0) + 'd median' : ''),
+            tone: bestMonth && m.label === bestMonth.label ? 'success' : undefined
+          };
+        })
+      } : null,
       {
         kind: 'chart-grid', cols: 1,
         charts: [
@@ -300,12 +380,12 @@
           }
         ]
       },
-      {
+      bestMonth ? {
         kind: 'callout', tone: 'success',
-        title: 'April is the proof',
-        body: 'Hitting $7.44M at a 16.2-day median across 420 jobs in one month is the playbook. Document the schedule density, the crew utilization, and the start-to-complete handoff. Q2/Q3 capacity planning should assume we can run this pace with the right sequencing.'
-      }
-    ]
+        title: bestMonth.label + ' is the proof',
+        body: 'Hitting ' + fmt.money(bestMonth.rev, { short: true }) + (bestMonth.med != null ? ' at a ' + bestMonth.med.toFixed(1) + '-day median' : '') + ' across ' + bestMonth.jobs + ' jobs in one month is the playbook. Document the schedule density, the crew utilization, and the start-to-complete handoff. Forward capacity planning should assume we can run this pace with the right sequencing.'
+      } : null
+    ].filter(Boolean)
   };
 
   // ============================================================
@@ -314,8 +394,8 @@
   pages['multi-trade'] = {
     eyebrow: 'MULTI-TRADE MIX',
     title: 'Multi-Trade Mix',
-    intro: 'Multi-trade jobs lift the average ticket by 68% but cost an extra 23 days in cycle time. Where the lift is real and where the cycle tax kills it.',
-    tags: [{ kind: 'success', text: '+68% revenue lift' }, { kind: 'warn', text: '+22.8d cycle tax' }],
+    intro: 'Multi-trade jobs lift the average ticket (' + mtLiftTxt + ') but cost an extra ' + mtGapTxt + ' in cycle time. Where the lift is real and where the cycle tax kills it.',
+    tags: [{ kind: 'success', text: mtLiftTxt }, { kind: 'warn', text: mtGapTxt + ' cycle tax' }],
     sections: [
       {
         kind: 'kpi-row', cols: 3,
@@ -341,7 +421,7 @@
           },
           {
             title: 'Multi-Trade % by Market',
-            sub: 'Knoxville and Richmond lead attach rates',
+            sub: (C.ch_mt_by_market.labels.length >= 2 ? C.ch_mt_by_market.labels[0] + ' and ' + C.ch_mt_by_market.labels[1] + ' lead attach rates' : 'Attach rate by market'),
             height: 320,
             config: {
               type: 'bar',
@@ -369,7 +449,7 @@
         charts: [
           {
             title: 'MT vs ST Median Complete by Market',
-            sub: 'The cycle penalty for adding a trade, Raleigh, Richmond, Dayton are the worst offenders',
+            sub: 'The cycle penalty for adding a trade' + (worstGaps.length ? ', ' + worstGaps.map(function (g) { return g.name; }).join(', ') + ' are the worst offenders' : ''),
             height: 320,
             config: {
               type: 'bar',
@@ -385,29 +465,36 @@
           }
         ]
       },
-      {
+      worstGaps.length ? {
         kind: 'callout', tone: 'warn',
-        title: 'The Raleigh / Richmond / Dayton problem',
-        body: 'These three markets have the largest MT-vs-ST cycle gap (Raleigh 70.1d vs 20.0d, Richmond 52.9d vs 14.5d, Dayton 52.1d vs 24.9d). The DC Metro playbook (MT 26.0d vs ST 15.8d) shows it is solvable with crew rotation and scheduling discipline. Replicate before adding any new MT capacity.'
-      }
-    ]
+        title: 'The ' + worstGaps.map(function (g) { return g.name; }).join(' / ') + ' problem',
+        body: 'These markets have the largest MT-vs-ST cycle gap ('
+          + worstGaps.map(function (g) { return g.name + ' ' + g.mt + 'd vs ' + g.st + 'd'; }).join(', ') + '). '
+          + (bestGap ? 'The ' + bestGap.name + ' playbook (MT ' + bestGap.mt + 'd vs ST ' + bestGap.st + 'd) shows it is solvable with crew rotation and scheduling discipline. ' : '')
+          + 'Replicate before adding any new MT capacity.'
+      } : null
+    ].filter(Boolean)
   };
 
   // ============================================================
   // MARKETS
   // ============================================================
   pages.markets = {
-    eyebrow: 'MARKETS · ALL 14',
+    eyebrow: 'MARKETS · ALL ' + mkRows.length,
     title: 'Markets',
     intro: 'Every market that has invoiced revenue YTD, ranked by dollars. The cycle and multi-trade metrics tell you where the model is healthy versus where it is held together with grit.',
     sections: [
       {
         kind: 'kpi-row', cols: 4,
         items: [
-          { label: 'Top Market',           value: 'Columbus', sub: '$5.81M · 347 jobs · 42d median', tone: 'navy' },
-          { label: 'Highest Avg Contract', value: 'Greenville', sub: '$28,747 on 25 jobs',          tone: 'success' },
-          { label: 'Fastest Median',       value: 'Greenville', sub: '13.0d median complete',       tone: 'success' },
-          { label: 'Slowest Median',       value: 'Columbus', sub: '42.0d on 347 jobs',             tone: 'warn' }
+          { label: 'Top Market',           value: topMkt ? topMkt[0] : '—',
+            sub: topMkt ? fmt.money(topMkt[2], { short: true }) + ' · ' + topMkt[1] + ' jobs · ' + topMkt[4] + 'd median' : '', tone: 'navy' },
+          { label: 'Highest Avg Contract', value: bigContractMkt ? bigContractMkt[0] : '—',
+            sub: bigContractMkt ? fmt.money(bigContractMkt[3]) + ' on ' + bigContractMkt[1] + ' jobs' : '', tone: 'success' },
+          { label: 'Fastest Median',       value: fastestMkt ? fastestMkt[0] : '—',
+            sub: fastestMkt ? fastestMkt[4] + 'd median complete on ' + fastestMkt[1] + ' jobs' : '', tone: 'success' },
+          { label: 'Slowest Median',       value: slowestMkt ? slowestMkt[0] : '—',
+            sub: slowestMkt ? slowestMkt[4] + 'd on ' + slowestMkt[1] + ' jobs' : '', tone: 'warn' }
         ]
       },
       {
@@ -451,7 +538,7 @@
       },
       {
         kind: 'table', heading: 'All markets · full scorecard',
-        caption: '14 markets sorted by revenue',
+        caption: mkRows.length + ' markets sorted by revenue',
         headers: T.tbl_markets.headers.map(function (h, idx) { return { label: h, num: idx > 0 }; }),
         rows: T.tbl_markets.rows.map(function (r) {
           return [
@@ -467,12 +554,12 @@
           ];
         })
       },
-      {
+      fastestMkt ? {
         kind: 'callout', tone: 'success',
-        title: 'DC Metro is the model',
-        body: 'DC Metro: 19.4-day median complete, 30.5% multi-trade attach, $18K average contract on 82 jobs. Best-balanced market in the network. Use as the playbook reference for Richmond and Raleigh, both of which have the volume but not the discipline.'
-      }
-    ]
+        title: fastestMkt[0] + ' is the model',
+        body: fastestMkt[0] + ': ' + fastestMkt[4] + '-day median complete, ' + fastestMkt[6] + '% multi-trade attach, ' + fmt.money(fastestMkt[3], { short: true }) + ' average contract on ' + fastestMkt[1] + ' jobs. Best-balanced market in the network. Use it as the playbook reference for the slowest markets' + (slowestMkt && slowestMkt[0] !== fastestMkt[0] ? ', starting with ' + slowestMkt[0] : '') + '.'
+      } : null
+    ].filter(Boolean)
   };
 
   // ============================================================
@@ -481,18 +568,18 @@
   pages.pms = {
     eyebrow: 'PROJECT MANAGERS',
     title: 'Project Managers',
-    intro: 'All 28 active PMs (5+ WOs). Where revenue concentrates, where cycle is fast, and which combinations of volume + speed actually scale.',
+    intro: 'All ' + pmRows.length + ' active PMs (5+ WOs). Where revenue concentrates, where cycle is fast, and which combinations of volume + speed actually scale.',
     sections: [
       {
         kind: 'kpi-row', cols: 4,
         items: [
-          { label: 'Active PMs',     value: '28',          sub: 'WOs ≥ 5',                              tone: 'navy' },
-          { label: 'Top PM Revenue', value: '$1.53M',      sub: 'Eric Isakov · 71 WOs · 49.1d median' },
-          { label: 'Top 5 PM Share', value: (function(){
-              var t=T.tbl_pms.rows.slice(0,5).reduce(function(a,r){return a+r[3];},0);
-              return ((t / 19310000) * 100).toFixed(0) + '%';
-            })(), sub: 'of $19.31M YTD' },
-          { label: 'Slowest High-Vol PM', value: '74.2d',  sub: 'Mason Bryant · 89 WOs · Columbus',     tone: 'warn' }
+          { label: 'Active PMs',     value: String(pmRows.length), sub: 'WOs ≥ 5', tone: 'navy' },
+          { label: 'Top PM Revenue', value: topPm ? fmt.money(topPm[3], { short: true }) : '—',
+            sub: topPm ? topPm[0] + ' · ' + topPm[1] + ' WOs · ' + topPm[5] + 'd median' : '' },
+          { label: 'Top 5 PM Share', value: top5PmShare.toFixed(0) + '%',
+            sub: 'of ' + fmt.money(totalRev, { short: true }) + ' YTD' },
+          { label: 'Slowest High-Vol PM', value: slowHighVolPm ? slowHighVolPm[5] + 'd' : '—',
+            sub: slowHighVolPm ? slowHighVolPm[0] + ' · ' + slowHighVolPm[1] + ' WOs' : '', tone: 'warn' }
         ]
       },
       {
@@ -517,7 +604,7 @@
         kind: 'chart-grid', cols: 1,
         charts: [
           {
-            title: 'Revenue vs Cycle Speed (all 28 PMs)',
+            title: 'Revenue vs Cycle Speed (all ' + pmRows.length + ' PMs)',
             sub: 'Top-left = best (high revenue, fast cycle) · Bottom-right = worst (low revenue, slow cycle)',
             height: 380,
             config: {
@@ -549,7 +636,7 @@
         ]
       },
       {
-        kind: 'table', heading: 'All 28 PMs · ranked by revenue',
+        kind: 'table', heading: 'All ' + pmRows.length + ' PMs · ranked by revenue',
         headers: T.tbl_pms.headers.map(function (h, i) { return { label: h, num: i > 0 }; }),
         rows: T.tbl_pms.rows.map(function (r) {
           return [
@@ -560,12 +647,13 @@
           ];
         })
       },
-      {
+      slowHighVolPm ? {
         kind: 'callout', tone: 'warn',
-        title: 'Mason Bryant: the volume-cycle paradox',
-        body: '89 WOs, $1.37M revenue, 74.2-day median complete. Top-3 PM by volume but the slowest high-volume PM in the network. 100% Columbus, skewed toward roofing (62 of 89 WOs). The fix is sequencing, not removing volume. Pair the book to Brandon Vera in a structured shadow-then-handoff.'
-      }
-    ]
+        title: slowHighVolPm[0] + ': the volume-cycle paradox',
+        body: slowHighVolPm[1] + ' WOs, ' + fmt.money(slowHighVolPm[3], { short: true }) + ' revenue, ' + slowHighVolPm[5] + '-day median complete. Top-volume PM but the slowest high-volume PM in the network. The fix is sequencing, not removing volume.'
+          + (fastHighVolPm && fastHighVolPm[0] !== slowHighVolPm[0] ? ' Pair the book to ' + fastHighVolPm[0] + ' (' + fastHighVolPm[5] + 'd median) in a structured shadow-then-handoff.' : '')
+      } : null
+    ].filter(Boolean)
   };
 
   // ============================================================
@@ -574,16 +662,23 @@
   pages['work-types'] = {
     eyebrow: 'WORK TYPES',
     title: 'Work Types',
-    intro: 'Roofing carries 75% of the revenue, but the cycle dynamics differ sharply by trade. Gutters runs 47% slower than roofing on a fraction of the ticket size.',
+    intro: (roofRow ? roofRow[0] + ' carries ' + roofShare.toFixed(0) + '% of the revenue, but the cycle dynamics differ sharply by trade. ' : 'The cycle dynamics differ sharply by trade. ')
+      + (gutterRow && gutterSlowPct > 0 ? gutterRow[0] + ' runs ' + gutterSlowPct.toFixed(0) + '% slower than ' + (roofRow ? roofRow[0].toLowerCase() : 'the lead trade') + ' on a fraction of the ticket size.' : ''),
     sections: [
       {
         kind: 'kpi-row', cols: 4,
-        items: [
-          { label: 'Roofing',   value: '$14.40M', sub: '945 WOs · 27.1d median', tone: 'navy' },
-          { label: 'Gutters',   value: '$2.80M',  sub: '299 WOs · 39.9d median', tone: 'warn' },
-          { label: 'Siding',    value: '$821K',   sub: '86 WOs' },
-          { label: 'All Other', value: fmt.money(T.tbl_worktypes.rows.slice(3).reduce(function(a,r){return a+r[2];},0), { short: true }), sub: 'Metal, windows, masonry, solar' }
-        ]
+        items: wtRows.slice(0, 3).map(function (r, i) {
+          return {
+            label: r[0],
+            value: fmt.money(r[2], { short: true }),
+            sub: r[1] + ' WOs · ' + r[4] + 'd median',
+            tone: i === 0 ? 'navy' : (i === 1 ? 'warn' : undefined)
+          };
+        }).concat([{
+          label: 'All Other',
+          value: fmt.money(wtRows.slice(3).reduce(function (a, r) { return a + (r[2] || 0); }, 0), { short: true }),
+          sub: wtRows.length > 3 ? (wtRows.length - 3) + ' smaller trades' : 'No other trades'
+        }])
       },
       {
         kind: 'chart-grid', cols: 2,
@@ -647,12 +742,12 @@
           ];
         })
       },
-      {
+      (gutterRow && roofRow && gutterSlowPct > 0) ? {
         kind: 'callout', tone: 'warn',
-        title: 'The gutters cycle gap',
-        body: 'Gutters runs at a 39.9-day median complete versus 27.1d for roofing, 47% slower on the lowest-priced trade. Pilot a dedicated gutter-crew rotation in Columbus and Detroit. If the cycle gap closes by half, that is roughly 6 days back per gutter job at scale.'
-      }
-    ]
+        title: 'The ' + gutterRow[0].toLowerCase() + ' cycle gap',
+        body: gutterRow[0] + ' runs at a ' + gutterRow[4] + '-day median complete versus ' + roofRow[4] + 'd for ' + roofRow[0].toLowerCase() + ', ' + gutterSlowPct.toFixed(0) + '% slower on a lower-priced trade. Pilot a dedicated ' + gutterRow[0].toLowerCase() + '-crew rotation in the highest-volume markets. If the cycle gap closes by half, that is roughly ' + Math.round((gutterRow[4] - roofRow[4]) / 2) + ' days back per job at scale.'
+      } : null
+    ].filter(Boolean)
   };
 
   // ============================================================
@@ -661,18 +756,17 @@
   pages.creators = {
     eyebrow: 'CREATED BY',
     title: 'Created By',
-    intro: 'Eight creators are responsible for every job in the YTD book. Three carry 75% of the volume. The creator-by-market network shows where each one\'s book actually lives.',
+    intro: crRows.length + ' creators are responsible for every job in the YTD book. The top three carry ' + top3CrShare.toFixed(0) + '% of the revenue. The creator-by-market network shows where each one\'s book actually lives.',
     sections: [
       {
         kind: 'kpi-row', cols: 4,
         items: [
-          { label: 'Active Creators', value: '8',           sub: 'Each with 5+ jobs',                  tone: 'navy' },
-          { label: 'Top Creator',     value: 'Brandon Vera', sub: '320 jobs · $6.25M · 22.2d median', tone: 'success' },
-          { label: 'Top 3 Share',     value: (function(){
-              var t=T.tbl_creators.rows.slice(0,3).reduce(function(a,r){return a+r[2];},0);
-              return ((t / 19310000) * 100).toFixed(0) + '%';
-            })(), sub: 'of YTD revenue' },
-          { label: 'Highest MT %',    value: 'Brandon Vera', sub: '34.4% multi-trade attach',           tone: 'success' }
+          { label: 'Active Creators', value: String(crRows.length), sub: 'Each with 5+ jobs', tone: 'navy' },
+          { label: 'Top Creator',     value: topCr ? topCr[0] : '—',
+            sub: topCr ? topCr[1] + ' jobs · ' + fmt.money(topCr[2], { short: true }) + ' · ' + topCr[4] + ' median' : '', tone: 'success' },
+          { label: 'Top 3 Share',     value: top3CrShare.toFixed(0) + '%', sub: 'of YTD revenue' },
+          { label: 'Highest MT %',    value: bestMtCr ? bestMtCr[0] : '—',
+            sub: bestMtCr ? (bestMtCr[6] || 0).toFixed(1) + '% multi-trade attach' : '', tone: 'success' }
         ]
       },
       {
@@ -802,7 +896,9 @@
       {
         kind: 'callout',
         title: 'What the heatmap reveals',
-        body: 'Amanda Wade is 72% Columbus (163 of 227). David Schwan is 35% Knoxville and 37% Nashville with light Columbus exposure. Brandon Vera is the only creator with meaningful presence in nine markets. Concentration matters when planning territory coverage and shadow-then-handoff transitions.'
+        body: (mostConcentratedCr ? mostConcentratedCr.name + ' is ' + mostConcentratedCr.topPct.toFixed(0) + '% ' + mostConcentratedCr.topMarket + ' (' + mostConcentratedCr.topCount + ' of ' + mostConcentratedCr.total + ' jobs). ' : '')
+          + (mostSpreadCr ? mostSpreadCr.name + ' has the widest footprint, with presence in ' + mostSpreadCr.presence + ' markets. ' : '')
+          + 'Concentration matters when planning territory coverage and shadow-then-handoff transitions.'
       }
     ]
   };
@@ -869,6 +965,11 @@
 
     var totalRev = hm.trueRevenue || 0;
 
+    // Deal-sizing policy threshold (methodology constant, not data): the
+    // multi-trade lift is judged worth the cycle tax on MF jobs above this
+    // contract value. Change here only with an approved methodology change.
+    var MT_DEAL_SIZE_MIN = 150000;
+
     var mfPages = {};
 
     // ─────────────────────────────────────────────────────────────
@@ -932,7 +1033,7 @@
     mfPages.trends = {
       eyebrow: 'MONTHLY TRENDS · MF',
       title: 'Monthly Trends',
-      intro: 'Five months of invoiced MF production. The book is lumpy because MF deals are large; one or two big jobs swing a month.',
+      intro: (monthly.length ? monthly.length + ' months' : 'Months') + ' of invoiced MF production. The book is lumpy because MF deals are large; one or two big jobs swing a month.',
       sections: [
         monthly.length ? {
           kind: 'kpi-row', cols: monthly.length,
@@ -1072,7 +1173,7 @@
         } : null,
         { kind: 'callout', tone: 'warn',
           title: 'Multi-trade economics',
-          body: 'On the MF book, multi-trade jobs run <strong>' + ((mtKpis[0] && mtKpis[0].sub) || '+72.9%') + '</strong> on per-deal contract value but cost <strong>' + ((mtKpis[2] && mtKpis[2].sub) || '+15.9d') + '</strong> in cycle. The lift is real for any MF job over $150K. Below that, the cycle tax usually erases the margin gain. Use it as a deal-sizing rule, not a default.'
+          body: 'On the MF book, multi-trade jobs run <strong>' + ((mtKpis[0] && mtKpis[0].sub) || '—') + '</strong> on per-deal contract value but cost <strong>' + ((mtKpis[2] && mtKpis[2].sub) || '—') + '</strong> in cycle. The lift is real for any MF job over ' + fmt.money(MT_DEAL_SIZE_MIN, { short: true }) + '. Below that, the cycle tax usually erases the margin gain. Use it as a deal-sizing rule, not a default.'
         }
       ].filter(Boolean)
     };

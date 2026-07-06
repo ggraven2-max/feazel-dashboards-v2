@@ -251,7 +251,7 @@
       longAppts.length ? {
         kind: 'table',
         heading: 'Longest single appointments',
-        caption: 'Single appointments at 4+ hours — manual review for scoping or scheduling issues',
+        caption: 'Single appointments at 4+ hours, flagged for manual review for scoping or scheduling issues',
         maxHeight: '520px',
         headers: [
           { label: 'Appt #', num: false },
@@ -284,7 +284,7 @@
         })
       } : null,
       { kind: 'callout', tone: 'info', title: 'What "Billable Time" means here',
-        body: 'In this Salesforce export, Billable Time is the man-hours posted to the job (Laborers × hours on site), not the customer\'s billable rate. A 2-laborer crew on a 1-hour appointment posts 2 billable man-hours. The network ratio (Bill Ratio) tells you how aggressively the typical appointment is crewed — currently ' + (hm.networkBillRatio || 0).toFixed(2) + 'x. Outliers above 2x deserve a look at whether the crew was actually that size.'
+        body: 'In this Salesforce export, Billable Time is the man-hours posted to the job (Laborers × hours on site), not the customer\'s billable rate. A 2-laborer crew on a 1-hour appointment posts 2 billable man-hours. The network ratio (Bill Ratio) tells you how aggressively the typical appointment is crewed, currently ' + (hm.networkBillRatio || 0).toFixed(2) + 'x. Outliers above 2x deserve a look at whether the crew was actually that size.'
       }
     ].filter(Boolean)
   };
@@ -452,7 +452,7 @@
   pages.accounts = {
     eyebrow: 'ACCOUNTS · TOP 25 BY VOLUME',
     title: 'Accounts',
-    intro: 'The 25 accounts driving the most service appointments. These are the property managers and commercial customers worth knowing by name — they generate the bulk of the service workload.',
+    intro: 'The 25 accounts driving the most service appointments. These are the property managers and commercial customers worth knowing by name; they generate the bulk of the service workload.',
     tags: accounts.length ? [{ kind: 'info', text: 'Top ' + accounts.length + ' accounts shown · ' + (hm.uniqAccounts || 0) + ' total' }] : [],
     sections: [
       accounts.length ? {
@@ -496,7 +496,7 @@
         })
       } : null,
       { kind: 'callout', tone: 'info', title: 'Account concentration',
-        body: 'Property managers dominate the service book. These accounts are the same ones that show up in the install↔service overlap analysis on Service Revenue Forecast — protecting the relationship is worth more than the per-ticket margin.'
+        body: 'Property managers dominate the service book. These accounts are the same ones that show up in the install↔service overlap analysis on Service Revenue Forecast; protecting the relationship is worth more than the per-ticket margin.'
       }
     ].filter(Boolean)
   };
@@ -548,7 +548,7 @@
             fmt.money(w.contract)
           ];
         }) : [[
-          { html: '<em>No In Progress WOs aged 14+ days right now — clean.</em>' },
+          { html: '<em>No In Progress WOs aged 14+ days right now. Clean.</em>' },
           '', '', '', '', '', ''
         ]]
       },
@@ -658,7 +658,7 @@
         })
       } : null,
       { kind: 'callout', tone: 'warn', title: 'Action checklist',
-        body: '<strong>Stuck WOs:</strong> work the oldest 5 with branch GMs this week — close, escalate, or write off. <strong>Disproportionate WOs:</strong> for the top 5 by hours-per-$100, walk the scope with the dispatching tech to spot misclassified scopes (charge codes vs reality). <strong>Multi-touch WOs:</strong> sample 3 from the top of the list and ask "could this have been one visit?" — that\'s where return-trip cost lives.'
+        body: '<strong>Stuck WOs:</strong> work the oldest 5 with branch GMs this week: close, escalate, or write off. <strong>Disproportionate WOs:</strong> for the top 5 by hours-per-$100, walk the scope with the dispatching tech to spot misclassified scopes (charge codes vs reality). <strong>Multi-touch WOs:</strong> sample 3 from the top of the list and ask "could this have been one visit?" That\'s where return-trip cost lives.'
       }
     ].filter(Boolean)
   };
@@ -669,7 +669,7 @@
   pages.findings = {
     eyebrow: 'FINDINGS · AUTO-DETECTED',
     title: 'Findings',
-    intro: 'The narrative read of the Service appointment data: where labor cost may be leaking, what to monitor, and what is working. Items here are auto-generated from the data — the actual prioritization is yours.',
+    intro: 'The narrative read of the Service appointment data: where labor cost may be leaking, what to monitor, and what is working. Items here are auto-generated from the data; the actual prioritization is yours.',
     tags: [
       { kind: 'danger',  text: (findings.concerns || []).length + ' concerns' },
       { kind: 'warn',    text: (findings.watch || []).length + ' watch list' },

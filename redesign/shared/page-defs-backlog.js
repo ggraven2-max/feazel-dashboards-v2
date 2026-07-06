@@ -87,14 +87,128 @@
   // ============================================================
   var pages = {};
 
+  // ---- derived context (every figure below comes from the payload) ----
+  var hm = D.headerMeta || {};
+  function kFind(arr, re) {
+    var k = (arr || []).find(function (x) { return x && re.test(String(x.label)); });
+    return k || { label: '', value: '—', sub: '' };
+  }
+  var kRisk          = kFind(D.kpisRiskOpportunity, /at risk/i);
+  var kOpp           = kFind(D.kpisRiskOpportunity, /opportunity/i);
+  var kPartialJobs   = kFind(D.kpisPartial, /^partial jobs$/i);
+  var kTrapped       = kFind(D.kpisPartial, /trapped value/i);
+  var kOpenPartials  = kFind(D.kpisPartial, /open wos/i);
+  var kRts           = kFind(D.kpisPartial, /rts ready/i);
+  var kTotalHolds    = kFind(D.kpisHolds, /total holds/i);
+  var kPendingPermit = kFind(D.kpisHolds, /pending permit/i);
+  var kActiveReps    = kFind(D.kpisSales, /active reps/i);
+  var kStuckValue    = kFind(D.kpisSales, /stuck value/i);
+  var kRepsStuck     = kFind(D.kpisSales, /reps with stuck/i);
+  var kInProgress    = kFind(D.kpisExecutive, /in progress/i);
+  var kNotStartedJobs  = kFind(D.kpisBacklog, /not started jobs/i);
+  var kNotStartedValue = kFind(D.kpisBacklog, /not started value/i);
+  var kOldestNS      = kFind(D.kpisBacklog, /oldest/i);
+
+  var branchRows = (T.branchDetail && T.branchDetail.rows) || [];
+  var branchByValue = branchRows.slice().sort(function (a, b) { return (b[10] || 0) - (a[10] || 0); });
+  var topBranch = branchByValue[0] || null;
+  var secondBranch = branchByValue[1] || null;
+  var totalBranchValue = branchRows.reduce(function (s, r) { return s + (r[10] || 0); }, 0);
+  var totalBranchWOs = branchRows.reduce(function (s, r) { return s + (r[1] || 0); }, 0);
+  var top2Value = (topBranch ? topBranch[10] : 0) + (secondBranch ? secondBranch[10] : 0);
+  var top2WOs = (topBranch ? topBranch[1] : 0) + (secondBranch ? secondBranch[1] : 0);
+  var completedWOs = branchRows.reduce(function (s, r) { return s + (r[2] || 0); }, 0);
+  var rasWOs = branchRows.reduce(function (s, r) { return s + (r[7] || 0); }, 0);
+  var topWoBranch = branchRows.slice().sort(function (a, b) { return (b[1] || 0) - (a[1] || 0); })[0] || null;
+  var mostScheduledBranch = branchRows.slice().sort(function (a, b) { return (b[5] || 0) - (a[5] || 0); })[0] || null;
+
+  var holdsRows = (T.holdsBySubStatus && T.holdsBySubStatus.rows) || [];
+  var holdsTotal = holdsRows.reduce(function (s, r) { return s + (r[1] || 0); }, 0);
+  var holdsSorted = holdsRows.slice().sort(function (a, b) { return (b[1] || 0) - (a[1] || 0); });
+  var topHold = holdsSorted[0] || null;
+  var secondHold = holdsSorted[1] || null;
+  var top2HoldPct = holdsTotal > 0
+    ? Math.round(((topHold ? topHold[1] : 0) + (secondHold ? secondHold[1] : 0)) / holdsTotal * 100) : 0;
+  var slowestHold = holdsRows.slice().sort(function (a, b) { return (b[2] || 0) - (a[2] || 0); })[0] || null;
+  var pendingSalesRow = holdsRows.find(function (r) { return /pending sales/i.test(r[0]); }) || null;
+
+  var permitsByBranch = (D.computedExtras && D.computedExtras.permitsByBranch) || [];
+  var permitsSorted = permitsByBranch.slice().sort(function (a, b) { return (b.permits || 0) - (a.permits || 0); });
+  var topPermitBranch = permitsSorted[0] || null;
+  var totalPermits = permitsByBranch.reduce(function (s, p) { return s + (p.permits || 0); }, 0);
+
+  var trailingRows = (T.trailingTrades && T.trailingTrades.rows) || [];
+  var topTrailing = trailingRows[0] || null;
+
+  var tradeRows = (T.tradeDetail && T.tradeDetail.rows) || [];
+  var tradeTotalValue = tradeRows.reduce(function (s, r) { return s + (r[5] || 0); }, 0);
+  function findTrade(re) { return tradeRows.find(function (r) { return re.test(String(r[0])); }) || null; }
+  var roofTrade = findTrade(/roof/i);
+  var gutterTrade = findTrade(/gutter/i);
+  var sidingTrade = findTrade(/siding/i);
+  var specialtyRows = (T.specialtyWatch && T.specialtyWatch.rows) || [];
+  var specialtyWOs = specialtyRows.reduce(function (s, r) { return s + (r[1] || 0); }, 0);
+
+  var gutterStatusRows = (T.gutterStatusBreakdown && T.gutterStatusBreakdown.rows) || [];
+  function gutterStatusCount(re) {
+    var r = gutterStatusRows.find(function (x) { return re.test(String(x[0])); });
+    return r ? (r[1] || 0) : 0;
+  }
+  var gutterRts = gutterStatusCount(/ready to schedule/i);
+  var gutterHold = gutterStatusCount(/hold/i);
+  var gutterDone = gutterStatusCount(/completed/i);
+
+  var stuckRows = (T.salesTop15ByStuck && T.salesTop15ByStuck.rows) || [];
+  var topStuckRep = stuckRows[0] || null;
+  var top5Stuck = stuckRows.slice(0, 5).reduce(function (s, r) { return s + (r[3] || 0); }, 0);
+
+  var backlogRows = (T.backlogByBranch && T.backlogByBranch.rows) || [];
+  var backlogByJobs = backlogRows.slice().sort(function (a, b) { return (b[1] || 0) - (a[1] || 0); });
+  var backlogTop = backlogByJobs[0] || null;
+  var backlogSecond = backlogByJobs[1] || null;
+  var backlogTotalJobs = backlogRows.reduce(function (s, r) { return s + (r[1] || 0); }, 0);
+  var backlogTotalValue = backlogRows.reduce(function (s, r) { return s + (r[2] || 0); }, 0);
+  var backlogTop2Jobs = (backlogTop ? backlogTop[1] : 0) + (backlogSecond ? backlogSecond[1] : 0);
+  var backlogTop2Value = (backlogTop ? backlogTop[2] : 0) + (backlogSecond ? backlogSecond[2] : 0);
+
+  var oldestRows = (T.oldest15NotStarted && T.oldest15NotStarted.rows) || [];
+  var oldestJob = oldestRows[0] || null;
+
+  var woStatus = C['ch-wo-status'] || null;
+  var woStatusPairs = woStatus ? woStatus.labels.map(function (l, i) {
+    return { label: l, n: (woStatus.datasets[0].data[i] || 0) };
+  }).sort(function (a, b) { return b.n - a.n; }) : [];
+  var woStatusTotal = woStatusPairs.reduce(function (s, p) { return s + p.n; }, 0);
+  var top3StatusPct = woStatusTotal > 0
+    ? Math.round(woStatusPairs.slice(0, 3).reduce(function (s, p) { return s + p.n; }, 0) / woStatusTotal * 100) : 0;
+  function statusLine(n) {
+    return woStatusPairs.slice(0, n).map(function (p) { return p.n + ' ' + p.label; }).join(', ');
+  }
+
+  var agingChart = C['ch-wo-aging'] || null;
+  var slowestAging = agingChart ? agingChart.labels.map(function (l, i) {
+    return { label: l, n: (agingChart.datasets[0].data[i] || 0) };
+  }).sort(function (a, b) { return b.n - a.n; })[0] : null;
+
+  var incStatus = C['ch-incomplete-status'] || null;
+  var incPairs = incStatus ? incStatus.labels.map(function (l, i) {
+    return { label: l, n: (incStatus.datasets[0].data[i] || 0) };
+  }) : [];
+  var incTotal = incPairs.reduce(function (s, p) { return s + p.n; }, 0);
+  var incRts = (incPairs.filter(function (p) { return /ready to schedule|rts/i.test(p.label); })[0] || { n: 0 }).n;
+  var incAge = C['ch-incomplete-age'] || null;
+  var incOver60 = incAge ? incAge.labels.reduce(function (s, l, i) {
+    return />\s*60|60\+/.test(l) ? s + (incAge.datasets[0].data[i] || 0) : s;
+  }, 0) : 0;
+
   pages.index = {
     eyebrow: 'LIVE BACKLOG · ' + (D.headerMeta.totalJobs) + ' JOBS · ' + (D.headerMeta.totalWOs) + ' WORK ORDERS',
     title: 'Job Backlog & Production',
-    intro: 'A live, job-level read of the residential production book. Of the $9.9M portfolio sitting in front of operations, this page surfaces what is moving, what is stuck, and where the throughput levers are. Every number ties back to a single job or work order, so you can drill from the headline to the worksite.',
+    intro: 'A live, job-level read of the residential production book. Of the ' + fmt.money(hm.portfolioValue || 0, { short: true }) + ' portfolio sitting in front of operations, this page surfaces what is moving, what is stuck, and where the throughput levers are. Every number ties back to a single job or work order, so you can drill from the headline to the worksite.',
     tags: [
-      { kind: 'info',    text: D.headerMeta.totalJobs + ' jobs in backlog' },
-      { kind: 'warn',    text: '78 partial jobs · $2.0M trapped' },
-      { kind: 'success', text: '40 RTS WOs ready to dispatch' }
+      { kind: 'info',    text: (hm.totalJobs || 0) + ' jobs in backlog' },
+      { kind: 'warn',    text: kPartialJobs.value + ' partial jobs · ' + kTrapped.value + ' trapped' },
+      { kind: 'success', text: kRts.value + ' RTS WOs ready to dispatch' }
     ],
     sections: [
       {
@@ -103,28 +217,15 @@
       },
       {
         kind: 'kpi-row', cols: 2,
-        items: [
-          {
-            label: 'Revenue at Risk',
-            value: fmt.money(1577176, { short: true }),
-            sub: 'Jobs with WOs >30 days in status',
-            tone: 'danger'
-          },
-          {
-            label: 'Immediate Throughput Opportunity',
-            value: fmt.money(1994476, { short: true }),
-            sub: 'Partial-job value waiting on trailing trades',
-            tone: 'success'
-          }
-        ]
+        items: kpiItems(D.kpisRiskOpportunity)
       },
       {
         kind: 'chart-grid', cols: 2, heading: 'Where the Work Sits',
-        caption: '840 work orders sliced by status and by branch',
+        caption: (hm.totalWOs || 0) + ' work orders sliced by status and by branch',
         charts: [
           {
             title: 'Work Order Status Distribution',
-            sub: '266 RTS, 210 On Hold, 175 Scheduled · the heaviest queue is the dispatchable one',
+            sub: (woStatusPairs.length >= 3 ? statusLine(3) + ' lead the queue' : 'WO count by status'),
             height: 320,
             config: {
               type: 'bar',
@@ -151,7 +252,7 @@
           },
           {
             title: 'Branch Production Load (stacked by status)',
-            sub: 'All 13 markets · Columbus and Detroit Metro carry the load',
+            sub: 'All ' + branchRows.length + ' markets' + (topBranch && secondBranch ? ' · ' + topBranch[0] + ' and ' + secondBranch[0] + ' carry the load' : ''),
             height: 320,
             config: {
               type: 'bar',
@@ -181,7 +282,7 @@
         charts: [
           {
             title: 'WO Aging by Status (avg days in status)',
-            sub: 'Pending Insurance Claim is the structural drag · everything else should clear in days, not months',
+            sub: (slowestAging ? slowestAging.label + ' is the structural drag at ' + slowestAging.n + 'd avg' : 'Average days in status') + ' · everything else should clear in days, not months',
             height: 320,
             config: {
               type: 'bar',
@@ -204,7 +305,7 @@
           },
           {
             title: 'WO Volume by Trade (Completed vs Open)',
-            sub: 'Roofing is the volume engine · Gutters is the trailing-trade bottleneck',
+            sub: (roofTrade ? roofTrade[0] + ' is the volume engine' : 'Volume by trade') + (topTrailing ? ' · ' + topTrailing[0] + ' is the trailing-trade bottleneck' : ''),
             height: 320,
             config: {
               type: 'bar',
@@ -228,7 +329,8 @@
           {
             kind: 'chart', span: 6,
             title: 'Not-Started Backlog by Branch',
-            sub: '440 jobs · $7.22M signed and waiting · Columbus and Detroit Metro hold 61%',
+            sub: kNotStartedJobs.value + ' jobs · ' + kNotStartedValue.value + ' signed and waiting'
+              + (backlogTop && backlogSecond && backlogTotalJobs > 0 ? ' · ' + backlogTop[0] + ' and ' + backlogSecond[0] + ' hold ' + Math.round(backlogTop2Jobs / backlogTotalJobs * 100) + '%' : ''),
             height: 300,
             config: {
               type: 'bar',
@@ -250,7 +352,7 @@
           {
             kind: 'chart', span: 6,
             title: 'On-Hold Sub-Status Mix',
-            sub: '210 WOs · Pending Permit (112) and Pending Sales (39) account for 72% of holds',
+            sub: holdsTotal + ' WOs' + (topHold && secondHold ? ' · ' + topHold[0] + ' (' + topHold[1] + ') and ' + secondHold[0] + ' (' + secondHold[1] + ') account for ' + top2HoldPct + '% of holds' : ''),
             height: 300,
             config: {
               type: 'doughnut',
@@ -279,9 +381,12 @@
       {
         kind: 'prose', heading: 'Headlines',
         cards: [
-          { kind: 'tint', eyebrow: 'WHAT IS WORKING', title: 'The book is real and it is bigger than capacity', body: '<p>$9.9M of signed contract value sits in front of the production org today. 154 jobs are actively in motion and 90 work orders have already been completed in this window. The portfolio is not the issue, throughput is.</p>' },
-          { eyebrow: 'WHAT IS STUCK', title: 'Three drag categories', body: '<p><strong>Partial jobs</strong> hold $1.99M of recoverable revenue trapped behind a single trailing trade (Gutters most often). <strong>Pending Permit</strong> WOs (112 total, 72 in Detroit Metro alone) idle the queue. <strong>Pending Sales</strong> dispositions sit at 39 WOs with the oldest at 229 days, an aged cohort the sales ops team needs to clear.</p>' },
-          { kind: 'navy', eyebrow: 'NEXT MOVES', title: 'Run the action plan', body: '<p>Open the Action Plan tab. The immediate wins: dispatch the 40 RTS WOs sitting on partial jobs (no blockers), re-dispatch the 28 RAS WOs (oldest is 111 days), and run a Detroit Metro permit sweep. None of this needs new headcount.</p>' }
+          { kind: 'tint', eyebrow: 'WHAT IS WORKING', title: 'The book is real and it is bigger than capacity',
+            body: '<p>' + fmt.money(hm.portfolioValue || 0, { short: true }) + ' of signed contract value sits in front of the production org today. ' + kInProgress.value + ' jobs are actively in motion and ' + completedWOs + ' work orders have already been completed in this window. The portfolio is not the issue, throughput is.</p>' },
+          { eyebrow: 'WHAT IS STUCK', title: 'Three drag categories',
+            body: '<p><strong>Partial jobs</strong> hold ' + kTrapped.value + ' of recoverable revenue trapped behind a single trailing trade (' + (topTrailing ? topTrailing[0] : 'see the Partial tab') + ' most often). <strong>Pending Permit</strong> WOs (' + kPendingPermit.value + ' total' + (topPermitBranch ? ', ' + topPermitBranch.permits + ' in ' + topPermitBranch.branch + ' alone' : '') + ') idle the queue. <strong>Pending Sales</strong> dispositions sit at ' + (pendingSalesRow ? pendingSalesRow[1] + ' WOs with the oldest at ' + pendingSalesRow[3] + ' days' : 'an aged count') + ', a cohort the sales ops team needs to clear.</p>' },
+          { kind: 'navy', eyebrow: 'NEXT MOVES', title: 'Run the action plan',
+            body: '<p>Open the Action Plan tab. The immediate wins: dispatch the ' + kRts.value + ' RTS WOs sitting on partial jobs (no blockers), re-dispatch the ' + rasWOs + ' RAS WOs, and run a ' + (topPermitBranch ? topPermitBranch.branch : 'top-branch') + ' permit sweep. None of this needs new headcount.</p>' }
         ]
       }
     ]
@@ -293,10 +398,10 @@
   pages.executive = {
     eyebrow: 'EXECUTIVE BRIEF · BACKLOG & PRODUCTION',
     title: 'Executive Summary',
-    intro: 'The job-level state of production: how the 594-job book is split between active and waiting, where the dollar value lives, and the two numbers that frame the throughput conversation.',
+    intro: 'The job-level state of production: how the ' + (hm.totalJobs || 0) + '-job book is split between active and waiting, where the dollar value lives, and the two numbers that frame the throughput conversation.',
     tags: [
-      { kind: 'info', text: '$' + (D.headerMeta.portfolioValue / 1e6).toFixed(1) + 'M portfolio' },
-      { kind: 'warn', text: '12d avg in status' }
+      { kind: 'info', text: fmt.money(hm.portfolioValue || 0, { short: true }) + ' portfolio' },
+      { kind: 'warn', text: (hm.avgDaysInStatus || 0) + 'd avg in status' }
     ],
     sections: [
       {
@@ -305,20 +410,7 @@
       },
       {
         kind: 'kpi-row', cols: 2,
-        items: [
-          {
-            label: 'Revenue at Risk',
-            value: fmt.money(1577176),
-            sub: 'Jobs with WOs >30 days in status',
-            tone: 'danger'
-          },
-          {
-            label: 'Immediate Throughput Opportunity',
-            value: fmt.money(1994476),
-            sub: 'Partial-job value waiting on trailing trades',
-            tone: 'success'
-          }
-        ]
+        items: kpiItems(D.kpisRiskOpportunity)
       },
       {
         kind: 'chart-grid', cols: 2, heading: 'Production Snapshot',
@@ -326,7 +418,7 @@
         charts: [
           {
             title: 'Work Order Status Distribution',
-            sub: '840 WOs · top three statuses (RTS, On Hold, Scheduled) carry 78% of the queue',
+            sub: (hm.totalWOs || 0) + ' WOs · top three statuses' + (woStatusPairs.length >= 3 ? ' (' + woStatusPairs.slice(0, 3).map(function (p) { return p.label; }).join(', ') + ') carry ' + top3StatusPct + '% of the queue' : ''),
             height: 320,
             config: {
               type: 'bar',
@@ -368,7 +460,7 @@
       },
       tableSection({
         id: 'branchDetail',
-        heading: 'Branch scorecard · all 13 markets',
+        heading: 'Branch scorecard · all ' + branchRows.length + ' markets',
         caption: 'Jobs, WOs, status mix, and dollar value carried at each branch',
         rowMap: function (r) {
           return [
@@ -381,7 +473,7 @@
       {
         kind: 'callout', tone: 'warn',
         title: 'The exec read in one paragraph',
-        body: 'The book is healthy in volume terms (594 jobs, $9.9M signed). The drag is in the middle of the funnel: 78 partial jobs trap $2.0M of already-signed revenue, 210 WOs are on hold (over half of them on permits), and 105 WOs older than 30 days hold $930K of stuck contract value. The fix list is operational, not strategic, and the top three workstreams (RTS dispatch, RAS re-dispatch, Detroit Metro permits) move the number without adding headcount.'
+        body: 'The book is healthy in volume terms (' + (hm.totalJobs || 0) + ' jobs, ' + fmt.money(hm.portfolioValue || 0, { short: true }) + ' signed). The drag is in the middle of the funnel: ' + kPartialJobs.value + ' partial jobs trap ' + kTrapped.value + ' of already-signed revenue, ' + kTotalHolds.value + ' WOs are on hold (' + (holdsTotal > 0 && topHold ? Math.round(topHold[1] / holdsTotal * 100) + '% of them on ' + topHold[0].toLowerCase() : 'concentrated in a few sub-statuses') + '), and the >30-day cohort holds ' + kStuckValue.value + ' of stuck contract value. The fix list is operational, not strategic, and the top three workstreams (RTS dispatch, RAS re-dispatch, ' + (topPermitBranch ? topPermitBranch.branch + ' permits' : 'the permit sweep') + ') move the number without adding headcount.'
       }
     ]
   };
@@ -392,10 +484,10 @@
   pages.partial = {
     eyebrow: 'PARTIAL JOBS · TRAILING TRADES',
     title: 'Partially Complete',
-    intro: 'Jobs that are 80% done in production but waiting on a single trade to close out. This is the most concentrated near-term lever in the book: $2.0M of already-signed revenue gated by 96 open work orders.',
+    intro: 'Jobs that are mostly done in production but waiting on a single trade to close out. This is the most concentrated near-term lever in the book: ' + kTrapped.value + ' of already-signed revenue gated by ' + kOpenPartials.value + ' open work orders.',
     tags: [
-      { kind: 'warn',    text: '78 partial jobs' },
-      { kind: 'success', text: '$1.99M recoverable' }
+      { kind: 'warn',    text: kPartialJobs.value + ' partial jobs' },
+      { kind: 'success', text: kTrapped.value + ' recoverable' }
     ],
     sections: [
       {
@@ -404,11 +496,11 @@
       },
       {
         kind: 'chart-grid', cols: 2, heading: 'Where the Trailing WOs Live',
-        caption: 'Status mix and aging distribution of the 96 open WOs on partial jobs',
+        caption: 'Status mix and aging distribution of the ' + kOpenPartials.value + ' open WOs on partial jobs',
         charts: [
           {
             title: 'Incomplete WOs by Status (partial jobs only)',
-            sub: 'Of 96 trailing WOs · 40 are RTS (no blocker), 22 on hold, 19 scheduled',
+            sub: 'Of ' + incTotal + ' trailing WOs · ' + incRts + ' are RTS (no blocker, dispatch now)',
             height: 300,
             config: {
               type: 'doughnut',
@@ -428,7 +520,7 @@
           },
           {
             title: 'Aging Distribution (incomplete WOs on partial jobs)',
-            sub: '11 of 96 are >60 days · those are the escalation candidates',
+            sub: incOver60 + ' of ' + incTotal + ' are >60 days · those are the escalation candidates',
             height: 300,
             config: {
               type: 'bar',
@@ -456,7 +548,7 @@
       tableSection({
         id: 'trailingTrades',
         heading: 'Trailing trades · open WOs on partial jobs',
-        caption: 'Ranked by trapped contract value · Gutters is the dominant trailing trade',
+        caption: 'Ranked by trapped contract value' + (topTrailing ? ' · ' + topTrailing[0] + ' is the dominant trailing trade' : ''),
         rowMap: function (r) {
           return [
             { html: '<strong>' + r[0] + '</strong>' },
@@ -471,7 +563,7 @@
         charts: [
           {
             title: 'Trapped Value by Trailing Trade',
-            sub: 'Gutters alone gates $1.05M across 44 partial jobs',
+            sub: topTrailing ? topTrailing[0] + ' alone gates ' + fmt.money(topTrailing[3], { short: true }) + ' across ' + topTrailing[2] + ' partial jobs' : 'Trapped value by trade',
             height: 300,
             config: {
               type: 'bar',
@@ -497,7 +589,7 @@
       {
         kind: 'callout', tone: 'success',
         title: 'The fastest revenue dollar in the book',
-        body: '40 of the 96 trailing WOs are Ready to Schedule, meaning no blocker, no hold, no permit. Those dispatch today. The Gutter sweep is the biggest single concentration: 44 partial jobs, $1.05M of trapped value, all waiting on the same trade. A two-week dispatch surge clears most of it.'
+        body: kRts.value + ' of the ' + kOpenPartials.value + ' trailing WOs are Ready to Schedule, meaning no blocker, no hold, no permit. Those dispatch today.' + (topTrailing ? ' The ' + topTrailing[0] + ' sweep is the biggest single concentration: ' + topTrailing[2] + ' partial jobs, ' + fmt.money(topTrailing[3], { short: true }) + ' of trapped value, all waiting on the same trade. A two-week dispatch surge clears most of it.' : '')
       }
     ]
   };
@@ -506,12 +598,12 @@
   // HOLDS & BLOCKERS
   // ============================================================
   pages.holds = {
-    eyebrow: 'HOLDS · 210 WORK ORDERS',
+    eyebrow: 'HOLDS · ' + kTotalHolds.value + ' WORK ORDERS',
     title: 'Holds & Blockers',
-    intro: 'Every WO sitting in On Hold status, broken down by why. The 210 holds split into six sub-status categories, with permits and pending sales accounting for 72% of the total.',
+    intro: 'Every WO sitting in On Hold status, broken down by why. The ' + kTotalHolds.value + ' holds split into ' + holdsRows.length + ' sub-status categories' + (topHold && secondHold ? ', with ' + topHold[0].toLowerCase() + ' and ' + secondHold[0].toLowerCase() + ' accounting for ' + top2HoldPct + '% of the total' : '') + '.',
     tags: [
-      { kind: 'danger', text: '210 holds total' },
-      { kind: 'warn',   text: '115 pending permit' }
+      { kind: 'danger', text: kTotalHolds.value + ' holds total' },
+      { kind: 'warn',   text: kPendingPermit.value + ' pending permit' }
     ],
     sections: [
       {
@@ -524,7 +616,7 @@
         charts: [
           {
             title: 'On-Hold Sub-Status Mix',
-            sub: 'Pending Permit dominates · Homeowner Request is the slowest-clearing bucket at 61d avg',
+            sub: (topHold ? topHold[0] + ' dominates' : 'Sub-status mix') + (slowestHold ? ' · ' + slowestHold[0] + ' is the slowest-clearing bucket at ' + slowestHold[2] + 'd avg' : ''),
             height: 320,
             config: {
               type: 'doughnut',
@@ -571,7 +663,7 @@
       tableSection({
         id: 'holdsBySubStatus',
         heading: 'On-Hold sub-status breakdown',
-        caption: 'Six sub-status categories · WO count, average age, and worst-case oldest',
+        caption: holdsRows.length + ' sub-status categories · WO count, average age, and worst-case oldest',
         rowMap: function (r) {
           return [
             { html: '<strong>' + r[0] + '</strong>' },
@@ -585,11 +677,11 @@
       }),
       {
         kind: 'chart-grid', cols: 1, heading: 'Permit Concentration',
-        caption: 'Where the 115 pending-permit WOs are clustered',
+        caption: 'Where the ' + kPendingPermit.value + ' pending-permit WOs are clustered',
         charts: [
           {
             title: 'Pending Permits by Branch',
-            sub: 'Detroit Metro carries 72 of 115 (63%) · this is a single-branch AHJ-relations problem, not a company-wide one',
+            sub: (topPermitBranch && totalPermits > 0 ? topPermitBranch.branch + ' carries ' + topPermitBranch.permits + ' of ' + totalPermits + ' (' + Math.round(topPermitBranch.permits / totalPermits * 100) + '%) · a single-branch AHJ-relations problem, not a company-wide one' : 'Pending-permit WOs by branch'),
             height: 300,
             config: {
               type: 'bar',
@@ -611,31 +703,31 @@
           }
         ]
       },
-      {
+      topPermitBranch && totalPermits > 0 ? {
         kind: 'callout', tone: 'danger',
-        title: 'The Detroit Metro permit story',
-        body: 'Detroit Metro alone carries 72 of the 115 pending-permit WOs (63% of all permit holds). The branch GM owns daily AHJ follow-up, and anything over 14 days needs an escalation path. Until permits move there, the queue cannot drain.'
-      }
-    ]
+        title: 'The ' + topPermitBranch.branch + ' permit story',
+        body: topPermitBranch.branch + ' alone carries ' + topPermitBranch.permits + ' of the ' + totalPermits + ' pending-permit WOs (' + Math.round(topPermitBranch.permits / totalPermits * 100) + '% of all permit holds). The branch GM owns daily AHJ follow-up, and anything over 14 days needs an escalation path. Until permits move there, the queue cannot drain.'
+      } : null
+    ].filter(Boolean)
   };
 
   // ============================================================
   // TRADE ANALYSIS
   // ============================================================
   pages.trades = {
-    eyebrow: 'TRADES · 13 CATEGORIES',
+    eyebrow: 'TRADES · ' + tradeRows.length + ' CATEGORIES',
     title: 'Trade Analysis',
-    intro: 'How each trade contributes to the production load. Roofing is the volume engine; Gutters is the trailing-trade bottleneck on partial jobs; specialty trades (Solar, Metal) are the small-but-watch buckets.',
-    tags: [{ kind: 'info', text: '840 WOs across 13 trades' }],
+    intro: 'How each trade contributes to the production load. ' + (roofTrade ? roofTrade[0] + ' is the volume engine; ' : '') + (topTrailing ? topTrailing[0] + ' is the trailing-trade bottleneck on partial jobs; ' : '') + 'specialty trades are the small-but-watch buckets.',
+    tags: [{ kind: 'info', text: (hm.totalWOs || 0) + ' WOs across ' + tradeRows.length + ' trades' }],
     sections: [
       {
         kind: 'kpi-row', cols: 4,
         items: [
-          { label: 'Roofing WOs',          value: '520',  sub: '69 done · 451 open · $6.14M', tone: 'navy' },
-          { label: 'Gutters WOs',          value: '179',  sub: '7 done · 172 open · trailing-trade #1', tone: 'warn' },
-          { label: 'Siding WOs',           value: '86',   sub: '8 done · 78 open · $815K' },
-          { label: 'Specialty (Solar+Metal)', value: '16',   sub: '9 Solar · 7 Metal · watch list', tone: 'success' }
-        ]
+          roofTrade ? { label: roofTrade[0] + ' WOs', value: String(roofTrade[1]), sub: roofTrade[2] + ' done · ' + roofTrade[3] + ' open · ' + fmt.money(roofTrade[5], { short: true }), tone: 'navy' } : null,
+          gutterTrade ? { label: gutterTrade[0] + ' WOs', value: String(gutterTrade[1]), sub: gutterTrade[2] + ' done · ' + gutterTrade[3] + ' open' + (topTrailing && topTrailing[0] === gutterTrade[0] ? ' · trailing-trade #1' : ''), tone: 'warn' } : null,
+          sidingTrade ? { label: sidingTrade[0] + ' WOs', value: String(sidingTrade[1]), sub: sidingTrade[2] + ' done · ' + sidingTrade[3] + ' open · ' + fmt.money(sidingTrade[5], { short: true }) } : null,
+          { label: 'Specialty', value: String(specialtyWOs), sub: specialtyRows.map(function (r) { return r[1] + ' ' + r[0]; }).join(' · ') || 'watch list', tone: 'success' }
+        ].filter(Boolean)
       },
       {
         kind: 'chart-grid', cols: 1, heading: 'Trade Volume',
@@ -666,7 +758,7 @@
         charts: [
           {
             title: 'Contract Value by Trade',
-            sub: 'Roofing carries 62% of the dollar value across all open and closed work',
+            sub: (roofTrade && tradeTotalValue > 0 ? roofTrade[0] + ' carries ' + Math.round(roofTrade[5] / tradeTotalValue * 100) + '% of the dollar value across all open and closed work' : 'Contract value by trade'),
             height: 320,
             config: {
               type: 'bar',
@@ -687,7 +779,7 @@
           },
           {
             title: 'Gutter WO Status Breakdown',
-            sub: 'The trailing-trade bottleneck, status by status · 95 RTS Gutters waiting to dispatch',
+            sub: 'The trailing-trade bottleneck, status by status · ' + gutterRts + ' RTS Gutters waiting to dispatch',
             height: 320,
             config: {
               type: 'bar',
@@ -716,7 +808,7 @@
       },
       tableSection({
         id: 'tradeDetail',
-        heading: 'Trade performance · all 13 trades',
+        heading: 'Trade performance · all ' + tradeRows.length + ' trades',
         caption: 'Volume, completion mix, and dollar value carried by each trade',
         rowMap: function (r) {
           return [
@@ -740,39 +832,43 @@
           ];
         }
       }),
-      {
+      gutterTrade ? {
         kind: 'callout', tone: 'warn',
-        title: 'The Gutter math',
-        body: 'Of 179 Gutter WOs in the system, only 7 are complete. 95 sit in Ready to Schedule and 42 are on hold. Gutters trail 44 partial jobs holding $1.05M. A trade-specific dispatch surge (or a sub-fleet expansion) is the highest-leverage move in the production org right now.'
-      }
-    ]
+        title: 'The ' + gutterTrade[0] + ' math',
+        body: 'Of ' + gutterTrade[1] + ' ' + gutterTrade[0] + ' WOs in the system, only ' + gutterDone + ' are complete. ' + gutterRts + ' sit in Ready to Schedule and ' + gutterHold + ' are on hold.' + (topTrailing && topTrailing[0] === gutterTrade[0] ? ' ' + topTrailing[0] + ' trail ' + topTrailing[2] + ' partial jobs holding ' + fmt.money(topTrailing[3], { short: true }) + '.' : '') + ' A trade-specific dispatch surge (or a sub-fleet expansion) is the highest-leverage move in the production org right now.'
+      } : null
+    ].filter(Boolean)
   };
 
   // ============================================================
   // BRANCH DRILLDOWN
   // ============================================================
   pages.branches = {
-    eyebrow: 'BRANCHES · 13 MARKETS',
+    eyebrow: 'BRANCHES · ' + branchRows.length + ' MARKETS',
     title: 'Branch Drilldown',
-    intro: 'Production load by branch, with the full status mix and dollar value carried at each market. Columbus and Detroit Metro carry over half the company portfolio.',
-    tags: [{ kind: 'info', text: '13 active branches' }],
+    intro: 'Production load by branch, with the full status mix and dollar value carried at each market.' + (topBranch && secondBranch && totalBranchValue > 0 ? ' ' + topBranch[0] + ' and ' + secondBranch[0] + ' carry ' + Math.round(top2Value / totalBranchValue * 100) + '% of the company portfolio.' : ''),
+    tags: [{ kind: 'info', text: branchRows.length + ' active branches' }],
     sections: [
       {
         kind: 'kpi-row', cols: 4,
         items: [
-          { label: 'Top Branch by Value', value: 'Columbus',     sub: '$2.93M · 290 WOs · 208 jobs', tone: 'navy' },
-          { label: '#2 by Value',          value: 'Detroit Metro', sub: '$2.75M · 210 WOs · 149 jobs', tone: 'success' },
-          { label: 'Highest Permit Load',  value: 'Detroit Metro', sub: '72 pending-permit WOs',       tone: 'danger' },
-          { label: 'Cleanest Mix',          value: 'Cleveland',     sub: '11 of 106 done · 36 scheduled', tone: 'success' }
+          { label: 'Top Branch by Value', value: topBranch ? topBranch[0] : '—',
+            sub: topBranch ? fmt.money(topBranch[10], { short: true }) + ' · ' + topBranch[1] + ' WOs · ' + topBranch[9] + ' jobs' : '', tone: 'navy' },
+          { label: '#2 by Value',          value: secondBranch ? secondBranch[0] : '—',
+            sub: secondBranch ? fmt.money(secondBranch[10], { short: true }) + ' · ' + secondBranch[1] + ' WOs · ' + secondBranch[9] + ' jobs' : '', tone: 'success' },
+          { label: 'Highest Permit Load',  value: topPermitBranch ? topPermitBranch.branch : '—',
+            sub: topPermitBranch ? topPermitBranch.permits + ' pending-permit WOs' : '', tone: 'danger' },
+          { label: 'Most Scheduled',       value: mostScheduledBranch ? mostScheduledBranch[0] : '—',
+            sub: mostScheduledBranch ? mostScheduledBranch[5] + ' scheduled WOs of ' + mostScheduledBranch[1] : '', tone: 'success' }
         ]
       },
       {
         kind: 'chart-grid', cols: 1, heading: 'Branch Production Load',
-        caption: 'Stacked status mix, all 13 markets',
+        caption: 'Stacked status mix, all ' + branchRows.length + ' markets',
         charts: [
           {
             title: 'Branch Production Load by Status',
-            sub: 'Each bar = total WOs at the branch · stacked by status · Columbus carries 290 WOs',
+            sub: 'Each bar = total WOs at the branch · stacked by status' + (topWoBranch ? ' · ' + topWoBranch[0] + ' carries ' + topWoBranch[1] + ' WOs' : ''),
             height: 380,
             config: {
               type: 'bar',
@@ -801,7 +897,7 @@
         charts: [
           {
             title: 'Contract Value by Branch',
-            sub: 'Top two branches carry $5.7M of the $9.9M portfolio',
+            sub: (topBranch && secondBranch ? 'Top two branches carry ' + fmt.money(top2Value, { short: true }) + ' of the ' + fmt.money(hm.portfolioValue || totalBranchValue, { short: true }) + ' portfolio' : 'Contract value by branch'),
             height: 320,
             config: {
               type: 'bar',
@@ -822,7 +918,7 @@
           },
           {
             title: 'On-Hold WOs by Branch',
-            sub: 'Where the 210 holds are clustered',
+            sub: 'Where the ' + kTotalHolds.value + ' holds are clustered',
             height: 320,
             config: {
               type: 'bar',
@@ -847,7 +943,7 @@
       },
       tableSection({
         id: 'branchDetail',
-        heading: 'Full branch detail · all 13 markets',
+        heading: 'Full branch detail · all ' + branchRows.length + ' markets',
         caption: 'WO totals, status breakdown, permit load, and contract value at each branch',
         rowMap: function (r) {
           return [
@@ -857,24 +953,24 @@
           ];
         }
       }),
-      {
+      (topBranch && secondBranch && totalBranchWOs > 0 && totalBranchValue > 0) ? {
         kind: 'callout',
         title: 'Two-branch concentration',
-        body: 'Columbus and Detroit Metro together carry 500 of 840 WOs (60%) and $5.7M of the $9.9M portfolio (58%). Any operational lift at those two branches moves the company number. Ops investments (dispatcher capacity, permit ops, sub-trade fleet) should be sized to that concentration first.'
-      }
-    ]
+        body: topBranch[0] + ' and ' + secondBranch[0] + ' together carry ' + top2WOs + ' of ' + totalBranchWOs + ' WOs (' + Math.round(top2WOs / totalBranchWOs * 100) + '%) and ' + fmt.money(top2Value, { short: true }) + ' of the ' + fmt.money(totalBranchValue, { short: true }) + ' portfolio (' + Math.round(top2Value / totalBranchValue * 100) + '%). Any operational lift at those two branches moves the company number. Ops investments (dispatcher capacity, permit ops, sub-trade fleet) should be sized to that concentration first.'
+      } : null
+    ].filter(Boolean)
   };
 
   // ============================================================
   // SALESPERSON VIEW
   // ============================================================
   pages.salespeople = {
-    eyebrow: 'SALES BACKLOG · 111 ACTIVE REPS',
+    eyebrow: 'SALES BACKLOG · ' + kActiveReps.value + ' ACTIVE REPS',
     title: 'Salesperson View',
     intro: 'How the backlog looks from the sales side: which reps have the most stuck contract value and the longest aging WOs sitting against their book.',
     tags: [
-      { kind: 'info',   text: '111 active reps' },
-      { kind: 'danger', text: '$930K stuck >30d' }
+      { kind: 'info',   text: kActiveReps.value + ' active reps' },
+      { kind: 'danger', text: kStuckValue.value + ' stuck >30d' }
     ],
     sections: [
       {
@@ -887,7 +983,7 @@
         charts: [
           {
             title: 'Top 15 Salespeople by Stuck Value (>30d)',
-            sub: 'Hunter Carrington Scott carries one $239K stuck job · concentration matters more than count',
+            sub: (topStuckRep ? topStuckRep[0] + ' carries ' + fmt.money(topStuckRep[3], { short: true }) + ' across ' + topStuckRep[4] + ' stale WO' + (topStuckRep[4] === 1 ? '' : 's') + ' · concentration matters more than count' : 'Stuck value by rep'),
             height: 480,
             config: {
               type: 'bar',
@@ -928,7 +1024,7 @@
       {
         kind: 'callout', tone: 'warn',
         title: 'Where to push the disposition meeting',
-        body: 'The weekly Pending Sales disposition meeting (Jesse McCorkle, Matt Henry) should triage from this list. Top 5 reps account for $700K+ of stuck value. Most of these are dispositions, not deals to lose, so a 14-day cohort sweep clears the bulk of it.'
+        body: 'The weekly Pending Sales disposition meeting (Residential Sales and Inside Sales leadership) should triage from this list. The top 5 reps account for ' + fmt.money(top5Stuck, { short: true }) + ' of stuck value. Most of these are dispositions, not deals to lose, so a 14-day cohort sweep clears the bulk of it.'
       }
     ]
   };
@@ -937,12 +1033,12 @@
   // BACKLOG PIPELINE
   // ============================================================
   pages.pipeline = {
-    eyebrow: 'NOT-STARTED BACKLOG · 440 JOBS · $7.22M',
+    eyebrow: 'NOT-STARTED BACKLOG · ' + kNotStartedJobs.value + ' JOBS · ' + kNotStartedValue.value,
     title: 'Backlog Pipeline',
-    intro: 'The book of signed work that has not yet been dispatched: 440 jobs holding $7.22M of revenue. This is the production runway for the next 30 to 60 days.',
+    intro: 'The book of signed work that has not yet been dispatched: ' + kNotStartedJobs.value + ' jobs holding ' + kNotStartedValue.value + ' of revenue. This is the production runway for the next 30 to 60 days.',
     tags: [
-      { kind: 'info', text: '440 jobs not started' },
-      { kind: 'warn', text: 'Oldest 239 days' }
+      { kind: 'info', text: kNotStartedJobs.value + ' jobs not started' },
+      { kind: 'warn', text: 'Oldest ' + kOldestNS.value }
     ],
     sections: [
       {
@@ -951,11 +1047,11 @@
       },
       {
         kind: 'chart-grid', cols: 2, heading: 'Backlog Distribution',
-        caption: 'Where the 440 not-started jobs sit, by branch',
+        caption: 'Where the ' + kNotStartedJobs.value + ' not-started jobs sit, by branch',
         charts: [
           {
             title: 'Backlog by Branch (Job Count)',
-            sub: 'Columbus carries 159 of 440 (36%) · Detroit Metro adds 111 (25%)',
+            sub: (backlogTop && backlogTotalJobs > 0 ? backlogTop[0] + ' carries ' + backlogTop[1] + ' of ' + backlogTotalJobs + ' (' + Math.round(backlogTop[1] / backlogTotalJobs * 100) + '%)' + (backlogSecond ? ' · ' + backlogSecond[0] + ' adds ' + backlogSecond[1] + ' (' + Math.round(backlogSecond[1] / backlogTotalJobs * 100) + '%)' : '') : 'Not-started jobs by branch'),
             height: 360,
             config: {
               type: 'bar',
@@ -976,7 +1072,7 @@
           },
           {
             title: 'Backlog by Branch (Contract Value)',
-            sub: 'Columbus and Detroit Metro hold $4.18M of the $7.22M not-started book (58%)',
+            sub: (backlogTop && backlogSecond && backlogTotalValue > 0 ? backlogTop[0] + ' and ' + backlogSecond[0] + ' hold ' + fmt.money(backlogTop2Value, { short: true }) + ' of the ' + fmt.money(backlogTotalValue, { short: true }) + ' not-started book (' + Math.round(backlogTop2Value / backlogTotalValue * 100) + '%)' : 'Not-started value by branch'),
             height: 360,
             config: {
               type: 'bar',
@@ -1000,7 +1096,7 @@
       tableSection({
         id: 'backlogByBranch',
         heading: 'Backlog by branch · jobs, value, oldest in status',
-        caption: 'The 440-job not-started book, ranked by job count',
+        caption: 'The ' + kNotStartedJobs.value + '-job not-started book, ranked by job count',
         rowMap: function (r) {
           return [
             { html: '<strong>' + r[0] + '</strong>' },
@@ -1032,12 +1128,12 @@
           ];
         }
       }),
-      {
+      oldestJob ? {
         kind: 'callout', tone: 'danger',
-        title: 'The 239-day job',
-        body: 'Job-102051 (Detroit Metro, Masonry, Pending Permit) has been waiting 239 days. The next four oldest are all 138 days or more. None of these clear without a single owner taking responsibility for the AHJ follow-up. Assign by name at the next ops standup.'
-      }
-    ]
+        title: 'The ' + oldestJob[6] + '-day job',
+        body: oldestJob[0] + ' (' + oldestJob[2] + ', ' + oldestJob[3] + (oldestJob[4] ? ', ' + oldestJob[4] : '') + ') has been waiting ' + oldestJob[6] + ' days.' + (oldestRows.length >= 5 ? ' The next four oldest are all ' + oldestRows[4][6] + ' days or more.' : '') + ' None of these clear without a single owner taking responsibility for the follow-up. Assign by name at the next ops standup.'
+      } : null
+    ].filter(Boolean)
   };
 
   // ============================================================
@@ -1055,10 +1151,10 @@
       {
         kind: 'kpi-row', cols: 4,
         items: [
-          { label: 'Throughput Opportunity', value: '$2.0M', sub: 'Partial-job recoverable revenue', tone: 'success' },
-          { label: 'Revenue at Risk',         value: '$1.6M', sub: 'WOs >30 days in status',          tone: 'danger' },
-          { label: 'RTS Ready Today',         value: '40',    sub: 'No blockers, just dispatch',     tone: 'success' },
-          { label: 'RAS to Re-Dispatch',      value: '28',    sub: 'Oldest 111 days',                 tone: 'warn' }
+          { label: 'Throughput Opportunity', value: kOpp.value,  sub: 'Partial-job recoverable revenue', tone: 'success' },
+          { label: 'Revenue at Risk',         value: kRisk.value, sub: 'WOs >30 days in status',          tone: 'danger' },
+          { label: 'RTS Ready Today',         value: kRts.value,  sub: 'No blockers, just dispatch',      tone: 'success' },
+          { label: 'RAS to Re-Dispatch',      value: String(rasWOs), sub: 'Return-and-schedule WOs across all branches', tone: 'warn' }
         ]
       },
       {
@@ -1152,7 +1248,7 @@
           charts: [
             {
               title: 'WOs by status',
-              sub: 'Where the 322 work orders are sitting today',
+              sub: 'Where the ' + (hm.totalWOs || 0) + ' work orders are sitting today',
               height: 300,
               config: {
                 type: 'bar',
@@ -1189,7 +1285,7 @@
           caption: 'Stacked bars: each branch\'s WO count split by status',
           charts: [{
             title: 'Branch × WO status',
-            sub: 'Detroit Metro carries the largest book; aging concentration shows in stacked color',
+            sub: (topBranch ? topBranch[0] + ' carries the largest book; ' : '') + 'aging concentration shows in stacked color',
             height: 320,
             config: {
               type: 'bar',
@@ -1226,7 +1322,7 @@
     mf.partial = {
       eyebrow: 'PARTIAL · MF',
       title: 'Partially Complete',
-      intro: 'Jobs that have at least one Completed WO and at least one open WO. These are the highest-leverage trade dispatches in the book — the customer has invoiced revenue tied up waiting on one trade.',
+      intro: 'Jobs that have at least one Completed WO and at least one open WO. These are the highest-leverage trade dispatches in the book; the customer has invoiced revenue tied up waiting on one trade.',
       tags: [
         topTrailing ? { kind: 'warn', text: 'Top blocker: ' + topTrailing[0] + ' (' + topTrailing[1] + ' WO' + (topTrailing[1] === 1 ? '' : 's') + ')' } : null,
         { kind: 'info', text: ((D.kpisPartial || []).find(function (k) { return /partial jobs/i.test(k.label); }) || { value: '0' }).value + ' partial jobs' }
@@ -1335,7 +1431,7 @@
     mf.branches = {
       eyebrow: 'BRANCHES · MF',
       title: 'Branch Drilldown',
-      intro: 'Production load by branch. ' + (topBranch ? topBranch[0] + ' carries the largest WO count and dollar value' : 'Detroit Metro typically carries the load') + '. Status mix per branch tells you where the operational pressure is concentrated.',
+      intro: 'Production load by branch. ' + (topBranch ? topBranch[0] + ' carries the largest WO count and dollar value' : 'The table below shows which branch carries the largest load') + '. Status mix per branch tells you where the operational pressure is concentrated.',
       tags: branchRows.length ? [{ kind: 'info', text: branchRows.length + ' active MF branches' }] : [],
       sections: [
         topBranch ? { kind: 'kpi-row', cols: 4, items: [
@@ -1396,10 +1492,16 @@
     // ─────────────────────────────────────────────────────────────
     // PIPELINE (not-started backlog)
     // ─────────────────────────────────────────────────────────────
+    // Not-started snapshot pulled from the backlog KPI payload so the intro
+    // narrative always matches the tiles ('—' when a KPI is missing).
+    var nsJobsKpi = (D.kpisBacklog || []).find(function (k) { return /not started jobs/i.test(k.label); });
+    var nsValKpi  = (D.kpisBacklog || []).find(function (k) { return /not started value/i.test(k.label); });
+    var nsOldKpi  = (D.kpisBacklog || []).find(function (k) { return /oldest/i.test(k.label); });
+
     mf.pipeline = {
       eyebrow: 'PIPELINE · MF NOT-STARTED',
       title: 'Backlog Pipeline',
-      intro: 'Signed jobs waiting to dispatch. The 89 not-started jobs hold $15.5M of contract value; the oldest has been sitting 580 days. This is the queue that has to clear before MF can sustain a higher monthly invoicing pace.',
+      intro: 'Signed jobs waiting to dispatch. The ' + (nsJobsKpi ? nsJobsKpi.value : '—') + ' not-started jobs hold ' + (nsValKpi ? nsValKpi.value : '—') + ' of contract value; the oldest has been waiting ' + (nsOldKpi ? nsOldKpi.value : '—') + '. This is the queue that has to clear before MF can sustain a higher monthly invoicing pace.',
       tags: [
         { kind: 'info',   text: ((D.kpisBacklog || []).find(function (k) { return /not started jobs/i.test(k.label); }) || { value: '0' }).value + ' not-started jobs' },
         { kind: 'danger', text: 'Oldest ' + ((D.kpisBacklog || []).find(function (k) { return /oldest/i.test(k.label); }) || { value: '0d' }).value }
@@ -1426,7 +1528,7 @@
           rowMap: function (r) { return [r[0], r[1], r[2], r[3], r[4], r[5], r[6] + 'd', fmt.money(r[7] || 0)]; } }),
         oldestRow ? {
           kind: 'callout', tone: 'danger', title: 'Audit the not-started intake trigger',
-          body: 'The oldest not-started job is <strong>' + oldestRow[3] + ' days</strong> at <strong>' + oldestRow[0] + '</strong>. Concentration is heaviest at <strong>' + (concentrationKpi ? concentrationKpi.value : 'Detroit Metro') + '</strong>. The fix is operational: define what "ready to dispatch" means after a contract is signed, and put a daily intake review on the branch GM.'
+          body: 'The oldest not-started job is <strong>' + oldestRow[3] + ' days</strong> at <strong>' + oldestRow[0] + '</strong>. Concentration is heaviest at <strong>' + (concentrationKpi ? concentrationKpi.value : '—') + '</strong>. The fix is operational: define what "ready to dispatch" means after a contract is signed, and put a daily intake review on the branch GM.'
         } : null
       ].filter(Boolean)
     };

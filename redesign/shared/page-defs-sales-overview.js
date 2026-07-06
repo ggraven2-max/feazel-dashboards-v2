@@ -33,9 +33,9 @@
 
   // ============================================================
   // MULTI-FAMILY BRANCH
-  // The residential page-defs below have hardcoded KPI values from the V5
-  // model. When MF data is loaded, build a data-driven page set that reads
-  // KPIs from D.kpis directly instead of hardcoded residential figures.
+  // Both branches are data-driven. The residential pages below read every
+  // business figure from the SALES_OVERVIEW payload (D) via FZ.kpi/FZ.kpiRow
+  // and the derived-values block; MF builds its own page set the same way.
   // ============================================================
   var lob = (window.FZ.data && window.FZ.data._meta && window.FZ.data._meta.lob) || 'residential';
   if (lob === 'multi-family') {
@@ -49,32 +49,118 @@
   // ============================================================
   var pages = {};
 
+  // ---------- residential derived values (all from the payload) ----------
+  var TC = FZ.timeContext();
+  var MONTH3 = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var monthsArr = D.monthly || [];
+  function monthIdxOf (m) {
+    if (m && m.key) {
+      var p = parseInt(String(m.key).slice(5, 7), 10);
+      if (!isNaN(p)) return p - 1;
+    }
+    return MONTH3.indexOf(String((m && m.label) || '').slice(0, 3));
+  }
+  function mon3 (m) { return String((m && m.label) || '').slice(0, 3); }
+  // Closed months: strictly before the reader's current calendar month.
+  var closedMonths = monthsArr.filter(function (m) {
+    return monthIdxOf(m) > -1 && monthIdxOf(m) < TC.monthIdx && (m.amount || 0) > 0;
+  });
+  var firstMonth = monthsArr.filter(function (m) { return (m.amount || 0) > 0; })[0] || null;
+  var lastClosed = closedMonths.length ? closedMonths[closedMonths.length - 1] : firstMonth;
+  var prevClosed = closedMonths.length > 1 ? closedMonths[closedMonths.length - 2] : null;
+  var growthPct = (firstMonth && lastClosed && firstMonth !== lastClosed && firstMonth.amount > 0)
+    ? ((lastClosed.amount - firstMonth.amount) / firstMonth.amount) * 100
+    : null;
+  var momLift = (prevClosed && lastClosed && prevClosed.amount > 0)
+    ? ((lastClosed.amount - prevClosed.amount) / prevClosed.amount) * 100
+    : null;
+
+  var ytdSignedAmt = monthsArr.reduce(function (s, m) { return s + (m.amount || 0); }, 0);
+  var ytdInstallsN = monthsArr.reduce(function (s, m) { return s + (m.installs || 0); }, 0);
+  var ytdRepairsN  = monthsArr.reduce(function (s, m) { return s + (m.repairs  || 0); }, 0);
+  var ytdRepairPct = (ytdInstallsN + ytdRepairsN) > 0 ? (ytdRepairsN / (ytdInstallsN + ytdRepairsN)) * 100 : 0;
+  var annualRate = (D.ytdDays > 0) ? (ytdSignedAmt / D.ytdDays) * 365 : 0;
+  var annualRateKpi = FZ.kpi(D, 'Annualized Sales Rate');
+  var weeksN = (D.weeklyTrend || []).length;
+  var mscRows = (D.marketScorecard && D.marketScorecard.rows) || [];
+
+  function pipeBucket (label) {
+    var b = (D.pipelineBuckets || []).find(function (x) { return x.label === label; });
+    return b || { label: label, amount: 0, count: 0 };
+  }
+  var prBucket = pipeBucket('Production Review');
+  var kbBucket = pipeBucket('Kicked Back');
+  var kbPctOfSigned = ytdSignedAmt > 0 ? (kbBucket.amount / ytdSignedAmt) * 100 : 0;
+  var topKick = (D.marketKickbacks || []).slice().sort(function (a, b) {
+    return (b.kickedAmount || 0) - (a.kickedAmount || 0);
+  })[0] || null;
+  var topKickName = topKick ? topKick.market : 'the top kickback market';
+
+  var cbTop = D.completedBilling || {};
+  function cbSubRow (label) {
+    var r = (cbTop.bySubStatus || []).find(function (x) { return x.subStatus === label; });
+    return r || { subStatus: label, count: 0, amount: 0, avgAge: 0 };
+  }
+  var readyRow = cbSubRow('Ready to Invoice');
+  var suppRow  = cbSubRow('Pending Supplement');
+  var acctRow  = cbSubRow('Accounting Kickback');
+  var cbJobsAll = cbTop.fullJobList || [];
+  var aged60Jobs = cbJobsAll.filter(function (r) { return (r[6] || 0) >= 60; });
+  var aged60Amt = aged60Jobs.reduce(function (s, r) { return s + (r[5] || 0); }, 0);
+
+  // Model branch: of the top-5 markets by signed $, the one with the cleanest mix.
+  var modelRow = mscRows.slice(0, Math.min(5, mscRows.length)).slice().sort(function (a, b) {
+    return (a[6] || 0) - (b[6] || 0);
+  })[0] || null;
+
+  var jtArr = D.jobTypeTotals || [];
+  function jtRow (re) { return jtArr.find(function (j) { return re.test(j.jobType); }) || null; }
+  var insJT = jtRow(/^Insurance/i);
+  var retJT = jtRow(/Retail-No/i);
+  var finJT = jtRow(/Retail-Financing/i);
+  var jtTotalAmt = jtArr.reduce(function (s, j) { return s + (j.amount || 0); }, 0);
+  var finShare = (finJT && jtTotalAmt > 0) ? (finJT.amount / jtTotalAmt) * 100 : 0;
+  var finReps = (D.topPeople || []).filter(function (p) {
+    return p.jt && (p.jt['Retail-Financing'] || 0) > 0;
+  }).sort(function (a, b) {
+    return (b.jt['Retail-Financing'] || 0) - (a.jt['Retail-Financing'] || 0);
+  }).slice(0, 3).map(function (p) { return p.name; });
+
+  var scByJt = ((D.salesCycle || {}).byJobType) || [];
+  var insCycle = scByJt.find(function (b) { return /insurance/i.test(b.label); }) || null;
+  var retailCycleDeals = scByJt.filter(function (b) { return /retail/i.test(b.label); })
+    .reduce(function (s, b) { return s + (b.count || 0); }, 0);
+
+  // Jan-to-latest-closed growth chip
+  var growthChip = (growthPct != null)
+    ? { kind: growthPct >= 0 ? 'success' : 'danger',
+        text: (growthPct >= 0 ? '+' : '') + growthPct.toFixed(0) + '% ' + mon3(firstMonth) + '→' + mon3(lastClosed) }
+    : null;
+
   pages.index = {
-    eyebrow: 'YTD 2026 · ' + FZ.daysYTD() + ' days through ' + FZ.formatBuiltAt({ dateOnly: true }),
+    eyebrow: 'YTD ' + TC.year + ' · ' + FZ.daysYTD() + ' days through ' + FZ.formatBuiltAt({ dateOnly: true }),
     title: 'Residential Sales Overview',
-    intro: 'A consolidated view of every contract signed in 2026, what closed, what is in production review, what got kicked back, and how we are pacing against the $76M annualized rate. Use the sub-tabs above to drill into any dimension.',
+    intro: 'A consolidated view of every contract signed in ' + TC.year + ', what closed, what is in production review, what got kicked back, and how we are pacing against the ' + annualRateKpi.value + ' annualized rate. Use the sub-tabs above to drill into any dimension.',
     tags: [
       { kind: 'info',   text: D.lastSigned ? 'Last signed: ' + D.lastSigned : 'Live data' },
-      { kind: 'success', text: '+213% Jan→Apr' }
-    ],
+      growthChip
+    ].filter(Boolean),
     sections: [
       {
         kind: 'kpi-row', cols: 4,
-        items: [
-          { label: 'Signed Contracts YTD',  value: '$24.46M', sub: '1,572 contracts · 13 markets', tone: 'navy' },
-          { label: 'Sold (Closed-Sold)',     value: '$21.02M', sub: '1,393 deals · 88.6% conversion', tone: 'success' },
-          { label: 'Production Review',      value: '$2.50M',  sub: '132 deals queued', tone: 'warn' },
-          { label: 'Kicked Back',            value: '$880K',   sub: '44 deals · 2.8% of signed', tone: 'danger' }
-        ]
+        items: FZ.kpiRow(D, ['Signed Contracts YTD', 'Sold', 'Production Review', 'Kicked Back'], {
+          'Signed Contracts YTD': 'navy',
+          'Sold': 'success',
+          'Production Review': 'warn',
+          'Kicked Back': 'danger'
+        })
       },
       {
         kind: 'kpi-row', cols: 4,
-        items: [
-          { label: 'Avg Deal Size',          value: '$15,563', sub: 'Median $14,392 · install $18,252' },
-          { label: 'Annualized Sales Rate',  value: '$76.3M',  sub: 'Based on 117 days YTD' },
-          { label: 'Install vs Repair Mix',  value: '83.6 / 16.1', sub: '1,314 installs · 253 repairs' },
-          { label: 'Active Sales Reps',       value: '129',     sub: 'Across 13 markets' }
-        ]
+        items: FZ.kpiRow(D, ['Avg Deal Size', 'Annualized Sales Rate', 'Install vs Repair']).concat([(function () {
+          var k = FZ.kpi(D, 'Organization');
+          return { label: 'Active Sales Reps', value: k.value, sub: k.sub };
+        })()])
       },
       {
         kind: 'chart-grid', cols: 2, heading: 'Monthly Sales Pace',
@@ -119,7 +205,7 @@
           },
           {
             title: 'Pipeline Composition',
-            sub: 'Of the $24.46M signed YTD, where each dollar lives today',
+            sub: 'Of the ' + FZ.kpi(D, 'Signed Contracts YTD').value + ' signed YTD, where each dollar lives today',
             height: 300,
             config: {
               type: 'doughnut',
@@ -147,7 +233,7 @@
       },
       {
         kind: 'chart-grid', cols: 1, heading: 'Weekly Velocity',
-        caption: 'Each Friday across 18 weeks of data, drives our run-rate forecast',
+        caption: 'Each Friday across ' + weeksN + ' weeks of data, drives our run-rate forecast',
         charts: [
           {
             title: 'Weekly Signed Sales',
@@ -216,7 +302,7 @@
           {
             kind: 'chart', span: 6,
             title: 'Top 7 Markets by Signed $',
-            sub: 'Out of 13 active markets',
+            sub: 'Out of ' + mscRows.length + ' active markets',
             height: 260,
             config: {
               type: 'bar',
@@ -240,9 +326,9 @@
       {
         kind: 'prose', heading: 'Headlines',
         cards: [
-          { kind: 'tint', eyebrow: "WHAT'S WORKING", title: 'Trajectory is real', body: '<p>Monthly signed sales went from <strong>$3.24M in January</strong> to <strong>$10.16M in April</strong>, a +213% climb. That trajectory pushes the annualized rate to <strong>$76.3M</strong>. April repair mix dropped to 13.0% vs the YTD 16.1%, so we are also adding the right kind of sales.</p>' },
-          { eyebrow: 'WHAT NEEDS ATTENTION', title: 'Production Review backlog', body: '<p><strong>132 deals worth $2.50M</strong> are sitting in Production Review, that delays revenue recognition. Pair that with <strong>44 kickbacks worth $880K</strong> (Columbus carries the largest share) and the work-quality gate is becoming the bottleneck.</p>' },
-          { kind: 'navy', eyebrow: 'NEXT MOVES', title: 'Run the action plan', body: '<p>Open the Action Plan tab. This-week wins: invoice the $38.6K of Ready-to-Invoice jobs and escalate the four 60+ day unbilled jobs ($134K). Then push the Production Review surge plan and the Columbus kickback review.</p>' }
+          { kind: 'tint', eyebrow: "WHAT'S WORKING", title: 'Trajectory is real', body: '<p>Monthly signed sales went from <strong>' + (firstMonth ? fmt.money(firstMonth.amount, { short: true }) + ' in ' + firstMonth.label : 'the opening month') + '</strong> to <strong>' + (lastClosed ? fmt.money(lastClosed.amount, { short: true }) + ' in ' + lastClosed.label : 'the latest closed month') + '</strong>' + (growthPct != null ? ', a ' + (growthPct >= 0 ? '+' : '') + growthPct.toFixed(0) + '% move' : '') + '. That trajectory puts the annualized rate at <strong>' + annualRateKpi.value + '</strong>.' + (lastClosed ? ' ' + lastClosed.label + ' repair mix ' + (lastClosed.repairPct <= ytdRepairPct ? 'came in at ' : 'rose to ') + lastClosed.repairPct.toFixed(1) + '% vs the YTD ' + ytdRepairPct.toFixed(1) + '%' + (lastClosed.repairPct <= ytdRepairPct ? ', so we are also adding the right kind of sales.' : ', worth watching for mix drift.') : '') + '</p>' },
+          { eyebrow: 'WHAT NEEDS ATTENTION', title: 'Production Review backlog', body: '<p><strong>' + prBucket.count + ' deals worth ' + fmt.money(prBucket.amount, { short: true }) + '</strong> are sitting in Production Review, that delays revenue recognition. Pair that with <strong>' + kbBucket.count + ' kickbacks worth ' + fmt.money(kbBucket.amount, { short: true }) + '</strong>' + (topKick ? ' (' + topKick.market + ' carries the largest share)' : '') + ' and the work-quality gate is becoming the bottleneck.</p>' },
+          { kind: 'navy', eyebrow: 'NEXT MOVES', title: 'Run the action plan', body: '<p>Open the Action Plan tab. This-week wins: invoice the ' + fmt.money(readyRow.amount, { short: true }) + ' of Ready-to-Invoice jobs' + (aged60Jobs.length ? ' and escalate the ' + aged60Jobs.length + ' unbilled jobs aged 60+ days (' + fmt.money(aged60Amt, { short: true }) + ')' : '') + '. Then push the Production Review surge plan and the ' + topKickName + ' kickback review.</p>' }
         ]
       }
     ]
@@ -259,13 +345,12 @@
     sections: [
       {
         kind: 'kpi-row', cols: 5,
-        items: [
-          { label: 'Signed YTD',          value: '$24.46M', sub: '1,572 contracts',                  tone: 'navy' },
-          { label: 'Sold (Confirmed)',     value: '$21.02M', sub: '88.6% of signed',                 tone: 'success' },
-          { label: 'Production Review',    value: '$2.50M',  sub: '132 deals queued',                tone: 'warn' },
-          { label: 'Kicked Back',          value: '$880K',   sub: '44 deals · 2.8%',                 tone: 'danger' },
-          { label: 'Sales Action Pending', value: '$15K',    sub: '1 deal needs follow-up' }
-        ]
+        items: FZ.kpiRow(D, ['Signed Contracts YTD', 'Sold', 'Production Review', 'Kicked Back', 'Sales Action'], {
+          'Signed Contracts YTD': 'navy',
+          'Sold': 'success',
+          'Production Review': 'warn',
+          'Kicked Back': 'danger'
+        })
       },
       {
         kind: 'chart-grid', cols: 2, heading: 'Run-Rate vs Plan',
@@ -273,7 +358,7 @@
         charts: [
           {
             title: 'Cumulative Signed vs Implied Plan',
-            sub: 'Plan based on $76.3M annualized run rate, prorated by week',
+            sub: 'Plan based on the ' + fmt.money(annualRate, { short: true }) + ' annualized run rate, prorated by week',
             height: 320,
             config: {
               type: 'line',
@@ -291,8 +376,8 @@
                     fill: true, tension: 0.3
                   },
                   {
-                    label: 'Plan (Linear $76M)',
-                    data: D.weeklyTrend.map(function (_, i) { return ((76300000 / 52) * (i + 1)); }),
+                    label: 'Plan (Linear ' + fmt.money(annualRate, { short: true }) + ')',
+                    data: D.weeklyTrend.map(function (_, i) { return ((annualRate / 52) * (i + 1)); }),
                     borderColor: pal.blue, borderDash: [6, 4], pointRadius: 0, fill: false
                   }
                 ]
@@ -317,7 +402,7 @@
       },
       {
         kind: 'table', heading: 'Branch Scorecard',
-        caption: 'All 13 markets, ranked by signed $ YTD',
+        caption: 'All ' + mscRows.length + ' markets, ranked by signed $ YTD',
         headers: [
           { label: 'Branch' }, { label: 'Signed $', num: true }, { label: 'Deals', num: true },
           { label: 'Avg Deal', num: true }, { label: 'Installs', num: true }, { label: 'Repairs', num: true },
@@ -340,7 +425,7 @@
       },
       {
         kind: 'callout', tone: 'warn', title: 'Watch list',
-        body: 'Production Review backlog is up to <strong>132 deals worth $2.50M</strong>. Columbus carries the largest share of the 44 company kickbacks ($880K). Add capacity to the review queue and run a Columbus root-cause sweep before the end of the month.'
+        body: 'Production Review backlog is up to <strong>' + prBucket.count + ' deals worth ' + fmt.money(prBucket.amount, { short: true }) + '</strong>. ' + (topKick ? topKick.market + ' carries the largest share of the ' + kbBucket.count + ' company kickbacks (' + fmt.money(kbBucket.amount, { short: true }) + ').' : 'Kickbacks stand at ' + kbBucket.count + ' deals (' + fmt.money(kbBucket.amount, { short: true }) + ').') + ' Add capacity to the review queue and run a ' + topKickName + ' root-cause sweep before the end of the month.'
       }
     ]
   };
@@ -349,7 +434,7 @@
   // TRENDS & MOMENTUM
   // ============================================================
   pages.trends = {
-    eyebrow: 'TRENDS · 18 WEEKS',
+    eyebrow: 'TRENDS · ' + weeksN + ' WEEKS',
     title: 'Trends & Momentum',
     intro: 'Weekly velocity, monthly progression, and where the deal-count vs deal-size dynamic is shifting.',
     sections: [
@@ -358,15 +443,20 @@
         items: [
           { label: 'Best Week',     value: fmt.money(Math.max.apply(null, D.weeklyTrend.map(function (w) { return w.amount; })), { short: true }), sub: 'Single best signing week YTD', tone: 'success' },
           { label: 'Last 4 Weeks',  value: fmt.money(D.weeklyTrend.slice(-4).reduce(function (a, b) { return a + b.amount; }, 0), { short: true }), sub: 'Trailing 4-week sales' },
-          { label: 'Avg Weekly Rate', value: fmt.money(D.weeklyTrend.reduce(function (a, b) { return a + b.amount; }, 0) / D.weeklyTrend.length, { short: true }), sub: 'Across 18 weeks' },
-          { label: 'Mar→Apr Lift',  value: '+46%', sub: '$6.95M → $10.16M', tone: 'success' }
+          { label: 'Avg Weekly Rate', value: fmt.money(D.weeklyTrend.reduce(function (a, b) { return a + b.amount; }, 0) / D.weeklyTrend.length, { short: true }), sub: 'Across ' + weeksN + ' weeks' },
+          {
+            label: (prevClosed && lastClosed) ? mon3(prevClosed) + '→' + mon3(lastClosed) + ' Lift' : 'MoM Lift',
+            value: momLift != null ? (momLift >= 0 ? '+' : '') + momLift.toFixed(0) + '%' : 'n/a',
+            sub: (prevClosed && lastClosed) ? fmt.money(prevClosed.amount, { short: true }) + ' → ' + fmt.money(lastClosed.amount, { short: true }) : 'Needs two closed months',
+            tone: momLift != null && momLift >= 0 ? 'success' : 'warn'
+          }
         ]
       },
       {
         kind: 'chart-grid', cols: 1,
         charts: [
           {
-            title: 'Weekly Signed Sales, full 18 weeks',
+            title: 'Weekly Signed Sales, full ' + weeksN + ' weeks',
             sub: 'Each bar is one Friday roll-up · trend line is rolling 4-week average',
             height: 320,
             config: {
@@ -453,7 +543,18 @@
       {
         kind: 'callout',
         title: 'What the trend is telling us',
-        body: 'Deal volume more than tripled from January to April (181 → 653). Average deal size held flat in the $14K–$18K band, meaning the trajectory is volume-led, not price-led. The 4-week trailing average is climbing at roughly +$250K per week, which is what gets us from a $76M annualized rate to a $90M+ exit run rate by year-end if it holds.'
+        body: (function () {
+          var closedAvgs = closedMonths.map(function (m) { return m.avgDeal || 0; }).filter(function (v) { return v > 0; });
+          var loAvg = closedAvgs.length ? Math.min.apply(null, closedAvgs) : 0;
+          var hiAvg = closedAvgs.length ? Math.max.apply(null, closedAvgs) : 0;
+          var volLine = (firstMonth && lastClosed && firstMonth !== lastClosed)
+            ? 'Deal volume went from ' + firstMonth.count + ' in ' + firstMonth.label + ' to ' + lastClosed.count + ' in ' + lastClosed.label + ' (closed months). '
+            : '';
+          var bandLine = (loAvg && hiAvg)
+            ? 'Average deal size held in the ' + fmt.money(loAvg, { short: true }) + ' to ' + fmt.money(hiAvg, { short: true }) + ' band, meaning the trajectory is volume-led, not price-led. '
+            : '';
+          return volLine + bandLine + 'The annualized rate off ' + D.ytdDays + ' days of signings is ' + fmt.money(annualRate, { short: true }) + '; if the 4-week trailing average keeps climbing, the exit run rate finishes above that.';
+        })()
       }
     ]
   };
@@ -462,18 +563,24 @@
   // MARKET DEEP DIVE
   // ============================================================
   pages.markets = {
-    eyebrow: 'MARKETS · ALL 13',
+    eyebrow: 'MARKETS · ALL ' + mscRows.length,
     title: 'Market Deep Dive',
     intro: 'How each branch is contributing to the YTD number, and where the mix is healthy versus where the repair tail is dragging margin.',
     sections: [
       {
         kind: 'kpi-row', cols: 4,
-        items: [
-          { label: 'Top Market', value: 'Columbus', sub: '$7.40M · 502 deals', tone: 'navy' },
-          { label: '#2 Market',  value: 'Detroit Metro', sub: '$4.59M · 277 deals', tone: 'success' },
-          { label: 'Highest Avg Deal', value: 'Richmond', sub: '$23,938 average', tone: 'success' },
-          { label: 'Highest Repair %', value: 'Nashville', sub: '30.2% repair share', tone: 'warn' }
-        ]
+        items: (function () {
+          var topMkt = mscRows[0];
+          var secondMkt = mscRows[1];
+          var highAvg = mscRows.slice().sort(function (a, b) { return (b[3] || 0) - (a[3] || 0); })[0];
+          var highRepair = mscRows.slice().sort(function (a, b) { return (b[6] || 0) - (a[6] || 0); })[0];
+          return [
+            { label: 'Top Market', value: topMkt ? topMkt[0] : 'n/a', sub: topMkt ? fmt.money(topMkt[1], { short: true }) + ' · ' + topMkt[2] + ' deals' : '', tone: 'navy' },
+            { label: '#2 Market',  value: secondMkt ? secondMkt[0] : 'n/a', sub: secondMkt ? fmt.money(secondMkt[1], { short: true }) + ' · ' + secondMkt[2] + ' deals' : '', tone: 'success' },
+            { label: 'Highest Avg Deal', value: highAvg ? highAvg[0] : 'n/a', sub: highAvg ? fmt.money(highAvg[3]) + ' average' : '', tone: 'success' },
+            { label: 'Highest Repair %', value: highRepair ? highRepair[0] : 'n/a', sub: highRepair ? highRepair[6].toFixed(1) + '% repair share' : '', tone: 'warn' }
+          ];
+        })()
       },
       {
         kind: 'chart-grid', cols: 2,
@@ -516,7 +623,7 @@
         ]
       },
       {
-        kind: 'table', heading: 'All 13 markets, full scorecard',
+        kind: 'table', heading: 'All ' + mscRows.length + ' markets, full scorecard',
         headers: [
           'Branch',
           { label: 'Signed $', num: true }, { label: 'Deals', num: true },
@@ -535,11 +642,11 @@
           ];
         })
       },
-      {
-        kind: 'callout', tone: 'success', title: 'Detroit Metro: the model branch',
-        body: '$4.59M on 277 deals at $16,559 avg with only 8.3% repair mix and 4-day median close. That ratio of volume + ticket size + clean job mix + speed is the template for Columbus and Cleveland to chase.'
-      }
-    ].concat(((function () {
+      modelRow ? {
+        kind: 'callout', tone: 'success', title: modelRow[0] + ': the model branch',
+        body: fmt.money(modelRow[1], { short: true }) + ' on ' + modelRow[2] + ' deals at ' + fmt.money(modelRow[3]) + ' avg with only ' + modelRow[6].toFixed(1) + '% repair mix and ' + modelRow[7] + '-day median close. That ratio of volume + ticket size + clean job mix + speed is the template for the rest of the network to chase.'
+      } : null
+    ].filter(Boolean).concat(((function () {
       // ----- Closing % and NSLI by branch -----
       // Mirrors the formatted Salesforce report layout:
       //   Branch · Sum of Sold Deals · Closing Percent · NSLI · Record Count
@@ -679,17 +786,20 @@
   pages.people = {
     eyebrow: 'PEOPLE · TOP PRODUCERS',
     title: 'People & Productivity',
-    intro: 'Who is driving the YTD number. 129 active reps across 13 markets, but production is concentrated.',
+    intro: 'Who is driving the YTD number. ' + FZ.kpi(D, 'Organization').value + ' across ' + mscRows.length + ' markets, but production is concentrated.',
     sections: [
       {
         kind: 'kpi-row', cols: 4,
         items: [
-          { label: 'Active Reps',         value: '129',   sub: '13 markets', tone: 'navy' },
+          (function () {
+            var k = FZ.kpi(D, 'Organization');
+            return { label: 'Active Reps', value: k.value, sub: k.sub, tone: 'navy' };
+          })(),
           { label: 'Top Producer',        value: D.topPeople[0] && D.topPeople[0].name, sub: D.topPeople[0] ? fmt.money(D.topPeople[0].amount) + ' · ' + D.topPeople[0].count + ' deals' : '', tone: 'success' },
           { label: 'Top 10 Share',        value: (function(){
               var t10 = D.topPeople.slice(0, 10).reduce(function (a, b) { return a + b.amount; }, 0);
-              return ((t10 / 24460000) * 100).toFixed(0) + '%';
-            })(), sub: 'of $24.46M signed YTD' },
+              return ytdSignedAmt > 0 ? ((t10 / ytdSignedAmt) * 100).toFixed(0) + '%' : 'n/a';
+            })(), sub: 'of ' + fmt.money(ytdSignedAmt, { short: true }) + ' signed YTD' },
           { label: 'Avg / Top-10 Rep',    value: fmt.money(D.topPeople.slice(0, 10).reduce(function (a, b) { return a + b.amount; }, 0) / 10, { short: true }), sub: 'per rep YTD' }
         ]
       },
@@ -750,10 +860,10 @@
       {
         kind: 'kpi-row', cols: 3,
         items: [
-          { label: 'Retail-No Financing', value: '$9.28M', sub: '809 deals · $11,469 avg · volume engine', tone: 'navy' },
-          { label: 'Insurance',           value: '$8.91M', sub: '447 deals · $19,942 avg · premium ticket', tone: 'success' },
-          { label: 'Retail-Financing',    value: '$3.03M', sub: '145 deals · $20,878 avg · highest avg' }
-        ]
+          retJT ? { label: 'Retail-No Financing', value: fmt.money(retJT.amount, { short: true }), sub: retJT.count + ' deals · ' + fmt.money(retJT.avg) + ' avg · volume engine', tone: 'navy' } : null,
+          insJT ? { label: 'Insurance',           value: fmt.money(insJT.amount, { short: true }), sub: insJT.count + ' deals · ' + fmt.money(insJT.avg) + ' avg · premium ticket', tone: 'success' } : null,
+          finJT ? { label: 'Retail-Financing',    value: fmt.money(finJT.amount, { short: true }), sub: finJT.count + ' deals · ' + fmt.money(finJT.avg) + ' avg' } : null
+        ].filter(Boolean)
       },
       {
         kind: 'chart-grid', cols: 2,
@@ -819,11 +929,11 @@
           return [{ html: '<strong>' + j.jobType + '</strong>' }, fmt.money(j.amount), j.count, fmt.money(j.avg)];
         })
       },
-      {
+      finJT ? {
         kind: 'callout', tone: 'success', title: 'Financing push opportunity',
-        body: 'Retail-Financing carries the highest average ticket ($20,878) but only 9.2% of the YTD mix. Lifting financing penetration to 15% means $1.5M+ of additional revenue without adding leads. The top financing reps to scale from: Kevin Ditty, Storm Drumm, Scott Scaperato.'
-      }
-    ]
+        body: 'Retail-Financing runs a ' + fmt.money(finJT.avg) + ' average ticket but only ' + finShare.toFixed(1) + '% of the YTD dollar mix. Lifting financing penetration adds premium-ticket revenue without adding leads.' + (finReps.length ? ' The top financing reps to scale from: ' + finReps.join(', ') + '.' : '')
+      } : null
+    ].filter(Boolean)
   };
 
   // ============================================================
@@ -880,7 +990,10 @@
       {
         kind: 'callout', tone: 'warn',
         title: 'Insurance is the cycle drag',
-        body: 'Insurance jobs have a 27-day median close (76-day mean). That is structural, carrier dependence. But it argues for keeping insurance and retail capacity separately scheduled so the carrier wait does not starve the faster retail flow.'
+        body: (insCycle
+          ? 'Insurance jobs have a ' + insCycle.median + '-day median close (' + insCycle.mean + '-day mean). That is structural, carrier dependence.'
+          : 'Insurance jobs carry the longest close cycle in the book. That is structural, carrier dependence.')
+          + ' But it argues for keeping insurance and retail capacity separately scheduled so the carrier wait does not starve the faster retail flow.'
       }
     ]
   };
@@ -891,16 +1004,16 @@
   pages.risks = {
     eyebrow: 'RISKS · TOP OF MIND',
     title: 'Risks & Red Flags',
-    intro: 'Every dollar that is at risk of slipping out of 2026, ranked. These are the items that need a meeting, not just a metric.',
-    tags: [{ kind: 'danger', text: '6 critical' }],
+    intro: 'Every dollar that is at risk of slipping out of ' + TC.year + ', ranked. These are the items that need a meeting, not just a metric.',
+    tags: [{ kind: 'danger', text: (D.commentary.criticalRisks || []).length + ' critical' }],
     sections: [
       {
         kind: 'kpi-row', cols: 4,
         items: [
-          { label: 'Pipeline Kickbacks',    value: '$880K', sub: '44 deals · 2.8% of signed', tone: 'danger' },
-          { label: 'Production Review Backlog', value: '$2.50M', sub: '132 deals queued',     tone: 'warn' },
-          { label: 'Unbilled Completed',    value: '$1.0M', sub: '51 jobs · 17d avg',         tone: 'warn' },
-          { label: 'Pending Supplements',   value: '$799K', sub: '37 jobs · oldest 99d',      tone: 'danger' }
+          { label: 'Pipeline Kickbacks',    value: fmt.money(kbBucket.amount, { short: true }), sub: kbBucket.count + ' deals · ' + kbPctOfSigned.toFixed(1) + '% of signed', tone: 'danger' },
+          { label: 'Production Review Backlog', value: fmt.money(prBucket.amount, { short: true }), sub: prBucket.count + ' deals queued', tone: 'warn' },
+          { label: 'Unbilled Completed',    value: fmt.money(cbTop.totalUnbilled || 0, { short: true }), sub: (cbTop.totalJobs || 0) + ' jobs · ' + (cbTop.avgAge || 0).toFixed(0) + 'd avg', tone: 'warn' },
+          { label: 'Pending Supplements',   value: fmt.money(suppRow.amount, { short: true }), sub: suppRow.count + ' jobs · ' + suppRow.avgAge + 'd avg', tone: 'danger' }
         ]
       },
       {
@@ -920,7 +1033,7 @@
       {
         kind: 'callout', tone: 'danger',
         title: 'Owner check',
-        body: 'Each item above needs a single owner and a 7-day commitment. Specifically: Columbus kickback root cause (Bruce Lemon Jr), Supplement aging (Matt Henry/Inside Sales), Accounting kickbacks ($172K, 10 jobs, Mahlet Teshome Mandefro), Production Review surge plan (Jeff Craft).'
+        body: 'Each item above needs a single owner and a 7-day commitment. Specifically: ' + topKickName + ' kickback root cause (Residential Production), supplement aging of ' + fmt.money(suppRow.amount, { short: true }) + ' across ' + suppRow.count + ' jobs (Inside Sales), accounting kickbacks of ' + fmt.money(acctRow.amount, { short: true }) + ' on ' + acctRow.count + ' jobs (finance liaison), and the Production Review surge plan (Service).'
       }
     ]
   };
@@ -932,16 +1045,16 @@
     eyebrow: 'WINS · COMPOUND THESE',
     title: 'Build on the Good',
     intro: 'Where the model is already working. Each of these is something we should institutionalize, not just celebrate.',
-    tags: [{ kind: 'success', text: '8 strengths' }],
+    tags: [{ kind: 'success', text: ((D.commentary.strengthsToAmplify || []).length || 'Live') + ' strengths' }],
     sections: [
       {
         kind: 'kpi-row', cols: 4,
         items: [
-          { label: 'Detroit Avg Deal',    value: '$16,559', sub: '277 deals · 8.3% repair mix', tone: 'success' },
-          { label: 'Retail Velocity',     value: '4 days',  sub: 'Median close on 950 retail deals' },
-          { label: 'Insurance Density',   value: '$8.91M',  sub: '447 deals · $19,942 avg' },
-          { label: 'April Repair Rate',   value: '13.0%',   sub: 'Down from 16.1% YTD', tone: 'success' }
-        ]
+          modelRow ? { label: modelRow[0] + ' Avg Deal', value: fmt.money(modelRow[3]), sub: modelRow[2] + ' deals · ' + modelRow[6].toFixed(1) + '% repair mix', tone: 'success' } : null,
+          { label: 'Retail Velocity',     value: FZ.kpi(D.salesCycle, 'Retail').value,  sub: retailCycleDeals ? 'Median close on ' + retailCycleDeals.toLocaleString() + ' retail deals' : 'Median close, all retail job types' },
+          insJT ? { label: 'Insurance Density',   value: fmt.money(insJT.amount, { short: true }),  sub: insJT.count + ' deals · ' + fmt.money(insJT.avg) + ' avg' } : null,
+          lastClosed ? { label: lastClosed.label + ' Repair Rate', value: lastClosed.repairPct.toFixed(1) + '%', sub: (lastClosed.repairPct <= ytdRepairPct ? 'Down from ' : 'Up from ') + ytdRepairPct.toFixed(1) + '% YTD', tone: lastClosed.repairPct <= ytdRepairPct ? 'success' : 'warn' } : null
+        ].filter(Boolean)
       },
       {
         kind: 'prose', heading: 'Strengths to amplify',
@@ -966,12 +1079,12 @@
   pages.fixes = {
     eyebrow: 'FIX LIST · WHAT TO ATTACK',
     title: 'Fix the Weak Areas',
-    intro: 'The seven specific weaknesses worth a focused intervention. Each item is sized so a single owner can move the number in 30 days.',
+    intro: 'The ' + ((D.commentary.fixList || []).length || '') + ' specific weaknesses worth a focused intervention. Each item is sized so a single owner can move the number in 30 days.',
     sections: [
       {
         kind: 'prose',
         cards: [{
-          eyebrow: 'FIX LIST', title: 'Seven workstreams',
+          eyebrow: 'FIX LIST', title: ((D.commentary.fixList || []).length || '') + ' workstreams',
           list: D.commentary.fixList.map(function (t) { return { text: t, icon: '→' }; })
         }]
       }
@@ -984,7 +1097,7 @@
   pages['action-plan'] = {
     eyebrow: 'ACTION PLAN · NOW / NEXT / LATER',
     title: 'Action Plan',
-    intro: 'Sequenced moves to convert the YTD trajectory into a finished 2026.',
+    intro: 'Sequenced moves to convert the YTD trajectory into a finished ' + TC.year + '.',
     sections: [
       {
         kind: 'prose', heading: 'Sequenced workstreams',
@@ -1108,7 +1221,7 @@
             { label: 'Avg / Week', num: true }
           ],
           rows: monthRows.map(function (m) {
-            return [m.mo + ' 2026', m.weeks, fmt.money(m.total), fmt.money(m.total / Math.max(1, m.weeks))];
+            return [m.mo + ' ' + TC.year, m.weeks, fmt.money(m.total), fmt.money(m.total / Math.max(1, m.weeks))];
           })
         },
         byJobType.length ? {
@@ -1135,7 +1248,7 @@
         byMarket.length ? {
           kind: 'table',
           heading: 'Allocation by market',
-          caption: 'Top-13 branch market split of the weekly target',
+          caption: byMarket.length + '-market split of the weekly target',
           maxHeight: '440px',
           headers: [
             { label: 'Market', num: false },
@@ -1155,7 +1268,7 @@
           kind: 'callout', tone: paceGap > 0 ? 'danger' : 'success',
           title: paceGap > 0 ? 'Pace gap to close' : 'Tracking ahead',
           body: paceGap > 0
-            ? 'The 4-week average sales pace is <strong>' + fmt.money(recent4Wk, { short: true }) + '/wk</strong> against a required <strong>' + fmt.money(avgWeekly, { short: true }) + '/wk</strong>. That is <strong>' + fmt.money(paceGap, { short: true }) + '</strong> short per week. If the actual weekly run rate diverges by more than ±15% for two consecutive weeks, escalate to the COO and the FP&amp;A Director (Mahlet Teshome Mandefro) for an off-cycle review.'
+            ? 'The 4-week average sales pace is <strong>' + fmt.money(recent4Wk, { short: true }) + '/wk</strong> against a required <strong>' + fmt.money(avgWeekly, { short: true }) + '/wk</strong>. That is <strong>' + fmt.money(paceGap, { short: true }) + '</strong> short per week. If the actual weekly run rate diverges by more than ±15% for two consecutive weeks, escalate to the COO and the finance liaison for an off-cycle review.'
             : 'The 4-week average sales pace of <strong>' + fmt.money(recent4Wk, { short: true }) + '/wk</strong> is currently above the required <strong>' + fmt.money(avgWeekly, { short: true }) + '/wk</strong>. Keep this momentum.'
         }
       ].filter(Boolean)
@@ -1181,9 +1294,9 @@
     var q1Inv = monthly ? (monthly[0] + monthly[1] + monthly[2]) : null;
     var q1InvBudget = budgetInv ? (budgetInv[0] + budgetInv[1] + budgetInv[2]) : null;
     var q1Shortfall = (q1Inv != null && q1InvBudget != null) ? (q1Inv - q1InvBudget) : null;
-    var fullYearBudget = br.fullYearBudget || (rf.execSummary && rf.execSummary.budget) || 125600000;
+    var fullYearBudget = br.fullYearBudget || (rf.execSummary && rf.execSummary.budget) || 0;
     var annualForecast = (rf.execSummary && rf.execSummary.modelAnnualInvoiced) || 0;
-    var annualGap = annualForecast - fullYearBudget;
+    var annualGap = (fullYearBudget > 0 && annualForecast > 0) ? (annualForecast - fullYearBudget) : null;
     var ytdActual = ns.totalInvoiced || 0;     // works in both formats
 
     pages['budget-recovery'] = {
@@ -1196,7 +1309,9 @@
         aggOnly
           ? { kind: 'warn', text: 'YTD ' + fmt.money(ytdActual, { short: true }) + ' (branch rollup, no Q1 detail)' }
           : { kind: q1Shortfall != null && q1Shortfall < 0 ? 'danger' : 'success', text: q1Shortfall != null ? 'Q1 ' + (q1Shortfall >= 0 ? '+' : '') + fmt.money(q1Shortfall, { short: true }) + ' vs plan' : 'Q1 data pending' },
-        { kind: annualGap < 0 ? 'warn' : 'success', text: 'Annual ' + (annualGap >= 0 ? '+' : '') + fmt.money(annualGap, { short: true }) }
+        annualGap != null
+          ? { kind: annualGap < 0 ? 'warn' : 'success', text: 'Annual ' + (annualGap >= 0 ? '+' : '') + fmt.money(annualGap, { short: true }) }
+          : { kind: 'info', text: 'Annual plan pending' }
       ],
       sections: [
         {
@@ -1205,7 +1320,7 @@
             { label: 'Q1 Budget (Invoiced)',  value: q1InvBudget != null ? fmt.money(q1InvBudget, { short: true }) : '—', sub: 'Sum Jan + Feb + Mar plan',     tone: 'navy' },
             { label: 'Q1 Invoiced (Actual)',   value: q1Inv != null      ? fmt.money(q1Inv, { short: true })      : '—', sub: 'NetSuite AR · Jan-Mar booked', tone: 'good' },
             { label: 'Q1 Variance',            value: q1Shortfall != null ? (q1Shortfall >= 0 ? '+' : '') + fmt.money(q1Shortfall, { short: true }) : '—', sub: q1Shortfall != null && q1Shortfall < 0 ? 'To recover across Q2-Q4' : 'Tracking to plan', tone: q1Shortfall != null && q1Shortfall < 0 ? 'crit' : 'good' },
-            { label: 'Annual Forecast',        value: annualForecast ? fmt.money(annualForecast, { short: true }) : '—', sub: 'Model invoiced · vs ' + fmt.money(fullYearBudget, { short: true }), tone: annualGap < 0 ? 'warn' : 'good' }
+            { label: 'Annual Forecast',        value: annualForecast ? fmt.money(annualForecast, { short: true }) : '—', sub: 'Model invoiced' + (fullYearBudget > 0 ? ' · vs ' + fmt.money(fullYearBudget, { short: true }) : ' · plan pending'), tone: annualGap != null && annualGap < 0 ? 'warn' : 'good' }
           ]
         },
         monthly && budgetInv ? {
@@ -1225,7 +1340,7 @@
             var diff = actual - plan;
             var pct = plan > 0 ? (diff / plan) * 100 : 0;
             return [
-              m + ' 2026',
+              m + ' ' + TC.year,
               fmt.money(plan),
               fmt.money(actual),
               (diff >= 0 ? '+' : '') + fmt.money(diff),
@@ -1245,7 +1360,7 @@
           kind: 'callout',
           tone: q1Shortfall != null && q1Shortfall < 0 ? 'danger' : aggOnly ? 'warn' : 'success',
           title: aggOnly
-            ? 'Q1 detail unavailable — NetSuite file is a branch rollup'
+            ? 'Q1 detail unavailable: NetSuite file is a branch rollup'
             : q1Shortfall != null && q1Shortfall < 0 ? 'Q1 invoiced shortfall'
             : q1Shortfall != null && q1Shortfall >= 0 ? 'Q1 ahead of plan'
             : 'Q1 data not yet locked',
@@ -1376,6 +1491,13 @@
     var wtMarkets = safeArr(wt.byMarket);
     var wtSched   = safeArr(wt.weekSchedule);
 
+    // Annual MF plan from the budget-recovery payload. All prose derives from
+    // these so copy never goes stale; '—' when the payload is missing.
+    var planMfAnnual = br.fullYearBudget || 0;
+    var planMfStr = planMfAnnual ? fmt.money(planMfAnnual, { short: true }) : '—';
+    // Year anchor from the reader's clock, consistent with FZ.timeContext usage.
+    var mfYear = FZ.timeContext().year;
+
     var totalSold = (D.kpis || []).reduce(function (s, k) { return s + 0; }, 0);
     var soldRow   = (D.kpis || []).find(function (k) { return k.label === 'Sold'; });
     var signedRow = (D.kpis || []).find(function (k) { return k.label === 'Signed Contracts YTD'; });
@@ -1387,7 +1509,7 @@
     // EXECUTIVE OVERVIEW (index/executive)
     // ─────────────────────────────────────────────────────────────
     var indexPage = {
-      eyebrow: 'YTD 2026 · MULTI-FAMILY',
+      eyebrow: 'YTD ' + mfYear + ' · MULTI-FAMILY',
       title: 'Multi-Family Sales Overview',
       intro: 'Commercial and multi-family contracts signed YTD. Same Salesforce pipeline as residential, scoped to the Commercial book under Todd Sandler.',
       tags: [
@@ -1503,7 +1625,7 @@
           })
         } : null,
         { kind: 'callout', tone: 'info', title: 'How to read MF momentum',
-          body: 'MF deal sizes range from a few thousand (repairs) to several hundred thousand (insurance jobs). Week-over-week swings are normal; a single $400K insurance contract can flip a week from red to green. The 4-week rolling average and monthly view smooth that out.' }
+          body: 'MF deal sizes range from a few thousand (repairs) to several hundred thousand (insurance jobs). Week-over-week swings are normal; a single large insurance contract can flip a week from red to green. The 4-week rolling average and monthly view smooth that out.' }
       ].filter(Boolean)
     };
 
@@ -1654,7 +1776,7 @@
     mfPages['job-mix'] = {
       eyebrow: 'JOB MIX · MF',
       title: 'Job Type & Service Mix',
-      intro: 'Where the MF dollars come from by sale type. Insurance is small in count but very large in average deal — the only category that consistently produces $300K+ contracts.',
+      intro: 'Where the MF dollars come from by sale type. Insurance is small in count but very large in average deal: it is the category that consistently produces the outsized contracts.',
       tags: [{ kind: 'info', text: jtTot.length + ' job types · ' + fmt.money(jtTotal, { short: true }) + ' YTD' }],
       sections: [
         { kind: 'kpi-row', cols: 3, items: [
@@ -1732,7 +1854,7 @@
             height: Math.max(280, cycleByMkt.length * 26),
             config: {
               type: 'bar',
-              data: { labels: cycleByMkt.map(function (r) { return r.label; }),
+              data: { labels: cycleByMkt.map(function (r) { return r.market || r.label; }),
                 datasets: [{ data: cycleByMkt.map(function (r) { return r.median; }), backgroundColor: cycleByMkt.map(function (r) {
                   return r.median >= 60 ? pal.danger : r.median >= 30 ? pal.warning : pal.success;
                 }), label: 'Median days' }] },
@@ -1766,7 +1888,7 @@
             var pill = r.median >= 60 ? '<span class="pill pill-danger">' + r.median + 'd</span>'
                      : r.median >= 30 ? '<span class="pill pill-warn">' + r.median + 'd</span>'
                      : '<span class="pill pill-success">' + r.median + 'd</span>';
-            return [{ html: '<strong>' + r.label + '</strong>' }, { html: pill }, r.mean + 'd', r.count];
+            return [{ html: '<strong>' + (r.market || r.label) + '</strong>' }, { html: pill }, r.mean + 'd', r.count];
           })
         } : null,
         { kind: 'callout', tone: 'info', title: 'Cycle interpretation',
@@ -1792,7 +1914,7 @@
             { label: 'Insurance Pipeline', value: insRow ? insRow.count + ' deals' : '—', sub: insRow ? fmt.money(insRow.amount, { short: true }) + ' · 90+ day cycle typical' : '', tone: 'warn' },
             { label: 'Slowest Market', value: (function () {
                 var slow = cycleByMkt.slice().sort(function (a, b) { return b.median - a.median; })[0];
-                return slow ? slow.label : '—';
+                return slow ? (slow.market || slow.label) : '—';
               })(), sub: (function () {
                 var slow = cycleByMkt.slice().sort(function (a, b) { return b.median - a.median; })[0];
                 return slow ? slow.median + ' day median' : '';
@@ -1918,7 +2040,7 @@
     // Reuses the same plan + bridge that drives Budget Recovery.
     // ─────────────────────────────────────────────────────────────
     var brBridgeT = safeArr(br.monthlyBridge);
-    var planMfT = br.fullYearBudget || 51673207;
+    var planMfT = planMfAnnual;
     var closedMonths = brBridgeT.filter(function (m) { return m.status === 'Actual'; });
     var futureMonths = brBridgeT.filter(function (m) { return m.status !== 'Actual'; });
     var ytdRev = closedMonths.reduce(function (s, m) {
@@ -1951,7 +2073,7 @@
     mfPages['weekly-targets'] = {
       eyebrow: 'TARGETS · MF MONTHLY · REVENUE BASIS',
       title: 'Monthly Targets',
-      intro: 'Monthly invoiced-revenue targets to land the $51.67M Commercial Budget plan. Closed months come from NetSuite AR; remaining months show what each month needs to deliver.',
+      intro: 'Monthly invoiced-revenue targets to land the ' + planMfStr + ' Commercial Budget plan. Closed months come from NetSuite AR; remaining months show what each month needs to deliver.',
       tags: [
         { kind: 'info', text: monthsRemaining + ' months remaining' },
         { kind: lastClosedDelta >= 0 ? 'success' : 'warn',
@@ -1974,14 +2096,14 @@
               tone: ytdRev >= ytdPlanT ? 'success' : 'warn' },
             { label: 'Remaining Need',
               value: fmt.money(remainingNeed, { short: true }),
-              sub: 'to land $51.67M annual',
+              sub: 'to land ' + planMfStr + ' annual',
               tone: 'navy' }
         ]},
         brBridgeT.length ? {
           kind: 'chart-grid', cols: 1,
           charts: [{
             title: 'Monthly targets through year-end',
-            sub: 'Closed-month bars are NetSuite invoiced actuals; future-month bars are required revenue to hold $51.67M',
+            sub: 'Closed-month bars are NetSuite invoiced actuals; future-month bars are required revenue to hold ' + planMfStr,
             height: 320,
             config: {
               type: 'bar',
@@ -2069,8 +2191,8 @@
         { kind: 'callout', tone: ytdRev >= ytdPlanT ? 'success' : 'warn',
           title: ytdRev >= ytdPlanT ? 'On pace through closed months' : 'Below plan through closed months',
           body: ytdRev >= ytdPlanT
-            ? 'Closed-month invoiced revenue is <strong>' + fmt.money(ytdRev, { short: true }) + '</strong> against a <strong>' + fmt.money(ytdPlanT, { short: true }) + '</strong> plan, a <strong>+' + fmt.money(ytdRev - ytdPlanT, { short: true }) + '</strong> lead. The remaining ' + monthsRemaining + ' months need to average <strong>' + fmt.money(avgMonthlyTarget, { short: true }) + '/mo</strong> to land $51.67M. The market table above shows each branch\'s share of that monthly need.'
-            : 'Closed-month invoiced revenue is <strong>' + fmt.money(ytdPlanT - ytdRev, { short: true }) + ' below plan</strong>. The remaining ' + monthsRemaining + ' months need to average <strong>' + fmt.money(avgMonthlyTarget, { short: true }) + '/mo</strong> to recover and land $51.67M. The market table shows where each branch needs to land.'
+            ? 'Closed-month invoiced revenue is <strong>' + fmt.money(ytdRev, { short: true }) + '</strong> against a <strong>' + fmt.money(ytdPlanT, { short: true }) + '</strong> plan, a <strong>+' + fmt.money(ytdRev - ytdPlanT, { short: true }) + '</strong> lead. The remaining ' + monthsRemaining + ' months need to average <strong>' + fmt.money(avgMonthlyTarget, { short: true }) + '/mo</strong> to land ' + planMfStr + '. The market table above shows each branch\'s share of that monthly need.'
+            : 'Closed-month invoiced revenue is <strong>' + fmt.money(ytdPlanT - ytdRev, { short: true }) + ' below plan</strong>. The remaining ' + monthsRemaining + ' months need to average <strong>' + fmt.money(avgMonthlyTarget, { short: true }) + '/mo</strong> to recover and land ' + planMfStr + '. The market table shows where each branch needs to land.'
         }
       ].filter(Boolean)
     };
@@ -2080,7 +2202,7 @@
     // ─────────────────────────────────────────────────────────────
     var brBridge = safeArr(br.monthlyBridge);
     var brMkts = safeArr(br.adjSalesByMarket);
-    var planMf = br.fullYearBudget || 51673207;
+    var planMf = planMfAnnual;
     var ytdActualMf = brBridge
       .filter(function (m) { return m.status === 'Actual'; })
       .reduce(function (s, m) { return s + (m.liveActual != null ? m.liveActual : m.recovTarget); }, 0);
@@ -2099,8 +2221,8 @@
       eyebrow: 'RECOVERY · MF · REVENUE BASIS',
       title: 'Budget Recovery',
       intro: aheadMode
-        ? 'MF invoiced revenue is currently running ahead of the $51.67M plan. The bridge below tracks NetSuite booked revenue for each closed month against the Commercial Budget split and shows the remaining-year pace required to hold the lead.'
-        : 'The path back to the MF $51.67M plan, measured in NetSuite invoiced revenue (apples-to-apples with the Commercial Budget) rather than signed contracts.',
+        ? 'MF invoiced revenue is currently running ahead of the ' + planMfStr + ' plan. The bridge below tracks NetSuite booked revenue for each closed month against the Commercial Budget split and shows the remaining-year pace required to hold the lead.'
+        : 'The path back to the MF ' + planMfStr + ' plan, measured in NetSuite invoiced revenue (apples-to-apples with the Commercial Budget) rather than signed contracts.',
       tags: [
         { kind: q1Shortfall >= 0 ? 'success' : 'danger', text: 'Q1 ' + (q1Shortfall >= 0 ? '+' : '') + fmt.money(q1Shortfall, { short: true }) + ' vs plan' },
         { kind: aprilGap >= 0 ? 'success' : 'warn',     text: 'April ' + (aprilGap >= 0 ? '+' : '') + fmt.money(aprilGap, { short: true }) + ' vs plan' },
@@ -2119,7 +2241,7 @@
               tone: aheadMode ? 'success' : 'warn' },
             { label: 'Required Pace / mo',
               value: fmt.money(((planMf - ytdActualMf) / Math.max(1, 12 - brBridge.filter(function (m) { return m.status === 'Actual'; }).length)) , { short: true }),
-              sub: (12 - brBridge.filter(function (m) { return m.status === 'Actual'; }).length) + ' months left to land $51.67M',
+              sub: (12 - brBridge.filter(function (m) { return m.status === 'Actual'; }).length) + ' months left to land ' + planMfStr,
               tone: 'navy' }
         ]},
         brBridge.length ? {
@@ -2152,7 +2274,7 @@
         brBridge.length ? {
           kind: 'table',
           heading: 'Monthly bridge to plan',
-          caption: 'Plan = Commercial Budget monthly · Revenue = NetSuite booked invoiced revenue (closed months) · Required = revenue needed to hold $51.67M annual',
+          caption: 'Plan = Commercial Budget monthly · Revenue = NetSuite booked invoiced revenue (closed months) · Required = revenue needed to hold ' + planMfStr + ' annual',
           headers: [
             { label: 'Month', num: false },
             { label: 'Plan', num: true },
@@ -2190,7 +2312,7 @@
           title: aheadMode ? 'Ahead of plan: hold the pace' : 'Path back to plan',
           body: aheadMode
             ? 'YTD invoiced revenue is <strong>' + fmt.money(ytdVariance, { short: true }) + '</strong> ahead of the Commercial Budget plan through ' + (brBridge.filter(function (m) { return m.status === 'Actual'; }).length ? brBridge.filter(function (m) { return m.status === 'Actual'; }).slice(-1)[0].mo : 'YTD') + '. Plan is invoiced revenue, so this is an apples-to-apples read against the Commercial Budget. The biggest risk is a Q3 invoicing slowdown pulling MF back to plan; the bridge above shows the monthly revenue each remaining month needs to deliver.'
-            : 'To close the <strong>' + fmt.money(br.totalToRecover || 0, { short: true }) + '</strong> gap, hold monthly invoiced revenue at the gold-bar level shown in the bridge across the remaining months. The bridge tracks NetSuite invoiced revenue, the same basis as the $51.67M Commercial Budget plan.'
+            : 'To close the <strong>' + fmt.money(br.totalToRecover || 0, { short: true }) + '</strong> gap, hold monthly invoiced revenue at the gold-bar level shown in the bridge across the remaining months. The bridge tracks NetSuite invoiced revenue, the same basis as the ' + planMfStr + ' Commercial Budget plan.'
         }
       ].filter(Boolean)
     };

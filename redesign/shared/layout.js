@@ -129,12 +129,24 @@ window.FZ.renderShell = function (opts) {
   var asOf = window.FZ.formatBuiltAt
     ? window.FZ.formatBuiltAt()
     : ((currentDashboard && currentDashboard.asOf) || 'unknown');
+  // Staleness flag (2026-07-06): pages anchor to the reader's clock, so when
+  // the data lags the calendar by more than a day, say so visibly.
+  var staleHTML = '';
+  if (window.FZ.timeContext) {
+    var tc = window.FZ.timeContext();
+    if (tc.staleDays != null && tc.staleDays > 1) {
+      staleHTML = '<div class="stamp" style="color:#e8b339;border-color:#e8b33955;">'
+        + '<span class="dot" style="background:#e8b339;"></span>'
+        + 'Data ' + tc.staleDays + ' days old</div>';
+    }
+  }
   var topbarHTML = ''
     + '<header class="topbar">'
     +   '<div class="topbar-left">'
     +     '<div class="topbar-crumbs">' + crumbs + '</div>'
     +   '</div>'
     +   '<div class="topbar-right">'
+    +     staleHTML
     +     '<div class="stamp"><span class="dot"></span>Refreshed ' + asOf + '</div>'
     +     '<div class="topbar-user"><span class="avatar">GG</span><span>Greg Graven · COO</span></div>'
     +   '</div>'

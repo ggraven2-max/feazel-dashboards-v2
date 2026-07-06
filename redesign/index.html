@@ -564,9 +564,9 @@
       <div class="sub" id="ent-invoiced-sub">Across both lines of business</div>
     </div>
     <div class="stat">
-      <div class="label">2026 Plan</div>
-      <div class="value" id="ent-budget">$185M</div>
-      <div class="sub">Enterprise revenue target</div>
+      <div class="label" id="ent-budget-label">Plan</div>
+      <div class="value" id="ent-budget">—</div>
+      <div class="sub">Combined budget across all three suites</div>
     </div>
     <div class="stat">
       <div class="label">Combined Signed YTD</div>
@@ -587,7 +587,7 @@
         <div>
           <span class="eyebrow">Residential · 13 markets</span>
           <h2>Residential Suite</h2>
-          <p class="desc">In-home sales, retail and insurance, plus the DRP carrier book. V5 forecast model with NetSuite-locked actuals.</p>
+          <p class="desc">In-home sales, retail and insurance, plus the DRP carrier book. Realistic Forecast against budget with NetSuite-locked actuals.</p>
         </div>
         <div class="arrow">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
@@ -665,7 +665,7 @@
   <div class="quick">
     <a href="./residential/revenue-forecast/">
       <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><polyline points="7 14 11 10 15 12 21 6"/></svg></div>
-      <div><div class="ttl">Revenue Forecast</div><div class="sub">V5 model, monthly outlook, plan vs actual</div></div>
+      <div><div class="ttl">Revenue Forecast</div><div class="sub">Realistic vs Budget, monthly outlook</div></div>
     </a>
     <a href="./residential/sales-overview/">
       <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg></div>
@@ -678,7 +678,7 @@
   </div>
 
   <footer>
-    <div>© 2026 Feazel Roofing · <strong>Command Center</strong> · For internal use only · Confidential</div>
+    <div>© <span id="copyright-year"></span> Feazel Roofing · <strong>Command Center</strong> · For internal use only · Confidential</div>
     <div class="right" id="data-as-of">Data refreshed —</div>
   </footer>
 </div>
@@ -749,10 +749,10 @@
 
   // Headline numbers (raw, for animated counters)
   // CRITICAL: Invoiced YTD must come from NetSuite AR only. Never fall back to
-  // V5's full-year forecast (modelAnnualInvoiced) — that conflates a forecast
-  // with year-to-date actuals and inflated combined to ~$129M when NetSuite
-  // returned 0. Falling back to the KPI-string parse is fine because the KPI
-  // itself is sourced from NetSuite by applyNetSuiteOverride.
+  // the model's full-year forecast (modelAnnualInvoiced): that conflates a
+  // forecast with year-to-date actuals and inflated the combined figure when
+  // NetSuite returned 0. Falling back to the KPI-string parse is fine because
+  // the KPI itself is sourced from NetSuite by applyNetSuiteOverride.
   var resInvoiced = (Rrf.netsuiteInvoiced && Rrf.netsuiteInvoiced.totalInvoiced) ||
                     parseMoney(findKpi(Rrf.kpis, 'Invoiced YTD') && findKpi(Rrf.kpis, 'Invoiced YTD').value) || 0;
   var mfInvoiced  = (Mrf.netsuiteInvoiced && Mrf.netsuiteInvoiced.totalInvoiced) ||
@@ -769,9 +769,13 @@
   var mfBacklog  = (Mbl.headerMeta && Mbl.headerMeta.portfolioValue) || 0;
   var entBacklog = resBacklog + mfBacklog;
 
-  var resBudget = (Rrf.execSummary && Rrf.execSummary.budget) || 125615037;
-  var mfBudget  = (Mrf.execSummary && Mrf.execSummary.budget) || 51673207;
-  var svcBudget = (Srf.execSummary && Srf.execSummary.budget) || 6800179;
+  // Budgets come from each LOB payload only. No hardcoded fallbacks: when a
+  // payload is missing, the tile renders the standard '—' placeholder rather
+  // than a stale number.
+  var resBudget = (Rrf.execSummary && Rrf.execSummary.budget) || 0;
+  var mfBudget  = (Mrf.execSummary && Mrf.execSummary.budget) || 0;
+  var svcBudget = (Srf.execSummary && Srf.execSummary.budget) || 0;
+  var entBudget = resBudget + mfBudget + svcBudget;
   var svcPace   = (Srf.execSummary && Srf.execSummary.modelAnnualInvoiced) || 0;
   var svcGmPct  = (Srf.profitabilitySummary && Srf.profitabilitySummary.combinedGP_pct) || 0;
 
@@ -793,9 +797,9 @@
   var resPace = resBudget > 0 ? (resInvoiced / resBudget) : 0;
   var mfPace  = mfBudget  > 0 ? (mfInvoiced  / mfBudget)  : 0;
   var svcPaceRatio = svcBudget > 0 ? (svcInvoiced / svcBudget) : 0;
-  setBind('res.pacePct', (resPace * 100).toFixed(1) + '% of $' + (resBudget / 1e6).toFixed(0) + 'M');
-  setBind('mf.pacePct',  (mfPace  * 100).toFixed(1) + '% of $' + (mfBudget  / 1e6).toFixed(1) + 'M');
-  setBind('svc.pacePct', (svcPaceRatio * 100).toFixed(1) + '% of $' + (svcBudget / 1e6).toFixed(2) + 'M');
+  setBind('res.pacePct', resBudget > 0 ? (resPace * 100).toFixed(1) + '% of $' + (resBudget / 1e6).toFixed(0) + 'M' : '—');
+  setBind('mf.pacePct',  mfBudget  > 0 ? (mfPace  * 100).toFixed(1) + '% of $' + (mfBudget  / 1e6).toFixed(1) + 'M' : '—');
+  setBind('svc.pacePct', svcBudget > 0 ? (svcPaceRatio * 100).toFixed(1) + '% of $' + (svcBudget / 1e6).toFixed(2) + 'M' : '—');
 
   // Bar fills
   setTimeout(function () {
@@ -833,6 +837,14 @@
   animateNumber(document.getElementById('ent-invoiced'), entInvoiced, 1800);
   animateNumber(document.getElementById('ent-signed'),   entSigned,   1800);
   animateNumber(document.getElementById('ent-backlog'),  entBacklog,  1800);
+  var entBudgetEl = document.getElementById('ent-budget');
+  if (entBudget > 0) animateNumber(entBudgetEl, entBudget, 1800);
+  else if (entBudgetEl) entBudgetEl.textContent = '—';
+
+  // Year anchors are computed, never hardcoded.
+  var fyYear = new Date().getFullYear();
+  document.getElementById('ent-budget-label').textContent = fyYear + ' Plan';
+  document.getElementById('copyright-year').textContent = fyYear;
 
   // -------- Freshness --------
   var meta = (R._meta || M._meta || {});

@@ -17,6 +17,15 @@ const path = require('path');
 const ROOT = path.resolve(__dirname);                       // redesign/mobile
 const LOBS = ['residential', 'multi-family', 'service'];
 
+// Board-approved enterprise revenue target. This figure is not present in any
+// dashboard data payload; it is the company plan committed to the board.
+// It lives here exactly once. Update only with Greg's explicit approval.
+const ENTERPRISE_PLAN_TARGET = '$185M';
+
+// Plan year for all rendered copy (eyebrows, budget labels, target labels).
+// Derived at generation time so hub pages roll forward without code edits.
+const PLAN_YEAR = new Date().getFullYear();
+
 // Service has a different shape than residential/MF: only 2 dashboards
 // (Revenue Forecast + Service Calls) and Service Calls isn't in the shared
 // page registry. Define its layout explicitly so the mobile generator can
@@ -111,30 +120,29 @@ function subPageHTML (lob, folder, slug, label, dashTitle) {
 // Title / tagline / eyebrow mirror the iOS app's native LOB headers
 // (App.js ResidentialHeader / MultiFamilyHeader / ServiceHeader) so the
 // public mobile site reads as one cohesive surface with the iOS app.
+// Budget dollar figures are intentionally absent here: the hub hero stats are
+// bound at runtime from each LOB's data payload (REVENUE_FORECAST execSummary
+// budget and kpis), so this copy carries no literal dollar amounts.
 const LOB_COPY = {
   'residential': {
     title: 'Residential',
     tagline: 'Doors knocked. Roofs sold.',
     eyebrow: 'RESIDENTIAL · 13 MARKETS',
-    intro: 'Where the residential business stands today: signed contracts, the revenue forecast against $125.6M, the open backlog, and what is actually invoicing.',
-    target: '$185M',
-    targetSub: '$125.6M residential'
+    intro: 'Where the residential business stands today: signed contracts, the revenue forecast against the residential budget, the open backlog, and what is actually invoicing.',
+    targetSub: 'Residential budget'
   },
   'multi-family': {
     title: 'Multi-Family',
     tagline: 'By the building. By the block.',
     eyebrow: 'MULTI-FAMILY · COMMERCIAL',
     intro: 'Where the multi-family and commercial book stands today: signed contracts, revenue projection, open backlog, and invoiced production.',
-    target: '$185M',
-    targetSub: '$59.4M commercial'
+    targetSub: 'MF and commercial budget'
   },
   'service': {
     title: 'Service',
     tagline: 'Always on. Always Feazel.',
     eyebrow: 'SERVICE · FEE-FOR-SERVICE',
-    intro: 'Where the Service book stands today: NetSuite invoiced revenue against the 2026 Service Budget plan, plus install-to-service overlap and the live service-call queue.',
-    target: '$6.8M',
-    targetSub: '2026 Service plan'
+    intro: 'Where the Service book stands today: NetSuite invoiced revenue against the ' + PLAN_YEAR + ' Service Budget plan, plus install-to-service overlap and the live service-call queue.'
   }
 };
 
@@ -167,9 +175,9 @@ function serviceHubHTML () {
     <p class="hero-narrative">${escape(copy.intro)}</p>
     <div class="hub-hero-stats">
       <div class="hub-hero-stat">
-        <div class="l">2026 Service Target</div>
+        <div class="l">${PLAN_YEAR} Service Target</div>
         <div class="v" data-bind="hero.target">—</div>
-        <div class="s">Service plan from 2026 Service Budget XLSX</div>
+        <div class="s">Service plan from ${PLAN_YEAR} Service Budget XLSX</div>
       </div>
       <div class="hub-hero-stat">
         <div class="l">Invoiced YTD</div>
@@ -192,7 +200,7 @@ function serviceHubHTML () {
   <section class="section">
     <div class="callout">
       <span class="callout-title">Where it stands</span>
-      Service is fee-for-service, short-cycle, concentrated in a handful of top branches. The forecast anchors on the annualized run-rate vs the 2026 Service Budget; profitability comes from the same NetSuite cost-mix CSV the residential and MF books use.
+      Service is fee-for-service, short-cycle, concentrated in a handful of top branches. The forecast anchors on the annualized run-rate vs the ${PLAN_YEAR} Service Budget; profitability comes from the same NetSuite cost-mix CSV the residential and MF books use.
     </div>
   </section>
 
@@ -201,7 +209,7 @@ function serviceHubHTML () {
     <div class="grid">
 
       <a class="tile" href="./revenue-forecast/index.html">
-        <span class="eyebrow">SERVICE-V1 · 2026 OUTLOOK</span>
+        <span class="eyebrow">SERVICE · ${PLAN_YEAR} OUTLOOK</span>
         <h2 style="margin-top:2px;">Revenue Forecast</h2>
         <p>Per-month invoiced revenue vs the Service Budget plan. Profitability, recovery, and install-to-service overlap.</p>
         <div class="tile-stats">
@@ -234,7 +242,7 @@ function serviceHubHTML () {
       <div class="card">
         <span class="eyebrow">METHODOLOGY</span>
         <h3 style="margin-top:6px;">Forecast Service-v1 Locked</h3>
-        <p style="margin-top:8px; font-size:12px;">Annualized run-rate model anchored to the 2026 Service Budget. Revenue from NetSuite invoiced (Type = Invoice).</p>
+        <p style="margin-top:8px; font-size:12px;">Annualized run-rate model anchored to the ${PLAN_YEAR} Service Budget. Revenue from NetSuite invoiced (Type = Invoice).</p>
       </div>
       <div class="card">
         <span class="eyebrow">DATA FRESHNESS</span>
@@ -337,7 +345,7 @@ function commandCenterHTML (lob) {
     <p class="hero-narrative">${escape(copy.intro)}</p>
     <div class="hub-hero-stats">
       <div class="hub-hero-stat">
-        <div class="l">${lob === 'multi-family' ? '2026 MF Target' : '2026 Residential Target'}</div>
+        <div class="l">${lob === 'multi-family' ? PLAN_YEAR + ' MF Target' : PLAN_YEAR + ' Residential Target'}</div>
         <div class="v" data-bind="hero.target">—</div>
         <div class="s" data-bind="hero.targetSub">${escape(copy.targetSub)}</div>
       </div>
@@ -373,7 +381,7 @@ function commandCenterHTML (lob) {
     <div class="grid">
 
       <a class="tile" href="./sales-overview/index.html">
-        <span class="eyebrow">YTD 2026</span>
+        <span class="eyebrow">YTD ${PLAN_YEAR}</span>
         <h2 style="margin-top:2px;">Sales Overview</h2>
         <p>Signed contracts, branch and rep performance, levers to close the gap.</p>
         <div class="tile-stats">
@@ -386,7 +394,7 @@ function commandCenterHTML (lob) {
       </a>
 
       <a class="tile" href="./revenue-forecast/index.html">
-        <span class="eyebrow">V5 · 2026 OUTLOOK</span>
+        <span class="eyebrow">${lob === 'multi-family' ? 'FORECAST' : 'REALISTIC'} · ${PLAN_YEAR} OUTLOOK</span>
         <h2 style="margin-top:2px;">Revenue Forecast</h2>
         <p>Net invoiced revenue projection vs plan.</p>
         <div class="tile-stats">
@@ -431,8 +439,10 @@ function commandCenterHTML (lob) {
     <div class="grid">
       <div class="card">
         <span class="eyebrow">METHODOLOGY</span>
-        <h3 style="margin-top:6px;">Forecast V5 Locked</h3>
-        <p style="margin-top:8px; font-size:12px;">Locked April 19, 2026. WIP constants and cycle hierarchy not changed without approval.</p>
+        <h3 style="margin-top:6px;">${lob === 'multi-family' ? 'Forecast vs Budget' : 'Realistic Forecast'}</h3>
+        <p style="margin-top:8px; font-size:12px;">${lob === 'multi-family'
+          ? 'Monthly schedules plus plan-rest projection, reported against the MF budget. Methodology changes require approval.'
+          : 'Realistic vs Budget. Probability-weighted landing reported against the board budget. Methodology is locked; changes require approval.'}</p>
       </div>
       <div class="card">
         <span class="eyebrow">DATA FRESHNESS</span>
@@ -496,7 +506,7 @@ function commandCenterHTML (lob) {
 
     var binds = {
       'hero.target':    fmtBigMoney(rfBudgetRaw),
-      'hero.targetSub': '$185M total enterprise plan',
+      'hero.targetSub': '${ENTERPRISE_PLAN_TARGET} total enterprise plan',
       'hero.signed':   val(soSigned),
       'hero.signedSub': sub(soSigned, '13 markets'),
       'hero.invoiced':  val(rfInv),

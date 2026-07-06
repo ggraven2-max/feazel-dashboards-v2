@@ -97,6 +97,11 @@
     var wtH = D.weeklyTargetsHeader || {};
     var brH = D.budgetRecoveryHeader || {};
     var commentary = D.commentary || {};
+    // Budget string for prose; derived from the payload so copy never goes stale.
+    var bdgStr = bdg ? fmt.money(bdg, { short: true }) : '—';
+    // Fiscal-year anchors derived from the reader's clock (FZ.timeContext).
+    var fyCur = FZ.timeContext().year;
+    var fyPrior = fyCur - 1;
 
     function kpisRow (slice, cols) {
       return { kind: 'kpi-row', cols: cols || 4, items: slice };
@@ -152,9 +157,9 @@
     // INDEX / EXECUTIVE
     // ─────────────────────────────────────────────────────────────
     var indexPage = {
-      eyebrow: D.subtitle || 'MF-v1 · 2026',
+      eyebrow: D.subtitle || ('MF-v1 · ' + fyCur),
       title: 'Multi-Family Revenue Forecast',
-      intro: es.narrative || 'MF revenue tracking against the $51.67M Commercial Budget. Actuals come from Salesforce invoiced dates (NetSuite cross-check available); forecast is Lisa\'s monthly schedule.',
+      intro: es.narrative || ('MF revenue tracking against the ' + bdgStr + ' Commercial Budget. Actuals come from Salesforce invoiced dates (NetSuite cross-check available); forecast is Lisa\'s monthly schedule.'),
       tags: [
         { kind: 'info',    text: 'MF-v1 · locked ' + (D.methodologyLock ? D.methodologyLock.lockedOn : '2026-05-04') },
         { kind: gap >= 0 ? 'success' : 'warn', text: (gap >= 0 ? '+' : '') + fmt.money(gap, { short: true }) + ' vs plan' },
@@ -184,8 +189,8 @@
         { kind: 'callout', tone: gap >= 0 ? 'success' : 'warn',
           title: gap >= 0 ? 'On pace to plan' : 'Below plan',
           body: gap >= 0
-            ? 'Annualized run-rate of <strong>' + fmt.money(actual, { short: true }) + '</strong> clears the $51.67M plan with cushion. The bridge in Budget Recovery shows where the lead came from and the per-month pace required to hold it.'
-            : 'Annualized run-rate of <strong>' + fmt.money(actual, { short: true }) + '</strong> projects <strong>' + fmt.money(gap, { short: true }) + '</strong> short of the $51.67M plan, a <strong>' + brH.upliftPct.toFixed(1) + '%</strong> uplift on remaining months. Push WIP through to invoice and accelerate starts in the top branches; see Recommendations for the specific moves.'
+            ? 'Annualized run-rate of <strong>' + fmt.money(actual, { short: true }) + '</strong> clears the ' + bdgStr + ' plan with cushion. The bridge in Budget Recovery shows where the lead came from and the per-month pace required to hold it.'
+            : 'Annualized run-rate of <strong>' + fmt.money(actual, { short: true }) + '</strong> projects <strong>' + fmt.money(gap, { short: true }) + '</strong> short of the ' + bdgStr + ' plan, a <strong>' + brH.upliftPct.toFixed(1) + '%</strong> uplift on remaining months. Push WIP through to invoice and accelerate starts in the top branches; see Recommendations for the specific moves.'
         }
       ].filter(Boolean)
     };
@@ -207,7 +212,7 @@
         kpisRow([
           allKpis.find(function (k) { return /annualized|annual forecast|annual budget/i.test(k.label); }) || { label: 'Annual Forecast', value: fmt.money(actual, { short: true }), sub: 'annualized run-rate' },
           planRestKpi || { label: 'Plan-Rest Forecast', value: fmt.money(actual, { short: true }), sub: 'YTD + remaining plan', tone: 'navy' },
-          { label: 'Annual Budget', value: fmt.money(bdg, { short: true }), sub: '2026 MF target', tone: 'navy' },
+          { label: 'Annual Budget', value: fmt.money(bdg, { short: true }), sub: fyCur + ' MF target', tone: 'navy' },
           { label: 'Forecast vs Plan', value: (gap >= 0 ? '+' : '') + fmt.money(gap, { short: true }), sub: brH.upliftPct ? brH.upliftPct.toFixed(1) + '% gap' : '', tone: gap >= 0 ? 'success' : 'warn' }
         ]),
         {
@@ -264,21 +269,21 @@
     mfPages.budget = {
       eyebrow: 'PLAN · MF COMMERCIAL BUDGET',
       title: 'Annual Budget Detail',
-      intro: 'Per-month invoiced-revenue plan from the 2026 Commercial Budget XLSX (Total - 40000 - Revenue row). Headline annual is locked at $51.67M; monthly cells sum slightly lower (~$49.7M) and the bridge grosses them up to match the headline.',
+      intro: 'Per-month invoiced-revenue plan from the Commercial Budget XLSX (Total - 40000 - Revenue row). The headline annual plan is ' + bdgStr + '; the bridge normalizes the monthly cells to tie to that headline.',
       tags: [
         { kind: 'info', text: 'Annual plan ' + fmt.money(bdg, { short: true }) },
         ytdVsPlanKpi ? { kind: ytdVsPlanKpi.tone === 'danger' ? 'warn' : 'success', text: 'YTD vs plan ' + ytdVsPlanKpi.value } : null
       ].filter(Boolean),
       sections: [
         kpisRow([
-          { label: 'Annual Plan',      value: fmt.money(bdg, { short: true }),       sub: 'Commercial Budget · 2026',          tone: 'navy' },
+          { label: 'Annual Plan',      value: fmt.money(bdg, { short: true }),       sub: 'Commercial Budget · ' + fyCur,      tone: 'navy' },
           ytdVsPlanKpi || { label: 'YTD vs Plan', value: '—', sub: '' },
           { label: 'Forecast vs Plan', value: (gap >= 0 ? '+' : '') + fmt.money(gap, { short: true }), sub: brH.upliftPct ? brH.upliftPct.toFixed(1) + '% gap' : 'on plan', tone: gap >= 0 ? 'success' : 'warn' },
           { label: 'Uplift Needed',    value: (brH.upliftPct || 0).toFixed(1) + '%', sub: 'to recover plan on remaining months', tone: (brH.upliftPct || 0) > 10 ? 'danger' : (brH.upliftPct || 0) > 0 ? 'warn' : 'success' }
         ]),
         tableFromId('mf-monthly-rollup', { heading: 'Monthly plan vs actual' }),
         { kind: 'callout', tone: 'info', title: 'Plan source',
-          body: 'Pulled directly from <code>2026 Commercial Budget.xlsx</code> in <code>inputs/multi-family/revenue-forecast/</code>. The monthly cells are illustrative; the contract is the $51.67M annual headline. If the budget is re-planned mid-year, drop the new XLSX in the inputs folder and the bridge updates automatically.'
+          body: 'Pulled directly from the Commercial Budget XLSX in <code>inputs/multi-family/revenue-forecast/</code>. The monthly cells are illustrative; the contract is the ' + bdgStr + ' annual headline. If the budget is re-planned mid-year, drop the new XLSX in the inputs folder and the bridge updates automatically.'
         }
       ].filter(Boolean)
     };
@@ -347,7 +352,7 @@
         } : null,
         tableFromId('mf-by-jobtype', { heading: 'Revenue and job count by job type' }),
         { kind: 'callout', tone: 'info', title: 'Where the leverage is',
-          body: 'Insurance jobs are the smallest count but tend to carry the largest contracts on the MF book. A single insurance contract in the $300K+ range materially moves a month. Retail-no-financing sets the volume baseline.'
+          body: 'Insurance jobs are the smallest count but tend to carry the largest contracts on the MF book. A single large insurance contract can materially move a month. Retail-no-financing sets the volume baseline.'
         }
       ].filter(Boolean)
     };
@@ -421,7 +426,7 @@
     mfPages['weekly-targets'] = {
       eyebrow: 'TARGETS · MF MONTHLY',
       title: 'Monthly Targets',
-      intro: 'What MF needs each month to land the $51.67M plan. The MF book runs monthly (lumpy big-deal cadence), so we treat the weekly target as informational only and anchor on the per-month bridge.',
+      intro: 'What MF needs each month to land the ' + bdgStr + ' plan. The MF book runs monthly (lumpy big-deal cadence), so we treat the weekly target as informational only and anchor on the per-month bridge.',
       tags: [
         { kind: 'info', text: 'Annual plan ' + fmt.money(bdg, { short: true }) },
         gap >= 0
@@ -430,14 +435,14 @@
       ],
       sections: [
         kpisRow([
-          { label: 'Avg Weekly Need',  value: fmt.money(wtH.avgWeeklyNeed || 0, { short: true }), sub: '$51.67M / 52 weeks · informational', tone: 'navy' },
-          { label: 'Avg Monthly Need', value: fmt.money(monthlyNeed, { short: true }),            sub: '$51.67M / 12 months',                tone: 'navy' },
+          { label: 'Avg Weekly Need',  value: fmt.money(wtH.avgWeeklyNeed || 0, { short: true }), sub: bdgStr + ' / 52 weeks · informational', tone: 'navy' },
+          { label: 'Avg Monthly Need', value: fmt.money(monthlyNeed, { short: true }),            sub: bdgStr + ' / 12 months',                tone: 'navy' },
           ytdVsPlanKpi || { label: 'YTD vs Plan', value: '—', sub: '' },
           { label: 'Uplift Needed',    value: (brH.upliftPct || 0).toFixed(1) + '%',              sub: 'on remaining months',                tone: (brH.upliftPct || 0) > 10 ? 'danger' : (brH.upliftPct || 0) > 0 ? 'warn' : 'success' }
         ]),
         tableFromId('mf-monthly-rollup', { heading: 'Monthly target schedule (plan, actual, gap, starts)' }),
         { kind: 'callout', tone: 'info', title: 'Why monthly, not weekly',
-          body: 'MF deal sizes range from a few thousand for repairs to several hundred thousand for insurance jobs. Weekly cadence is too noisy for management — a single big contract can flip a week. The Sales Overview Monthly Targets tab has the deeper monthly view with per-market lift.'
+          body: 'MF deal sizes range from a few thousand for repairs to several hundred thousand for insurance jobs. Weekly cadence is too noisy for management; a single big contract can flip a week. The Sales Overview Monthly Targets tab has the deeper monthly view with per-market lift.'
         }
       ].filter(Boolean)
     };
@@ -458,7 +463,8 @@
           { label: 'Top Branch',     value: topBranchRow[0],                sub: topBranchRow[1] + ' invoiced · ' + (topBranchRow[3] || 0) + ' jobs', tone: 'success' },
           { label: 'WIP at Top',     value: topBranchRow[2] || '$0',        sub: 'currently in flight',                                              tone: 'navy' },
           { label: 'Total Branches', value: byBranchRows.length + '',       sub: 'with YTD MF activity',                                            tone: 'navy' },
-          { label: 'YTD Revenue',    value: fmt.money((es && es.modelAnnualInvoiced ? actual / 12 * 5 : 0), { short: true }), sub: 'invoiced through last closed month',                                            tone: 'navy' }
+          allKpis.find(function (k) { return /invoiced ytd/i.test(k.label); }) ||
+          { label: 'YTD Revenue',    value: '—',                            sub: 'invoiced through last closed month',                                            tone: 'navy' }
         ]) : null,
         tableFromId('mf-branch-forecast', { heading: 'Forecasted revenue by branch (per month, from Lisa)' }),
         tableFromId('mf-by-branch',       { heading: 'YTD invoiced by branch (Salesforce actuals)' }),
@@ -511,7 +517,7 @@
     mfPages.profitability = profParsed ? {
       eyebrow: 'PROFITABILITY · MF',
       title: 'Profitability',
-      intro: 'Gross margin and cost mix on the MF book, sourced from <code>' + (ps.sourceFile || 'GregProfitabilityMFResults*.csv') + '</code>. Includes <strong>' + (ps.jobsParsed || 0) + '</strong> jobs marked Invoiced or Closed-and-Capped-Out across 2025 and YTD 2026. Combined GM is the all-jobs blended margin; year-split tables underneath show the YoY trajectory and the per-segment view.',
+      intro: 'Gross margin and cost mix on the MF book, sourced from <code>' + (ps.sourceFile || 'GregProfitabilityMFResults*.csv') + '</code>. Includes <strong>' + (ps.jobsParsed || 0) + '</strong> jobs marked Invoiced or Closed-and-Capped-Out across ' + fyPrior + ' and YTD ' + fyCur + '. Combined GM is the all-jobs blended margin; year-split tables underneath show the YoY trajectory and the per-segment view.',
       tags: [
         { kind: 'success', text: 'Combined GM ' + (ps.combinedGP_pct || 0).toFixed(1) + '%' },
         { kind: ytdGmDelta >= 0 ? 'success' : 'warn',
@@ -522,10 +528,10 @@
         kpisRow([
           { label: 'Combined Revenue', value: fmt.money(ps.combinedRevenue || 0, { short: true }), sub: (ps.jobsParsed || 0) + ' invoiced/capped jobs in source', tone: 'navy' },
           { label: 'Combined GM',      value: (ps.combinedGP_pct || 0).toFixed(1) + '%',           sub: fmt.money(ps.combinedGP || 0, { short: true }) + ' gross profit', tone: 'success' },
-          { label: 'FY2026 GM',        value: (ps.y2026_GP_pct || 0).toFixed(1) + '%',
+          { label: 'FY' + fyCur + ' GM',   value: (ps.y2026_GP_pct || 0).toFixed(1) + '%',
             sub: (ps.y2026_jobs || 0) + ' jobs · ' + fmt.money(ps.y2026_revenue || 0, { short: true }) + ' revenue',
             tone: ytdGmDelta >= 0 ? 'success' : 'warn' },
-          { label: 'FY2025 GM',        value: (ps.y2025_GP_pct || 0).toFixed(1) + '%',
+          { label: 'FY' + fyPrior + ' GM', value: (ps.y2025_GP_pct || 0).toFixed(1) + '%',
             sub: (ps.y2025_jobs || 0) + ' jobs · ' + fmt.money(ps.y2025_revenue || 0, { short: true }) + ' revenue',
             tone: 'navy' }
         ]),
@@ -539,7 +545,7 @@
           kind: 'chart-grid', cols: 2,
           charts: [
             jtProf.length ? {
-              title: 'FY2026 Revenue by job type',
+              title: 'FY' + fyCur + ' Revenue by job type',
               sub: 'Mix of cost-tracked jobs YTD',
               height: 300,
               config: {
@@ -556,7 +562,7 @@
               }
             } : null,
             mkProf.length ? {
-              title: 'FY2026 GM% by market',
+              title: 'FY' + fyCur + ' GM% by market',
               sub: '≥35% green · ≥25% amber · <25% red',
               height: 300,
               config: {
@@ -582,32 +588,32 @@
         },
         jtProf.length ? {
           kind: 'table',
-          heading: 'FY2026 profitability by job type',
+          heading: 'FY' + fyCur + ' profitability by job type',
           caption: 'GM% pill: green ≥35%, amber ≥25%, red <25%',
           headers: profHeaders,
-          rows: jtProf.map(function (r) { return profRow(r, 2026); })
+          rows: jtProf.map(function (r) { return profRow(r, fyCur); })
         } : null,
         mkProf.length ? {
           kind: 'table',
-          heading: 'FY2026 profitability by market',
-          caption: 'Branches with at least one cost-tracked job in 2026',
+          heading: 'FY' + fyCur + ' profitability by market',
+          caption: 'Branches with at least one cost-tracked job in ' + fyCur,
           headers: profHeaders,
-          rows: mkProf.map(function (r) { return profRow(r, 2026); })
+          rows: mkProf.map(function (r) { return profRow(r, fyCur); })
         } : null,
         jtProf25.length ? {
           kind: 'table',
-          heading: 'FY2025 profitability by job type (comparison)',
-          caption: 'Year-over-year baseline — does this match what you expected?',
+          heading: 'FY' + fyPrior + ' profitability by job type (comparison)',
+          caption: 'Year-over-year baseline. Does this match what you expected?',
           headers: profHeaders,
-          rows: jtProf25.map(function (r) { return profRow(r, 2025); })
+          rows: jtProf25.map(function (r) { return profRow(r, fyPrior); })
         } : null,
         {
           kind: 'callout',
           tone: ytdGmDelta >= 0 ? 'success' : 'warn',
           title: ytdGmDelta >= 0 ? 'Margin trending up' : 'Margin trending down',
           body: ytdGmDelta >= 0
-            ? 'FY2026 YTD GM is <strong>' + ytdGmDelta.toFixed(1) + ' points higher</strong> than FY2025 (' + ps.y2026_GP_pct.toFixed(1) + '% vs ' + ps.y2025_GP_pct.toFixed(1) + '%). The lift is consistent with the mix shift toward Insurance jobs and the smaller share of low-ticket retail. Worth interrogating: whether material costs trended down because of MMU credits or because of project mix.'
-            : 'FY2026 YTD GM is <strong>' + Math.abs(ytdGmDelta).toFixed(1) + ' points lower</strong> than FY2025 (' + ps.y2026_GP_pct.toFixed(1) + '% vs ' + ps.y2025_GP_pct.toFixed(1) + '%). Drill into the per-market table above; concentrated weakness in 1-2 markets usually means a single under-priced job is dragging the average. Check material % first — if material crept above 35%, that is the lever to pull.'
+            ? 'FY' + fyCur + ' YTD GM is <strong>' + ytdGmDelta.toFixed(1) + ' points higher</strong> than FY' + fyPrior + ' (' + ps.y2026_GP_pct.toFixed(1) + '% vs ' + ps.y2025_GP_pct.toFixed(1) + '%). The lift is consistent with the mix shift toward Insurance jobs and the smaller share of low-ticket retail. Worth interrogating: whether material costs trended down because of MMU credits or because of project mix.'
+            : 'FY' + fyCur + ' YTD GM is <strong>' + Math.abs(ytdGmDelta).toFixed(1) + ' points lower</strong> than FY' + fyPrior + ' (' + ps.y2026_GP_pct.toFixed(1) + '% vs ' + ps.y2025_GP_pct.toFixed(1) + '%). Drill into the per-market table above; concentrated weakness in 1-2 markets usually means a single under-priced job is dragging the average. Check material % first: if material crept above 35%, that is the lever to pull.'
         },
         bestMktGm && worstMktGm && bestMktGm.key !== worstMktGm.key ? {
           kind: 'callout', tone: 'info', title: 'Margin spread',
@@ -625,7 +631,7 @@
           { label: 'YTD Revenue', value: fmt.money(ps.combinedRevenue || 0, { short: true }), sub: (ps.y2026_jobs || 0) + ' jobs · revenue-only view', tone: 'navy' },
           { label: 'YTD Jobs',    value: (ps.y2026_jobs || 0) + '', sub: 'invoiced or closed YTD', tone: 'navy' },
           { label: 'GM (combined)', value: '—', sub: 'no cost data parsed', tone: 'navy' },
-          { label: 'FY2025 Comp', value: ps.y2025_jobs ? (ps.y2025_jobs + ' jobs') : '—', sub: ps.y2025_revenue ? fmt.money(ps.y2025_revenue, { short: true }) + ' revenue' : '', tone: 'navy' }
+          { label: 'FY' + fyPrior + ' Comp', value: ps.y2025_jobs ? (ps.y2025_jobs + ' jobs') : '—', sub: ps.y2025_revenue ? fmt.money(ps.y2025_revenue, { short: true }) + ' revenue' : '', tone: 'navy' }
         ]),
         { kind: 'callout', tone: 'info', title: 'Profitability source',
           body: 'The MF profitability view reads <code>GregProfitabilityMFResults*.csv</code> exported from NetSuite. Each row carries Revenue (Stored), Total Expenses (Stored), Material Expenses, Labor Expenses, Other Expenses, and Commission columns. The calculator filters to <code>Feazel Status = Invoiced</code> or <code>Closed and Capped Out</code> and aggregates GM, cost mix, and per-market splits.' }
@@ -645,7 +651,7 @@
       ].filter(Boolean),
       sections: [
         kpisRow([
-          { label: 'Annual Plan',     value: fmt.money(bdg, { short: true }),    sub: 'Commercial Budget · 2026',                  tone: 'navy' },
+          { label: 'Annual Plan',     value: fmt.money(bdg, { short: true }),    sub: 'Commercial Budget · ' + fyCur,              tone: 'navy' },
           ytdVsPlanKpi || { label: 'YTD vs Plan', value: '—', sub: '' },
           { label: 'Uplift Needed',   value: (brH.upliftPct || 0).toFixed(1) + '%', sub: 'on remaining months to recover plan',  tone: (brH.upliftPct || 0) > 10 ? 'danger' : (brH.upliftPct || 0) > 0 ? 'warn' : 'success' },
           { label: 'Forecast Gap',    value: (gap >= 0 ? '+' : '') + fmt.money(gap, { short: true }), sub: 'annualized run-rate vs plan', tone: gap >= 0 ? 'success' : 'warn' }
@@ -675,7 +681,7 @@
     mfPages.recommendations = {
       eyebrow: 'STRATEGY · MF',
       title: 'Recommendations',
-      intro: es.narrative || 'Where the MF book stands and the next moves to land the $51.67M plan.',
+      intro: es.narrative || ('Where the MF book stands and the next moves to land the ' + bdgStr + ' plan.'),
       tags: actions.length ? [{ kind: 'info', text: actions.length + ' action item' + (actions.length === 1 ? '' : 's') }] : [],
       sections: [
         kpisRow([
@@ -722,6 +728,8 @@
   // 2026 Service Budget.
   // ============================================================
   function buildServicePages (D, T, C, fmt, pal, BASE_OPTS, moneyAxis, withOpts) {
+    var svcYr = (window.FZ && window.FZ.timeContext) ? window.FZ.timeContext().year : new Date().getFullYear();
+    var svcYrPrior = svcYr - 1;
     var es = D.execSummary || {};
     var bdg = es.budget || 0;
     var actual = es.modelAnnualInvoiced || 0;
@@ -779,9 +787,9 @@
     // INDEX / EXECUTIVE
     // ─────────────────────────────────────────────────────────────
     var indexPage = {
-      eyebrow: D.subtitle || 'SERVICE-V1 · 2026',
+      eyebrow: D.subtitle || ('SERVICE-V1 · ' + svcYr),
       title: 'Service Revenue Forecast',
-      intro: es.narrative || 'Service revenue tracking against the 2026 Service Budget. Actuals come from NetSuite invoiced revenue (per-invoice export, all 2026 dates). The forecast is the annualized run-rate compared against the budget plan; the Service book is fee-for-service, so cycle is short and projections lean heavily on the YTD pace.',
+      intro: es.narrative || ('Service revenue tracking against the ' + svcYr + ' Service Budget. Actuals come from NetSuite invoiced revenue (per-invoice export, all ' + svcYr + ' dates). The forecast is the annualized run-rate compared against the budget plan; the Service book is fee-for-service, so cycle is short and projections lean heavily on the YTD pace.'),
       tags: [
         { kind: 'info',    text: 'Service-v1 · locked ' + (D.methodologyLock ? D.methodologyLock.lockedOn : '2026-05-06') },
         { kind: gap >= 0 ? 'success' : 'warn', text: (gap >= 0 ? '+' : '') + fmt.money(gap, { short: true }) + ' vs plan' },
@@ -798,7 +806,7 @@
         } : null,
         tableFromId('sv-monthly-rollup', {
           heading: 'Monthly roll-up',
-          caption: 'Plan = monthly cells from the 2026 Service Budget · Revenue = NetSuite booked invoices'
+          caption: 'Plan = monthly cells from the ' + svcYr + ' Service Budget · Revenue = NetSuite booked invoices'
         }),
         tableFromId('sv-by-branch', {
           heading: 'YTD invoiced by branch',
@@ -830,7 +838,7 @@
         kpisRow([
           paceKpi || { label: 'Annualized Pace', value: fmt.money(actual, { short: true }), sub: 'YTD × 12/months', tone: gap >= 0 ? 'success' : 'warn' },
           planRestKpi || { label: 'Plan-Rest Forecast', value: fmt.money(actual, { short: true }), sub: 'YTD + remaining plan', tone: 'navy' },
-          { label: 'Annual Budget', value: fmt.money(bdg, { short: true }), sub: '2026 Service plan', tone: 'navy' },
+          { label: 'Annual Budget', value: fmt.money(bdg, { short: true }), sub: svcYr + ' Service plan', tone: 'navy' },
           { label: 'Forecast Gap', value: (gap >= 0 ? '+' : '') + fmt.money(gap, { short: true }), sub: (brH.upliftPct || 0).toFixed(1) + '% uplift needed', tone: gap >= 0 ? 'success' : 'warn' }
         ]),
         chartFromId('sv-rev-vs-plan') ? {
@@ -875,16 +883,16 @@
     // BUDGET (annual plan detail)
     // ─────────────────────────────────────────────────────────────
     svcPages.budget = {
-      eyebrow: 'PLAN · 2026 SERVICE BUDGET',
+      eyebrow: 'PLAN · ' + svcYr + ' SERVICE BUDGET',
       title: 'Annual Budget Detail',
-      intro: 'Per-month invoiced-revenue plan from the 2026 Service Budget XLSX (Total - 40000 - Revenue row). Annual headline is ' + fmt.money(bdg, { short: true }) + '.',
+      intro: 'Per-month invoiced-revenue plan from the ' + svcYr + ' Service Budget XLSX (Total - 40000 - Revenue row). Annual headline is ' + fmt.money(bdg, { short: true }) + '.',
       tags: [
         { kind: 'info', text: 'Annual plan ' + fmt.money(bdg, { short: true }) },
         ytdVsPlanKpi ? { kind: ytdVsPlanKpi.tone === 'danger' ? 'warn' : 'success', text: 'YTD vs plan ' + ytdVsPlanKpi.value } : null
       ].filter(Boolean),
       sections: [
         kpisRow([
-          { label: 'Annual Plan',      value: fmt.money(bdg, { short: true }),       sub: 'Service Budget · 2026', tone: 'navy' },
+          { label: 'Annual Plan',      value: fmt.money(bdg, { short: true }),       sub: 'Service Budget · ' + svcYr, tone: 'navy' },
           ytdVsPlanKpi || { label: 'YTD vs Plan', value: '—', sub: '' },
           { label: 'Forecast vs Plan', value: (gap >= 0 ? '+' : '') + fmt.money(gap, { short: true }), sub: (brH.upliftPct || 0).toFixed(1) + '% gap', tone: gap >= 0 ? 'success' : 'warn' },
           { label: 'Uplift Needed',    value: (brH.upliftPct || 0).toFixed(1) + '%', sub: 'on remaining months',  tone: (brH.upliftPct || 0) > 10 ? 'danger' : (brH.upliftPct || 0) > 0 ? 'warn' : 'success' }
@@ -978,10 +986,10 @@
         kpisRow([
           { label: 'Combined Revenue', value: fmt.money(ps.combinedRevenue || 0, { short: true }), sub: (ps.jobsParsed || 0) + ' invoiced/closed jobs in source', tone: 'navy' },
           { label: 'Combined GM',      value: (ps.combinedGP_pct || 0).toFixed(1) + '%',           sub: fmt.money(ps.combinedGP || 0, { short: true }) + ' gross profit', tone: 'success' },
-          { label: 'FY2026 GM',        value: (ps.y2026_GP_pct || 0).toFixed(1) + '%',
+          { label: 'FY' + svcYr + ' GM',        value: (ps.y2026_GP_pct || 0).toFixed(1) + '%',
             sub: (ps.y2026_jobs || 0) + ' jobs · ' + fmt.money(ps.y2026_revenue || 0, { short: true }),
             tone: ytdGmDelta >= 0 ? 'success' : 'warn' },
-          { label: 'FY2025 GM',        value: (ps.y2025_GP_pct || 0).toFixed(1) + '%',
+          { label: 'FY' + svcYrPrior + ' GM',        value: (ps.y2025_GP_pct || 0).toFixed(1) + '%',
             sub: (ps.y2025_jobs || 0) + ' jobs · ' + fmt.money(ps.y2025_revenue || 0, { short: true }),
             tone: 'navy' }
         ]),
@@ -995,7 +1003,7 @@
           kind: 'chart-grid', cols: 2,
           charts: [
             jtProf.length ? {
-              title: 'FY2026 Revenue by job type',
+              title: 'FY' + svcYr + ' Revenue by job type',
               sub: 'Mix of cost-tracked jobs YTD',
               height: 300,
               config: {
@@ -1012,7 +1020,7 @@
               }
             } : null,
             mkProf.length ? {
-              title: 'FY2026 GM% by branch',
+              title: 'FY' + svcYr + ' GM% by branch',
               sub: '≥35% green · ≥25% amber · <25% red',
               height: 300,
               config: {
@@ -1038,21 +1046,21 @@
         },
         jtProf.length ? {
           kind: 'table',
-          heading: 'FY2026 profitability by job type',
+          heading: 'FY' + svcYr + ' profitability by job type',
           caption: 'GM% pill: green ≥35%, amber ≥25%, red <25%',
           headers: profHeaders,
           rows: jtProf.map(profRow)
         } : null,
         mkProf.length ? {
           kind: 'table',
-          heading: 'FY2026 profitability by branch',
-          caption: 'Branches with at least one cost-tracked Service job in 2026',
+          heading: 'FY' + svcYr + ' profitability by branch',
+          caption: 'Branches with at least one cost-tracked Service job in ' + svcYr,
           headers: profHeaders,
           rows: mkProf.map(profRow)
         } : null,
         jtProf25.length ? {
           kind: 'table',
-          heading: 'FY2025 profitability by job type (comparison)',
+          heading: 'FY' + svcYrPrior + ' profitability by job type (comparison)',
           caption: 'Year-over-year baseline',
           headers: profHeaders,
           rows: jtProf25.map(profRow)
@@ -1062,8 +1070,8 @@
           tone: ytdGmDelta >= 0 ? 'success' : 'warn',
           title: ytdGmDelta >= 0 ? 'Margin trending up' : 'Margin trending down',
           body: ytdGmDelta >= 0
-            ? 'FY2026 YTD GM is <strong>' + ytdGmDelta.toFixed(1) + ' points higher</strong> than FY2025 (' + ps.y2026_GP_pct.toFixed(1) + '% vs ' + ps.y2025_GP_pct.toFixed(1) + '%). Service GM is sensitive to dispatch density: fewer trucks per geo means higher labor% per ticket. Sustained gains usually come from route optimization.'
-            : 'FY2026 YTD GM is <strong>' + Math.abs(ytdGmDelta).toFixed(1) + ' points lower</strong> than FY2025 (' + ps.y2026_GP_pct.toFixed(1) + '% vs ' + ps.y2025_GP_pct.toFixed(1) + '%). Drill into the per-branch table; concentrated weakness in 1-2 branches usually means a coverage gap or under-pricing on small tickets.'
+            ? 'FY' + svcYr + ' YTD GM is <strong>' + ytdGmDelta.toFixed(1) + ' points higher</strong> than FY' + svcYrPrior + ' (' + ps.y2026_GP_pct.toFixed(1) + '% vs ' + ps.y2025_GP_pct.toFixed(1) + '%). Service GM is sensitive to dispatch density: fewer trucks per geo means higher labor% per ticket. Sustained gains usually come from route optimization.'
+            : 'FY' + svcYr + ' YTD GM is <strong>' + Math.abs(ytdGmDelta).toFixed(1) + ' points lower</strong> than FY' + svcYrPrior + ' (' + ps.y2026_GP_pct.toFixed(1) + '% vs ' + ps.y2025_GP_pct.toFixed(1) + '%). Drill into the per-branch table; concentrated weakness in 1-2 branches usually means a coverage gap or under-pricing on small tickets.'
         },
         bestMktGm && worstMktGm && bestMktGm.key !== worstMktGm.key ? {
           kind: 'callout', tone: 'info', title: 'Margin spread',
@@ -1092,7 +1100,7 @@
       tags: actions.length ? [{ kind: 'info', text: actions.length + ' action item' + (actions.length === 1 ? '' : 's') }] : [],
       sections: [
         kpisRow([
-          { label: 'Plan',            value: fmt.money(bdg, { short: true }),    sub: '2026 Service Budget',           tone: 'navy' },
+          { label: 'Plan',            value: fmt.money(bdg, { short: true }),    sub: svcYr + ' Service Budget',           tone: 'navy' },
           { label: 'Annual Forecast', value: fmt.money(actual, { short: true }), sub: 'annualized run-rate',           tone: gap >= 0 ? 'success' : 'warn' },
           { label: 'Forecast Gap',    value: (gap >= 0 ? '+' : '') + fmt.money(gap, { short: true }), sub: (brH.upliftPct || 0).toFixed(1) + '% uplift needed', tone: gap >= 0 ? 'success' : 'warn' },
           { label: 'Top Branch',      value: (function () {
@@ -1239,7 +1247,7 @@
           } : null,
           {
             kind: 'table',
-            heading: 'By branch — install↔service overlap',
+            heading: 'By branch: install↔service overlap',
             caption: '% column = installs-with-service / total install jobs at branch',
             headers: [
               { label: 'Branch', num: false },
@@ -1319,7 +1327,7 @@
           (iso.installJobRows && iso.installJobRows.length) ? {
             kind: 'table',
             heading: 'Top 25 install jobs whose accounts have the most service work',
-            caption: 'Service hours and repair $ shown are aggregated at the account level — multiple installs at the same account share the same account-level totals.',
+            caption: 'Service hours and repair $ shown are aggregated at the account level; multiple installs at the same account share the same account-level totals.',
             maxHeight: '520px',
             headers: [
               { label: 'Job #', num: false },
@@ -1358,41 +1366,179 @@
   }
 
   // ============================================================
-  // INDEX (Revenue Forecast hub) — RESIDENTIAL ONLY BELOW
+  // INDEX (Revenue Forecast hub), RESIDENTIAL ONLY BELOW
   // ============================================================
   var pages = {};
 
+  // ---------- shared residential derivations (payload-driven, no literals) ----------
+  var tc = FZ.timeContext();
+  var esR = D.execSummary || {};
+  var wtH = D.weeklyTargetsHeader || {};
+  var brH = D.budgetRecoveryHeader || {};
+  var pip = D.pipelineSnapshot || {};
+  var psR = D.profitabilitySummary || {};
+  var commR = D.commentary || {};
+  var lockedOn = (D.methodologyLock && D.methodologyLock.lockedOn) || '';
+  var yNow = tc.year;
+  var yPrev = yNow - 1;
+
+  var bdg = esR.budget || 0;
+  var modelInv = esR.modelAnnualInvoiced || 0;
+  var signedGap = modelInv - bdg;
+  var gapAbs = Math.abs(signedGap);
+  var gapPctPlan = bdg > 0 ? (gapAbs / bdg * 100) : 0;
+  var gapTone = signedGap >= 0 ? 'success' : 'warn';
+  var gapText = (signedGap >= 0 ? '+' : '-') + fmt.money(gapAbs, { short: true });
+
+  // Display rule (locked 2026-06-16): the rendered dashboard never names V5.
+  // Payload prose may still carry the engine name; strip it before rendering.
+  function noV5(s) {
+    return String(s == null ? '' : s).replace(/\bV5\s*/gi, '').replace(/\s{2,}/g, ' ');
+  }
+  function stripYear(label) { return String(label || '').replace(/\s*\d{4}.*$/, ''); }
+  var MONTH_SHORT_R = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  var MONTH_KEYS_R = ['january', 'february', 'march', 'april', 'may', 'june', 'july',
+                      'august', 'september', 'october', 'november', 'december'];
+  function monthIdxFromLabel(label) {
+    var m = String(label || '').slice(0, 3).toLowerCase();
+    for (var mi = 0; mi < 12; mi++) { if (MONTH_SHORT_R[mi].toLowerCase() === m) return mi; }
+    return -1;
+  }
+  function sumCol(rows, i) {
+    return (rows || []).reduce(function (a, r) { return a + (typeof r[i] === 'number' ? r[i] : 0); }, 0);
+  }
+
+  // Month-revenue entries in calendar order; Actual vs Forecast comes off the clock.
+  var monthRevEntries = [];
+  Object.keys(D.monthRevenue || {}).forEach(function (k) {
+    var idx = MONTH_KEYS_R.indexOf(String(k).toLowerCase());
+    if (idx >= 0) monthRevEntries.push({ idx: idx, label: MONTH_SHORT_R[idx], data: D.monthRevenue[k] });
+  });
+  monthRevEntries.sort(function (a, b) { return a.idx - b.idx; });
+  var mrFirst = monthRevEntries[0] || null;
+  var mrLast = monthRevEntries.length > 1 ? monthRevEntries[monthRevEntries.length - 1] : null;
+  function monthRevTile(entry, tone) {
+    if (!entry || !entry.data) return null;
+    var kind = entry.idx < tc.monthIdx ? 'Actual' : 'Forecast';
+    var m = entry.data;
+    var t = {
+      label: entry.label + ' Revenue (' + kind + ')',
+      value: fmt.money(m.netRevenue, { short: true }),
+      sub: 'Invoiced ' + fmt.money(m.invoiced, { short: true }) + ' + WIP ' + fmt.money(m.wipChange, { short: true })
+    };
+    if (tone) t.tone = tone;
+    return t;
+  }
+
+  // Pipeline totals
+  var pipStages = pip.stages || [];
+  var pipTotal = pipStages.reduce(function (a, s) { return a + (s.value || 0); }, 0);
+  var pipJobs = pipStages.reduce(function (a, s) { return a + (s.jobs || 0); }, 0);
+
+  // Job type impact, ranked by Rev/Day (rows: type, avg $, cycle d, rev/day, same-mo %, hist rev)
+  var jtiRows = (T.jobTypeImpact && T.jobTypeImpact.rows) || [];
+  var jtiSorted = jtiRows.slice().sort(function (a, b) { return (b[3] || 0) - (a[3] || 0); });
+
+  // Monthly forecast rollup (rows: month, budget net, backlog, required sales, forecast net, variance)
+  var mfRows = (T.monthlyForecast && T.monthlyForecast.rows) || [];
+  var mfSpan = mfRows.length ? stripYear(mfRows[0][0]) + '–' + stripYear(mfRows[mfRows.length - 1][0]) : '';
+  var mfForecastTotal = sumCol(mfRows, 4);
+  var mfBudgetTotal = sumCol(mfRows, 1);
+  var mfRemaining = mfRows.filter(function (r) { return monthIdxFromLabel(r[0]) >= tc.monthIdx; });
+  var mfPinch = mfRemaining.slice().sort(function (a, b) { return (b[3] || 0) - (a[3] || 0); }).slice(0, 2);
+
+  // Budget requirements rollup (rows: month, backlog, rev from backlog, gap, total sales needed)
+  var fbRows = (T.forecastBacklog && T.forecastBacklog.rows) || [];
+  var fbSpan = fbRows.length ? stripYear(fbRows[0][0]) + '–' + stripYear(fbRows[fbRows.length - 1][0]) : '';
+  var fbNeedTotal = sumCol(fbRows, 4);
+  var fbFromBacklog = sumCol(fbRows, 2);
+  var fbGapTotal = sumCol(fbRows, 3);
+  var fbHighest = fbRows.slice().sort(function (a, b) { return (b[4] || 0) - (a[4] || 0); })[0];
+
+  // Trend projection rollup (rows: month, seasonal %, ytd actual, budget path, forecast path)
+  var tbRows = (T.trendBasedAnnual && T.trendBasedAnnual.rows) || [];
+  var tbActuals = tbRows.filter(function (r) { return /\[Actual\]/i.test(String(r[0])); });
+  var tbForward = tbRows.filter(function (r) { return !/\[Actual\]/i.test(String(r[0])); });
+  var tbYtdActual = sumCol(tbActuals, 2);
+  var tbBudgetTotal = sumCol(tbRows, 3);
+  var tbForecastTotal = sumCol(tbRows, 4);
+  var tbPathGap = tbForecastTotal - tbBudgetTotal;
+  var tbLastActualLabel = tbActuals.length ? stripYear(tbActuals[tbActuals.length - 1][0]) : '';
+  var tbTop2 = tbForward.slice().sort(function (a, b) { return (b[3] || 0) - (a[3] || 0); }).slice(0, 2);
+
+  // Branch revenue mix (chart data = % of YTD invoiced, sorted descending)
+  var brLabels = (C.branchChart && C.branchChart.labels) || [];
+  var brData = (C.branchChart && C.branchChart.datasets && C.branchChart.datasets[0].data) || [];
+  function sumFirst(arr, n) { return arr.slice(0, n).reduce(function (a, v) { return a + (v || 0); }, 0); }
+
+  // Weekly target context
+  var wkGapPct = wtH.avgWeeklyNeed > 0 ? (wtH.gap / wtH.avgWeeklyNeed * 100) : 0;
+
+  // Profitability context (payload keys are year-bound: y2026_*, y2025_*)
+  var gmDelta = (psR.y2026_GP_pct || 0) - (psR.y2025_GP_pct || 0);
+  function lastPct(r) { return parseFloat(String(r[r.length - 1]).replace('%', '')); }
+  // Generic profitability row renderer: first cell bold, last cell GP% pill,
+  // money formatting on numeric cost/revenue columns. Shape-agnostic so it
+  // survives calculator column changes.
+  function profCellsR(r) {
+    return r.map(function (c, i) {
+      if (i === 0) return { html: '<strong>' + c + '</strong>' };
+      if (i === r.length - 1) {
+        var v = parseFloat(String(c).replace('%', ''));
+        var cls = v >= 45 ? 'pill-success' : v >= 38 ? 'pill-info' : v >= 30 ? 'pill-warn' : 'pill-danger';
+        return { html: '<span class="pill ' + cls + '">' + (isNaN(v) ? c : v.toFixed(1) + '%') + '</span>' };
+      }
+      if (i === 1) return c;
+      return (typeof c === 'number') ? fmt.money(c) : c;
+    });
+  }
+  var pmRows = (T.profitabilityByMarket2026 && T.profitabilityByMarket2026.rows) || [];
+  var pmNonTotal = pmRows.filter(function (r) { return r[0] !== 'TOTAL'; });
+  var pmSorted = pmNonTotal.slice().sort(function (a, b) { return lastPct(a) - lastPct(b); });
+  var pmWorst = pmSorted[0];
+  var pmBest = pmSorted[pmSorted.length - 1];
+
+  // Cycle table (rows: job type, created->IP, IP->complete, total days, count, avg $)
+  var cjRows = ((T.cycleByJobType && T.cycleByJobType.rows) || []).filter(function (r) {
+    return !/overall/i.test(String(r[0]));
+  });
+  var cjLongest = cjRows.slice().sort(function (a, b) { return (b[3] || 0) - (a[3] || 0); })[0];
+
+  // Strategic best-markets table (rows: market, jobs, revenue, median days, $/day)
+  var smRows = (T.strategicBestMarketsRevEff && T.strategicBestMarketsRevEff.rows) || [];
+
   pages.index = {
-    eyebrow: D.subtitle || 'V5 Model · YTD 2026',
+    eyebrow: 'Realistic vs Budget · Data as of ' + (D.runDate || FZ.formatBuiltAt({ dateOnly: true })),
     title: 'Residential Revenue Forecast',
-    intro: 'A unified revenue picture: what we have invoiced, what is coming through the pipeline, and what we still need to sign each week to land the $125.6M residential plan. The V5 model translates today\'s sold-not-invoiced backlog into month-by-month revenue and surfaces the weekly sales targets that close the gap.',
+    intro: 'A unified revenue picture: what we have invoiced, what is coming through the pipeline, and what we still need to sign each week to land the ' + fmt.money(bdg, { short: true }) + ' residential plan. The model translates today\'s sold-not-invoiced backlog into month-by-month revenue and surfaces the weekly sales targets that close the gap.',
     tags: [
-      { kind: 'info',    text: 'V5 model · locked 2026-04-19' },
-      { kind: 'warn',    text: '$3.4M recovery gap' },
-      { kind: 'success', text: '4-wk avg $2.6M/wk' }
+      { kind: 'info',    text: 'Realistic vs Budget · locked ' + lockedOn },
+      { kind: (brH.gap || 0) > 0 ? 'warn' : 'success', text: fmt.money(brH.gap || 0, { short: true }) + ' recovery gap' },
+      { kind: (wtH.recent4WkAvg || 0) >= (wtH.avgWeeklyNeed || 0) ? 'success' : 'info', text: '4-wk avg ' + fmt.money(wtH.recent4WkAvg || 0, { short: true }) + '/wk' }
     ],
     sections: [
       {
         kind: 'kpi-row', cols: 4,
-        items: [
-          { label: 'YTD Sales (Created)',     value: '$21.3M', sub: 'Jobs processed into system',          tone: 'navy' },
-          { label: 'Invoiced YTD',             value: '$18.8M', sub: 'Based on actual invoice dates',       tone: 'success' },
-          { label: '4-Week Avg Weekly Sales',  value: '$2.6M',  sub: 'Trend: +$252K/week',                   tone: 'success' },
-          { label: 'Current Week (Projected)', value: '$2.4M',  sub: 'WTD: $675K',                           tone: 'warn' }
-        ]
+        items: FZ.kpiRow(D, ['YTD Sales (Created)', 'Invoiced YTD', '4-Week Avg Weekly Sales', 'Current Week (Projected)'], {
+          'YTD Sales (Created)': 'navy',
+          'Invoiced YTD': 'success',
+          '4-Week Avg Weekly Sales': 'success',
+          'Current Week (Projected)': 'warn'
+        })
       },
       {
         kind: 'kpi-row', cols: 4,
-        items: [
-          { label: 'Annual Forecast',         value: fmt.money(D.execSummary.modelAnnualInvoiced, { short: true }), sub: 'Model invoiced revenue' },
-          { label: 'Annual Budget',           value: fmt.money(D.execSummary.budget, { short: true }),              sub: 'Residential plan' },
-          { label: 'Forecast vs Budget',      value: '-$6.3M', sub: '5.0% under plan',                       tone: 'warn' },
-          { label: 'Active Pipeline',         value: '$14.7M', sub: '713 jobs across 4 stages',              tone: 'navy' }
-        ]
+        items: (function () {
+          var row = FZ.kpiRow(D, ['Annual Forecast', 'Annual Budget', 'Forecast vs Budget', 'Active Pipeline'], {
+            'Active Pipeline': 'navy'
+          });
+          row[2].tone = gapTone;
+          return row;
+        })()
       },
       {
         kind: 'chart-grid', cols: 1, heading: 'Weekly Sales Velocity',
-        caption: 'Each Friday roll-up across 16 weeks · the 4-week average is what feeds the forecast model',
+        caption: 'Each Friday roll-up across ' + ((C.salesChart && C.salesChart.labels) || []).length + ' weeks · the 4-week average is what feeds the forecast model',
         charts: [
           {
             title: 'Weekly Signed Sales',
@@ -1434,7 +1580,7 @@
         ]
       },
       {
-        kind: 'chart-grid', cols: 2, heading: 'Budget vs Forecast (Apr through Dec)',
+        kind: 'chart-grid', cols: 2, heading: 'Budget vs Forecast (' + mfSpan + ')',
         caption: 'The model picks up coverage from known sales early, then leans on forward weekly velocity',
         charts: [
           {
@@ -1455,7 +1601,7 @@
           },
           {
             title: 'Required Monthly Sales to Hit Budget',
-            sub: 'What we have to sign each month, Apr through Dec',
+            sub: 'What we have to sign each month through year-end',
             height: 300,
             config: {
               type: 'bar',
@@ -1479,7 +1625,7 @@
           {
             kind: 'chart', span: 6,
             title: 'Active Revenue Pipeline',
-            sub: '$14.7M across 713 jobs · stage mix today',
+            sub: fmt.money(pipTotal, { short: true }) + ' across ' + pipJobs + ' jobs · stage mix today',
             height: 280,
             config: {
               type: 'doughnut',
@@ -1506,7 +1652,7 @@
           {
             kind: 'chart', span: 6,
             title: 'Branch Revenue Mix',
-            sub: '% of YTD invoiced revenue, all 12 active markets',
+            sub: '% of YTD invoiced revenue across ' + brLabels.length + ' active markets',
             height: 280,
             config: {
               type: 'bar',
@@ -1530,9 +1676,9 @@
       {
         kind: 'prose', heading: 'Headlines',
         cards: [
-          { kind: 'navy', eyebrow: 'THE MODEL READ', title: 'Timing, not volume', body: '<p>The V5 model projects <strong>' + fmt.money(D.execSummary.modelAnnualInvoiced, { short: true }) + '</strong> in annual invoiced revenue against a <strong>' + fmt.money(D.execSummary.budget, { short: true }) + '</strong> plan. Q1 ramped slowly, so Q2 invoicing will lag. If the current $2.6M weekly pace holds, H2 catches up as earlier sales convert to invoiced revenue.</p>' },
-          { kind: 'tint', eyebrow: 'WEEKLY TARGET', title: 'Sign $2.68M to stay on plan', body: '<p>The locked V5 weekly target is <strong>' + fmt.money(D.weeklyTargetsHeader.avgWeeklyNeed, { short: true }) + '</strong>. Trailing four weeks landed at <strong>' + fmt.money(D.weeklyTargetsHeader.recent4WkAvg, { short: true }) + '</strong>. The gap is <strong>' + fmt.money(D.weeklyTargetsHeader.gap) + '/week</strong>, well within reach if Columbus and Detroit Metro hold their April pace.</p>' },
-          { eyebrow: 'WHAT TO WATCH', title: 'The recovery bridge', body: '<p>The Budget Recovery view re-allocates a <strong>' + fmt.money(D.budgetRecoveryHeader.gap, { short: true }) + '</strong> shortfall across May through December as a <strong>+' + D.budgetRecoveryHeader.upliftPct + '%</strong> uplift on each remaining month. April is accepted as forecast (no catch-up).</p>' }
+          { kind: 'navy', eyebrow: 'THE MODEL READ', title: 'Timing, not volume', body: '<p>' + noV5(esR.narrative || ('The model projects <strong>' + fmt.money(modelInv, { short: true }) + '</strong> in annual invoiced revenue against a <strong>' + fmt.money(bdg, { short: true }) + '</strong> plan.')) + '</p>' },
+          { kind: 'tint', eyebrow: 'WEEKLY TARGET', title: 'Sign ' + fmt.money(wtH.avgWeeklyNeed || 0, { short: true }) + '/wk to stay on plan', body: '<p>The locked weekly target is <strong>' + fmt.money(wtH.avgWeeklyNeed || 0, { short: true }) + '</strong>. Trailing four weeks landed at <strong>' + fmt.money(wtH.recent4WkAvg || 0, { short: true }) + '</strong>. The gap is <strong>' + fmt.money(wtH.gap || 0) + '/week</strong> (' + fmt.pct(wkGapPct) + ' of target); closing it means the top branches hold their current pace.</p>' },
+          { eyebrow: 'WHAT TO WATCH', title: 'The recovery bridge', body: '<p>The Budget Recovery view re-allocates a <strong>' + fmt.money(brH.gap || 0, { short: true }) + '</strong> shortfall across the remaining months as a <strong>+' + (brH.upliftPct || 0) + '%</strong> uplift on each. Closed months are accepted as actuals (no catch-up).</p>' }
         ]
       }
     ]
@@ -1542,34 +1688,42 @@
   // EXECUTIVE SUMMARY
   // ============================================================
   pages.executive = {
-    eyebrow: 'EXECUTIVE BRIEF · V5 MODEL',
+    eyebrow: 'EXECUTIVE BRIEF · REALISTIC VS BUDGET',
     title: 'Executive Summary',
-    intro: 'The five numbers that frame the residential revenue picture today, plus the budget vs forecast bridge through year-end.',
+    intro: 'The numbers that frame the residential revenue picture today, plus the budget vs forecast bridge through year-end.',
     tags: [
-      { kind: 'warn', text: '-$6.3M to plan' },
+      { kind: gapTone, text: gapText + ' to plan' },
       { kind: 'info', text: 'Updated daily' }
     ],
     sections: [
       {
         kind: 'kpi-row', cols: 4,
-        items: [
-          { label: 'YTD Sales (Created)',  value: '$21.3M', sub: 'Jobs processed into system',          tone: 'navy' },
-          { label: 'Invoiced YTD',          value: '$18.8M', sub: 'Based on actual invoice dates',       tone: 'success' },
-          { label: '4-Week Avg',            value: '$2.6M',  sub: 'Trend: +$252K/wk',                    tone: 'success' },
-          { label: 'Current Week (Proj.)',  value: '$2.4M',  sub: 'WTD: $675K',                          tone: 'warn' }
-        ]
+        items: FZ.kpiRow(D, ['YTD Sales (Created)', 'Invoiced YTD', '4-Week Avg Weekly Sales', 'Current Week (Projected)'], {
+          'YTD Sales (Created)': 'navy',
+          'Invoiced YTD': 'success',
+          '4-Week Avg Weekly Sales': 'success',
+          'Current Week (Projected)': 'warn'
+        })
       },
       {
         kind: 'kpi-row', cols: 4,
-        items: [
-          { label: 'April Revenue (Actual)', value: fmt.money(D.monthRevenue.april.netRevenue, { short: true }), sub: 'Invoiced ' + fmt.money(D.monthRevenue.april.invoiced, { short: true }) + ' + WIP ' + fmt.money(D.monthRevenue.april.wipChange, { short: true }) },
-          { label: 'May Revenue (Forecast)', value: fmt.money(D.monthRevenue.may.netRevenue, { short: true }),    sub: 'Invoiced ' + fmt.money(D.monthRevenue.may.invoiced, { short: true }) + ' + WIP ' + fmt.money(D.monthRevenue.may.wipChange, { short: true }) },
-          { label: 'Annual Forecast',        value: fmt.money(D.execSummary.modelAnnualInvoiced, { short: true }), sub: 'Model invoiced revenue' },
-          { label: 'Forecast vs Budget',     value: '-$6.3M', sub: '5.0% under $125.6M plan', tone: 'warn' }
-        ]
+        items: (function () {
+          var items = [monthRevTile(mrFirst, 'navy'), monthRevTile(mrLast)].filter(Boolean);
+          items.push(FZ.kpi(D, 'Annual Forecast'));
+          items.push({
+            label: 'Forecast vs Budget',
+            value: gapText,
+            sub: fmt.pct(gapPctPlan) + (signedGap >= 0 ? ' over ' : ' under ') + fmt.money(bdg, { short: true }) + ' plan',
+            tone: gapTone
+          });
+          return items;
+        })()
       },
       {
-        kind: 'chart-grid', cols: 1, heading: 'Budget vs Model Revenue (Apr–Dec)',
+        kind: 'chart-grid', cols: 1, heading: 'Budget vs Model Revenue (' + (function () {
+          var ls = (C.execChart && C.execChart.labels) || [];
+          return ls.length ? stripYear(ls[0]) + '–' + stripYear(ls[ls.length - 1]) : 'monthly';
+        })() + ')',
         caption: 'Three reads: original budget, model revenue, and the slice that comes from sales already on the books',
         charts: [
           {
@@ -1592,15 +1746,19 @@
         ]
       },
       {
-        kind: 'callout', tone: 'warn',
+        kind: 'callout', tone: gapTone,
         title: 'The shape of the gap',
-        body: D.execSummary.narrative
+        body: noV5(esR.narrative)
       },
       {
         kind: 'prose', heading: 'Strategic context',
         cards: [
-          { kind: 'tint', eyebrow: 'BEST JOB TYPES BY REV/DAY', body: '<p>Insurance leads at <strong>$1,316/day</strong>, Retail-Financing at <strong>$1,216/day</strong>, Retail-No Financing at <strong>$988/day</strong>. The fastest revenue dollar in the company is a single-trade Retail-Financing job: 21-day cycle, $20,387 average ticket.</p>' },
-          { eyebrow: 'WEEKLY NEED VS LIVE', body: '<p>Locked target: <strong>' + fmt.money(D.weeklyTargetsHeader.avgWeeklyNeed) + '/wk</strong>. Trailing four weeks: <strong>' + fmt.money(D.weeklyTargetsHeader.recent4WkAvg) + '/wk</strong>. Gap: <strong>' + fmt.money(D.weeklyTargetsHeader.gap) + '/wk</strong> (~5%). Catchable if April velocity holds.</p>' }
+          { kind: 'tint', eyebrow: 'BEST JOB TYPES BY REV/DAY', body: '<p>' + (jtiSorted.length
+              ? jtiSorted.map(function (r, i) {
+                  return '<strong>' + r[0] + '</strong>' + (i === 0 ? ' leads at ' : ' at ') + '<strong>$' + Math.round(r[3]).toLocaleString('en-US') + '/day</strong>';
+                }).join(', ') + '. The fastest revenue dollar today is a ' + jtiSorted[0][0] + ' job: ' + Math.round(jtiSorted[0][2]) + '-day cycle, ' + fmt.money(jtiSorted[0][1]) + ' average ticket.'
+              : 'Job type efficiency data is not in this refresh.') + '</p>' },
+          { eyebrow: 'WEEKLY NEED VS LIVE', body: '<p>Locked target: <strong>' + fmt.money(wtH.avgWeeklyNeed || 0) + '/wk</strong>. Trailing four weeks: <strong>' + fmt.money(wtH.recent4WkAvg || 0) + '/wk</strong>. Gap: <strong>' + fmt.money(wtH.gap || 0) + '/wk</strong> (' + fmt.pct(wkGapPct) + ' of target).</p>' }
         ],
         cols: 2
       }
@@ -1613,16 +1771,16 @@
   pages.projection = {
     eyebrow: 'SALES PROJECTION · TREND-BASED',
     title: 'Sales Projection',
-    intro: 'A trend-based annual sales projection using 2025 seasonality applied to today\'s YTD pace. Two paths: budget path (what we planned) and forecast path (what current velocity implies).',
-    tags: [{ kind: 'info', text: 'Trend model · 2025 seasonality' }],
+    intro: 'A trend-based annual sales projection using ' + yPrev + ' seasonality applied to today\'s YTD pace. Two paths: budget path (what we planned) and forecast path (what current velocity implies).',
+    tags: [{ kind: 'info', text: 'Trend model · ' + yPrev + ' seasonality' }],
     sections: [
       {
         kind: 'kpi-row', cols: 4,
         items: [
-          { label: 'YTD Actual (Jan–Apr)',  value: '$25.1M',  sub: 'Sales created through April',         tone: 'navy' },
-          { label: 'Forecast Path',          value: '$119.2M', sub: 'Trend-based annual projection',       tone: 'success' },
-          { label: 'Budget Path',            value: '$125.6M', sub: '2025 seasonality on plan' },
-          { label: 'Path Gap',               value: '-$6.3M',  sub: 'Forecast vs budget',                  tone: 'warn' }
+          { label: 'YTD Actual' + (tbLastActualLabel ? ' (through ' + tbLastActualLabel + ')' : ''), value: fmt.money(tbYtdActual, { short: true }), sub: 'Sales created' + (tbLastActualLabel ? ' through ' + tbLastActualLabel : ''), tone: 'navy' },
+          { label: 'Forecast Path', value: fmt.money(tbForecastTotal, { short: true }), sub: 'Trend-based annual projection', tone: 'success' },
+          { label: 'Budget Path',   value: fmt.money(tbBudgetTotal, { short: true }),   sub: yPrev + ' seasonality on plan' },
+          { label: 'Path Gap',      value: (tbPathGap >= 0 ? '+' : '-') + fmt.money(Math.abs(tbPathGap), { short: true }), sub: 'Forecast vs budget', tone: tbPathGap >= 0 ? 'success' : 'warn' }
         ]
       },
       {
@@ -1630,7 +1788,7 @@
         charts: [
           {
             title: 'Trend-Based Annual Sales Projection',
-            sub: 'YTD actual rolls into a forecast that uses 2025 seasonal mix · budget shown for reference',
+            sub: 'YTD actual rolls into a forecast that uses ' + yPrev + ' seasonal mix · budget shown for reference',
             height: 320,
             config: {
               type: 'bar',
@@ -1666,7 +1824,7 @@
         kind: 'chart-grid', cols: 2,
         charts: [
           {
-            title: '2025 Seasonal Mix',
+            title: yPrev + ' Seasonal Mix',
             sub: 'Share of annual revenue by month, the basis for the forecast curve',
             height: 280,
             config: {
@@ -1686,7 +1844,7 @@
             }
           },
           {
-            title: 'Adjusted Weekly Sales Run Rate (Apr–Dec)',
+            title: 'Adjusted Weekly Sales Run Rate (Remaining Months)',
             sub: 'What each remaining month implies as a weekly target',
             height: 280,
             config: {
@@ -1707,7 +1865,7 @@
       tableSection({
         id: 'trendBasedAnnual',
         heading: 'Trend-based annual projection · row detail',
-        caption: 'YTD actual is locked · forward months blend 2025 seasonality with current velocity',
+        caption: 'YTD actual is locked · forward months blend ' + yPrev + ' seasonality with current velocity',
         rowMap: function (r) {
           return [
             { html: '<strong>' + r[0] + '</strong>' },
@@ -1721,33 +1879,36 @@
       {
         kind: 'callout',
         title: 'Read the curve',
-        body: 'Sept and Oct are the make-or-break months. Combined budget path is <strong>$28.6M</strong>; forecast path is <strong>$26.7M</strong>. If we are still tracking ±5% to plan at end of August, those two months pull the year back into line.'
+        body: tbTop2.length === 2
+          ? stripYear(tbTop2[0][0]) + ' and ' + stripYear(tbTop2[1][0]) + ' are the make-or-break months. Combined budget path is <strong>' + fmt.money((tbTop2[0][3] || 0) + (tbTop2[1][3] || 0), { short: true }) + '</strong>; forecast path is <strong>' + fmt.money((tbTop2[0][4] || 0) + (tbTop2[1][4] || 0), { short: true }) + '</strong>. If we are still tracking close to plan going into them, those two months pull the year back into line.'
+          : 'Forward months blend ' + yPrev + ' seasonality with current velocity; watch the largest remaining budget months, they decide the year.'
       }
-    ]
+    ].filter(Boolean)
   };
 
   // ============================================================
   // MONTHLY FORECAST
   // ============================================================
   pages.monthly = {
-    eyebrow: 'MONTHLY FORECAST · APRIL FORWARD',
+    eyebrow: 'MONTHLY FORECAST · ' + (mfRows.length ? stripYear(mfRows[0][0]).toUpperCase() + ' FORWARD' : 'MONTH BY MONTH'),
     title: 'Monthly Forecast',
     intro: 'The full month-by-month bridge: how much revenue the existing backlog will throw off, how much new sales we need on top, and where the gap to budget sits each month.',
     sections: [
       {
         kind: 'kpi-row', cols: 4,
-        items: [
-          { label: 'Apr Net Revenue',  value: fmt.money(D.monthRevenue.april.netRevenue, { short: true }), sub: 'Invoiced + WIP change',           tone: 'navy' },
-          { label: 'May Forecast',      value: fmt.money(D.monthRevenue.may.netRevenue, { short: true }),    sub: 'Largest sales month required',    tone: 'warn' },
-          { label: 'Apr–Dec Total',     value: '$107.3M', sub: 'Forecast net revenue',                       tone: 'success' },
-          { label: 'Apr–Dec Budget',    value: '$109.6M', sub: 'Variance -$2.3M' }
-        ]
+        items: (function () {
+          var items = [monthRevTile(mrFirst, 'navy'), monthRevTile(mrLast, 'warn')].filter(Boolean);
+          var mfVar = mfForecastTotal - mfBudgetTotal;
+          items.push({ label: mfSpan + ' Total', value: fmt.money(mfForecastTotal, { short: true }), sub: 'Forecast net revenue', tone: 'success' });
+          items.push({ label: mfSpan + ' Budget', value: fmt.money(mfBudgetTotal, { short: true }), sub: 'Variance ' + (mfVar >= 0 ? '+' : '-') + fmt.money(Math.abs(mfVar), { short: true }) });
+          return items;
+        })()
       },
       {
         kind: 'chart-grid', cols: 1,
         charts: [
           {
-            title: 'Net Revenue: Budget vs Forecast (Apr–Dec)',
+            title: 'Net Revenue: Budget vs Forecast (' + mfSpan + ')',
             sub: 'Side-by-side monthly bars',
             height: 320,
             config: {
@@ -1806,12 +1967,16 @@
           ];
         }
       }),
-      {
+      mfPinch.length === 2 ? {
         kind: 'callout', tone: 'warn',
-        title: 'May and August are the pinch months',
-        body: 'May needs <strong>$17.2M</strong> in signed sales (highest of the year) to land its $13.7M revenue target. August follows with <strong>$15.2M</strong> needed. These are the two months where Sales and Production ops have to be operating hot at the same time.'
+        title: stripYear(mfPinch[0][0]) + ' and ' + stripYear(mfPinch[1][0]) + ' are the pinch months',
+        body: stripYear(mfPinch[0][0]) + ' needs <strong>' + fmt.money(mfPinch[0][3], { short: true }) + '</strong> in signed sales (highest remaining) to land its ' + fmt.money(mfPinch[0][4], { short: true }) + ' revenue target. ' + stripYear(mfPinch[1][0]) + ' follows with <strong>' + fmt.money(mfPinch[1][3], { short: true }) + '</strong> needed. These are the two months where Sales and Production ops have to be operating hot at the same time.'
+      } : {
+        kind: 'callout', tone: 'info',
+        title: 'Watch the largest remaining sales months',
+        body: 'The months with the highest required-sales figures in the table above are where Sales and Production ops have to be operating hot at the same time.'
       }
-    ]
+    ].filter(Boolean)
   };
 
   // ============================================================
@@ -1825,17 +1990,17 @@
       {
         kind: 'kpi-row', cols: 4,
         items: [
-          { label: 'Total Apr–Dec Need',     value: '$107.1M', sub: 'New sales required to hit plan',     tone: 'navy' },
-          { label: 'From Backlog',            value: '$16.8M',  sub: 'Already on the books',                tone: 'success' },
-          { label: 'Revenue Gap to Cover',    value: '$92.4M',  sub: 'New sales that must arrive',          tone: 'warn' },
-          { label: 'Highest Month (May)',     value: '$17.2M',  sub: 'Largest single-month sales need',     tone: 'danger' }
+          { label: 'Total ' + fbSpan + ' Need', value: fmt.money(fbNeedTotal, { short: true }), sub: 'New sales required to hit plan', tone: 'navy' },
+          { label: 'From Backlog',              value: fmt.money(fbFromBacklog, { short: true }), sub: 'Already on the books', tone: 'success' },
+          { label: 'Revenue Gap to Cover',      value: fmt.money(fbGapTotal, { short: true }), sub: 'New sales that must arrive', tone: 'warn' },
+          { label: 'Highest Month' + (fbHighest ? ' (' + stripYear(fbHighest[0]) + ')' : ''), value: fbHighest ? fmt.money(fbHighest[4], { short: true }) : '—', sub: 'Largest single-month sales need', tone: 'danger' }
         ]
       },
       {
         kind: 'chart-grid', cols: 1,
         charts: [
           {
-            title: 'Required Monthly Sales to Hit Budget (Apr–Dec)',
+            title: 'Required Monthly Sales to Hit Budget (' + fbSpan + ')',
             sub: 'Total sales needed each month, including backlog absorption',
             height: 320,
             config: {
@@ -1845,9 +2010,13 @@
                 datasets: [{
                   label: 'Required Sales',
                   data: C.budgetSalesChart.datasets[0].data,
-                  backgroundColor: C.budgetSalesChart.datasets[0].data.map(function (v) {
-                    return v >= 15000000 ? pal.danger : v >= 12000000 ? pal.warning : pal.navy;
-                  })
+                  backgroundColor: (function () {
+                    var arr = C.budgetSalesChart.datasets[0].data || [];
+                    var mx = Math.max.apply(null, arr.concat([0]));
+                    return arr.map(function (v) {
+                      return v >= mx * 0.9 ? pal.danger : v >= mx * 0.75 ? pal.warning : pal.navy;
+                    });
+                  })()
                 }]
               },
               options: withOpts({ scales: { y: moneyAxis() }, plugins: { legend: { display: false } } })
@@ -1893,9 +2062,16 @@
       {
         kind: 'callout',
         title: 'How the gap shrinks',
-        body: 'In April, backlog covers <strong>$9.4M</strong> of the <strong>$12.3M</strong> need (76%). By July, backlog only covers <strong>$655K</strong> of <strong>$10.2M</strong> (6%). The further out we look, the more every revenue dollar comes from sales we have to make this week.'
+        body: (function () {
+          if (fbRows.length < 2) return 'The further out we look, the more every revenue dollar comes from sales we have to make this week.';
+          var a = fbRows[0];
+          var b = fbRows[Math.min(3, fbRows.length - 1)];
+          var pa = a[4] > 0 ? (a[2] / a[4] * 100) : 0;
+          var pb = b[4] > 0 ? (b[2] / b[4] * 100) : 0;
+          return 'In ' + stripYear(a[0]) + ', backlog covers <strong>' + fmt.money(a[2], { short: true }) + '</strong> of the <strong>' + fmt.money(a[4], { short: true }) + '</strong> need (' + pa.toFixed(0) + '%). By ' + stripYear(b[0]) + ', backlog only covers <strong>' + fmt.money(b[2], { short: true }) + '</strong> of <strong>' + fmt.money(b[4], { short: true }) + '</strong> (' + pb.toFixed(0) + '%). The further out we look, the more every revenue dollar comes from sales we have to make this week.';
+        })()
       }
-    ]
+    ].filter(Boolean)
   };
 
   // ============================================================
@@ -1904,15 +2080,18 @@
   pages['job-types'] = {
     eyebrow: 'JOB TYPES · CYCLE & TICKET',
     title: 'Job Type Analysis',
-    intro: 'How each of our three job types converts to revenue: ticket size, cycle days, dollars per day, and how the same-month conversion drops over the M+0 to M+5 window.',
+    intro: 'How each of our job types converts to revenue: ticket size, cycle days, dollars per day, and how the same-month conversion drops over the M+0 to M+5 window.',
     sections: [
       {
-        kind: 'kpi-row', cols: 3,
-        items: [
-          { label: 'Insurance',           value: '$1,316/day', sub: '$25,011 avg · 19d cycle · 43.6% same-mo conv', tone: 'navy' },
-          { label: 'Retail-Financing',    value: '$1,216/day', sub: '$21,883 avg · 18d cycle · 60.8% same-mo conv', tone: 'success' },
-          { label: 'Retail-No Financing', value: '$988/day',   sub: '$18,768 avg · 19d cycle · 61.9% same-mo conv' }
-        ]
+        kind: 'kpi-row', cols: Math.max(1, Math.min(jtiSorted.length || 3, 4)),
+        items: jtiSorted.map(function (r, i) {
+          return {
+            label: r[0],
+            value: '$' + Math.round(r[3]).toLocaleString('en-US') + '/day',
+            sub: fmt.money(r[1], { short: true }) + ' avg · ' + Math.round(r[2]) + 'd cycle · ' + fmt.pct(r[4]) + ' same-mo conv',
+            tone: i === 0 ? 'navy' : i === 1 ? 'success' : undefined
+          };
+        })
       },
       {
         kind: 'chart-grid', cols: 2,
@@ -1936,7 +2115,10 @@
           },
           {
             title: 'Avg Job $ by Job Type',
-            sub: 'Insurance dominates ticket size · Retail-Financing close behind',
+            sub: (function () {
+              var byTicket = jtiRows.slice().sort(function (a, b) { return (b[1] || 0) - (a[1] || 0); });
+              return byTicket.length >= 2 ? byTicket[0][0] + ' leads ticket size · ' + byTicket[1][0] + ' close behind' : 'Average ticket by job type';
+            })(),
             height: 280,
             config: {
               type: 'bar',
@@ -2012,19 +2194,19 @@
       {
         kind: 'callout', tone: 'success',
         title: 'The Rev/Day playbook',
-        body: 'Single-trade jobs dominate. Retail-Financing 1-trade is <strong>$859/day</strong>; multi-trade Insurance jobs collapse to <strong>$516/day</strong>. The bookings team should be steering toward simpler scopes whenever possible (same revenue, fewer days locked up).'
+        body: 'Single-trade jobs dominate revenue per day across job types; multi-trade bundles stretch the cycle faster than they add ticket value. The bookings team should be steering toward simpler scopes whenever possible (same revenue, fewer days locked up).'
       }
-    ]
+    ].filter(Boolean)
   };
 
   // ============================================================
   // PIPELINE & BRANCH
   // ============================================================
   pages.pipeline = {
-    eyebrow: 'PIPELINE · 4 STAGES · 12 MARKETS',
+    eyebrow: 'PIPELINE · ' + pipStages.length + ' STAGES · ' + brLabels.length + ' MARKETS',
     title: 'Pipeline & Branch',
-    intro: 'Where the active $14.7M lives today, plus how it splits across the 12 active branches.',
-    tags: [{ kind: 'info', text: '713 jobs in pipeline' }],
+    intro: 'Where the active ' + fmt.money(pipTotal, { short: true }) + ' lives today, plus how it splits across the ' + brLabels.length + ' active branches.',
+    tags: [{ kind: 'info', text: pipJobs + ' jobs in pipeline' }],
     sections: [
       {
         kind: 'kpi-row', cols: 4,
@@ -2043,7 +2225,7 @@
         charts: [
           {
             title: 'Active Pipeline Composition',
-            sub: '$14.7M across 4 stages',
+            sub: fmt.money(pipTotal, { short: true }) + ' across ' + pipStages.length + ' stages',
             height: 300,
             config: {
               type: 'doughnut',
@@ -2069,7 +2251,9 @@
           },
           {
             title: 'Branch Revenue Mix (% of YTD)',
-            sub: 'Columbus and Detroit Metro dominate · top three carry 57%',
+            sub: brLabels.length >= 3
+              ? brLabels[0] + ' and ' + brLabels[1] + ' lead · top three carry ' + fmt.pct(sumFirst(brData, 3))
+              : 'Share of YTD invoiced revenue by branch',
             height: 300,
             config: {
               type: 'bar',
@@ -2147,9 +2331,20 @@
       {
         kind: 'callout',
         title: 'The 80/20 view',
-        body: 'Top 4 markets (Columbus, Detroit Metro, Nashville, DC Metro) carry <strong>66.5%</strong> of YTD revenue. Backlog is just as concentrated: Columbus + Detroit Metro hold <strong>$4.2M</strong> of the $7.2M not-started book.'
+        body: (function () {
+          var parts = [];
+          if (brLabels.length >= 4) {
+            parts.push('Top 4 markets (' + brLabels.slice(0, 4).join(', ') + ') carry <strong>' + fmt.pct(sumFirst(brData, 4)) + '</strong> of YTD revenue.');
+          }
+          var blRows = (T.backlogByMarket && T.backlogByMarket.rows) || [];
+          if (blRows.length >= 2) {
+            var blTotal = sumCol(blRows, 2);
+            parts.push('Backlog is just as concentrated: ' + blRows[0][0] + ' + ' + blRows[1][0] + ' hold <strong>' + fmt.money((blRows[0][2] || 0) + (blRows[1][2] || 0), { short: true }) + '</strong> of the ' + fmt.money(blTotal, { short: true }) + ' not-started book.');
+          }
+          return parts.length ? parts.join(' ') : 'Revenue and backlog concentration by market is shown in the charts above.';
+        })()
       }
-    ]
+    ].filter(Boolean)
   };
 
   // ============================================================
@@ -2163,10 +2358,12 @@
       {
         kind: 'kpi-row', cols: 4,
         items: [
-          { label: 'Sales Cycle (Created→IP)', value: '12d', sub: 'V5 model assumption',                       tone: 'navy' },
-          { label: 'Production (IP→Complete)',  value: '9d',  sub: 'V5 model assumption' },
-          { label: 'Total Cycle',                value: '21d', sub: 'Created → Invoiced',                       tone: 'success' },
-          { label: '4-Trade Insurance',          value: '60.5d', sub: 'Worst-case multi-trade · 1.9× single', tone: 'warn' }
+          { label: 'Sales Cycle (Created→IP)', value: (wtH.productionCycleStart != null ? wtH.productionCycleStart : '—') + 'd', sub: 'Model assumption', tone: 'navy' },
+          { label: 'Production (IP→Complete)',  value: (wtH.productionCycleComplete != null ? wtH.productionCycleComplete : '—') + 'd', sub: 'Model assumption' },
+          { label: 'Total Cycle',                value: (wtH.productionTotalCycle != null ? wtH.productionTotalCycle : '—') + 'd', sub: 'Created → Invoiced', tone: 'success' },
+          cjLongest
+            ? { label: 'Longest Cycle', value: cjLongest[3] + 'd', sub: cjLongest[0] + ' · slowest job type median', tone: 'warn' }
+            : { label: 'Longest Cycle', value: '—', sub: 'not in data payload', tone: 'warn' }
         ]
       },
       {
@@ -2196,10 +2393,15 @@
         ]
       },
       tableSection({
-        id: 'jobTypeCycle',
+        id: 'cycleByJobType',
         heading: 'Job type cycle times: quick read',
         rowMap: function (r) {
-          return [{ html: '<strong>' + r[0] + '</strong>' }, r[1], r[2], r[3], r[4], r[5]];
+          return [
+            { html: '<strong>' + r[0] + '</strong>' },
+            r[1] + 'd', r[2] + 'd', r[3] + 'd',
+            r[4],
+            (typeof r[5] === 'number') ? fmt.money(r[5]) : r[5]
+          ];
         }
       }),
       tableSection({
@@ -2230,43 +2432,43 @@
       {
         kind: 'callout', tone: 'warn',
         title: 'The cycle-tax on multi-trade',
-        body: 'Adding a second trade to an Insurance job pushes cycle from 28d to 40d (+43%). Adding a third pushes it to 53d (+90%). Margin holds, but the same crew capacity earns 47% fewer turns. The booking team should default to single-trade scope unless the bundle adds material ticket value.'
+        body: 'Each added trade stretches the cycle materially. Margin holds, but the same crew capacity earns fewer turns per year. The booking team should default to single-trade scope unless the bundle adds material ticket value.'
       }
-    ]
+    ].filter(Boolean)
   };
 
   // ============================================================
   // WEEKLY SALES TARGETS
   // ============================================================
   pages['weekly-targets'] = {
-    eyebrow: 'WEEKLY TARGETS · LOCKED V5',
+    eyebrow: 'WEEKLY TARGETS · LOCKED METHODOLOGY',
     title: 'Weekly Sales Targets',
-    intro: 'The locked weekly target schedule that drives the budget plan. Methodology locked April 19, 2026 (do not change WIP constants without explicit approval).',
+    intro: 'The locked weekly target schedule that drives the budget plan. Methodology locked ' + lockedOn + ' (do not change WIP constants without explicit approval).',
     tags: [
-      { kind: 'info', text: 'Locked V5' },
-      { kind: 'success', text: 'Gap to live: ~5%' }
+      { kind: 'info', text: 'Locked ' + lockedOn },
+      { kind: wkGapPct <= 10 ? 'success' : 'warn', text: 'Gap to live: ' + fmt.pct(wkGapPct) }
     ],
     sections: [
       {
         kind: 'kpi-row', cols: 4,
         items: [
-          { label: 'Avg Weekly Need',    value: fmt.money(D.weeklyTargetsHeader.avgWeeklyNeed),       sub: 'V5 locked target',                  tone: 'navy' },
-          { label: 'Recent 4-Wk Avg',     value: fmt.money(D.weeklyTargetsHeader.recent4WkAvg),         sub: 'Trailing actuals',                  tone: 'success' },
-          { label: 'Weekly Gap',          value: fmt.money(D.weeklyTargetsHeader.gap),                  sub: '~5% short of target',                tone: 'warn' },
-          { label: 'Production Need',     value: fmt.money(D.weeklyTargetsHeader.productionAvgWeeklyNeed), sub: 'Weekly must-complete-and-invoice', tone: 'navy' }
+          { label: 'Avg Weekly Need',    value: fmt.money(wtH.avgWeeklyNeed),       sub: 'Locked weekly target',                  tone: 'navy' },
+          { label: 'Recent 4-Wk Avg',     value: fmt.money(wtH.recent4WkAvg),         sub: 'Trailing actuals',                  tone: 'success' },
+          { label: 'Weekly Gap',          value: fmt.money(wtH.gap),                  sub: fmt.pct(wkGapPct) + ((wtH.gap || 0) > 0 ? ' short of target' : ' ahead of target'), tone: (wtH.gap || 0) > 0 ? 'warn' : 'success' },
+          { label: 'Production Need',     value: fmt.money(wtH.productionAvgWeeklyNeed), sub: 'Weekly must-complete-and-invoice', tone: 'navy' }
         ]
       },
       {
         kind: 'callout', tone: 'warn',
         title: 'Methodology locked',
-        body: 'The Weekly Sales Targets schedule is locked as of <strong>2026-04-19</strong>. WIP constants and cycle-time hierarchy are immutable in this view. If actuals diverge by more than ±15% from the locked target for two consecutive weeks, escalate to the COO and FP&A Director (Mahlet Teshome Mandefro) for an off-cycle methodology review.'
+        body: 'The Weekly Sales Targets schedule is locked as of <strong>' + lockedOn + '</strong>. WIP constants and cycle-time hierarchy are immutable in this view. If actuals diverge by more than ±15% from the locked target for two consecutive weeks, escalate to the COO and the finance forecasting team for an off-cycle methodology review.'
       },
       {
         kind: 'chart-grid', cols: 2,
         charts: [
           {
             title: 'Weekly Target by Job Type',
-            sub: 'How the $2.68M weekly need splits across the three job types',
+            sub: 'How the ' + fmt.money(wtH.avgWeeklyNeed || 0, { short: true }) + ' weekly need splits across the job types',
             height: 260,
             config: {
               type: 'doughnut',
@@ -2283,7 +2485,10 @@
           },
           {
             title: 'Weekly Target by Trade',
-            sub: 'Roofing carries 62% of every weekly target dollar',
+            sub: (function () {
+              var rows = (T.weeklyTargetsByTrade && T.weeklyTargetsByTrade.rows) || [];
+              return rows.length ? rows[0][0] + ' carries ' + fmt.pct(rows[0][2]) + ' of every weekly target dollar' : 'Split of the weekly target by trade';
+            })(),
             height: 260,
             config: {
               type: 'doughnut',
@@ -2305,7 +2510,12 @@
         charts: [
           {
             title: 'Weekly Target by Market',
-            sub: 'All 11 active markets · Columbus needs $793K/wk on its own',
+            sub: (function () {
+              var rows = (T.weeklyTargetByMarketJobType && T.weeklyTargetByMarketJobType.rows) || [];
+              return rows.length
+                ? rows.length + ' active markets · ' + rows[0][0] + ' needs ' + fmt.money(rows[0][1], { short: true }) + '/wk on its own'
+                : 'Per-market weekly targets, stacked by job type';
+            })(),
             height: 360,
             config: {
               type: 'bar',
@@ -2328,7 +2538,7 @@
       tableSection({
         id: 'weeklyTargetByMarketJobType',
         heading: 'Weekly target by market × job type',
-        caption: 'Locked V5 weekly targets, with deals/wk implied by ticket sizes',
+        caption: 'Locked weekly targets, with deals/wk implied by ticket sizes',
         rowMap: function (r) {
           return [
             { html: '<strong>' + r[0] + '</strong>' },
@@ -2341,20 +2551,19 @@
         }
       }),
       tableSection({
-        id: 'weekByWeekSalesSchedule',
+        id: 'weeklyScheduleNext',
         heading: 'Week-by-week sales schedule',
-        caption: 'Every week from Apr 19 to year-end · what to sign and the running cumulative',
+        caption: 'Upcoming weekly targets · what to sign each week',
         maxHeight: '480px',
         rowMap: function (r) {
           return [
             { html: '<strong>' + r[0] + '</strong>' },
             r[1],
-            fmt.money(r[2]),
-            { html: '<strong>' + fmt.money(r[3]) + '</strong>' }
+            { html: '<strong>' + fmt.money(r[2]) + '</strong>' }
           ];
         }
       })
-    ]
+    ].filter(Boolean)
   };
 
   // ============================================================
@@ -2363,15 +2572,15 @@
   pages.production = {
     eyebrow: 'PRODUCTION · WEEKLY MUST-DOS',
     title: 'Production Metrics',
-    intro: 'The other side of the budget equation: what production has to complete and invoice each week to convert sales into revenue. Same locked V5 methodology, applied to the production cycle.',
+    intro: 'The other side of the budget equation: what production has to complete and invoice each week to convert sales into revenue. Same locked methodology, applied to the production cycle.',
     sections: [
       {
         kind: 'kpi-row', cols: 4,
         items: [
-          { label: 'Weekly Production Need', value: fmt.money(D.weeklyTargetsHeader.productionAvgWeeklyNeed), sub: 'Must complete and invoice',     tone: 'navy' },
-          { label: 'Sales Cycle (Created→IP)', value: D.weeklyTargetsHeader.productionCycleStart + 'd',         sub: 'V5 assumption' },
-          { label: 'Production Cycle (IP→C)',  value: D.weeklyTargetsHeader.productionCycleComplete + 'd',      sub: 'V5 assumption' },
-          { label: 'Total Cycle',              value: D.weeklyTargetsHeader.productionTotalCycle + 'd',         sub: 'Created → Invoiced',           tone: 'success' }
+          { label: 'Weekly Production Need', value: fmt.money(wtH.productionAvgWeeklyNeed), sub: 'Must complete and invoice',     tone: 'navy' },
+          { label: 'Sales Cycle (Created→IP)', value: wtH.productionCycleStart + 'd',         sub: 'Model assumption' },
+          { label: 'Production Cycle (IP→C)',  value: wtH.productionCycleComplete + 'd',      sub: 'Model assumption' },
+          { label: 'Total Cycle',              value: wtH.productionTotalCycle + 'd',         sub: 'Created → Invoiced',           tone: 'success' }
         ]
       },
       {
@@ -2396,7 +2605,10 @@
           },
           {
             title: 'Weekly Production by Trade',
-            sub: 'Roofing + Gutters drive 88% of production capacity',
+            sub: (function () {
+              var rows = (T.productionByTrade && T.productionByTrade.rows) || [];
+              return rows.length >= 2 ? rows[0][0] + ' + ' + rows[1][0] + ' carry the bulk of production capacity' : 'Production load by trade';
+            })(),
             height: 280,
             config: {
               type: 'doughnut',
@@ -2418,7 +2630,10 @@
         charts: [
           {
             title: 'Weekly Production Target by Market',
-            sub: 'Stacked by job type · Columbus alone is $793K/wk in production',
+            sub: (function () {
+              var rows = (T.productionByMarketJobType && T.productionByMarketJobType.rows) || [];
+              return rows.length ? 'Stacked by job type · ' + rows[0][0] + ' carries the largest weekly load' : 'Stacked by job type';
+            })(),
             height: 360,
             config: {
               type: 'bar',
@@ -2473,7 +2688,7 @@
       tableSection({
         id: 'weekByWeekProductionSchedule',
         heading: 'Week-by-week production schedule',
-        caption: 'Locked V5 production targets, week by week to year-end',
+        caption: 'Locked production targets, week by week to year-end',
         maxHeight: '480px',
         rowMap: function (r) {
           return [
@@ -2484,43 +2699,43 @@
           ];
         }
       })
-    ]
+    ].filter(Boolean)
   };
 
   // ============================================================
   // PROFITABILITY
   // ============================================================
   pages.profitability = {
-    eyebrow: 'PROFITABILITY · 2025 + 2026 YTD',
+    eyebrow: 'PROFITABILITY · ' + yPrev + ' + ' + yNow + ' YTD',
     title: 'Profitability',
-    intro: 'Combined gross profit picture across both years, with the 2025 baseline and 2026 YTD layered side by side. GP percent is the cleanest pricing-discipline read we have.',
+    intro: 'Combined gross profit picture across both years, with the ' + yPrev + ' baseline and ' + yNow + ' YTD layered side by side. GP percent is the cleanest pricing-discipline read we have.',
     tags: [
-      { kind: 'success', text: '2026 GP% improving · 42.1%' }
+      { kind: gmDelta >= 0 ? 'success' : 'warn', text: yNow + ' GP% ' + (gmDelta >= 0 ? 'improving' : 'declining') + ' · ' + fmt.pct(psR.y2026_GP_pct) }
     ],
     sections: [
       {
         kind: 'kpi-row', cols: 4,
         items: [
-          { label: 'Combined GP %',         value: fmt.pct(D.profitabilitySummary.combinedGP_pct),    sub: '2025 + 2026 YTD blended',          tone: 'navy' },
-          { label: 'Combined GP $',          value: fmt.money(D.profitabilitySummary.combinedGP, { short: true }), sub: 'On ' + fmt.money(D.profitabilitySummary.combinedRevenue, { short: true }) + ' invoiced revenue', tone: 'success' },
-          { label: '2026 YTD GP %',          value: fmt.pct(D.profitabilitySummary.y2026_GP_pct),     sub: 'Trending up vs 2025 (' + fmt.pct(D.profitabilitySummary.y2025_GP_pct) + ')', tone: 'success' },
-          { label: '2025 Full-Year GP %',    value: fmt.pct(D.profitabilitySummary.y2025_GP_pct),     sub: fmt.money(D.profitabilitySummary.y2025_revenue, { short: true }) + ' on ' + D.profitabilitySummary.y2025_jobs + ' jobs' }
+          { label: 'Combined GP %',         value: fmt.pct(psR.combinedGP_pct),    sub: yPrev + ' + ' + yNow + ' YTD blended',          tone: 'navy' },
+          { label: 'Combined GP $',          value: fmt.money(psR.combinedGP, { short: true }), sub: 'On ' + fmt.money(psR.combinedRevenue, { short: true }) + ' invoiced revenue', tone: 'success' },
+          { label: yNow + ' YTD GP %',       value: fmt.pct(psR.y2026_GP_pct),     sub: 'Trending ' + (gmDelta >= 0 ? 'up' : 'down') + ' vs ' + yPrev + ' (' + fmt.pct(psR.y2025_GP_pct) + ')', tone: gmDelta >= 0 ? 'success' : 'warn' },
+          { label: yPrev + ' Full-Year GP %', value: fmt.pct(psR.y2025_GP_pct),    sub: fmt.money(psR.y2025_revenue, { short: true }) + ' on ' + psR.y2025_jobs + ' jobs' }
         ]
       },
       {
         kind: 'kpi-row', cols: 3,
         items: [
-          { label: 'Material Cost',  value: fmt.money(D.profitabilitySummary.materialCost, { short: true }),   sub: fmt.pct(D.profitabilitySummary.materialPctContract) + ' of contract value' },
-          { label: 'Labor Cost',     value: fmt.money(D.profitabilitySummary.laborCost, { short: true }),       sub: fmt.pct(D.profitabilitySummary.laborPctContract) + ' of contract value' },
-          { label: 'Commissions',    value: fmt.money(D.profitabilitySummary.commissions, { short: true }),     sub: fmt.pct(D.profitabilitySummary.commissionPctContract) + ' of contract value' }
+          { label: 'Material Cost',  value: fmt.money(psR.materialCost, { short: true }),   sub: fmt.pct(psR.materialPctContract) + ' of contract value' },
+          { label: 'Labor Cost',     value: fmt.money(psR.laborCost, { short: true }),       sub: fmt.pct(psR.laborPctContract) + ' of contract value' },
+          { label: 'Commissions',    value: fmt.money(psR.commissions, { short: true }),     sub: fmt.pct(psR.commissionPctContract) + ' of contract value' }
         ]
       },
       {
         kind: 'chart-grid', cols: 2,
         charts: [
           {
-            title: 'GP % by Job Type (2026 YTD)',
-            sub: 'Retail-Financing leads · Insurance trails',
+            title: 'GP % by Job Type (' + yNow + ' YTD)',
+            sub: 'Ranked view of pricing discipline by job type',
             height: 280,
             config: {
               type: 'bar',
@@ -2528,7 +2743,7 @@
                 labels: T.profitabilityByJobType2026.rows.map(function (r) { return r[0]; }),
                 datasets: [{
                   label: 'GP %',
-                  data: T.profitabilityByJobType2026.rows.map(function (r) { return parseFloat(String(r[6]).replace('%', '')); }),
+                  data: T.profitabilityByJobType2026.rows.map(lastPct),
                   backgroundColor: [pal.blue, pal.navy, pal.success]
                 }]
               },
@@ -2536,8 +2751,8 @@
             }
           },
           {
-            title: 'GP % by Job Type (2025 Baseline)',
-            sub: 'Same view, full-year 2025 reference',
+            title: 'GP % by Job Type (' + yPrev + ' Baseline)',
+            sub: 'Same view, full-year ' + yPrev + ' reference',
             height: 280,
             config: {
               type: 'bar',
@@ -2545,7 +2760,7 @@
                 labels: T.profitabilityByJobType2025.rows.map(function (r) { return r[0]; }),
                 datasets: [{
                   label: 'GP %',
-                  data: T.profitabilityByJobType2025.rows.map(function (r) { return parseFloat(String(r[6]).replace('%', '')); }),
+                  data: T.profitabilityByJobType2025.rows.map(lastPct),
                   backgroundColor: [pal.navy, pal.blue, pal.success]
                 }]
               },
@@ -2558,18 +2773,20 @@
         kind: 'chart-grid', cols: 1,
         charts: [
           {
-            title: 'GP % by Market (2026 YTD)',
-            sub: 'Cleveland leads (47.2%) · Raleigh is the outlier (26.9%)',
+            title: 'GP % by Market (' + yNow + ' YTD)',
+            sub: (pmBest && pmWorst && pmBest[0] !== pmWorst[0])
+              ? pmBest[0] + ' leads (' + fmt.pct(lastPct(pmBest)) + ') · ' + pmWorst[0] + ' is the outlier (' + fmt.pct(lastPct(pmWorst)) + ')'
+              : 'GP percent by market, ranked',
             height: 360,
             config: {
               type: 'bar',
               data: {
-                labels: T.profitabilityByMarket2026.rows.filter(function (r) { return r[0] !== 'TOTAL'; }).map(function (r) { return r[0]; }),
+                labels: pmNonTotal.map(function (r) { return r[0]; }),
                 datasets: [{
                   label: 'GP %',
-                  data: T.profitabilityByMarket2026.rows.filter(function (r) { return r[0] !== 'TOTAL'; }).map(function (r) { return parseFloat(String(r[7]).replace('%', '')); }),
-                  backgroundColor: T.profitabilityByMarket2026.rows.filter(function (r) { return r[0] !== 'TOTAL'; }).map(function (r) {
-                    var v = parseFloat(String(r[7]).replace('%', ''));
+                  data: pmNonTotal.map(lastPct),
+                  backgroundColor: pmNonTotal.map(function (r) {
+                    var v = lastPct(r);
                     return v >= 45 ? pal.success : v >= 38 ? pal.navy : v >= 30 ? pal.warning : pal.danger;
                   })
                 }]
@@ -2585,75 +2802,56 @@
       },
       tableSection({
         id: 'profitabilityByJobType2026',
-        heading: 'Invoiced 2026: by job type',
-        caption: 'Retail-Financing carries the highest GP% (49.2%)',
-        rowMap: function (r) {
-          return [
-            { html: '<strong>' + r[0] + '</strong>' },
-            r[1],
-            fmt.money(r[2]),
-            fmt.money(r[3]),
-            fmt.money(r[4]),
-            fmt.money(r[5]),
-            { html: '<span class="pill pill-success">' + r[6] + '</span>' }
-          ];
-        }
+        heading: 'Invoiced ' + yNow + ': by job type',
+        caption: 'GP% pill colors track the same bands as the market chart',
+        rowMap: profCellsR
       }),
       tableSection({
         id: 'profitabilityByMarket2026',
-        heading: 'Invoiced 2026: by market',
+        heading: 'Invoiced ' + yNow + ': by market',
         caption: 'Full P&L cut · ranked by revenue',
         maxHeight: '480px',
-        rowMap: function (r) {
-          var pct = parseFloat(String(r[7]).replace('%', ''));
-          var pillCls = pct >= 45 ? 'pill-success' : pct >= 38 ? 'pill-info' : pct >= 30 ? 'pill-warn' : 'pill-danger';
-          return [
-            { html: '<strong>' + r[0] + '</strong>' },
-            r[1],
-            fmt.money(r[2]),
-            fmt.money(r[3]),
-            fmt.money(r[4]),
-            fmt.money(r[5]),
-            fmt.money(r[6]),
-            { html: '<span class="pill ' + pillCls + '">' + r[7] + '</span>' }
-          ];
-        }
+        rowMap: profCellsR
       }),
-      {
+      pmWorst ? {
         kind: 'callout',
-        title: 'The Raleigh question',
-        body: 'Raleigh is invoicing at <strong>26.9% GP</strong> on $1.16M of 2026 revenue, well below the 41.6% blended baseline. 2025 it was 42.1% on a similar volume. Worth a focused estimate review and a material/labor cost audit before Q3 plans lock.'
+        title: 'The ' + pmWorst[0] + ' question',
+        body: pmWorst[0] + ' is invoicing at <strong>' + fmt.pct(lastPct(pmWorst)) + ' GP</strong>, the lowest market in the ' + yNow + ' YTD table and well below the ' + fmt.pct(psR.y2026_GP_pct) + ' blended margin. Worth a focused estimate review and a material/labor cost audit before the next quarter\'s plans lock.'
+      } : {
+        kind: 'callout', tone: 'info',
+        title: 'Per-market detail pending',
+        body: 'Per-market profitability rows are not in this refresh. Drop the latest profitability CSV into the residential inputs folder and rerun the build to populate the market cut.'
       }
-    ]
+    ].filter(Boolean)
   };
 
   // ============================================================
   // BUDGET RECOVERY
   // ============================================================
   pages['budget-recovery'] = {
-    eyebrow: 'BUDGET RECOVERY · LOCKED V5',
+    eyebrow: 'BUDGET RECOVERY · REALISTIC VS BUDGET',
     title: 'Budget Recovery',
-    intro: 'How we close the gap between today\'s forecast and the original residential budget. The recovery layer adds a ' + D.budgetRecoveryHeader.upliftPct + '% uplift to each remaining month so the year still lands at $126.1M.',
+    intro: 'How we close the gap between today\'s forecast and the original residential budget. The recovery layer adds a ' + (brH.upliftPct || 0) + '% uplift to each remaining month so the year still lands at ' + fmt.money(brH.fullYearBudget || 0, { short: true }) + '.',
     tags: [
-      { kind: 'danger', text: fmt.money(D.budgetRecoveryHeader.gap, { short: true }) + ' to recover' },
-      { kind: 'info',   text: '+' + D.budgetRecoveryHeader.upliftPct + '% monthly uplift' }
+      { kind: 'danger', text: fmt.money(brH.gap || 0, { short: true }) + ' to recover' },
+      { kind: 'info',   text: '+' + (brH.upliftPct || 0) + '% monthly uplift' }
     ],
     sections: [
       {
         kind: 'kpi-row', cols: 4,
         items: [
-          { label: 'Full-Year Budget',    value: fmt.money(D.budgetRecoveryHeader.fullYearBudget, { short: true }), sub: 'Residential plan target',         tone: 'navy' },
-          { label: 'Recovery Gap',         value: fmt.money(D.budgetRecoveryHeader.gap, { short: true }),            sub: 'To re-allocate across May-Dec',    tone: 'danger' },
-          { label: 'Monthly Uplift',       value: '+' + D.budgetRecoveryHeader.upliftPct + '%',                       sub: 'On forecast for each month',       tone: 'warn' },
-          { label: 'April Treatment',      value: 'Accepted',                                                          sub: fmt.money(D.budgetRecoveryHeader.aprilGap, { short: true }) + ' April gap absorbed' }
+          { label: 'Full-Year Budget',    value: fmt.money(brH.fullYearBudget, { short: true }), sub: 'Residential plan target',         tone: 'navy' },
+          { label: 'Recovery Gap',         value: fmt.money(brH.gap, { short: true }),            sub: 'To re-allocate across remaining months',    tone: 'danger' },
+          { label: 'Monthly Uplift',       value: '+' + (brH.upliftPct || 0) + '%',                       sub: 'On forecast for each month',       tone: 'warn' },
+          { label: 'Closed-Month Treatment', value: 'Accepted',                                                          sub: fmt.money(brH.aprilGap, { short: true }) + ' early-month gap absorbed' }
         ]
       },
       {
         kind: 'kpi-row', cols: 3,
         items: [
-          { label: 'Q1 Original Budget', value: fmt.money(D.budgetRecoveryHeader.q1OriginalBudget, { short: true }), sub: 'Original residential plan' },
-          { label: 'Q1 Actual',           value: fmt.money(D.budgetRecoveryHeader.q1Actual, { short: true }),         sub: 'Through end of March' },
-          { label: 'Q1 Shortfall',        value: fmt.money(D.budgetRecoveryHeader.q1Shortfall, { short: true }),      sub: 'Inside the recovery target',     tone: 'warn' }
+          { label: 'Q1 Original Budget', value: fmt.money(brH.q1OriginalBudget, { short: true }), sub: 'Original residential plan' },
+          { label: 'Q1 Actual',           value: fmt.money(brH.q1Actual, { short: true }),         sub: 'Through end of March' },
+          { label: 'Q1 Shortfall',        value: fmt.money(brH.q1Shortfall, { short: true }),      sub: 'Inside the recovery target',     tone: 'warn' }
         ]
       },
       {
@@ -2683,7 +2881,7 @@
         charts: [
           {
             title: 'Catch-Up Added by Month',
-            sub: 'The actual recovery dollars distributed across May through December',
+            sub: 'The actual recovery dollars distributed across the remaining months',
             height: 280,
             config: {
               type: 'bar',
@@ -2732,9 +2930,9 @@
       {
         kind: 'callout', tone: 'danger',
         title: 'Owner check',
-        body: 'The recovery layer is a math allocation, not a plan. For it to land we need: (a) Columbus and Detroit Metro to hold their April pace through Q3, (b) Insurance closing velocity to stay above 28-day median, (c) the unbilled-completed queue to stay under 21d. If any of those three slip in May, re-baseline at end-of-month and escalate to the COO.'
+        body: 'The recovery layer is a math allocation, not a plan. For it to land we need: (a) the top revenue branches to hold their current pace, (b) closing velocity to stay at or better than the model cycle medians, (c) the unbilled-completed queue to stay short. If any of those three slip, re-baseline at end-of-month and escalate to the COO.'
       }
-    ]
+    ].filter(Boolean)
   };
 
   // ============================================================
@@ -2743,27 +2941,43 @@
   pages.recommendations = {
     eyebrow: 'STRATEGIC · WHERE TO PUSH',
     title: 'Strategic Recommendations',
-    intro: 'The six moves the data points to. Each one is sized so a single owner can move the number in 30 to 60 days. Read the strategy highlights for the math behind them.',
-    tags: [{ kind: 'success', text: '6 prioritized actions' }],
+    intro: 'The moves the data points to. Each one is sized so a single owner can move the number in 30 to 60 days. Read the strategy highlights for the math behind them.',
+    tags: [{ kind: 'success', text: ((commR.actionableRecommendations || []).length || 'No') + ' prioritized action' + ((commR.actionableRecommendations || []).length === 1 ? '' : 's') }],
     sections: [
       {
         kind: 'kpi-row', cols: 3,
-        items: [
-          { label: 'Best Job Type · Rev/Day',  value: 'Insurance',         sub: '$1,316/day · 19d cycle · $25,011 avg', tone: 'navy' },
-          { label: 'Best Single-Trade Combo',   value: 'Retail-Fin Roofing', sub: '$895/day · 21d cycle · $20,490 avg',   tone: 'success' },
-          { label: 'Best Branch · Rev/Eff',     value: 'Nashville RF',       sub: '$965/day · 26d cycle · 40 jobs',        tone: 'success' }
-        ]
+        items: (function () {
+          var items = [];
+          if (jtiSorted.length) {
+            items.push({
+              label: 'Best Job Type · Rev/Day',
+              value: jtiSorted[0][0],
+              sub: '$' + Math.round(jtiSorted[0][3]).toLocaleString('en-US') + '/day · ' + Math.round(jtiSorted[0][2]) + 'd cycle · ' + fmt.money(jtiSorted[0][1], { short: true }) + ' avg',
+              tone: 'navy'
+            });
+          }
+          smRows.slice(0, 2).forEach(function (r, i) {
+            items.push({
+              label: (i === 0 ? 'Best' : 'Runner-Up') + ' Market · Rev/Eff',
+              value: r[0],
+              sub: '$' + Math.round(r[4]).toLocaleString('en-US') + '/day · ' + r[3] + 'd median · ' + r[1] + ' jobs',
+              tone: 'success'
+            });
+          });
+          if (!items.length) items.push({ label: 'Revenue Efficiency', value: '—', sub: 'not in data payload' });
+          return items;
+        })()
       },
       {
         kind: 'prose', heading: 'Actionable recommendations',
         cards: [
           {
             kind: 'tint', eyebrow: 'PRIORITIZED MOVES',
-            list: D.commentary.actionableRecommendations.map(function (t) { return { text: t, icon: '→', tone: 'navy' }; })
+            list: (commR.actionableRecommendations || []).map(function (t) { return { text: noV5(t), icon: '→', tone: 'navy' }; })
           },
           {
             eyebrow: 'STRATEGY HIGHLIGHTS',
-            list: D.commentary.strategyHighlights.map(function (t) { return { text: t, icon: '✓', tone: 'success' }; })
+            list: (commR.strategyHighlights || []).map(function (t) { return { text: noV5(t), icon: '✓', tone: 'success' }; })
           }
         ],
         cols: 2
@@ -2773,15 +2987,15 @@
         charts: [
           {
             title: 'Best Markets by Revenue Efficiency',
-            sub: 'Top 12 job-type × branch combinations · ranked by Rev/Day',
+            sub: 'Top ' + Math.min(smRows.length || 12, 12) + ' markets · ranked by Rev/Day',
             height: 380,
             config: {
               type: 'bar',
               data: {
-                labels: T.strategicBestMarketsRevEff.rows.slice(0, 12).map(function (r) { return r[1] + ' / ' + r[2]; }),
+                labels: smRows.slice(0, 12).map(function (r) { return r[0]; }),
                 datasets: [{
                   label: 'Rev/Day',
-                  data: T.strategicBestMarketsRevEff.rows.slice(0, 12).map(function (r) { return r[3]; }),
+                  data: smRows.slice(0, 12).map(function (r) { return r[4]; }),
                   backgroundColor: pal.navy
                 }]
               },
@@ -2801,14 +3015,11 @@
         maxHeight: '460px',
         rowMap: function (r) {
           return [
-            r[0],
+            { html: '<strong>' + r[0] + '</strong>' },
             r[1],
-            { html: '<strong>' + r[2] + '</strong>' },
-            { html: '<strong>$' + r[3] + '/day</strong>' },
-            fmt.money(r[4]),
-            r[5] + 'd',
-            r[6],
-            fmt.money(r[7])
+            fmt.money(r[2]),
+            r[3] + 'd',
+            { html: '<strong>$' + Math.round(r[4]).toLocaleString('en-US') + '/day</strong>' }
           ];
         }
       }),
@@ -2818,16 +3029,10 @@
         caption: 'Trade combinations that move the most revenue per crew-day',
         maxHeight: '460px',
         rowMap: function (r) {
-          return [
-            r[0],
-            r[1],
-            { html: '<strong>' + r[2] + '</strong>' },
-            { html: '<strong>$' + r[3] + '/day</strong>' },
-            fmt.money(r[4]),
-            r[5] + 'd',
-            r[6],
-            fmt.money(r[7])
-          ];
+          return r.map(function (c, i) {
+            if (i === 0) return { html: '<strong>' + c + '</strong>' };
+            return (typeof c === 'number' && c >= 10000) ? fmt.money(c) : c;
+          });
         }
       }),
       {
@@ -2835,7 +3040,7 @@
         title: 'How to use this page',
         body: 'Print this tab on the first Monday of each month. The Prioritized Moves list should be the basis for branch-level OKRs. The Best Markets table tells the sales ops team where to add lead spend; the Best Trades table tells the bookings team which scopes to steer toward.'
       }
-    ]
+    ].filter(Boolean)
   };
 
   // ============================================================

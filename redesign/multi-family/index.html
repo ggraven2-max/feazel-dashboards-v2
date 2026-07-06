@@ -18,10 +18,10 @@
     <span class="eyebrow">MULTI-FAMILY · COMMERCIAL</span>
     <h1>Multi-Family</h1>
     <p class="hero-tagline">By the building. By the block.</p>
-    <p class="hero-narrative">One view of where the multi-family and commercial book stands today: signed contracts, the revenue forecast against the $51.67M plan, the open backlog, and what is actually invoicing.</p>
+    <p class="hero-narrative">One view of where the multi-family and commercial book stands today: signed contracts, the revenue forecast against the <strong data-bind="narrative.budget">—</strong> plan, the open backlog, and what is actually invoicing.</p>
     <div class="hub-hero-stats">
       <div class="hub-hero-stat">
-        <div class="l">2026 Multi-Family Target</div>
+        <div class="l" data-bind="hero.targetLabel">Multi-Family Target</div>
         <div class="v" data-bind="hero.target">—</div>
         <div class="s" data-bind="hero.targetSub">MF plan from Commercial Budget</div>
       </div>
@@ -47,10 +47,10 @@
   <section class="section">
     <div class="callout">
       <span class="callout-title">Where it stands</span>
-      The current 4-week sales pace (<strong data-bind="rollup.weeklyPace">—</strong>/wk) projects to <strong data-bind="rollup.annualForecast">—</strong> annual invoiced revenue against the
+      The job-by-job event model projects <strong data-bind="rollup.annualForecast">—</strong> annual invoiced revenue against the
       <strong data-bind="rollup.budget">—</strong> budget, a <strong data-bind="rollup.gap">—</strong> gap. The plan to close it is documented in Revenue Forecast → Budget Recovery
       and Sales Overview → Action Plan. The backlog and installs dashboards show what we have already sold
-      and need to deliver on time to convert that pace into invoiced revenue.
+      and need to deliver on time to convert that pipeline into invoiced revenue.
     </div>
   </section>
 
@@ -68,7 +68,7 @@
             <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
           </div>
           <div>
-            <span class="eyebrow">YTD 2026</span>
+            <span class="eyebrow" data-bind="tile.sales.eyebrow">YTD</span>
             <h2 style="margin-top:2px;">Multi-Family Sales Overview</h2>
             <p>Signed contracts, kicked-back rate, branch and rep performance, and the levers to close the gap to plan. 13 dedicated tabs.</p>
           </div>
@@ -88,9 +88,9 @@
             <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-6"/></svg>
           </div>
           <div>
-            <span class="eyebrow">MF-v1.1 · 2026 OUTLOOK</span>
+            <span class="eyebrow" data-bind="tile.rev.eyebrow">MF-V1.1</span>
             <h2 style="margin-top:2px;">Multi-Family Revenue Forecast</h2>
-            <p>Projects net invoiced revenue against the $51.67M Commercial Budget plan using a job-by-job event model anchored on Date Moved to Invoiced and NetSuite AR.</p>
+            <p>Projects net invoiced revenue against the Commercial Budget plan using a job-by-job event model anchored on Date Moved to Invoiced and NetSuite AR.</p>
           </div>
         </div>
         <div class="tile-stats">
@@ -151,7 +151,7 @@
       <div class="card">
         <span class="eyebrow">METHODOLOGY</span>
         <h3 style="margin-top:6px;">Forecast MF-v1.1 Locked</h3>
-        <p style="margin-top:8px; font-size:13px;">Job-by-job event model locked <strong>May 4, 2026</strong>. Revenue anchored on Date Moved to Invoiced (and NetSuite AR for booked actuals); WIP defined as start &le; month-end with no invoice yet. Annual budget $51.67M from the Commercial Budget XLSX. See Revenue Forecast → Executive Summary.</p>
+        <p style="margin-top:8px; font-size:13px;">Job-by-job event model, methodology locked. Revenue anchored on Date Moved to Invoiced (and NetSuite AR for booked actuals); WIP defined as start &le; month-end with no invoice yet. Annual budget from the Commercial Budget XLSX. See Revenue Forecast → Executive Summary.</p>
       </div>
       <div class="card">
         <span class="eyebrow">DATA FRESHNESS</span>
@@ -172,7 +172,7 @@
       <div class="card-head">
         <div>
           <h3>Active MF Markets</h3>
-          <span class="caption">Markets with multi-family activity in 2026, ranked by signed YTD</span>
+          <span class="caption">Markets with multi-family activity this year, ranked by signed YTD</span>
         </div>
         <div class="caption" id="mf-markets-meta">—</div>
       </div>
@@ -193,6 +193,19 @@
 
   // ---- Live binder: pull values from FZ.data into the Command Center hub ----
   (function bindCommandCenter () {
+    // Year anchors are computed, never hardcoded, and render even when the
+    // data payload is missing.
+    var yr = new Date().getFullYear();
+    var yearBinds = {
+      'hero.targetLabel':   yr + ' Multi-Family Target',
+      'tile.sales.eyebrow': 'YTD ' + yr,
+      'tile.rev.eyebrow':   'MF-V1.1 · ' + yr + ' OUTLOOK'
+    };
+    Object.keys(yearBinds).forEach(function (key) {
+      var el = document.querySelector('[data-bind="' + key + '"]');
+      if (el) el.textContent = yearBinds[key];
+    });
+
     var data = window.FZ && window.FZ.data;
     if (!data) return;
 
@@ -213,11 +226,12 @@
     var soKicked   = kpi(SO.kpis, 'Kicked Back');
     var soAvg      = kpi(SO.kpis, 'Avg Deal Size');
 
-    var rfFcst     = kpi(RF.kpis, 'Annual Forecast');
+    // The MF payload labels its annual projection 'Plan-Rest Forecast';
+    // accept either label so the forecast renders from MF's own numbers.
+    var rfFcst     = kpi(RF.kpis, 'Annual Forecast') || kpi(RF.kpis, 'Plan-Rest Forecast');
     var rfBudget   = kpi(RF.kpis, 'Annual Budget');
     var rfGap      = kpi(RF.kpis, 'Forecast vs Budget');
     var rfPipe     = kpi(RF.kpis, 'Active Pipeline');
-    var rfWeekly   = kpi(RF.kpis, '4-Week Avg Weekly Sales');
     var rfInvoiced = kpi(RF.kpis, 'Invoiced YTD');
 
     var iyRev      = kpi(IY.kpis, 'True Revenue');
@@ -244,18 +258,20 @@
     var binds = {
       // Hero
       'hero.target':      fmtBigMoney(rfBudgetRaw),
-      'hero.targetSub':   '$185M total enterprise plan',
+      'hero.targetSub':   'Annual multi-family budget',
+      'narrative.budget': val(rfBudget, fmtBigMoney(rfBudgetRaw)),
       'hero.signed':      val(soSigned),
       'hero.signedSub':   sub(soSigned, 'multi-family contracts'),
       'hero.invoiced':    val(rfInvoiced),
       'hero.invoicedSub': iyRev ? (iyRev.sub || '') : (sub(rfInvoiced)),
       'hero.backlog':     val(blValue),
       'hero.backlogSub':  blValue ? (blValue.sub || '') : (BL.headerMeta ? (BL.headerMeta.totalJobs + ' active jobs') : ''),
-      // Rollup callout
-      'rollup.weeklyPace':    val(rfWeekly, '$2.6M'),
-      'rollup.annualForecast':val(rfFcst, '$119M'),
-      'rollup.budget':        val(rfBudget, '$125.6M'),
-      'rollup.gap':           val(rfGap, '—'),
+      // Rollup callout. No hardcoded fallbacks: missing KPIs render as the
+      // standard '—' placeholder, never a stale number (the old literals here
+      // were residential figures, the wrong LOB for this page).
+      'rollup.annualForecast':val(rfFcst),
+      'rollup.budget':        val(rfBudget),
+      'rollup.gap':           val(rfGap),
       // Sales tile
       'tile.sales.signed': val(soSigned),
       'tile.sales.sold':   val(soSold),

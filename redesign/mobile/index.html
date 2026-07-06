@@ -451,7 +451,7 @@
   <div class="quick">
     <a href="./residential/revenue-forecast/">
       <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><polyline points="7 14 11 10 15 12 21 6"/></svg></div>
-      <div><div class="ttl">Revenue Forecast</div><div class="sub">V5 model, monthly outlook</div></div>
+      <div><div class="ttl">Revenue Forecast</div><div class="sub">Realistic vs Budget, monthly outlook</div></div>
     </a>
     <a href="./residential/sales-overview/">
       <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg></div>
@@ -549,8 +549,8 @@
   var Mrf = M.REVENUE_FORECAST || {}, Mso = M.SALES_OVERVIEW || {}, Mbl = M.BACKLOG || {};
   var Srf = S.REVENUE_FORECAST || {};
 
-  // Invoiced YTD must come from NetSuite AR only — never fall back to V5's
-  // full-year forecast (modelAnnualInvoiced), which is a forecast not a YTD.
+  // Invoiced YTD must come from NetSuite AR only. Never fall back to the
+  // model's full-year forecast (modelAnnualInvoiced), a forecast, not a YTD.
   var resInvoiced = (Rrf.netsuiteInvoiced && Rrf.netsuiteInvoiced.totalInvoiced) ||
                     parseMoney(findKpi(Rrf.kpis, 'Invoiced YTD') && findKpi(Rrf.kpis, 'Invoiced YTD').value) || 0;
   var mfInvoiced  = (Mrf.netsuiteInvoiced && Mrf.netsuiteInvoiced.totalInvoiced) ||
