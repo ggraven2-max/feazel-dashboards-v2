@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "builtAt": "2026-06-12T19:15:13.502Z",
+    "builtAt": "2026-07-06T17:03:13.861Z",
     "pipelineVersion": "2.0.0",
     "lob": "residential",
     "lastBuiltProjects": [
@@ -13,45 +13,45 @@
       {
         "id": "installs-ytd",
         "version": "1.0-rules-encoded",
-        "elapsedMs": 81,
-        "builtAt": "2026-06-12T19:15:13.502Z"
+        "elapsedMs": 94,
+        "builtAt": "2026-07-06T17:03:13.861Z"
       },
       {
         "id": "sales-overview",
         "version": "1.0-rules-encoded",
-        "elapsedMs": 474,
-        "builtAt": "2026-06-12T19:15:13.502Z"
+        "elapsedMs": 485,
+        "builtAt": "2026-07-06T17:03:13.861Z"
       },
       {
         "id": "revenue-forecast",
         "version": "V5-baseline-2026-05-04-shell-1.1",
-        "elapsedMs": 2961,
-        "builtAt": "2026-06-12T19:15:13.502Z"
+        "elapsedMs": 13,
+        "builtAt": "2026-07-06T17:03:13.861Z"
       },
       {
         "id": "backlog",
         "version": "1.0-rules-encoded",
-        "elapsedMs": 35,
-        "builtAt": "2026-06-12T19:15:13.502Z"
+        "elapsedMs": 36,
+        "builtAt": "2026-07-06T17:03:13.861Z"
       }
     ]
   },
   "INSTALLS_YTD": {
     "_source": "calculator/installs-ytd.js v1.0-rules-encoded",
     "title": "Residential Installs YTD",
-    "subtitle": "Invoiced Jobs - Jan 06, 2026 - Jun 12, 2026 - De-Duplicated at Job Level - 1,748 Jobs - 14 Markets - 29 PMs",
-    "generated": "2026-06-12",
+    "subtitle": "Invoiced Jobs - Jan 06, 2026 - Jul 06, 2026 - De-Duplicated at Job Level - 2,151 Jobs - 14 Markets - 30 PMs",
+    "generated": "2026-07-06",
     "headerMeta": {
-      "trueRevenue": 32421360.11,
-      "uniqueJobs": 1748,
+      "trueRevenue": 40620799.31,
+      "uniqueJobs": 2151,
       "markets": 14,
-      "pms": 29,
-      "medianComplete": 23.6,
-      "avgStart": 26.5,
-      "multiTradeJobs": 505,
-      "singleTradeJobs": 1243,
-      "multiTradePct": 28.9,
-      "lastBuild": "2026-06-12T19:15:13.502Z"
+      "pms": 30,
+      "medianComplete": 24.7,
+      "avgStart": 25.8,
+      "multiTradeJobs": 652,
+      "singleTradeJobs": 1499,
+      "multiTradePct": 30.3,
+      "lastBuild": "2026-07-06T17:03:13.861Z"
     },
     "tabs": [
       {
@@ -94,50 +94,50 @@
     "kpis": [
       {
         "label": "True Revenue",
-        "value": "$32.42M",
-        "sub": "1,748 unique jobs invoiced"
+        "value": "$40.62M",
+        "sub": "2,151 unique jobs invoiced"
       },
       {
         "label": "Avg Contract Value",
-        "value": "$18,548",
+        "value": "$18,885",
         "sub": "Per job (deduped)"
       },
       {
         "label": "Median Days to Complete",
-        "value": "23.6d",
+        "value": "24.7d",
         "sub": "Job-level median"
       },
       {
         "label": "Avg Days to Start",
-        "value": "26.5d",
+        "value": "25.8d",
         "sub": "Sale to crew on-site"
       },
       {
         "label": "Multi-Trade Jobs",
-        "value": "505",
-        "sub": "28.9% of book"
+        "value": "652",
+        "sub": "30.3% of book"
       },
       {
         "label": "Single-Trade Jobs",
-        "value": "1,243",
-        "sub": "71.1% of book"
+        "value": "1,499",
+        "sub": "69.7% of book"
       }
     ],
     "kpisMultiTrade": [
       {
         "label": "Multi-Trade Avg Contract",
-        "value": "$25,320",
-        "sub": "+60.3% vs single-trade"
+        "value": "$25,102",
+        "sub": "+55.1% vs single-trade"
       },
       {
         "label": "Single-Trade Avg Contract",
-        "value": "$15,796",
+        "value": "$16,180",
         "sub": "Baseline ticket"
       },
       {
         "label": "Completion Time Gap",
-        "value": "+16.9d",
-        "sub": "MT 36.4d vs ST 19.5d"
+        "value": "+15.9d",
+        "sub": "MT 36.4d vs ST 20.6d"
       }
     ],
     "monthly": [
@@ -163,7 +163,7 @@
         "m": "2026-03",
         "label": "March",
         "key": "2026-03",
-        "rev": 5906931.91,
+        "rev": 5913056.86,
         "jobs": 335,
         "med": 23.5,
         "start": 34.1
@@ -181,7 +181,7 @@
         "m": "2026-05",
         "label": "May",
         "key": "2026-05",
-        "rev": 8350587.95,
+        "rev": 8377996.95,
         "jobs": 459,
         "med": 21.7,
         "start": 22
@@ -190,10 +190,19 @@
         "m": "2026-06",
         "label": "June",
         "key": "2026-06",
-        "rev": 4319705.14,
-        "jobs": 226,
-        "med": 28,
-        "start": 26
+        "rev": 11015360.88,
+        "jobs": 557,
+        "med": 28.5,
+        "start": 24.4
+      },
+      {
+        "m": "2026-07",
+        "label": "July",
+        "key": "2026-07",
+        "rev": 1470249.51,
+        "jobs": 72,
+        "med": 28.5,
+        "start": 21.3
       }
     ],
     "charts": [
@@ -205,7 +214,8 @@
           "2026-03",
           "2026-04",
           "2026-05",
-          "2026-06"
+          "2026-06",
+          "2026-07"
         ],
         "datasets": [
           {
@@ -213,10 +223,11 @@
             "data": [
               3275604.18,
               2694605.54,
-              5906931.91,
+              5913056.86,
               7873925.39,
-              8350587.95,
-              4319705.14
+              8377996.95,
+              11015360.88,
+              1470249.51
             ]
           },
           {
@@ -227,7 +238,8 @@
               335,
               442,
               459,
-              226
+              557,
+              72
             ]
           }
         ]
@@ -240,7 +252,8 @@
           "2026-03",
           "2026-04",
           "2026-05",
-          "2026-06"
+          "2026-06",
+          "2026-07"
         ],
         "datasets": [
           {
@@ -251,7 +264,8 @@
               23.5,
               17.6,
               21.7,
-              28
+              28.5,
+              28.5
             ]
           },
           {
@@ -262,7 +276,8 @@
               34.1,
               25,
               22,
-              26
+              24.4,
+              21.3
             ]
           }
         ]
@@ -276,13 +291,13 @@
           {
             "label": "Multi-Trade",
             "data": [
-              505
+              652
             ]
           },
           {
             "label": "Single-Trade",
             "data": [
-              1243
+              1499
             ]
           }
         ]
@@ -296,21 +311,21 @@
           "Roofing + Siding",
           "Metal + Roofing",
           "Masonry + Roofing",
-          "Gutters + Metal + Roofing",
-          "Painting + Roofing"
+          "Gutters + Masonry + Roofing",
+          "Gutters + Metal + Roofing"
         ],
         "datasets": [
           {
             "label": "Jobs",
             "data": [
-              329,
+              424,
+              41,
               35,
-              27,
-              23,
+              31,
+              16,
               13,
-              12,
-              6,
-              6
+              10,
+              8
             ]
           }
         ]
@@ -322,10 +337,10 @@
           "Detroit Metro",
           "Nashville",
           "DC Metro",
-          "Dayton",
           "Cleveland",
-          "Cincinnati",
+          "Dayton",
           "Richmond",
+          "Cincinnati",
           "Raleigh",
           "Knoxville",
           "Greenville",
@@ -337,19 +352,19 @@
           {
             "label": "MT %",
             "data": [
-              26.5,
-              27.9,
-              32.5,
-              37.5,
-              25.8,
-              40.2,
-              27.3,
-              31.1,
-              12.9,
-              30.9,
-              22,
+              28.3,
+              27.7,
+              33.3,
+              42.3,
+              41,
+              27.7,
+              35.5,
+              25,
+              14.1,
+              29.1,
+              23.4,
               41.4,
-              30,
+              20,
               100
             ]
           }
@@ -362,10 +377,10 @@
           "Detroit Metro",
           "Nashville",
           "DC Metro",
-          "Dayton",
           "Cleveland",
-          "Cincinnati",
+          "Dayton",
           "Richmond",
+          "Cincinnati",
           "Raleigh",
           "Knoxville",
           "Greenville",
@@ -377,17 +392,17 @@
           {
             "label": "MT Median",
             "data": [
-              41.5,
-              43.7,
+              42.6,
+              44.6,
               21.7,
-              25.6,
-              33.5,
-              29.4,
-              39.1,
-              46.6,
-              64.4,
-              28.5,
-              27.7,
+              25.5,
+              34.5,
+              32.6,
+              42.6,
+              36.7,
+              56.7,
+              27.5,
+              22.4,
               64.6,
               39.5,
               346.7
@@ -396,19 +411,19 @@
           {
             "label": "ST Median",
             "data": [
-              17.5,
-              23.4,
-              20,
-              20.6,
-              22.7,
-              18.6,
               19.5,
+              24.5,
+              20.1,
+              18.1,
+              23.9,
+              21.7,
               10.6,
+              20.4,
               21.6,
-              18.7,
+              19.6,
               18.1,
               20.7,
-              28.6,
+              32.6,
               0
             ]
           }
@@ -421,10 +436,10 @@
           "Detroit Metro",
           "Nashville",
           "DC Metro",
-          "Dayton",
           "Cleveland",
-          "Cincinnati",
+          "Dayton",
           "Richmond",
+          "Cincinnati",
           "Raleigh",
           "Knoxville",
           "Greenville",
@@ -436,19 +451,19 @@
           {
             "label": "Revenue",
             "data": [
-              10200373.83,
-              4755093.61,
-              3487946.4,
-              2327923.04,
-              2085382.08,
-              1691868.42,
-              1687992.46,
-              1681413.86,
-              1475233.22,
-              1231115.83,
-              978775.08,
+              13289237.95,
+              6209137.1,
+              4134816.5,
+              3154044.25,
+              2460343.85,
+              2397501.35,
+              2099650.36,
+              1894363.67,
+              1625309.98,
+              1407682.89,
+              1061336.03,
               608668.35,
-              175879.52,
+              245012.62,
               33694.41
             ]
           }
@@ -461,10 +476,10 @@
           "Detroit Metro",
           "Nashville",
           "DC Metro",
-          "Dayton",
           "Cleveland",
-          "Cincinnati",
+          "Dayton",
           "Richmond",
+          "Cincinnati",
           "Raleigh",
           "Knoxville",
           "Greenville",
@@ -476,19 +491,19 @@
           {
             "label": "Median Days",
             "data": [
-              22.4,
-              29.5,
-              21.5,
-              22.6,
+              24.6,
+              29.7,
+              20.6,
+              21.6,
+              28.6,
+              25.5,
+              18.1,
               25.6,
-              24.5,
-              27.1,
-              17.5,
               27,
               23.5,
               20.1,
               44.5,
-              32.1,
+              32.6,
               346.7
             ]
           }
@@ -499,39 +514,39 @@
         "labels": [
           "Mason Bryant",
           "Eric Isakov",
+          "Jason Andrews",
           "Joseph Yager",
           "Brandon Skrzypek",
-          "Brandon Harter",
           "Richard Williams",
           "Landon Little",
-          "Jason Andrews",
+          "Brandon Harter",
           "Shawn Oehlstrom",
-          "Kaden Carter",
-          "Alex Dubanoski",
-          "Levi Nieman",
           "Alejandro Alvarado",
+          "Alex Dubanoski",
           "Abraham Santiago",
-          "Galo Munive"
+          "Kaden Carter",
+          "Galo Munive",
+          "Drew Bailey"
         ],
         "datasets": [
           {
             "label": "Fractional Revenue",
             "data": [
-              2487024.81,
-              2362057.75,
-              2011854.87,
-              1950406.56,
-              1887409.66,
-              1743263.17,
-              1708983.93,
-              1493871.54,
-              1492228.14,
-              1491126.14,
-              1405302.18,
-              1404629.54,
-              1368109.09,
-              1334854.41,
-              1312405.48
+              3270673.24,
+              2817746.92,
+              2712179.74,
+              2329957.4,
+              2327294.95,
+              2311478.09,
+              2186679.53,
+              2166495.34,
+              1954350.63,
+              1944349.79,
+              1848039.65,
+              1665564.87,
+              1638085.66,
+              1488698.9,
+              1416476.19
             ]
           }
         ]
@@ -541,30 +556,31 @@
         "labels": [
           "Mason Bryant",
           "Eric Isakov",
+          "Jason Andrews",
           "Joseph Yager",
           "Brandon Skrzypek",
-          "Brandon Harter",
           "Richard Williams",
           "Landon Little",
-          "Jason Andrews",
+          "Brandon Harter",
           "Shawn Oehlstrom",
-          "Kaden Carter",
-          "Alex Dubanoski",
-          "Levi Nieman",
           "Alejandro Alvarado",
+          "Alex Dubanoski",
           "Abraham Santiago",
+          "Kaden Carter",
           "Galo Munive",
-          "Joseph Jones",
           "Drew Bailey",
+          "Joseph Jones",
+          "Levi Nieman",
           "Brady Weingartner",
-          "Austin Weingartner",
           "Daniel Galli",
-          "Cody Mitchell",
+          "Austin Weingartner",
           "Chad Williams",
+          "Cody Mitchell",
           "Adam Marrero",
           "Michael Blevins",
           "(Unassigned)",
           "Neil Laux",
+          "Joshua Collins",
           "Justin Milliron",
           "Mike Scott",
           "Chris Atkins"
@@ -574,124 +590,130 @@
             "label": "PMs",
             "data": [
               {
-                "x": 26.7,
-                "y": 2487024.81,
-                "wos": 157,
+                "x": 27.5,
+                "y": 3270673.24,
+                "wos": 204,
                 "name": "Mason Bryant"
               },
               {
-                "x": 27.1,
-                "y": 2362057.75,
-                "wos": 128,
+                "x": 28.5,
+                "y": 2817746.92,
+                "wos": 161,
                 "name": "Eric Isakov"
               },
               {
-                "x": 27.6,
-                "y": 2011854.87,
-                "wos": 164,
-                "name": "Joseph Yager"
-              },
-              {
-                "x": 32.4,
-                "y": 1950406.56,
-                "wos": 102,
-                "name": "Brandon Skrzypek"
-              },
-              {
-                "x": 24.4,
-                "y": 1887409.66,
-                "wos": 100,
-                "name": "Brandon Harter"
-              },
-              {
-                "x": 27.7,
-                "y": 1743263.17,
-                "wos": 125,
-                "name": "Richard Williams"
-              },
-              {
-                "x": 25,
-                "y": 1708983.93,
-                "wos": 103,
-                "name": "Landon Little"
-              },
-              {
-                "x": 29.6,
-                "y": 1493871.54,
-                "wos": 170,
+                "x": 31.6,
+                "y": 2712179.74,
+                "wos": 233,
                 "name": "Jason Andrews"
               },
               {
-                "x": 24.4,
-                "y": 1492228.14,
-                "wos": 155,
+                "x": 26.5,
+                "y": 2329957.4,
+                "wos": 189,
+                "name": "Joseph Yager"
+              },
+              {
+                "x": 31.7,
+                "y": 2327294.95,
+                "wos": 124,
+                "name": "Brandon Skrzypek"
+              },
+              {
+                "x": 28.4,
+                "y": 2311478.09,
+                "wos": 164,
+                "name": "Richard Williams"
+              },
+              {
+                "x": 28,
+                "y": 2186679.53,
+                "wos": 131,
+                "name": "Landon Little"
+              },
+              {
+                "x": 23,
+                "y": 2166495.34,
+                "wos": 116,
+                "name": "Brandon Harter"
+              },
+              {
+                "x": 29,
+                "y": 1954350.63,
+                "wos": 199,
                 "name": "Shawn Oehlstrom"
               },
               {
-                "x": 27,
-                "y": 1491126.14,
-                "wos": 88,
-                "name": "Kaden Carter"
-              },
-              {
-                "x": 13.6,
-                "y": 1405302.18,
-                "wos": 104,
-                "name": "Alex Dubanoski"
-              },
-              {
-                "x": 35.5,
-                "y": 1404629.54,
-                "wos": 75,
-                "name": "Levi Nieman"
-              },
-              {
-                "x": 22.6,
-                "y": 1368109.09,
-                "wos": 104,
+                "x": 21.5,
+                "y": 1944349.79,
+                "wos": 146,
                 "name": "Alejandro Alvarado"
               },
               {
-                "x": 21.5,
-                "y": 1334854.41,
-                "wos": 72,
+                "x": 18.1,
+                "y": 1848039.65,
+                "wos": 136,
+                "name": "Alex Dubanoski"
+              },
+              {
+                "x": 21.1,
+                "y": 1665564.87,
+                "wos": 91,
                 "name": "Abraham Santiago"
               },
               {
-                "x": 25.5,
-                "y": 1312405.48,
-                "wos": 109,
+                "x": 27,
+                "y": 1638085.66,
+                "wos": 97,
+                "name": "Kaden Carter"
+              },
+              {
+                "x": 24,
+                "y": 1488698.9,
+                "wos": 126,
                 "name": "Galo Munive"
               },
               {
-                "x": 23.1,
-                "y": 1113576.09,
-                "wos": 84,
-                "name": "Joseph Jones"
-              },
-              {
-                "x": 10.5,
-                "y": 1004412.35,
-                "wos": 187,
+                "x": 15.5,
+                "y": 1416476.19,
+                "wos": 234,
                 "name": "Drew Bailey"
               },
               {
-                "x": 21.6,
-                "y": 994200.66,
-                "wos": 56,
+                "x": 22.7,
+                "y": 1290143.15,
+                "wos": 97,
+                "name": "Joseph Jones"
+              },
+              {
+                "x": 35.6,
+                "y": 1204126.04,
+                "wos": 74,
+                "name": "Levi Nieman"
+              },
+              {
+                "x": 22.4,
+                "y": 1097644.3,
+                "wos": 62,
                 "name": "Brady Weingartner"
               },
               {
-                "x": 28.5,
-                "y": 685856.12,
-                "wos": 45,
+                "x": 51,
+                "y": 828859.35,
+                "wos": 76,
+                "name": "Daniel Galli"
+              },
+              {
+                "x": 28.6,
+                "y": 736792.5,
+                "wos": 48,
                 "name": "Austin Weingartner"
               },
               {
-                "x": 52.6,
-                "y": 587820.37,
-                "wos": 61,
-                "name": "Daniel Galli"
+                "x": 61.6,
+                "y": 567265.38,
+                "wos": 51,
+                "name": "Chad Williams"
               },
               {
                 "x": 25.4,
@@ -700,34 +722,34 @@
                 "name": "Cody Mitchell"
               },
               {
-                "x": 65.5,
-                "y": 459095.57,
-                "wos": 42,
-                "name": "Chad Williams"
-              },
-              {
-                "x": 17.7,
-                "y": 372548.78,
-                "wos": 33,
+                "x": 16.6,
+                "y": 492708.25,
+                "wos": 41,
                 "name": "Adam Marrero"
               },
               {
-                "x": 18.7,
-                "y": 371892.93,
-                "wos": 25,
+                "x": 19.8,
+                "y": 472270.24,
+                "wos": 37,
                 "name": "Michael Blevins"
               },
               {
-                "x": 31,
-                "y": 281752.56,
-                "wos": 32,
+                "x": 32.6,
+                "y": 359765.61,
+                "wos": 40,
                 "name": "(Unassigned)"
               },
               {
-                "x": 35.4,
-                "y": 219515.24,
-                "wos": 13,
+                "x": 23.5,
+                "y": 296483.49,
+                "wos": 18,
                 "name": "Neil Laux"
+              },
+              {
+                "x": 30.4,
+                "y": 279838.29,
+                "wos": 19,
+                "name": "Joshua Collins"
               },
               {
                 "x": 83.2,
@@ -736,15 +758,15 @@
                 "name": "Justin Milliron"
               },
               {
-                "x": 39.5,
-                "y": 80929.06,
-                "wos": 11,
+                "x": 47.1,
+                "y": 90222.69,
+                "wos": 14,
                 "name": "Mike Scott"
               },
               {
-                "x": 66.1,
-                "y": 56305.99,
-                "wos": 12,
+                "x": 70.5,
+                "y": 76973.99,
+                "wos": 16,
                 "name": "Chris Atkins"
               }
             ]
@@ -766,6 +788,8 @@
           "Flat Roof",
           "Electrical",
           "Other",
+          "Insulation",
+          "Carpentry",
           "Unspecified",
           "Door"
         ],
@@ -773,18 +797,20 @@
           {
             "label": "Revenue",
             "data": [
-              23908173.33,
-              5002840.15,
-              1566425.29,
-              452016.21,
-              437279.62,
-              326865.03,
-              245905,
-              180377.69,
-              122992.11,
-              67210.46,
-              61298.98,
+              29682325.53,
+              6484651.59,
+              2115130.93,
+              548963.66,
+              472996.01,
+              415696.92,
+              249567.67,
+              230294.41,
+              136916.61,
+              117787.86,
+              96067.38,
               42886.6,
+              10924.5,
+              9500,
               4786.5,
               2303.15
             ]
@@ -806,6 +832,8 @@
           "Flat Roof",
           "Electrical",
           "Other",
+          "Insulation",
+          "Carpentry",
           "Unspecified",
           "Door"
         ],
@@ -813,18 +841,20 @@
           {
             "label": "Median Days",
             "data": [
-              24.4,
-              29.7,
-              49.5,
-              110.1,
-              81,
-              75.7,
-              78.2,
-              66.7,
+              25.5,
+              30.5,
+              46.4,
+              93.7,
+              66.5,
+              71.5,
+              84.7,
+              56.4,
               58.7,
-              65.7,
-              42.6,
+              61.2,
+              40.4,
               29.5,
+              39.5,
+              51.6,
               84.4,
               67.5
             ]
@@ -841,20 +871,22 @@
           "Thomas Hayes",
           "Morgan Valois",
           "Brenda Dixon",
-          "Kayla Wright"
+          "Kayla Wright",
+          "Brandi Cordray"
         ],
         "datasets": [
           {
             "label": "Jobs",
             "data": [
-              550,
-              449,
-              333,
-              230,
-              151,
-              19,
+              729,
+              577,
+              391,
+              256,
+              159,
+              20,
+              10,
               8,
-              8
+              1
             ]
           }
         ]
@@ -869,20 +901,22 @@
           "Thomas Hayes",
           "Morgan Valois",
           "Brenda Dixon",
-          "Kayla Wright"
+          "Kayla Wright",
+          "Brandi Cordray"
         ],
         "datasets": [
           {
             "label": "Median Complete",
             "data": [
               25.5,
-              23.5,
-              14.7,
-              26,
-              29.6,
-              126.5,
+              25.4,
+              16.4,
+              27.5,
+              30.6,
+              126.6,
               26.9,
-              43.1
+              43.1,
+              42.6
             ]
           }
         ]
@@ -897,20 +931,22 @@
           "Thomas Hayes",
           "Morgan Valois",
           "Brenda Dixon",
-          "Kayla Wright"
+          "Kayla Wright",
+          "Brandi Cordray"
         ],
         "datasets": [
           {
             "label": "MT %",
             "data": [
-              32.7,
-              28.5,
-              18,
-              32.6,
-              30.5,
-              57.9,
-              25,
-              37.5
+              34.8,
+              28.8,
+              20.7,
+              32.4,
+              32.1,
+              55,
+              30,
+              37.5,
+              0
             ]
           }
         ]
@@ -925,7 +961,8 @@
           "Thomas Hayes",
           "Morgan Valois",
           "Brenda Dixon",
-          "Kayla Wright"
+          "Kayla Wright",
+          "Brandi Cordray"
         ],
         "datasets": [
           {
@@ -933,44 +970,44 @@
             "data": [
               {
                 "x": 25.5,
-                "y": 19340.85,
-                "jobs": 550,
+                "y": 19778.71,
+                "jobs": 729,
                 "name": "Brandon Vera"
               },
               {
-                "x": 23.5,
-                "y": 20642.57,
-                "jobs": 449,
+                "x": 25.4,
+                "y": 20815.7,
+                "jobs": 577,
                 "name": "David Schwan"
               },
               {
-                "x": 14.7,
-                "y": 15039.66,
-                "jobs": 333,
+                "x": 16.4,
+                "y": 15375.17,
+                "jobs": 391,
                 "name": "Amanda Wade"
               },
               {
-                "x": 26,
-                "y": 17242.08,
-                "jobs": 230,
+                "x": 27.5,
+                "y": 17178.74,
+                "jobs": 256,
                 "name": "Bradley Essex"
               },
               {
-                "x": 29.6,
-                "y": 16414.15,
-                "jobs": 151,
+                "x": 30.6,
+                "y": 16795.71,
+                "jobs": 159,
                 "name": "Thomas Hayes"
               },
               {
-                "x": 126.5,
-                "y": 26158.96,
-                "jobs": 19,
+                "x": 126.6,
+                "y": 26014.52,
+                "jobs": 20,
                 "name": "Morgan Valois"
               },
               {
                 "x": 26.9,
-                "y": 42996.83,
-                "jobs": 8,
+                "y": 36364.56,
+                "jobs": 10,
                 "name": "Brenda Dixon"
               },
               {
@@ -978,6 +1015,12 @@
                 "y": 27745.01,
                 "jobs": 8,
                 "name": "Kayla Wright"
+              },
+              {
+                "x": 42.6,
+                "y": 5600,
+                "jobs": 1,
+                "name": "Brandi Cordray"
               }
             ]
           }
@@ -1002,123 +1045,123 @@
         "rows": [
           [
             "Columbus",
-            586,
-            10200373.83,
-            17406.78,
-            22.4,
-            30.3,
-            26.5,
-            41.5,
-            17.5
-          ],
-          [
-            "Detroit Metro",
-            262,
-            4755093.61,
-            18149.21,
+            735,
+            13289237.95,
+            18080.6,
+            24.6,
             29.5,
-            34.6,
-            27.9,
-            43.7,
-            23.4
-          ],
-          [
-            "Nashville",
-            151,
-            3487946.4,
-            23098.98,
-            21.5,
-            20.8,
-            32.5,
-            21.7,
-            20
-          ],
-          [
-            "DC Metro",
-            120,
-            2327923.04,
-            19399.36,
-            22.6,
-            22.6,
-            37.5,
-            25.6,
-            20.6
-          ],
-          [
-            "Dayton",
-            120,
-            2085382.08,
-            17378.18,
-            25.6,
-            20.8,
-            25.8,
-            33.5,
-            22.7
-          ],
-          [
-            "Cleveland",
-            112,
-            1691868.42,
-            15105.97,
-            24.5,
-            32.4,
-            40.2,
-            29.4,
-            18.6
-          ],
-          [
-            "Cincinnati",
-            88,
-            1687992.46,
-            19181.73,
-            27.1,
-            23.6,
-            27.3,
-            39.1,
+            28.3,
+            42.6,
             19.5
           ],
           [
+            "Detroit Metro",
+            328,
+            6209137.1,
+            18930.3,
+            29.7,
+            34,
+            27.7,
+            44.6,
+            24.5
+          ],
+          [
+            "Nashville",
+            180,
+            4134816.5,
+            22971.2,
+            20.6,
+            20.1,
+            33.3,
+            21.7,
+            20.1
+          ],
+          [
+            "DC Metro",
+            156,
+            3154044.25,
+            20218.23,
+            21.6,
+            20.6,
+            42.3,
+            25.5,
+            18.1
+          ],
+          [
+            "Cleveland",
+            156,
+            2460343.85,
+            15771.43,
+            28.6,
+            30.2,
+            41,
+            34.5,
+            23.9
+          ],
+          [
+            "Dayton",
+            137,
+            2397501.35,
+            17500.01,
+            25.5,
+            19.9,
+            27.7,
+            32.6,
+            21.7
+          ],
+          [
             "Richmond",
-            90,
-            1681413.86,
-            18682.38,
-            17.5,
-            14.5,
-            31.1,
-            46.6,
+            110,
+            2099650.36,
+            19087.73,
+            18.1,
+            14.1,
+            35.5,
+            42.6,
             10.6
           ],
           [
+            "Cincinnati",
+            100,
+            1894363.67,
+            18943.64,
+            25.6,
+            22.4,
+            25,
+            36.7,
+            20.4
+          ],
+          [
             "Raleigh",
-            70,
-            1475233.22,
-            21074.76,
+            78,
+            1625309.98,
+            20837.31,
             27,
-            22.3,
-            12.9,
-            64.4,
+            21.9,
+            14.1,
+            56.7,
             21.6
           ],
           [
             "Knoxville",
-            68,
-            1231115.83,
-            18104.64,
+            79,
+            1407682.89,
+            17818.77,
             23.5,
-            18.7,
-            30.9,
-            28.5,
-            18.7
+            17.8,
+            29.1,
+            27.5,
+            19.6
           ],
           [
             "Greenville",
-            41,
-            978775.08,
-            23872.56,
+            47,
+            1061336.03,
+            22581.62,
             20.1,
-            17.2,
-            22,
-            27.7,
+            16.2,
+            23.4,
+            22.4,
             18.1
           ],
           [
@@ -1134,14 +1177,14 @@
           ],
           [
             "Grand Rapids",
-            10,
-            175879.52,
-            17587.95,
-            32.1,
-            29.8,
-            30,
+            15,
+            245012.62,
+            16334.17,
+            32.6,
+            29,
+            20,
             39.5,
-            28.6
+            32.6
           ],
           [
             "Greensboro",
@@ -1171,183 +1214,192 @@
         "rows": [
           [
             "Mason Bryant",
-            157,
-            137,
-            2487024.81,
-            15840.92,
-            26.7,
-            26
+            204,
+            178,
+            3270673.24,
+            16032.71,
+            27.5,
+            25.6
           ],
           [
             "Eric Isakov",
-            128,
-            106,
-            2362057.75,
-            18453.58,
-            27.1,
-            30.5
-          ],
-          [
-            "Joseph Yager",
-            164,
-            133,
-            2011854.87,
-            12267.41,
-            27.6,
-            23.4
-          ],
-          [
-            "Brandon Skrzypek",
-            102,
-            101,
-            1950406.56,
-            19121.63,
-            32.4,
-            31.7
-          ],
-          [
-            "Brandon Harter",
-            100,
-            77,
-            1887409.66,
-            18874.1,
-            24.4,
-            21.8
-          ],
-          [
-            "Richard Williams",
-            125,
-            115,
-            1743263.17,
-            13946.11,
-            27.7,
-            30.6
-          ],
-          [
-            "Landon Little",
-            103,
-            96,
-            1708983.93,
-            16592.08,
-            25,
-            32.4
+            161,
+            131,
+            2817746.92,
+            17501.53,
+            28.5,
+            29.2
           ],
           [
             "Jason Andrews",
-            170,
-            144,
-            1493871.54,
-            8787.48,
-            29.6,
-            34.6
+            233,
+            195,
+            2712179.74,
+            11640.26,
+            31.6,
+            34.7
+          ],
+          [
+            "Joseph Yager",
+            189,
+            151,
+            2329957.4,
+            12327.82,
+            26.5,
+            22.2
+          ],
+          [
+            "Brandon Skrzypek",
+            124,
+            123,
+            2327294.95,
+            18768.51,
+            31.7,
+            29.7
+          ],
+          [
+            "Richard Williams",
+            164,
+            150,
+            2311478.09,
+            14094.38,
+            28.4,
+            29.9
+          ],
+          [
+            "Landon Little",
+            131,
+            122,
+            2186679.53,
+            16692.21,
+            28,
+            30.4
+          ],
+          [
+            "Brandon Harter",
+            116,
+            90,
+            2166495.34,
+            18676.68,
+            23,
+            21
           ],
           [
             "Shawn Oehlstrom",
-            155,
-            107,
-            1492228.14,
-            9627.28,
-            24.4,
-            32.7
-          ],
-          [
-            "Kaden Carter",
-            88,
-            74,
-            1491126.14,
-            16944.62,
-            27,
-            22.3
-          ],
-          [
-            "Alex Dubanoski",
-            104,
-            79,
-            1405302.18,
-            13512.52,
-            13.6,
-            13.9
-          ],
-          [
-            "Levi Nieman",
-            75,
-            74,
-            1404629.54,
-            18728.39,
-            35.5,
-            40.7
+            199,
+            138,
+            1954350.63,
+            9820.86,
+            29,
+            30.8
           ],
           [
             "Alejandro Alvarado",
+            146,
+            107,
+            1944349.79,
+            13317.46,
+            21.5,
+            17.6
+          ],
+          [
+            "Alex Dubanoski",
+            136,
             104,
-            79,
-            1368109.09,
-            13154.9,
-            22.6,
-            19.6
+            1848039.65,
+            13588.53,
+            18.1,
+            14.5
           ],
           [
             "Abraham Santiago",
-            72,
-            61,
-            1334854.41,
-            18539.64,
-            21.5,
-            21.4
+            91,
+            74,
+            1665564.87,
+            18302.91,
+            21.1,
+            20.8
+          ],
+          [
+            "Kaden Carter",
+            97,
+            82,
+            1638085.66,
+            16887.48,
+            27,
+            21.8
           ],
           [
             "Galo Munive",
-            109,
-            80,
-            1312405.48,
-            12040.42,
-            25.5,
-            25.9
-          ],
-          [
-            "Joseph Jones",
-            84,
-            64,
-            1113576.09,
-            13256.86,
-            23.1,
-            17.8
+            126,
+            92,
+            1488698.9,
+            11815.07,
+            24,
+            24.1
           ],
           [
             "Drew Bailey",
-            187,
-            181,
-            1004412.35,
-            5371.19,
-            10.5,
-            23.3
+            234,
+            219,
+            1416476.19,
+            6053.32,
+            15.5,
+            25.4
+          ],
+          [
+            "Joseph Jones",
+            97,
+            75,
+            1290143.15,
+            13300.44,
+            22.7,
+            16.9
+          ],
+          [
+            "Levi Nieman",
+            74,
+            73,
+            1204126.04,
+            16271.97,
+            35.6,
+            40.5
           ],
           [
             "Brady Weingartner",
-            56,
-            55,
-            994200.66,
-            17753.58,
-            21.6,
-            19.5
-          ],
-          [
-            "Austin Weingartner",
-            45,
-            42,
-            685856.12,
-            15241.25,
-            28.5,
-            26.8
+            62,
+            61,
+            1097644.3,
+            17703.94,
+            22.4,
+            19.7
           ],
           [
             "Daniel Galli",
-            61,
-            44,
-            587820.37,
-            9636.4,
-            52.6,
-            41
+            76,
+            58,
+            828859.35,
+            10906.04,
+            51,
+            39.5
+          ],
+          [
+            "Austin Weingartner",
+            48,
+            45,
+            736792.5,
+            15349.84,
+            28.6,
+            25.6
+          ],
+          [
+            "Chad Williams",
+            51,
+            34,
+            567265.38,
+            11122.85,
+            61.6,
+            21.5
           ],
           [
             "Cody Mitchell",
@@ -1359,49 +1411,49 @@
             21.2
           ],
           [
-            "Chad Williams",
-            42,
-            25,
-            459095.57,
-            10930.85,
-            65.5,
-            22.9
-          ],
-          [
             "Adam Marrero",
-            33,
-            27,
-            372548.78,
-            11289.36,
-            17.7,
-            17.8
+            41,
+            34,
+            492708.25,
+            12017.27,
+            16.6,
+            17.5
           ],
           [
             "Michael Blevins",
-            25,
-            22,
-            371892.93,
-            14875.72,
-            18.7,
-            14
+            37,
+            30,
+            472270.24,
+            12764.06,
+            19.8,
+            13.3
           ],
           [
             "(Unassigned)",
-            32,
-            28,
-            281752.56,
-            8804.77,
-            31,
-            38.9
+            40,
+            36,
+            359765.61,
+            8994.14,
+            32.6,
+            35
           ],
           [
             "Neil Laux",
-            13,
-            11,
-            219515.24,
-            16885.79,
-            35.4,
-            32.5
+            18,
+            16,
+            296483.49,
+            16471.31,
+            23.5,
+            25.5
+          ],
+          [
+            "Joshua Collins",
+            19,
+            19,
+            279838.29,
+            14728.33,
+            30.4,
+            25.9
           ],
           [
             "Justin Milliron",
@@ -1414,21 +1466,21 @@
           ],
           [
             "Mike Scott",
-            11,
-            11,
-            80929.06,
-            7357.19,
-            39.5,
-            35.1
+            14,
+            14,
+            90222.69,
+            6444.48,
+            47.1,
+            34.3
           ],
           [
             "Chris Atkins",
-            12,
-            10,
-            56305.99,
-            4692.17,
-            66.1,
-            46.6
+            16,
+            13,
+            76973.99,
+            4810.87,
+            70.5,
+            51.3
           ]
         ]
       },
@@ -1445,80 +1497,80 @@
         "rows": [
           [
             "Roofing",
-            1573,
-            23908173.33,
-            15199.09,
-            24.4
+            1929,
+            29682325.53,
+            15387.42,
+            25.5
           ],
           [
             "Gutters",
-            537,
-            5002840.15,
-            9316.28,
-            29.7
+            687,
+            6484651.59,
+            9439.09,
+            30.5
           ],
           [
             "Siding",
-            161,
-            1566425.29,
-            9729.35,
-            49.5
+            209,
+            2115130.93,
+            10120.24,
+            46.4
           ],
           [
             "Metal",
-            26,
-            452016.21,
-            17385.24,
-            110.1
+            31,
+            548963.66,
+            17708.51,
+            93.7
           ],
           [
             "Windows",
-            36,
-            437279.62,
-            12146.66,
-            81
+            41,
+            472996.01,
+            11536.49,
+            66.5
           ],
           [
             "Masonry",
-            29,
-            326865.03,
-            11271.21,
-            75.7
+            35,
+            415696.92,
+            11877.05,
+            71.5
           ],
           [
             "GAF Solar",
-            2,
-            245905,
-            122952.5,
-            78.2
+            3,
+            249567.67,
+            83189.22,
+            84.7
           ],
           [
             "Painting",
-            11,
-            180377.69,
-            16397.97,
-            66.7
+            15,
+            230294.41,
+            15352.96,
+            56.4
           ],
           [
             "Rack Mounted Solar",
-            14,
-            122992.11,
-            8785.15,
+            15,
+            136916.61,
+            9127.77,
             58.7
           ],
           [
             "Flat Roof",
-            5,
-            67210.46,
-            13442.09,
-            65.7
+            10,
+            117787.86,
+            11778.79,
+            61.2
           ],
           [
             "Electrical",
-            4,
-            61298.98,
-            15324.75,
-            42.6
+            9,
+            96067.38,
+            10674.15,
+            40.4
           ],
           [
             "Other",
@@ -1526,6 +1578,20 @@
             42886.6,
             8577.32,
             29.5
+          ],
+          [
+            "Insulation",
+            1,
+            10924.5,
+            10924.5,
+            39.5
+          ],
+          [
+            "Carpentry",
+            1,
+            9500,
+            9500,
+            51.6
           ],
           [
             "Unspecified",
@@ -1559,73 +1625,73 @@
         "rows": [
           [
             "Brandon Vera",
-            550,
-            10637467.49,
-            19340.85,
+            729,
+            14418679.53,
+            19778.71,
             "25.5d",
-            "25.2d",
-            32.7,
-            19340.85
+            "24d",
+            34.8,
+            19778.71
           ],
           [
             "David Schwan",
-            449,
-            9268514.43,
-            20642.57,
-            "23.5d",
-            "25.8d",
-            28.5,
-            20642.57
+            577,
+            12010656.73,
+            20815.7,
+            "25.4d",
+            "24.8d",
+            28.8,
+            20815.7
           ],
           [
             "Amanda Wade",
-            333,
-            5008208.21,
-            15039.66,
-            "14.7d",
-            "25.1d",
-            18,
-            15039.66
+            391,
+            6011690.19,
+            15375.17,
+            "16.4d",
+            "24.4d",
+            20.7,
+            15375.17
           ],
           [
             "Bradley Essex",
-            230,
-            3965678.77,
-            17242.08,
-            "26d",
-            "25.6d",
-            32.6,
-            17242.08
+            256,
+            4397758.45,
+            17178.74,
+            "27.5d",
+            "25.7d",
+            32.4,
+            17178.74
           ],
           [
             "Thomas Hayes",
-            151,
-            2478536.16,
-            16414.15,
-            "29.6d",
-            "33d",
-            30.5,
-            16414.15
+            159,
+            2670518.36,
+            16795.71,
+            "30.6d",
+            "34.4d",
+            32.1,
+            16795.71
           ],
           [
             "Morgan Valois",
-            19,
-            497020.32,
-            26158.96,
-            "126.5d",
-            "73.2d",
-            57.9,
-            26158.96
+            20,
+            520290.32,
+            26014.52,
+            "126.6d",
+            "80.4d",
+            55,
+            26014.52
           ],
           [
             "Brenda Dixon",
-            8,
-            343974.62,
-            42996.83,
+            10,
+            363645.62,
+            36364.56,
             "26.9d",
-            "22.4d",
-            25,
-            42996.83
+            "36.1d",
+            30,
+            36364.56
           ],
           [
             "Kayla Wright",
@@ -1636,6 +1702,16 @@
             "16.9d",
             37.5,
             27745.01
+          ],
+          [
+            "Brandi Cordray",
+            1,
+            5600,
+            5600,
+            "42.6d",
+            "26.4d",
+            0,
+            5600
           ]
         ]
       },
@@ -1665,28 +1741,28 @@
             "Amanda Wade",
             0,
             0,
-            239,
+            284,
             0,
+            2,
             1,
             0,
             0,
-            0,
-            35,
+            40,
             0,
             0,
             1,
-            57,
+            63,
             0,
-            333
+            391
           ],
           [
             "Bradley Essex",
-            59,
-            86,
+            62,
+            101,
             2,
             0,
-            73,
-            10,
+            79,
+            12,
             0,
             0,
             0,
@@ -1695,31 +1771,49 @@
             0,
             0,
             0,
-            230
+            256
+          ],
+          [
+            "Brandi Cordray",
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
           ],
           [
             "Brandon Vera",
-            13,
-            10,
-            127,
-            120,
-            43,
-            96,
-            4,
+            20,
+            36,
+            180,
+            156,
+            53,
+            116,
+            8,
             0,
-            6,
+            7,
             0,
             29,
             0,
-            12,
-            90,
-            550
+            14,
+            110,
+            729
           ],
           [
             "Brenda Dixon",
             0,
-            1,
-            6,
+            2,
+            7,
             0,
             0,
             1,
@@ -1731,25 +1825,25 @@
             0,
             0,
             0,
-            8
+            10
           ],
           [
             "David Schwan",
-            12,
-            7,
-            205,
+            14,
+            8,
+            255,
             0,
             0,
-            6,
-            1,
+            40,
+            2,
             0,
             0,
-            68,
+            79,
             0,
-            150,
+            179,
             0,
             0,
-            449
+            577
           ],
           [
             "Kayla Wright",
@@ -1776,7 +1870,7 @@
             0,
             0,
             0,
-            17,
+            18,
             0,
             0,
             0,
@@ -1785,7 +1879,7 @@
             0,
             0,
             0,
-            19
+            20
           ],
           [
             "Thomas Hayes",
@@ -1794,7 +1888,7 @@
             1,
             0,
             3,
-            132,
+            140,
             5,
             0,
             0,
@@ -1803,45 +1897,41 @@
             0,
             0,
             0,
-            151
+            159
           ],
           [
             "Total",
-            88,
-            112,
-            586,
-            120,
-            120,
-            262,
-            10,
+            100,
+            156,
+            735,
+            156,
+            137,
+            328,
+            15,
             1,
-            41,
-            68,
+            47,
+            79,
             29,
-            151,
-            70,
-            90,
-            1748
+            180,
+            78,
+            110,
+            2151
           ]
         ]
       }
     ],
     "commentary": {
       "areasOfConcern": [
-        "Chad Williams: 42 WOs, $459K revenue, 65.5-day median complete, top-volume PM with the slowest cycle in the network.",
-        "Multi-trade penalty is severe in 3 markets: NOVA MT 64.6d vs ST 20.7d, Raleigh MT 64.4d vs ST 21.6d, Richmond MT 46.6d vs ST 10.6d.",
-        "Days to Start averages 26.5 days company-wide and 34.6 days in Detroit Metro (a sold job sits weeks before a crew touches it)."
+        "Chad Williams: 51 WOs, $567K revenue, 61.6-day median complete, top-volume PM with the slowest cycle in the network.",
+        "Multi-trade penalty is severe in 3 markets: NOVA MT 64.6d vs ST 20.7d, Raleigh MT 56.7d vs ST 21.6d, Richmond MT 42.6d vs ST 10.6d.",
+        "Days to Start averages 25.8 days company-wide and 34.0 days in Detroit Metro (a sold job sits weeks before a crew touches it)."
       ],
-      "watchList": [
-        "Drew Bailey: 187 WOs, $5,371 revenue per WO, the lowest revenue density of any active high-volume PM.",
-        "Gutters-only work runs at 29.6-day median complete versus 24.4 days for roofing, 21% slower cycle on the lowest-priced trade.",
-        "Amanda Wade creates 333 jobs at $15,040 average contract and 18.0% multi-trade attach, well below the top creator."
-      ],
+      "watchList": [],
       "positivesToBuildOn": [
-        "May delivered $8.35M across 459 invoiced jobs at 21.7-day median complete, the highest revenue month and one of the fastest cycles of the year.",
-        "Richmond hits 17.5-day median complete and a $18,682 average contract on 90 jobs.",
-        "Multi-trade jobs carry a $25,320 average contract versus $15,796 for single-trade, a 60% revenue lift per job.",
-        "Columbus is the best-balanced market: 22.4-day median complete, 26.5% multi-trade attach, $17,407 average contract on 586 jobs."
+        "June delivered $11.02M across 557 invoiced jobs at 28.5-day median complete, the highest revenue month and one of the fastest cycles of the year.",
+        "Richmond hits 18.1-day median complete and a $19,088 average contract on 110 jobs.",
+        "Multi-trade jobs carry a $25,102 average contract versus $16,180 for single-trade, a 55% revenue lift per job.",
+        "Columbus is the best-balanced market: 24.6-day median complete, 28.3% multi-trade attach, $18,081 average contract on 735 jobs."
       ]
     }
   },
@@ -1849,9 +1939,9 @@
     "_source": "calculator/sales-overview.js v1.0-rules-encoded",
     "title": "Residential Sales Overview",
     "subtitle": "YTD 2026",
-    "lastSigned": "2026-06-28",
-    "ytdDays": 163,
-    "rowCount": 2551,
+    "lastSigned": "2026-08-03",
+    "ytdDays": 187,
+    "rowCount": 2979,
     "tabs": [
       {
         "id": "overview",
@@ -1909,77 +1999,77 @@
     "kpis": [
       {
         "label": "Signed Contracts YTD",
-        "value": "$42.54M",
-        "sub": "2,551 signed contracts across 13 markets"
+        "value": "$49.92M",
+        "sub": "2,979 signed contracts across 13 markets"
       },
       {
         "label": "Sold",
-        "value": "$39.02M",
-        "sub": "2,391 deals | 93.7% of signed contracts"
+        "value": "$46.62M",
+        "sub": "2,808 deals | 94.3% of signed contracts"
       },
       {
         "label": "Production Review",
-        "value": "$2.51M",
-        "sub": "110 deals | Ops Review, PM Review, Contracted"
+        "value": "$2.19M",
+        "sub": "118 deals | Ops Review, PM Review, Contracted"
       },
       {
         "label": "Kicked Back",
-        "value": "$945K",
-        "sub": "45 deals | 1.8% of signed contracts",
+        "value": "$1.07M",
+        "sub": "49 deals | 1.6% of signed contracts",
         "trend": "negative"
       },
       {
         "label": "Sales Action",
-        "value": "$30K",
-        "sub": "2 deals requiring sales follow-up",
+        "value": "$15K",
+        "sub": "1 deals requiring sales follow-up",
         "trend": "neutral"
       },
       {
         "label": "Avg Deal Size",
-        "value": "$16,677",
-        "sub": "Median: $15,500 | Install avg: $19,017"
+        "value": "$16,757",
+        "sub": "Median: $15,679 | Install avg: $19,025"
       },
       {
         "label": "Organization",
-        "value": "144 Reps",
+        "value": "150 Reps",
         "sub": "13 active markets"
       },
       {
         "label": "Annualized Sales Rate",
-        "value": "~$95.27M",
-        "sub": "Based on 163 days YTD"
+        "value": "~$97.44M",
+        "sub": "Based on 187 days YTD"
       },
       {
         "label": "Install vs Repair",
-        "value": "86.2% / 13.6%",
-        "sub": "2,200 installs | 346 repairs"
+        "value": "86.4% / 13.4%",
+        "sub": "2,575 installs | 400 repairs"
       }
     ],
     "pipelineBuckets": [
       {
         "label": "Sold",
-        "count": 2391,
-        "amount": 39019219.6
+        "count": 2808,
+        "amount": 46623775.4
       },
       {
         "label": "Production Review",
-        "count": 110,
-        "amount": 2511419.73
+        "count": 118,
+        "amount": 2185039.52
       },
       {
         "label": "Kicked Back",
-        "count": 45,
-        "amount": 945360.47
+        "count": 49,
+        "amount": 1067251.77
       },
       {
         "label": "Sales Action",
-        "count": 2,
-        "amount": 30000
+        "count": 1,
+        "amount": 15000
       },
       {
         "label": "Other",
         "count": 3,
-        "amount": 37107.75
+        "amount": 29005.72
       }
     ],
     "stageBuckets": {
@@ -1997,13 +2087,13 @@
       {
         "key": "2026-01",
         "label": "January",
-        "count": 182,
-        "amount": 3263898.78,
-        "installs": 163,
+        "count": 181,
+        "amount": 3241898.78,
+        "installs": 162,
         "repairs": 19,
-        "avgDeal": 17934,
-        "repairPct": 10.4,
-        "installAvg": 19894,
+        "avgDeal": 17911,
+        "repairPct": 10.5,
+        "installAvg": 19881,
         "repairAvg": 1113
       },
       {
@@ -2022,95 +2112,125 @@
         "key": "2026-03",
         "label": "March",
         "count": 499,
-        "amount": 6954165.43,
+        "amount": 6979440.1,
         "installs": 388,
         "repairs": 111,
-        "avgDeal": 13936,
+        "avgDeal": 13987,
         "repairPct": 22.2,
-        "installAvg": 17380,
+        "installAvg": 17446,
         "repairAvg": 1897
       },
       {
         "key": "2026-04",
         "label": "April",
-        "count": 792,
-        "amount": 12576181.59,
+        "count": 791,
+        "amount": 12636402.7,
         "installs": 688,
-        "repairs": 104,
-        "avgDeal": 15879,
-        "repairPct": 13.1,
-        "installAvg": 18031,
-        "repairAvg": 1644
+        "repairs": 103,
+        "avgDeal": 15975,
+        "repairPct": 13,
+        "installAvg": 18119,
+        "repairAvg": 1654
       },
       {
         "key": "2026-05",
         "label": "May",
-        "count": 622,
-        "amount": 11288920.58,
-        "installs": 560,
-        "repairs": 57,
-        "avgDeal": 18149,
-        "repairPct": 9.2,
-        "installAvg": 19789,
-        "repairAvg": 2049
+        "count": 628,
+        "amount": 11429355.95,
+        "installs": 565,
+        "repairs": 60,
+        "avgDeal": 18200,
+        "repairPct": 9.6,
+        "installAvg": 19865,
+        "repairAvg": 2403
       },
       {
         "key": "2026-06",
         "label": "June",
-        "count": 222,
-        "amount": 4338514.73,
-        "installs": 203,
-        "repairs": 19,
-        "avgDeal": 19543,
-        "repairPct": 8.6,
-        "installAvg": 21157,
-        "repairAvg": 2299
+        "count": 608,
+        "amount": 10834166.63,
+        "installs": 538,
+        "repairs": 69,
+        "avgDeal": 17819,
+        "repairPct": 11.3,
+        "installAvg": 19651,
+        "repairAvg": 3262
+      },
+      {
+        "key": "2026-07",
+        "label": "July",
+        "count": 37,
+        "amount": 650596.81,
+        "installs": 35,
+        "repairs": 2,
+        "avgDeal": 17584,
+        "repairPct": 5.4,
+        "installAvg": 18363,
+        "repairAvg": 3950
+      },
+      {
+        "key": "2026-08",
+        "label": "August",
+        "count": 1,
+        "amount": 26785,
+        "installs": 1,
+        "repairs": 0,
+        "avgDeal": 26785,
+        "repairPct": 0,
+        "installAvg": 26785,
+        "repairAvg": 0
       }
     ],
     "jobTypeMixByMonth": {
       "Retail-No Financing": {
         "2026-01": 1317788.72,
         "2026-02": 1796529.77,
-        "2026-03": 2995941.7,
-        "2026-04": 4987824.69,
-        "2026-05": 4030923.79,
-        "2026-06": 983307.51
+        "2026-03": 2972079.7,
+        "2026-04": 4995112.91,
+        "2026-05": 4280706.79,
+        "2026-06": 3520542.51,
+        "2026-07": 500,
+        "2026-08": 0
       },
       "Insurance": {
         "2026-01": 1437020.6,
-        "2026-02": 1693326.5,
-        "2026-03": 2772525.17,
-        "2026-04": 6185435.52,
-        "2026-05": 5230832.38,
-        "2026-06": 1001092.84
+        "2026-02": 1715849.5,
+        "2026-03": 2825661.84,
+        "2026-04": 6236287.12,
+        "2026-05": 5842742.28,
+        "2026-06": 4465761.58,
+        "2026-07": 102615.01,
+        "2026-08": 0
       },
       "Retail-Financing": {
-        "2026-01": 509089.46,
-        "2026-02": 631570.17,
-        "2026-03": 1135621.56,
-        "2026-04": 1284359.83,
-        "2026-05": 1061206.98,
-        "2026-06": 221251.18
+        "2026-01": 487089.46,
+        "2026-02": 609047.17,
+        "2026-03": 1141621.56,
+        "2026-04": 1316261.83,
+        "2026-05": 992342.98,
+        "2026-06": 778643.35,
+        "2026-07": 0,
+        "2026-08": 0
       }
     },
     "jobTypeTotals": [
       {
         "jobType": "Insurance",
-        "count": 887,
-        "amount": 18320233.01,
-        "avg": 20654
+        "count": 1091,
+        "amount": 22625937.93,
+        "avg": 20739
       },
       {
         "jobType": "Retail-No Financing",
-        "count": 1280,
-        "amount": 16112316.18,
-        "avg": 12588
+        "count": 1471,
+        "amount": 18883260.4,
+        "avg": 12837
       },
       {
         "jobType": "Retail-Financing",
-        "count": 232,
-        "amount": 4843099.18,
-        "avg": 20875
+        "count": 256,
+        "amount": 5325006.35,
+        "avg": 20801
       }
     ],
     "weeklyTrend": [
@@ -2121,8 +2241,8 @@
       },
       {
         "w": 2,
-        "count": 45,
-        "amount": 705781.14
+        "count": 44,
+        "amount": 683781.14
       },
       {
         "w": 3,
@@ -2162,17 +2282,17 @@
       {
         "w": 10,
         "count": 75,
-        "amount": 1175624.58
+        "amount": 1181749.53
       },
       {
         "w": 11,
         "count": 79,
-        "amount": 1160574.12
+        "amount": 1168723.84
       },
       {
         "w": 12,
         "count": 140,
-        "amount": 1579808.99
+        "amount": 1585808.99
       },
       {
         "w": 13,
@@ -2181,13 +2301,13 @@
       },
       {
         "w": 14,
-        "count": 152,
-        "amount": 2171241.03
+        "count": 151,
+        "amount": 2175674.05
       },
       {
         "w": 15,
         "count": 176,
-        "amount": 2690092.55
+        "amount": 2697947.75
       },
       {
         "w": 16,
@@ -2197,57 +2317,77 @@
       {
         "w": 17,
         "count": 205,
-        "amount": 3343367.88
+        "amount": 3365768.89
       },
       {
         "w": 18,
         "count": 167,
-        "amount": 2557933.14
+        "amount": 2588465.02
       },
       {
         "w": 19,
-        "count": 143,
-        "amount": 2578171.72
+        "count": 145,
+        "amount": 2611557.11
       },
       {
         "w": 20,
-        "count": 151,
-        "amount": 2611418.22
+        "count": 153,
+        "amount": 2640118.38
       },
       {
         "w": 21,
-        "count": 142,
-        "amount": 2580354.5
+        "count": 144,
+        "amount": 2627132.99
       },
       {
         "w": 22,
         "count": 143,
-        "amount": 2832156.51
+        "amount": 2861359.49
       },
       {
         "w": 23,
-        "count": 152,
-        "amount": 2905851.64
+        "count": 165,
+        "amount": 3175895.32
       },
       {
         "w": 24,
-        "count": 66,
-        "amount": 1376359.93
+        "count": 145,
+        "amount": 2684269.58
       },
       {
         "w": 25,
-        "count": 2,
-        "amount": 54844.61
+        "count": 111,
+        "amount": 1755748.17
       },
       {
         "w": 26,
-        "count": 3,
-        "amount": 51838.26
+        "count": 136,
+        "amount": 2429383.41
       },
       {
         "w": 27,
+        "count": 86,
+        "amount": 1400599.28
+      },
+      {
+        "w": 28,
         "count": 1,
-        "amount": 990
+        "amount": 29203.9
+      },
+      {
+        "w": 30,
+        "count": 1,
+        "amount": 19037.6
+      },
+      {
+        "w": 31,
+        "count": 2,
+        "amount": 44364.24
+      },
+      {
+        "w": 32,
+        "count": 1,
+        "amount": 26785
       }
     ],
     "marketScorecard": {
@@ -2264,123 +2404,123 @@
       "rows": [
         [
           "Columbus",
-          15156694.02,
-          893,
-          16973,
-          752,
-          141,
-          15.8,
-          9
+          17649969.55,
+          1033,
+          17086,
+          876,
+          157,
+          15.2,
+          10
         ],
         [
           "Detroit Metro",
-          6840260.85,
-          401,
-          17058,
-          366,
-          35,
-          8.7,
+          7784313.78,
+          473,
+          16457,
+          421,
+          52,
+          11,
           4
         ],
         [
           "Cleveland",
-          4186251.89,
-          288,
-          14536,
-          239,
-          45,
-          15.6,
-          8
+          5460386.22,
+          361,
+          15126,
+          308,
+          49,
+          13.6,
+          10
         ],
         [
           "Nashville",
-          3379966.65,
-          229,
-          14760,
-          169,
-          60,
-          26.2,
+          3820632.97,
+          247,
+          15468,
+          184,
+          63,
+          25.5,
           5
         ],
         [
           "DC Metro",
-          2873600.43,
-          171,
-          16805,
-          132,
-          39,
-          22.8,
-          15
+          3122684.55,
+          193,
+          16180,
+          150,
+          43,
+          22.3,
+          14
         ],
         [
           "Dayton",
-          2449546.33,
-          141,
-          17373,
-          135,
-          6,
-          4.3,
-          21
+          2739498.28,
+          156,
+          17561,
+          147,
+          9,
+          5.8,
+          20
         ],
         [
           "Richmond",
-          2225804.49,
-          102,
-          21822,
-          98,
+          2699072.32,
+          126,
+          21421,
+          121,
+          5,
           4,
-          3.9,
-          31
+          30
         ],
         [
           "Cincinnati",
-          1704652.29,
-          104,
-          16391,
-          97,
-          7,
-          6.7,
+          2198030.18,
+          129,
+          17039,
+          117,
+          12,
+          9.3,
           9
         ],
         [
           "Knoxville",
-          1220970.11,
-          74,
-          16500,
-          73,
+          1385944.14,
+          83,
+          16698,
+          82,
           1,
-          1.4,
-          16
+          1.2,
+          17
         ],
         [
           "Raleigh",
-          1012665.59,
-          63,
-          16074,
-          59,
-          4,
+          1314345.27,
+          80,
+          16429,
+          75,
+          5,
           6.3,
-          36
+          27
         ],
         [
           "Greenville",
-          772164.11,
-          39,
-          19799,
-          39,
+          981446.76,
+          49,
+          20030,
+          49,
           0,
           0,
           3
         ],
         [
           "Grand Rapids",
-          485314.53,
-          31,
-          15655,
-          28,
+          528532.13,
+          34,
+          15545,
+          32,
           2,
-          6.5,
-          24
+          5.9,
+          27
         ],
         [
           "NOVA",
@@ -2405,128 +2545,128 @@
       "rows": [
         {
           "branch": "Columbus",
-          "opps": 1916,
-          "soldAmt": 7960474.82,
-          "closePct": 33.4,
-          "nsli": 4155
+          "opps": 2102,
+          "soldAmt": 9580687.17,
+          "closePct": 34.8,
+          "nsli": 4558
         },
         {
           "branch": "Detroit",
-          "opps": 821,
-          "soldAmt": 4539066.23,
-          "closePct": 37.5,
-          "nsli": 5529
+          "opps": 917,
+          "soldAmt": 5308476.23,
+          "closePct": 40.3,
+          "nsli": 5789
         },
         {
           "branch": "Cleveland",
-          "opps": 619,
-          "soldAmt": 1952443,
-          "closePct": 27.9,
-          "nsli": 3154
+          "opps": 689,
+          "soldAmt": 2956508.22,
+          "closePct": 32.2,
+          "nsli": 4291
         },
         {
           "branch": "Nashville",
-          "opps": 294,
-          "soldAmt": 1529103.39,
-          "closePct": 43.2,
-          "nsli": 5201
+          "opps": 315,
+          "soldAmt": 1745047.74,
+          "closePct": 44.4,
+          "nsli": 5540
         },
         {
           "branch": "DC Metro",
-          "opps": 357,
-          "soldAmt": 1351340.73,
-          "closePct": 30.5,
-          "nsli": 3785
+          "opps": 420,
+          "soldAmt": 1632628.53,
+          "closePct": 30.7,
+          "nsli": 3887
         },
         {
           "branch": "Cincinnati",
-          "opps": 317,
-          "soldAmt": 884260.83,
+          "opps": 376,
+          "soldAmt": 1237215.63,
           "closePct": 21.5,
-          "nsli": 2789
+          "nsli": 3290
         },
         {
           "branch": "Dayton",
-          "opps": 221,
-          "soldAmt": 866161.78,
-          "closePct": 24.4,
-          "nsli": 3919
+          "opps": 253,
+          "soldAmt": 976188.12,
+          "closePct": 24.9,
+          "nsli": 3858
         },
         {
           "branch": "Greenville",
-          "opps": 97,
-          "soldAmt": 481027.31,
-          "closePct": 30.9,
-          "nsli": 4959
-        },
-        {
-          "branch": "Knoxville",
-          "opps": 83,
-          "soldAmt": 368133.27,
-          "closePct": 32.5,
-          "nsli": 4435
+          "opps": 109,
+          "soldAmt": 649325.96,
+          "closePct": 34.9,
+          "nsli": 5957
         },
         {
           "branch": "Raleigh",
-          "opps": 139,
-          "soldAmt": 266440.04,
-          "closePct": 16.5,
-          "nsli": 1917
+          "opps": 162,
+          "soldAmt": 433205.47,
+          "closePct": 20.4,
+          "nsli": 2674
+        },
+        {
+          "branch": "Knoxville",
+          "opps": 88,
+          "soldAmt": 399740.22,
+          "closePct": 33,
+          "nsli": 4543
         },
         {
           "branch": "Richmond",
-          "opps": 76,
-          "soldAmt": 239336.04,
-          "closePct": 23.7,
-          "nsli": 3149
+          "opps": 86,
+          "soldAmt": 331300.59,
+          "closePct": 32.6,
+          "nsli": 3852
         },
         {
           "branch": "Grand Rapids",
-          "opps": 73,
-          "soldAmt": 195668.92,
-          "closePct": 20.5,
-          "nsli": 2680
+          "opps": 78,
+          "soldAmt": 256498.78,
+          "closePct": 24.4,
+          "nsli": 3288
         }
       ],
       "totals": {
-        "opps": 5016,
-        "soldAmt": 20633456.36,
-        "closePct": 31.7,
-        "nsli": 4114
+        "opps": 5598,
+        "soldAmt": 25506822.66,
+        "closePct": 33.6,
+        "nsli": 4556
       },
-      "source": "Closing Percent By Branch-2026-06-12-13-59-27.xlsx",
+      "source": "Closing Percent By Branch-2026-07-06-12-54-23.xlsx",
       "format": "per-opportunity"
     },
     "marketKickbacks": [
       {
-        "market": "Columbus",
-        "kicked": 15,
-        "kickedAmount": 371331.55
+        "market": "Cleveland",
+        "kicked": 23,
+        "kickedAmount": 476717.09
       },
       {
-        "market": "Cleveland",
-        "kicked": 15,
-        "kickedAmount": 300762.64
+        "market": "Richmond",
+        "kicked": 7,
+        "kickedAmount": 182966.53
       },
       {
         "market": "Cincinnati",
+        "kicked": 7,
+        "kickedAmount": 196409.64
+      },
+      {
+        "market": "Columbus",
         "kicked": 5,
-        "kickedAmount": 76685.29
+        "kickedAmount": 90664.9
       },
       {
         "market": "Nashville",
         "kicked": 3,
-        "kickedAmount": 67210.5
+        "kickedAmount": 55331
       },
       {
         "market": "Dayton",
         "kicked": 3,
-        "kickedAmount": 36027
-      },
-      {
-        "market": "Richmond",
-        "kicked": 2,
-        "kickedAmount": 66347.17
+        "kickedAmount": 35359.75
       }
     ],
     "marketJobTypeChart": {
@@ -2550,287 +2690,295 @@
     "topPeople": [
       {
         "name": "Michael Conley",
-        "amount": 1301222.08,
-        "count": 76,
-        "avg": 17121,
+        "amount": 1439482.54,
+        "count": 85,
+        "avg": 16935,
         "medDays": 12,
         "jt": {
-          "Insurance": 30,
-          "Retail-Financing": 8,
-          "Retail-No Financing": 28
+          "Insurance": 39,
+          "Retail-No Financing": 32,
+          "Retail-Financing": 9
         },
-        "installs": 72,
-        "repairs": 4
-      },
-      {
-        "name": "Sam Scorziell",
-        "amount": 1235872.73,
-        "count": 51,
-        "avg": 24233,
-        "medDays": 25,
-        "jt": {
-          "Insurance": 37,
-          "Retail-No Financing": 11
-        },
-        "installs": 51,
-        "repairs": 0
+        "installs": 79,
+        "repairs": 6
       },
       {
         "name": "Kevin Ditty",
-        "amount": 1200619.59,
-        "count": 70,
-        "avg": 17152,
+        "amount": 1357348.26,
+        "count": 75,
+        "avg": 18098,
         "medDays": 2,
         "jt": {
-          "Retail-No Financing": 41,
-          "Insurance": 11,
-          "Retail-Financing": 15
+          "Insurance": 12,
+          "Retail-No Financing": 44,
+          "Retail-Financing": 17
         },
-        "installs": 51,
+        "installs": 56,
         "repairs": 19
+      },
+      {
+        "name": "Sam Scorziell",
+        "amount": 1283205.71,
+        "count": 53,
+        "avg": 24211,
+        "medDays": 24,
+        "jt": {
+          "Insurance": 40,
+          "Retail-No Financing": 13
+        },
+        "installs": 53,
+        "repairs": 0
       },
       {
         "name": "Storm Drumm",
-        "amount": 1027937.38,
-        "count": 66,
-        "avg": 15575,
+        "amount": 1225277.38,
+        "count": 78,
+        "avg": 15709,
         "medDays": 2,
         "jt": {
-          "Retail-No Financing": 39,
-          "Retail-Financing": 12,
-          "Insurance": 15
+          "Retail-Financing": 13,
+          "Retail-No Financing": 45,
+          "Insurance": 18
         },
-        "installs": 61,
-        "repairs": 5
-      },
-      {
-        "name": "Stephen Harmon",
-        "amount": 1004754.63,
-        "count": 44,
-        "avg": 22835,
-        "medDays": 13,
-        "jt": {
-          "Retail-No Financing": 42,
-          "Insurance": 2
-        },
-        "installs": 40,
-        "repairs": 4
-      },
-      {
-        "name": "Cole Burgess",
-        "amount": 979291.84,
-        "count": 48,
-        "avg": 20402,
-        "medDays": 3,
-        "jt": {
-          "Retail-Financing": 6,
-          "Retail-No Financing": 34,
-          "Insurance": 4
-        },
-        "installs": 47,
-        "repairs": 1
+        "installs": 70,
+        "repairs": 8
       },
       {
         "name": "Robert Beck",
-        "amount": 953480.01,
-        "count": 36,
-        "avg": 26486,
-        "medDays": 60,
+        "amount": 1104234.3,
+        "count": 42,
+        "avg": 26291,
+        "medDays": 54,
         "jt": {
+          "Insurance": 28,
           "Retail-No Financing": 10,
-          "Insurance": 25,
           "Retail-Financing": 1
         },
-        "installs": 34,
+        "installs": 40,
         "repairs": 2
       },
       {
-        "name": "Brian Ogrin",
-        "amount": 878834.75,
-        "count": 39,
-        "avg": 22534,
-        "medDays": 29,
+        "name": "Cole Burgess",
+        "amount": 1077941.84,
+        "count": 53,
+        "avg": 20339,
+        "medDays": 3,
         "jt": {
-          "Insurance": 23,
-          "Retail-No Financing": 13,
-          "Retail-Financing": 1
+          "Retail-No Financing": 38,
+          "Retail-Financing": 6,
+          "Insurance": 4
         },
-        "installs": 35,
-        "repairs": 4
+        "installs": 52,
+        "repairs": 1
+      },
+      {
+        "name": "Stephen Harmon",
+        "amount": 1073179.63,
+        "count": 51,
+        "avg": 21043,
+        "medDays": 13,
+        "jt": {
+          "Retail-No Financing": 49,
+          "Insurance": 2
+        },
+        "installs": 46,
+        "repairs": 5
       },
       {
         "name": "Dave Norris",
-        "amount": 868727.58,
-        "count": 63,
-        "avg": 13789,
-        "medDays": 13,
+        "amount": 971360.79,
+        "count": 69,
+        "avg": 14078,
+        "medDays": 12,
         "jt": {
-          "Insurance": 24,
-          "Retail-No Financing": 37,
+          "Retail-No Financing": 39,
+          "Retail-Financing": 1,
+          "Insurance": 28
+        },
+        "installs": 48,
+        "repairs": 21
+      },
+      {
+        "name": "Brian Ogrin",
+        "amount": 917179.57,
+        "count": 40,
+        "avg": 22929,
+        "medDays": 29,
+        "jt": {
+          "Insurance": 25,
+          "Retail-No Financing": 13,
           "Retail-Financing": 1
         },
-        "installs": 44,
-        "repairs": 19
-      },
-      {
-        "name": "Bill Applegate",
-        "amount": 831018.5,
-        "count": 46,
-        "avg": 18066,
-        "medDays": 22,
-        "jt": {
-          "Insurance": 21,
-          "Retail-No Financing": 18,
-          "Retail-Financing": 1
-        },
-        "installs": 37,
-        "repairs": 9
-      },
-      {
-        "name": "Derrick Sieber",
-        "amount": 823966.35,
-        "count": 52,
-        "avg": 15846,
-        "medDays": 14,
-        "jt": {
-          "Insurance": 15,
-          "Retail-No Financing": 31,
-          "Retail-Financing": 4
-        },
-        "installs": 35,
-        "repairs": 17
-      },
-      {
-        "name": "Donald Richard",
-        "amount": 812425,
-        "count": 46,
-        "avg": 17661,
-        "medDays": 4,
-        "jt": {
-          "Retail-No Financing": 37,
-          "Retail-Financing": 2,
-          "Insurance": 2
-        },
-        "installs": 43,
-        "repairs": 3
-      },
-      {
-        "name": "Frank Butts",
-        "amount": 799285.02,
-        "count": 60,
-        "avg": 13321,
-        "medDays": 8,
-        "jt": {
-          "Retail-No Financing": 28,
-          "Insurance": 30,
-          "Retail-Financing": 1
-        },
-        "installs": 53,
-        "repairs": 7
-      },
-      {
-        "name": "Scott Scaperato",
-        "amount": 782738.37,
-        "count": 70,
-        "avg": 11182,
-        "medDays": 2,
-        "jt": {
-          "Retail-Financing": 14,
-          "Retail-No Financing": 40,
-          "Insurance": 8
-        },
-        "installs": 57,
-        "repairs": 13
-      },
-      {
-        "name": "Frank Drummond",
-        "amount": 766202.31,
-        "count": 71,
-        "avg": 10792,
-        "medDays": 3,
-        "jt": {
-          "Insurance": 20,
-          "Retail-No Financing": 49,
-          "Retail-Financing": 2
-        },
-        "installs": 46,
-        "repairs": 25
-      },
-      {
-        "name": "Matthew Ross",
-        "amount": 756451.56,
-        "count": 43,
-        "avg": 17592,
-        "medDays": 3,
-        "jt": {
-          "Retail-No Financing": 30,
-          "Insurance": 1,
-          "Retail-Financing": 10
-        },
-        "installs": 39,
+        "installs": 36,
         "repairs": 4
       },
       {
-        "name": "Matt Williams",
-        "amount": 681065.24,
-        "count": 45,
-        "avg": 15135,
-        "medDays": 7,
+        "name": "Derrick Sieber",
+        "amount": 893782.14,
+        "count": 56,
+        "avg": 15960,
+        "medDays": 15,
         "jt": {
-          "Retail-No Financing": 32,
+          "Retail-No Financing": 34,
           "Retail-Financing": 4,
-          "Insurance": 6
+          "Insurance": 18
         },
-        "installs": 36,
+        "installs": 39,
+        "repairs": 17
+      },
+      {
+        "name": "Frank Drummond",
+        "amount": 893393.56,
+        "count": 84,
+        "avg": 10636,
+        "medDays": 4,
+        "jt": {
+          "Retail-No Financing": 55,
+          "Insurance": 26,
+          "Retail-Financing": 2
+        },
+        "installs": 55,
+        "repairs": 29
+      },
+      {
+        "name": "Matthew Ross",
+        "amount": 889506.56,
+        "count": 54,
+        "avg": 16472,
+        "medDays": 3,
+        "jt": {
+          "Retail-No Financing": 37,
+          "Insurance": 3,
+          "Retail-Financing": 12
+        },
+        "installs": 46,
+        "repairs": 8
+      },
+      {
+        "name": "Bill Applegate",
+        "amount": 866246.13,
+        "count": 48,
+        "avg": 18047,
+        "medDays": 26,
+        "jt": {
+          "Insurance": 26,
+          "Retail-No Financing": 20,
+          "Retail-Financing": 1
+        },
+        "installs": 39,
         "repairs": 9
       },
       {
         "name": "Mark Daggett",
-        "amount": 677982.27,
-        "count": 38,
-        "avg": 17842,
+        "amount": 862296.83,
+        "count": 49,
+        "avg": 17598,
         "medDays": 5,
         "jt": {
-          "Insurance": 5,
-          "Retail-No Financing": 29,
+          "Retail-No Financing": 33,
+          "Insurance": 11,
           "Retail-Financing": 3
         },
-        "installs": 33,
-        "repairs": 5
+        "installs": 43,
+        "repairs": 6
+      },
+      {
+        "name": "Scott Scaperato",
+        "amount": 860886.47,
+        "count": 73,
+        "avg": 11793,
+        "medDays": 2,
+        "jt": {
+          "Retail-No Financing": 45,
+          "Retail-Financing": 14,
+          "Insurance": 9
+        },
+        "installs": 60,
+        "repairs": 13
+      },
+      {
+        "name": "Frank Butts",
+        "amount": 851701.21,
+        "count": 63,
+        "avg": 13519,
+        "medDays": 10,
+        "jt": {
+          "Retail-No Financing": 28,
+          "Insurance": 33,
+          "Retail-Financing": 1
+        },
+        "installs": 57,
+        "repairs": 6
+      },
+      {
+        "name": "Matt Williams",
+        "amount": 842526.8,
+        "count": 52,
+        "avg": 16202,
+        "medDays": 6,
+        "jt": {
+          "Retail-No Financing": 37,
+          "Retail-Financing": 5,
+          "Insurance": 8
+        },
+        "installs": 43,
+        "repairs": 9
       },
       {
         "name": "Nick Junker",
-        "amount": 674439.35,
-        "count": 33,
-        "avg": 20438,
-        "medDays": 32,
+        "amount": 838460.38,
+        "count": 41,
+        "avg": 20450,
+        "medDays": 36,
         "jt": {
-          "Insurance": 15,
-          "Retail-No Financing": 18
+          "Insurance": 22,
+          "Retail-No Financing": 19
         },
-        "installs": 30,
+        "installs": 38,
         "repairs": 3
       },
       {
         "name": "Zachary Schneider",
-        "amount": 655284.25,
-        "count": 40,
-        "avg": 16382,
-        "medDays": 16,
+        "amount": 830707.87,
+        "count": 48,
+        "avg": 17306,
+        "medDays": 24,
         "jt": {
-          "Retail-No Financing": 18,
-          "Insurance": 21
+          "Retail-No Financing": 19,
+          "Insurance": 29
         },
-        "installs": 33,
-        "repairs": 7
+        "installs": 40,
+        "repairs": 8
+      },
+      {
+        "name": "Donald Richard",
+        "amount": 820849,
+        "count": 48,
+        "avg": 17101,
+        "medDays": 4,
+        "jt": {
+          "Retail-No Financing": 43,
+          "Retail-Financing": 3,
+          "Insurance": 2
+        },
+        "installs": 45,
+        "repairs": 3
       }
     ],
     "speedSellers": [
+      {
+        "name": "David Brumfield",
+        "medDays": 1
+      },
       {
         "name": "Caleb Severance",
         "medDays": 1
       },
       {
+        "name": "Storm Drumm",
+        "medDays": 2
+      },
+      {
         "name": "Kevin Ditty",
         "medDays": 2
       },
@@ -2839,44 +2987,36 @@
         "medDays": 2
       },
       {
-        "name": "Storm Drumm",
+        "name": "Gary Holm",
         "medDays": 2
       },
       {
-        "name": "Frank Drummond",
-        "medDays": 3
-      },
-      {
-        "name": "Cole Burgess",
-        "medDays": 3
+        "name": "Cody Mitchell",
+        "medDays": 2
       },
       {
         "name": "Derik Heinz",
-        "medDays": 3
-      },
-      {
-        "name": "Matthew Ross",
         "medDays": 3
       }
     ],
     "repairHeavy": [
       {
         "name": "Ryan Johnson",
-        "repairs": 15,
-        "deals": 28,
-        "pct": 53.6
+        "repairs": 16,
+        "deals": 29,
+        "pct": 55.2
       },
       {
         "name": "Jeff Camp",
-        "repairs": 11,
-        "deals": 29,
-        "pct": 37.9
+        "repairs": 13,
+        "deals": 32,
+        "pct": 40.6
       },
       {
         "name": "Dan Haske",
-        "repairs": 13,
-        "deals": 35,
-        "pct": 37.1
+        "repairs": 15,
+        "deals": 40,
+        "pct": 37.5
       }
     ],
     "salesCycle": {
@@ -2884,17 +3024,17 @@
         {
           "label": "Overall Median",
           "value": "9 days",
-          "sub": "Mean: 37 days (skewed by insurance)"
+          "sub": "Mean: 39 days (skewed by insurance)"
         },
         {
           "label": "Retail",
-          "value": "5 days",
+          "value": "4 days",
           "sub": "All retail job types"
         },
         {
           "label": "Insurance",
-          "value": "27 days",
-          "sub": "Median | Mean: 63 days"
+          "value": "28 days",
+          "sub": "Median | Mean: 65 days"
         },
         {
           "label": "Repair",
@@ -2906,82 +3046,82 @@
         {
           "label": "Retail-No Fin",
           "median": 5,
-          "mean": 22,
-          "count": 1198
+          "mean": 23,
+          "count": 1379
         },
         {
           "label": "Retail-Fin",
           "median": 3,
           "mean": 17,
-          "count": 226
+          "count": 249
         },
         {
           "label": "Insurance",
-          "median": 27,
-          "mean": 63,
-          "count": 831
+          "median": 28,
+          "mean": 65,
+          "count": 1019
         },
         {
           "label": "Repair",
           "median": 3,
-          "mean": 9,
-          "count": 320
+          "mean": 10,
+          "count": 370
         },
         {
           "label": "Install",
           "median": 11,
-          "mean": 41,
-          "count": 2071
+          "mean": 43,
+          "count": 2426
         }
       ],
       "byMarket": [
         {
           "market": "Greenville",
           "median": 3,
-          "mean": 5,
-          "count": 39
+          "mean": 4,
+          "count": 49
         },
         {
           "market": "Detroit Metro",
           "median": 4,
-          "mean": 26,
-          "count": 387
+          "mean": 28,
+          "count": 457
         },
         {
           "market": "Nashville",
           "median": 5,
-          "mean": 19,
-          "count": 224
-        },
-        {
-          "market": "Cleveland",
-          "median": 8,
-          "mean": 30,
-          "count": 256
-        },
-        {
-          "market": "Columbus",
-          "median": 9,
-          "mean": 35,
-          "count": 817
+          "mean": 22,
+          "count": 242
         },
         {
           "market": "Cincinnati",
           "median": 9,
-          "mean": 33,
-          "count": 102
+          "mean": 31,
+          "count": 126
+        },
+        {
+          "market": "Columbus",
+          "median": 10,
+          "mean": 38,
+          "count": 943
+        },
+        {
+          "market": "Cleveland",
+          "median": 10,
+          "mean": 35,
+          "count": 323
         },
         {
           "market": "DC Metro",
-          "median": 15,
-          "mean": 59,
-          "count": 159
+          "median": 14,
+          "mean": 58,
+          "count": 181
         },
         {
           "market": "Knoxville",
-          "median": 16,
+          "median": 17,
           "mean": 39,
-          "count": 73
+          "count": 82
         },
         {
           "market": "NOVA",
@@ -2991,27 +3131,27 @@
         },
         {
           "market": "Dayton",
-          "median": 21,
-          "mean": 44,
-          "count": 136
-        },
-        {
-          "market": "Grand Rapids",
-          "median": 24,
-          "mean": 29,
-          "count": 29
-        },
-        {
-          "market": "Richmond",
-          "median": 31,
-          "mean": 79,
-          "count": 98
+          "median": 20,
+          "mean": 43,
+          "count": 151
         },
         {
           "market": "Raleigh",
-          "median": 36,
-          "mean": 97,
-          "count": 61
+          "median": 27,
+          "mean": 88,
+          "count": 77
+        },
+        {
+          "market": "Grand Rapids",
+          "median": 27,
+          "mean": 38,
+          "count": 32
+        },
+        {
+          "market": "Richmond",
+          "median": 30,
+          "mean": 90,
+          "count": 122
         }
       ],
       "starInsuranceClosers": [
@@ -3022,163 +3162,156 @@
         },
         {
           "name": "Storm Drumm",
-          "medDays": 1,
-          "count": 15
+          "medDays": 2,
+          "count": 18
         },
         {
           "name": "Matt Williams",
           "medDays": 2,
-          "count": 6
+          "count": 8
         },
         {
-          "name": "Frank Drummond",
+          "name": "Cody Mitchell",
           "medDays": 3,
-          "count": 20
+          "count": 13
         },
         {
-          "name": "Justin Koenig",
+          "name": "Scott Scaperato",
           "medDays": 3,
-          "count": 12
+          "count": 9
         }
       ]
     },
     "completedBilling": {
-      "totalUnbilled": 1828426.53,
-      "totalJobs": 90,
-      "avgAge": 21.1,
-      "medAge": 11,
+      "totalUnbilled": 1596001.28,
+      "totalJobs": 78,
+      "avgAge": 22.4,
+      "medAge": 14,
       "tiers": [
         {
           "label": "Critical (60+ days)",
-          "count": 5,
-          "amount": 79139.17,
+          "count": 9,
+          "amount": 133088.54,
           "color": "red"
         },
         {
           "label": "Warning (30-59 days)",
-          "count": 25,
-          "amount": 507696.58,
+          "count": 14,
+          "amount": 291382.12,
           "color": "orange"
         },
         {
           "label": "Watch (14-29 days)",
-          "count": 14,
-          "amount": 244927.25,
+          "count": 16,
+          "amount": 449150.22,
           "color": "blue"
         },
         {
           "label": "Fresh (0-13 days)",
-          "count": 46,
-          "amount": 996663.53,
+          "count": 39,
+          "amount": 722380.4,
           "color": "green"
         }
       ],
       "bySubStatus": [
         {
           "subStatus": "Pending Supplement",
-          "count": 60,
-          "amount": 1344792.5,
-          "avgAge": 26,
+          "count": 53,
+          "amount": 1137450.32,
+          "avgAge": 27,
           "action": "Follow up with insurance carrier on supplement approval. Escalate if >30 days."
         },
         {
           "subStatus": "Accounting Kickback",
-          "count": 22,
-          "amount": 363672.41,
-          "avgAge": 12,
+          "count": 15,
+          "amount": 248744.57,
+          "avgAge": 21,
           "action": "Review kickback reason, correct documentation or pricing, resubmit to accounting."
         },
         {
           "subStatus": "Ready to Invoice",
-          "count": 5,
-          "amount": 82420.62,
-          "avgAge": 0,
+          "count": 7,
+          "amount": 146669.88,
+          "avgAge": 3,
           "action": "No blockers, submit invoice immediately. This is free cash waiting."
         },
         {
           "subStatus": "No Sub Status",
           "count": 3,
-          "amount": 37541,
-          "avgAge": 30,
+          "amount": 63136.51,
+          "avgAge": 3,
           "action": "Review job, identify what is blocking billing, assign owner."
         }
       ],
       "byMarket": [
         {
           "market": "Columbus",
-          "count": 30,
-          "amount": 575340.81,
-          "avgAge": 22,
+          "count": 31,
+          "amount": 599447.65,
+          "avgAge": 21,
           "urgency": "MEDIUM"
         },
         {
           "market": "Richmond",
-          "count": 11,
-          "amount": 328086.95,
-          "avgAge": 20,
+          "count": 9,
+          "amount": 288098.02,
+          "avgAge": 27,
           "urgency": "MEDIUM"
         },
         {
           "market": "Cleveland",
-          "count": 16,
-          "amount": 229205.99,
-          "avgAge": 19,
-          "urgency": "MEDIUM"
-        },
-        {
-          "market": "Dayton",
-          "count": 8,
-          "amount": 157715.98,
-          "avgAge": 15,
+          "count": 12,
+          "amount": 194088.29,
+          "avgAge": 29,
           "urgency": "MEDIUM"
         },
         {
           "market": "Detroit Metro",
           "count": 4,
-          "amount": 134504.69,
-          "avgAge": 12,
-          "urgency": "LOW"
-        },
-        {
-          "market": "Nashville",
-          "count": 4,
-          "amount": 106812.96,
-          "avgAge": 22,
+          "amount": 137900.21,
+          "avgAge": 21,
           "urgency": "MEDIUM"
         },
         {
           "market": "Knoxville",
+          "count": 6,
+          "amount": 104473.02,
+          "avgAge": 22,
+          "urgency": "MEDIUM"
+        },
+        {
+          "market": "Dayton",
           "count": 5,
-          "amount": 102761.74,
-          "avgAge": 35,
-          "urgency": "HIGH"
-        },
-        {
-          "market": "Cincinnati",
-          "count": 4,
-          "amount": 66021.69,
-          "avgAge": 33,
-          "urgency": "HIGH"
-        },
-        {
-          "market": "DC Metro",
-          "count": 3,
-          "amount": 60144.95,
-          "avgAge": 23,
+          "amount": 94003.1,
+          "avgAge": 20,
           "urgency": "MEDIUM"
         },
         {
           "market": "Greenville",
-          "count": 3,
-          "amount": 47324.22,
-          "avgAge": 16,
+          "count": 4,
+          "amount": 53663.72,
+          "avgAge": 22,
           "urgency": "MEDIUM"
         },
         {
           "market": "Raleigh",
+          "count": 3,
+          "amount": 50695.19,
+          "avgAge": 9,
+          "urgency": "LOW"
+        },
+        {
+          "market": "Nashville",
           "count": 2,
-          "amount": 20506.55,
+          "amount": 45401.76,
           "avgAge": 18,
+          "urgency": "MEDIUM"
+        },
+        {
+          "market": "Cincinnati",
+          "count": 2,
+          "amount": 28230.32,
+          "avgAge": 21,
           "urgency": "MEDIUM"
         }
       ],
@@ -3186,92 +3319,92 @@
         {
           "rep": "Sam Doyle",
           "count": 4,
-          "amount": 195403.22,
-          "oldest": 51
-        },
-        {
-          "rep": "Nick Junker",
-          "count": 5,
-          "amount": 139587.14,
-          "oldest": 72
-        },
-        {
-          "rep": "Derek Hastings",
-          "count": 5,
-          "amount": 103994.85,
-          "oldest": 51
-        },
-        {
-          "rep": "Frank Butts",
-          "count": 6,
-          "amount": 90926.84,
-          "oldest": 38
-        },
-        {
-          "rep": "Sam Scorziell",
-          "count": 4,
-          "amount": 87225.75,
-          "oldest": 73
-        },
-        {
-          "rep": "Trey Rury",
-          "count": 2,
-          "amount": 71948.33,
-          "oldest": 45
+          "amount": 182168.9,
+          "oldest": 35
         },
         {
           "rep": "Robert Beck",
-          "count": 2,
-          "amount": 65411.3,
-          "oldest": 25
+          "count": 3,
+          "amount": 103247.3,
+          "oldest": 38
+        },
+        {
+          "rep": "Frank Butts",
+          "count": 5,
+          "amount": 71770.86,
+          "oldest": 55
         },
         {
           "rep": "Zachary Schneider",
           "count": 3,
-          "amount": 64271.03,
-          "oldest": 14
+          "amount": 67620.88,
+          "oldest": 31
+        },
+        {
+          "rep": "Frank Drummond",
+          "count": 4,
+          "amount": 54382.27,
+          "oldest": 75
+        },
+        {
+          "rep": "Bryce Fink",
+          "count": 2,
+          "amount": 53259.9,
+          "oldest": 40
         },
         {
           "rep": "Bill Applegate",
           "count": 2,
           "amount": 51890.65,
-          "oldest": 64
+          "oldest": 88
         },
         {
-          "rep": "Kyle Gibson",
-          "count": 3,
-          "amount": 50026.7,
-          "oldest": 56
-        },
-        {
-          "rep": "Sean Hickey",
+          "rep": "Nick Junker",
           "count": 2,
-          "amount": 48483.47,
-          "oldest": 11
+          "amount": 50594.3,
+          "oldest": 32
         },
         {
-          "rep": "Bryce Fink",
+          "rep": "Sam Scorziell",
           "count": 2,
-          "amount": 48341.8,
-          "oldest": 16
+          "amount": 50401.98,
+          "oldest": 97
         },
         {
-          "rep": "Derrick Sieber",
-          "count": 2,
-          "amount": 43996.78,
-          "oldest": 55
-        },
-        {
-          "rep": "Tony Seagraves",
-          "count": 1,
-          "amount": 42897.69,
-          "oldest": 1
+          "rep": "Storm Drumm",
+          "count": 4,
+          "amount": 49647.09,
+          "oldest": 68
         },
         {
           "rep": "Andrew Coleman",
           "count": 2,
-          "amount": 42418.03,
-          "oldest": 50
+          "amount": 43858.95,
+          "oldest": 0
+        },
+        {
+          "rep": "Cole Burgess",
+          "count": 1,
+          "amount": 43842.21,
+          "oldest": 21
+        },
+        {
+          "rep": "Noah Jenkins",
+          "count": 1,
+          "amount": 41831.11,
+          "oldest": 6
+        },
+        {
+          "rep": "Michael Cox",
+          "count": 2,
+          "amount": 40822.25,
+          "oldest": 7
+        },
+        {
+          "rep": "Michael Conley",
+          "count": 2,
+          "amount": 40521.61,
+          "oldest": 32
         }
       ],
       "fullJobList": [
@@ -3280,9 +3413,9 @@
           "Michael Sebald",
           "Justin Koenig",
           "Cleveland",
-          "",
+          "Pending Supplement",
           200,
-          86,
+          110,
           "Insurance"
         ],
         [
@@ -3292,17 +3425,7 @@
           "Knoxville",
           "Pending Supplement",
           29945.74,
-          73,
-          "Insurance"
-        ],
-        [
-          "Job-108536",
-          "Carole Bertolini",
-          "Nick Junker",
-          "Columbus",
-          "Accounting Kickback",
-          24752.82,
-          72,
+          97,
           "Insurance"
         ],
         [
@@ -3310,19 +3433,9 @@
           "Julie Landholt",
           "Bill Applegate",
           "Columbus",
-          "Pending Supplement",
+          "Accounting Kickback",
           11400.75,
-          64,
-          "Insurance"
-        ],
-        [
-          "Job-110950",
-          "Teddy Douglass",
-          "Luke Allberry",
-          "Columbus",
-          "Pending Supplement",
-          12839.86,
-          63,
+          88,
           "Insurance"
         ],
         [
@@ -3332,47 +3445,7 @@
           "Columbus",
           "Pending Supplement",
           7916.87,
-          58,
-          "Insurance"
-        ],
-        [
-          "Job-111122",
-          "Dennis Whitlock",
-          "Kyle Gibson",
-          "Cincinnati",
-          "Pending Supplement",
-          24331.74,
-          56,
-          "Insurance"
-        ],
-        [
-          "Job-111125",
-          "Jerold fourman",
-          "Kyle Gibson",
-          "Cincinnati",
-          "Pending Supplement",
-          17478.75,
-          56,
-          "Insurance"
-        ],
-        [
-          "Job-111238",
-          "Lasean Gray",
-          "Derrick Sieber",
-          "DC Metro",
-          "Pending Supplement",
-          21251.56,
-          55,
-          "Retail-No Financing"
-        ],
-        [
-          "Job-110498",
-          "Wendell Thomas",
-          "Sam Doyle",
-          "Richmond",
-          "Pending Supplement",
-          32213.27,
-          51,
+          82,
           "Insurance"
         ],
         [
@@ -3382,57 +3455,7 @@
           "Columbus",
           "Pending Supplement",
           6237.55,
-          51,
-          "Insurance"
-        ],
-        [
-          "Job-111453",
-          "Ron Lowe",
-          "Derek Hastings",
-          "Dayton",
-          "Pending Supplement",
-          18331.98,
-          51,
-          "Insurance"
-        ],
-        [
-          "Job-111541",
-          "Kent Carringer",
-          "Andrew Coleman",
-          "Knoxville",
-          "Pending Supplement",
-          19218.03,
-          50,
-          "Retail-No Financing"
-        ],
-        [
-          "Job-110010",
-          "David Swift",
-          "Sam Scorziell",
-          "Columbus",
-          "Pending Supplement",
-          30679.32,
-          46,
-          "Insurance"
-        ],
-        [
-          "Job-111161",
-          "Gary Longberry",
-          "Jacob Miller",
-          "Columbus",
-          "Pending Supplement",
-          16640.48,
-          46,
-          "Insurance"
-        ],
-        [
-          "Job-110964",
-          "Shane Goodwin",
-          "Trey Rury",
-          "Nashville",
-          "Pending Supplement",
-          39995,
-          45,
+          75,
           "Insurance"
         ],
         [
@@ -3442,7 +3465,7 @@
           "Columbus",
           "Pending Supplement",
           13132,
-          44,
+          68,
           "Insurance"
         ],
         [
@@ -3450,9 +3473,9 @@
           "Workneh Abate",
           "Micah Hayes",
           "Richmond",
-          "Pending Supplement",
+          "Accounting Kickback",
           9372.63,
-          44,
+          68,
           "Insurance"
         ],
         [
@@ -3462,28 +3485,8 @@
           "Detroit Metro",
           "Pending Supplement",
           34483,
-          39,
+          63,
           "Retail-No Financing"
-        ],
-        [
-          "Job-111743",
-          "Norma Diaz",
-          "Frank Butts",
-          "Cleveland",
-          "Pending Supplement",
-          12694.99,
-          38,
-          "Insurance"
-        ],
-        [
-          "Job-111944",
-          "Beverly  Clabo",
-          "Tim Washer",
-          "Knoxville",
-          "Pending Supplement",
-          24600,
-          38,
-          "Insurance"
         ],
         [
           "Job-111624",
@@ -3492,77 +3495,7 @@
           "Greenville",
           "Pending Supplement",
           20400,
-          37,
-          "Insurance"
-        ],
-        [
-          "Job-112042",
-          "Bernard D Young Lesa A Young",
-          "Kevin Ditty",
-          "Nashville",
-          "Pending Supplement",
-          21921.52,
-          36,
-          "Insurance"
-        ],
-        [
-          "Job-112324",
-          "Katie Noel",
-          "Justin Godde",
-          "Raleigh",
-          "Pending Supplement",
-          14272.06,
-          36,
-          "Insurance"
-        ],
-        [
-          "Job-112063",
-          "Allison Davis",
-          "Dylan Macdonald",
-          "Richmond",
-          "Pending Supplement",
-          16515.08,
-          35,
-          "Insurance"
-        ],
-        [
-          "Job-112130",
-          "Sunitha Nandakumar",
-          "Jake Caldwell",
-          "Columbus",
-          "Accounting Kickback",
-          20486.41,
-          35,
-          "Insurance"
-        ],
-        [
-          "Job-112765",
-          "Jeremy Schmitter",
-          "Sam Scorziell",
-          "Columbus",
-          "Pending Supplement",
-          13039.69,
-          35,
-          "Insurance"
-        ],
-        [
-          "Job-108537",
-          "Gene & Sue Parsley",
-          "Nick Junker",
-          "Columbus",
-          "Pending Supplement",
-          35306.61,
-          32,
-          "Insurance"
-        ],
-        [
-          "Job-111682",
-          "Devin Rench",
-          "Frank Butts",
-          "Cleveland",
-          "Pending Supplement",
-          18570.44,
-          32,
+          61,
           "Insurance"
         ],
         [
@@ -3570,89 +3503,9 @@
           "John Morgan",
           "Frank Butts",
           "Cleveland",
-          "Accounting Kickback",
+          "Pending Supplement",
           18607.6,
-          31,
-          "Insurance"
-        ],
-        [
-          "Job-111802",
-          "Brian Horten",
-          "Jim Zipp",
-          "Cleveland",
-          "Pending Supplement",
-          8668.11,
-          29,
-          "Insurance"
-        ],
-        [
-          "Job-112215",
-          "Trish McMahon",
-          "Dylan Macdonald",
-          "Richmond",
-          "Pending Supplement",
-          20468.17,
-          29,
-          "Insurance"
-        ],
-        [
-          "Job-112500",
-          "Alfred Bachman",
-          "Robert Beck",
-          "Columbus",
-          "Accounting Kickback",
-          20000,
-          25,
-          "Insurance"
-        ],
-        [
-          "Job-112846",
-          "Amanda Herzog",
-          "Christian Hill",
-          "Dayton",
-          "Pending Supplement",
-          24257.06,
-          25,
-          "Insurance"
-        ],
-        [
-          "Job-112925",
-          "Thomas Blessing",
-          "Derek Hastings",
-          "Dayton",
-          "Pending Supplement",
-          18783.65,
-          21,
-          "Insurance"
-        ],
-        [
-          "Job-113139",
-          "Wanda Young",
-          "Kyle Gibson",
-          "Cincinnati",
-          "Pending Supplement",
-          8216.21,
-          21,
-          "Insurance"
-        ],
-        [
-          "Job-112569",
-          "Rosemary Renn",
-          "Rob Blackmore",
-          "Columbus",
-          "Accounting Kickback",
-          5207.42,
-          17,
-          "Retail-No Financing"
-        ],
-        [
-          "Job-113239",
-          "John Kasperek",
-          "Frank Butts",
-          "Cleveland",
-          "Pending Supplement",
-          14601.92,
-          17,
+          55,
           "Insurance"
         ],
         [
@@ -3662,37 +3515,7 @@
           "Cleveland",
           "Pending Supplement",
           26293.8,
-          16,
-          "Insurance"
-        ],
-        [
-          "Job-113293",
-          "Lillian & Vince  Welch",
-          "Nate Boyer",
-          "Cleveland",
-          "Pending Supplement",
-          12961.71,
-          16,
-          "Insurance"
-        ],
-        [
-          "Job-113674",
-          "Cara Tomasino",
-          "Daniel Beyer",
-          "Richmond",
-          "Pending Supplement",
-          10777.47,
-          15,
-          "Insurance"
-        ],
-        [
-          "Job-112022",
-          "Barb Holliday",
-          "Zachary Schneider",
-          "Columbus",
-          "Accounting Kickback",
-          14400,
-          14,
+          40,
           "Insurance"
         ],
         [
@@ -3702,7 +3525,7 @@
           "Columbus",
           "Pending Supplement",
           45411.3,
-          14,
+          38,
           "Insurance"
         ],
         [
@@ -3712,17 +3535,7 @@
           "Dayton",
           "Pending Supplement",
           14880.43,
-          14,
-          "Insurance"
-        ],
-        [
-          "Job-112075",
-          "Vadivel Kumaresan",
-          "Derrick Sieber",
-          "DC Metro",
-          "Pending Supplement",
-          22745.22,
-          11,
+          38,
           "Insurance"
         ],
         [
@@ -3732,18 +3545,8 @@
           "Richmond",
           "Pending Supplement",
           25395.56,
-          11,
+          35,
           "Insurance"
-        ],
-        [
-          "Job-113083",
-          "Joseph Deyarmon",
-          "Mark Daggett",
-          "Columbus",
-          "Accounting Kickback",
-          19333,
-          11,
-          "Retail-Financing"
         ],
         [
           "Job-113109",
@@ -3752,7 +3555,7 @@
           "Richmond",
           "Pending Supplement",
           24455.73,
-          11,
+          35,
           "Insurance"
         ],
         [
@@ -3762,38 +3565,8 @@
           "Richmond",
           "Pending Supplement",
           17747.9,
-          11,
+          35,
           "Insurance"
-        ],
-        [
-          "Job-113286",
-          "Louis Kaltenstein",
-          "Justin Koenig",
-          "Cleveland",
-          "Accounting Kickback",
-          10709.29,
-          11,
-          "Insurance"
-        ],
-        [
-          "Job-113746",
-          "Jeanine - Carol Hernandez",
-          "Sean Hickey",
-          "Richmond",
-          "Pending Supplement",
-          23087.91,
-          11,
-          "Insurance"
-        ],
-        [
-          "Job-112900",
-          "Rickey D Thomas Shirley D Thomas",
-          "Cody Mitchell",
-          "Greenville",
-          "Accounting Kickback",
-          16358.61,
-          10,
-          "Retail-Financing"
         ],
         [
           "Job-113283",
@@ -3802,7 +3575,7 @@
           "Cleveland",
           "Pending Supplement",
           13896.39,
-          10,
+          34,
           "Insurance"
         ],
         [
@@ -3812,7 +3585,7 @@
           "Knoxville",
           "Accounting Kickback",
           5797.97,
-          10,
+          34,
           "Insurance"
         ],
         [
@@ -3822,7 +3595,7 @@
           "Columbus",
           "Pending Supplement",
           40489.9,
-          8,
+          32,
           "Insurance"
         ],
         [
@@ -3832,7 +3605,7 @@
           "Columbus",
           "Pending Supplement",
           20277.54,
-          8,
+          32,
           "Insurance"
         ],
         [
@@ -3842,7 +3615,7 @@
           "Cleveland",
           "Pending Supplement",
           12555.5,
-          8,
+          32,
           "Insurance"
         ],
         [
@@ -3852,7 +3625,7 @@
           "Dayton",
           "Accounting Kickback",
           16400,
-          8,
+          32,
           "Insurance"
         ],
         [
@@ -3860,69 +3633,9 @@
           "Jenny Brady",
           "Zachary Schneider",
           "Columbus",
-          "Accounting Kickback",
-          9172.5,
-          7,
-          "Insurance"
-        ],
-        [
-          "Job-109491",
-          "Zackary Hammond",
-          "Spence Newman",
-          "Nashville",
-          "Accounting Kickback",
-          12943.11,
-          4,
-          "Insurance"
-        ],
-        [
-          "Job-111331",
-          "Bob Dacey",
-          "Donald Richard",
-          "Detroit Metro",
-          "Accounting Kickback",
-          33854,
-          4,
-          "Insurance"
-        ],
-        [
-          "Job-113634",
-          "Arthur  Crampton",
-          "Mekhi Hargrow",
-          "Columbus",
-          "Accounting Kickback",
-          13927,
-          4,
-          "Insurance"
-        ],
-        [
-          "Job-113723",
-          "Rachel Prince",
-          "Sam Scorziell",
-          "Columbus",
           "Pending Supplement",
-          13561,
-          4,
-          "Insurance"
-        ],
-        [
-          "Job-105078",
-          "Lisa  Hazergian",
-          "Cole Burgess",
-          "Detroit Metro",
-          "Accounting Kickback",
-          23270,
-          3,
-          "Retail-No Financing"
-        ],
-        [
-          "Job-112007",
-          "Jay Pepper",
-          "Gabe Baker",
-          "Columbus",
-          "",
-          14113,
-          3,
+          9172.5,
+          31,
           "Insurance"
         ],
         [
@@ -3930,39 +3643,9 @@
           "Bonnie A Moore",
           "Storm Drumm",
           "Columbus",
-          "Accounting Kickback",
+          "Pending Supplement",
           17561,
-          3,
-          "Insurance"
-        ],
-        [
-          "Job-113132",
-          "Dana Neumann",
-          "Nate Boyer",
-          "Cleveland",
-          "Pending Supplement",
-          12028.51,
-          3,
-          "Insurance"
-        ],
-        [
-          "Job-113153",
-          "Jean Mager",
-          "Nick Junker",
-          "Columbus",
-          "Accounting Kickback",
-          27546,
-          3,
-          "Retail-No Financing"
-        ],
-        [
-          "Job-113750",
-          "Assad Moini",
-          "Tristen Patla",
-          "DC Metro",
-          "Pending Supplement",
-          16148.17,
-          3,
+          27,
           "Insurance"
         ],
         [
@@ -3972,18 +3655,8 @@
           "Richmond",
           "Pending Supplement",
           120986.32,
-          2,
+          26,
           "Insurance"
-        ],
-        [
-          "Job-113377",
-          "Maeturah Harmon",
-          "Andrew Coleman",
-          "Knoxville",
-          "Ready to Invoice",
-          23200,
-          2,
-          "Retail-No Financing"
         ],
         [
           "Job-113484",
@@ -3992,68 +3665,408 @@
           "Columbus",
           "Pending Supplement",
           40698.53,
-          2,
+          26,
           "Insurance"
         ],
         [
-          "Job-112419",
-          "David Njus",
-          "Tony Seagraves",
-          "Detroit Metro",
+          "Job-114082",
+          "Maxim Moroz",
+          "Thomas Urling",
+          "Cincinnati",
           "Pending Supplement",
-          42897.69,
-          1,
+          15994.99,
+          24,
           "Insurance"
         ],
         [
-          "Job-112616",
-          "Nii-Tettey Tetteh",
-          "Austin Mitchell",
+          "Job-114504",
+          "Stephen Schmidt",
+          "Sam Doyle",
           "Richmond",
           "Pending Supplement",
-          27066.91,
-          1,
+          18978.95,
+          23,
           "Insurance"
         ],
         [
-          "Job-113258",
-          "Melinda  Reed",
-          "Trey Rury",
-          "Nashville",
-          "Accounting Kickback",
-          31953.33,
-          1,
-          "Retail-Financing"
+          "Job-112579",
+          "Stacie Yokhana",
+          "Cole Burgess",
+          "Detroit Metro",
+          "Pending Supplement",
+          43842.21,
+          21,
+          "Insurance"
         ],
         [
-          "Job-113487",
-          "Eve Brooksieker",
-          "Mike Stack",
+          "Job-113443",
+          "Mikele Mahaffey-ohl",
+          "Frank Drummond",
+          "Columbus",
+          "Pending Supplement",
+          11783.45,
+          21,
+          "Insurance"
+        ],
+        [
+          "Job-114309",
+          "Loletha Ross",
+          "Frank Butts",
           "Cleveland",
           "Pending Supplement",
-          29382.95,
-          1,
+          16650.82,
+          19,
           "Insurance"
         ],
         [
-          "Job-113826",
-          "Eunice Bass",
-          "Derek Hastings",
+          "Job-107193",
+          "Saju Michil",
+          "Eric England",
+          "Raleigh",
+          "Pending Supplement",
+          20332.62,
+          18,
+          "Insurance"
+        ],
+        [
+          "Job-112596",
+          "Patricia Seals",
+          "John Emrich",
+          "Nashville",
+          "Pending Supplement",
+          26884.83,
+          18,
+          "Insurance"
+        ],
+        [
+          "Job-113524",
+          "Jevon Heany",
+          "Brian Ogrin",
+          "Columbus",
+          "Ready to Invoice",
+          24729.41,
+          18,
+          "Insurance"
+        ],
+        [
+          "Job-113848",
+          "Kelly Capes",
+          "Bryce Fink",
+          "Cleveland",
+          "Pending Supplement",
+          26966.1,
+          18,
+          "Insurance"
+        ],
+        [
+          "Job-112898",
+          "George Hwang",
+          "Ron Merritt",
+          "Nashville",
+          "Accounting Kickback",
+          18516.93,
+          17,
+          "Insurance"
+        ],
+        [
+          "Job-114287",
+          "Callie Zapata",
+          "Ben Cirgin",
+          "Cincinnati",
+          "Pending Supplement",
+          12235.33,
+          17,
+          "Insurance"
+        ],
+        [
+          "Job-114593",
+          "Daniel Francis",
+          "Matt Reinoehl",
+          "Columbus",
+          "Pending Supplement",
+          18644.73,
+          14,
+          "Insurance"
+        ],
+        [
+          "Job-114732",
+          "Kristan Ramirez",
+          "Ethan Judd",
           "Dayton",
           "Pending Supplement",
-          18060.72,
-          1,
+          14344,
+          14,
           "Insurance"
         ],
         [
-          "Job-113988",
-          "Stephanie M And John P Henry",
-          "Allen Pruitt",
+          "Job-112846",
+          "Amanda Herzog",
+          "Christian Hill",
+          "Dayton",
+          "Pending Supplement",
+          24257.06,
+          13,
+          "Insurance"
+        ],
+        [
+          "Job-113075",
+          "Lisa Roberts",
+          "Nick Junker",
+          "Columbus",
+          "Pending Supplement",
+          30316.76,
+          13,
+          "Insurance"
+        ],
+        [
+          "Job-114658",
+          "Amy Macmillan",
+          "Cody Mitchell",
+          "Greenville",
+          "Pending Supplement",
+          13299.02,
+          13,
+          "Insurance"
+        ],
+        [
+          "Job-112550",
+          "Mary  Grahm",
+          "Jim Zipp",
+          "Cleveland",
+          "Pending Supplement",
+          15554.41,
+          12,
+          "Insurance"
+        ],
+        [
+          "Job-113981",
+          "Michelle Ludwig Nathan Ludwig",
+          "Frank Drummond",
+          "Columbus",
+          "Pending Supplement",
+          21094.11,
+          12,
+          "Insurance"
+        ],
+        [
+          "Job-113015",
+          "Kenneth R & Sandra K Farquhar",
+          "Storm Drumm",
+          "Columbus",
+          "Accounting Kickback",
+          11959,
+          11,
+          "Insurance"
+        ],
+        [
+          "Job-114069",
+          "Ismael Villalobos Jennife Ovares Alfaro",
+          "Cody Mitchell",
           "Greenville",
           "Accounting Kickback",
-          10565.61,
-          1,
-          "Retail-Financing"
+          18180.38,
+          11,
+          "Insurance"
+        ],
+        [
+          "Job-114564",
+          "Rsg Jeanette M Cuzzolini Jeanette M Cuzzolini",
+          "Sam Scorziell",
+          "Columbus",
+          "Accounting Kickback",
+          20456.24,
+          11,
+          "Insurance"
+        ],
+        [
+          "Job-114695",
+          "Brenda Glass",
+          "Frank Butts",
+          "Cleveland",
+          "Pending Supplement",
+          10060.55,
+          11,
+          "Insurance"
+        ],
+        [
+          "Job-115198",
+          "Colin Smolinsky",
+          "Sean Hickey",
+          "Richmond",
+          "Pending Supplement",
+          9273.9,
+          11,
+          "Insurance"
+        ],
+        [
+          "Job-114567",
+          "Martha Zunich",
+          "Matt Williams",
+          "Columbus",
+          "Accounting Kickback",
+          36500,
+          10,
+          "Insurance"
+        ],
+        [
+          "Job-111110",
+          "Joshua & Amanda F Sigmon",
+          "Dave Norris",
+          "Columbus",
+          "Accounting Kickback",
+          9319.91,
+          7,
+          "Insurance"
+        ],
+        [
+          "Job-114129",
+          "Aimee Buderer",
+          "Michael Cox",
+          "Cleveland",
+          "Pending Supplement",
+          8850.42,
+          7,
+          "Insurance"
+        ],
+        [
+          "Job-115197",
+          "clark farrey",
+          "Griffin Keller",
+          "Richmond",
+          "Pending Supplement",
+          20055.92,
+          7,
+          "Insurance"
+        ],
+        [
+          "Job-112868",
+          "Ebrima Sidibeh Amie Sidibeh",
+          "Morgan King",
+          "Columbus",
+          "Accounting Kickback",
+          13168.6,
+          6,
+          "Insurance"
+        ],
+        [
+          "Job-114274",
+          "Tom Bernardo",
+          "Frank Drummond",
+          "Columbus",
+          "Pending Supplement",
+          15267.16,
+          6,
+          "Insurance"
+        ],
+        [
+          "Job-114328",
+          "Rosalyn Miller",
+          "Jake Ross",
+          "Cleveland",
+          "Pending Supplement",
+          12480.87,
+          6,
+          "Insurance"
+        ],
+        [
+          "Job-115302",
+          "Francis Price",
+          "Luke Allberry",
+          "Columbus",
+          "Accounting Kickback",
+          13279.85,
+          6,
+          "Insurance"
+        ],
+        [
+          "Job-102764",
+          "Reghu Niar",
+          "Noah Jenkins",
+          "Richmond",
+          "Accounting Kickback",
+          41831.11,
+          6,
+          "Insurance"
+        ],
+        [
+          "Job-113298",
+          "Tim Crowley",
+          "Austyn Thurman",
+          "Columbus",
+          "",
+          19020,
+          5,
+          "Retail-No Financing"
+        ],
+        [
+          "Job-113479",
+          "Margaret Swisher",
+          "Morgan King",
+          "Columbus",
+          "",
+          11841.51,
+          5,
+          "Insurance"
+        ],
+        [
+          "Job-115451",
+          "William Elam",
+          "Michael Conley",
+          "Dayton",
+          "Pending Supplement",
+          24121.61,
+          5,
+          "Insurance"
+        ],
+        [
+          "Job-115556",
+          "Charles  Mccrimmon",
+          "Alex Morgan",
+          "Raleigh",
+          "Pending Supplement",
+          13941.57,
+          5,
+          "Insurance"
+        ],
+        [
+          "Job-113570",
+          "Dave Giddens",
+          "Jake Caldwell",
+          "Columbus",
+          "Accounting Kickback",
+          20776.88,
+          4,
+          "Insurance"
+        ],
+        [
+          "Job-114540",
+          "John dehner",
+          "Robert Beck",
+          "Columbus",
+          "Pending Supplement",
+          33836,
+          4,
+          "Insurance"
+        ],
+        [
+          "Job-115229",
+          "Bryan & Melissa Eder",
+          "Cody Mitchell",
+          "Greenville",
+          "Accounting Kickback",
+          1784.32,
+          4,
+          "Insurance"
+        ],
+        [
+          "Job-115539",
+          "Roger Pickard",
+          "Trevor Frazier",
+          "Raleigh",
+          "Pending Supplement",
+          16421,
+          4,
+          "Insurance"
         ],
         [
           "Job-110533",
@@ -4066,114 +4079,114 @@
           "Insurance"
         ],
         [
-          "Job-111469",
-          "Doug Noble",
-          "Derek Hastings",
-          "Dayton",
-          "Pending Supplement",
-          33938.07,
-          0,
-          "Insurance"
-        ],
-        [
-          "Job-111712",
-          "Henry Thomas - LB",
-          "Rob Blackmore",
-          "Raleigh",
-          "Ready to Invoice",
-          6234.49,
-          0,
-          "Insurance"
-        ],
-        [
           "Job-112236",
           "William Dobrolenski",
           "Storm Drumm",
           "Columbus",
-          "Accounting Kickback",
+          "Pending Supplement",
           6995.09,
           0,
           "Insurance"
         ],
         [
-          "Job-112729",
-          "Matt Vara",
-          "Clay Hastings",
-          "Columbus",
-          "",
-          23228,
-          0,
-          "Insurance"
-        ],
-        [
-          "Job-113135",
-          "Janis Yoder",
-          "Nate Boyer",
-          "Cleveland",
-          "Accounting Kickback",
-          3831.65,
-          0,
-          "Insurance"
-        ],
-        [
-          "Job-113252",
-          "Larry Colter",
-          "Nick Junker",
-          "Columbus",
-          "Pending Supplement",
-          31704.17,
-          0,
-          "Insurance"
-        ],
-        [
-          "Job-113285",
-          "Rich Movens",
+          "Job-113340",
+          "Kevin Fischbach",
           "Michael Cox",
           "Cleveland",
-          "Ready to Invoice",
-          12155.13,
+          "Pending Supplement",
+          31971.83,
           0,
           "Insurance"
         ],
         [
-          "Job-113594",
-          "Judy Longhenry",
-          "Derik Heinz",
+          "Job-113376",
+          "Jennifer Tiseo",
+          "Tony Seagraves",
+          "Detroit Metro",
+          "Ready to Invoice",
+          27300,
+          0,
+          "Retail-No Financing"
+        ],
+        [
+          "Job-114217",
+          "Aarant Gutter Project",
+          "Tim Washer",
+          "Knoxville",
+          "Ready to Invoice",
+          11650,
+          0,
+          "Retail-No Financing"
+        ],
+        [
+          "Job-114592",
+          "Michael Saneholtz",
+          "Rob Blackmore",
           "Columbus",
           "Ready to Invoice",
-          18783,
+          25911.16,
           0,
           "Insurance"
         ],
         [
-          "Job-113840",
-          "Sina Javidi",
-          "Bryce Fink",
-          "Cleveland",
+          "Job-114688",
+          "Shannon  Michael",
+          "Andrew Coleman",
+          "Knoxville",
           "Ready to Invoice",
-          22048,
+          20902,
+          0,
+          "Retail-Financing"
+        ],
+        [
+          "Job-114739",
+          "Kelvin Cash",
+          "Nathaniel Cocan",
+          "Knoxville",
+          "Ready to Invoice",
+          13220.36,
           0,
           "Insurance"
         ],
         [
-          "Job-114082",
-          "Maxim Moroz",
-          "Thomas Urling",
-          "Cincinnati",
+          "Job-114999",
+          "Bill Phillips",
+          "Zachary Schneider",
+          "Columbus",
           "Pending Supplement",
-          15994.99,
+          17749.85,
           0,
           "Insurance"
         ],
         [
-          "Job-114210",
-          "Sara Jerome",
-          "Jacob Miller",
-          "Dayton",
+          "Job-115149",
+          "Jon bosold",
+          "Robert Beck",
+          "Columbus",
           "Pending Supplement",
-          13064.07,
+          24000,
           0,
           "Insurance"
+        ],
+        [
+          "Job-115429",
+          "Michael Bailie",
+          "Andrew Coleman",
+          "Knoxville",
+          "Ready to Invoice",
+          22956.95,
+          0,
+          "Insurance"
+        ],
+        [
+          "Job-099092",
+          "Keisha Wade",
+          "Dan Strudgeon",
+          "Detroit Metro",
+          "",
+          32275,
+          0,
+          "Retail-No Financing"
         ]
       ]
     },
@@ -4490,7 +4503,7 @@
           "target": 487965
         }
       ],
-      "recent4WkAvg": 371008.2
+      "recent4WkAvg": 29847.69
     },
     "budgetRecovery": {
       "fullYearBudget": 126105724,
@@ -4548,7 +4561,7 @@
           "recovTarget": 15170128,
           "catchUp": 877798,
           "status": "Recovery",
-          "liveActual": 11288920.58
+          "liveActual": 11429355.95
         },
         {
           "mo": "Jun 2026",
@@ -4761,42 +4774,42 @@
     },
     "commentary": {
       "whatsWorking": [
-        "Sales Trajectory: Monthly sales moved from January $3.26M to June $4.34M (+33%). Annualized run rate: $95.27M.",
-        "Premium Deal Types: Insurance averages $20,654 per deal. Retail-Financing averages $20,875 (highest per-deal value). Retail-No Financing averages $12,588 (the volume engine).",
-        "Sold Conversion: 2,391 of 2,551 signed contracts (93.7%) have made it to Sold status for $39.02M in confirmed sales."
+        "Sales Trajectory: Monthly sales moved from January $3.24M to August $27K (-99%). Annualized run rate: $97.44M.",
+        "Premium Deal Types: Insurance averages $20,739 per deal. Retail-Financing averages $20,801 (highest per-deal value). Retail-No Financing averages $12,837 (the volume engine).",
+        "Sold Conversion: 2,808 of 2,979 signed contracts (94.3%) have made it to Sold status for $46.62M in confirmed sales."
       ],
       "whatNeedsAttention": [
-        "Kickback Concentration: Columbus has the most kickbacks (15, $371K). Total company kickbacks: 45 worth $945K.",
-        "Production Review Queue: 110 deals worth $2.51M sitting in Production Review. Watch for backlog growth, it delays revenue recognition."
+        "Kickback Concentration: Cleveland has the most kickbacks (23, $477K). Total company kickbacks: 49 worth $1.07M.",
+        "Production Review Queue: 118 deals worth $2.19M sitting in Production Review. Watch for backlog growth, it delays revenue recognition."
       ],
       "criticalRisks": [
-        "Columbus Kickback Concentration drives the company's largest single-market rework volume.",
-        "$1.83M sitting unbilled in Completed Jobs (90 jobs averaging 21 days; 5 jobs are 60+ days/$79K).",
-        "Pending Supplements aging: 60 supplement jobs ($1.34M), avg 26 days.",
-        "Accounting Kickbacks blocking $364K (22 completed jobs).",
-        "Pipeline kickbacks company-wide: 45 kickbacks totaling $945K.",
-        "Production Review backlog: 110 deals ($2.51M)."
+        "Cleveland Kickback Concentration drives the company's largest single-market rework volume.",
+        "$1.60M sitting unbilled in Completed Jobs (78 jobs averaging 22 days; 9 jobs are 60+ days/$133K).",
+        "Pending Supplements aging: 53 supplement jobs ($1.14M), avg 27 days.",
+        "Accounting Kickbacks blocking $249K (15 completed jobs).",
+        "Pipeline kickbacks company-wide: 49 kickbacks totaling $1.07M.",
+        "Production Review backlog: 118 deals ($2.19M)."
       ],
       "strengthsToAmplify": [
-        "Retail Velocity: 5d median close on 1,424 retail deals.",
-        "Insurance Density: $20,654 avg on 887 deals = $18.32M; +20% lift = ~$3.66M.",
-        "June repair rate at 8.6% vs YTD 13.6%, correction in latest month.",
-        "Financing Lifts Ticket: Retail-Financing averages $20,875, highest per-deal value."
+        "Retail Velocity: 4d median close on 1,628 retail deals.",
+        "Insurance Density: $20,739 avg on 1,091 deals = $22.63M; +20% lift = ~$4.53M.",
+        "August repair rate at 0.0% vs YTD 13.4%, correction in latest month.",
+        "Financing Lifts Ticket: Retail-Financing averages $20,801, highest per-deal value."
       ],
       "fixList": [
-        "Columbus Pipeline Kickback Intervention, pull every kickback and categorize root cause.",
-        "Supplement Follow-Up Process, 60 supplement jobs ($1.34M).",
-        "Accounting Kickback Root Causes, 22 jobs ($364K), need a Kickback Reason field.",
-        "Production Review Bottleneck, 110 deals; add temporary PM capacity.",
-        "Financing Push, 232 financing deals YTD (9.1%) at $20,875 avg. Target 15% mix."
+        "Cleveland Pipeline Kickback Intervention, pull every kickback and categorize root cause.",
+        "Supplement Follow-Up Process, 53 supplement jobs ($1.14M).",
+        "Accounting Kickback Root Causes, 15 jobs ($249K), need a Kickback Reason field.",
+        "Production Review Bottleneck, 118 deals; add temporary PM capacity.",
+        "Financing Push, 256 financing deals YTD (8.6%) at $20,801 avg. Target 15% mix."
       ],
       "actionPlan": {
         "thisWeek": [
-          "Invoice Immediately: $82K, 5 jobs marked Ready to Invoice.",
-          "Escalate 60+ Day Jobs: $79K, 5 jobs are 60+ days unbilled.",
-          "Accounting Kickback Blitz: $364K, 22 jobs kicked back; cross-functional meeting w/ accounting + sales ops.",
-          "Columbus Pipeline Kickback Review, meet with branch leadership.",
-          "Production Review Surge Plan, 110 deals ($2.51M) in queue."
+          "Invoice Immediately: $147K, 7 jobs marked Ready to Invoice.",
+          "Escalate 60+ Day Jobs: $133K, 9 jobs are 60+ days unbilled.",
+          "Accounting Kickback Blitz: $249K, 15 jobs kicked back; cross-functional meeting w/ accounting + sales ops.",
+          "Cleveland Pipeline Kickback Review, meet with branch leadership.",
+          "Production Review Surge Plan, 118 deals ($2.19M) in queue."
         ],
         "thisMonth": [
           "Supplement Escalation SOP, 7/14/30 day cadence with carrier escalation.",
@@ -4806,8 +4819,8 @@
         ],
         "thisQuarter": [
           "Add Kickback Reason field to accounting workflow.",
-          "Repair Business Decision, 346 repairs YTD at ~$1,780 avg.",
-          "Ops Capacity Planning, June hit 222 deals; summer typically exceeds spring."
+          "Repair Business Decision, 400 repairs YTD at ~$2,080 avg.",
+          "Ops Capacity Planning, August hit 1 deals; summer typically exceeds spring."
         ]
       }
     }
@@ -7189,11 +7202,11 @@
     "title": "Job Backlog & Production",
     "subtitle": "Live job-level backlog",
     "headerMeta": {
-      "totalJobs": 626,
-      "totalWOs": 939,
-      "portfolioValue": 13845184.65,
-      "avgDaysInStatus": 11,
-      "lastBuild": "2026-06-12T19:15:13.420Z"
+      "totalJobs": 605,
+      "totalWOs": 911,
+      "portfolioValue": 13541823.35,
+      "avgDaysInStatus": 16,
+      "lastBuild": "2026-07-06T17:03:13.767Z"
     },
     "tabs": [
       {
@@ -7236,37 +7249,37 @@
     "kpisExecutive": [
       {
         "label": "Total Jobs",
-        "value": "626",
-        "sub": "939 work orders",
+        "value": "605",
+        "sub": "911 work orders",
         "tone": "info"
       },
       {
         "label": "In Progress",
-        "value": "139",
-        "sub": "22.2% of book",
+        "value": "113",
+        "sub": "18.7% of book",
         "tone": "info"
       },
       {
         "label": "Not Started",
-        "value": "487",
-        "sub": "77.8% of book",
+        "value": "492",
+        "sub": "81.3% of book",
         "tone": "info"
       },
       {
         "label": "Partially Complete",
-        "value": "86",
-        "sub": "61.9% of In Progress",
+        "value": "81",
+        "sub": "71.7% of In Progress",
         "tone": "crit"
       },
       {
         "label": "Avg Days in Status",
-        "value": "11",
+        "value": "16",
         "sub": "Job-level average",
         "tone": "warn"
       },
       {
         "label": "Total Portfolio Value",
-        "value": "$13.85M",
+        "value": "$13.54M",
         "sub": "Sum of signed contracts in book",
         "tone": "good"
       }
@@ -7274,13 +7287,13 @@
     "kpisRiskOpportunity": [
       {
         "label": "Revenue at Risk",
-        "value": "$1.80M",
+        "value": "$2.30M",
         "sub": "Jobs with WOs >30 days in status",
         "tone": "crit"
       },
       {
         "label": "Immediate Throughput Opportunity",
-        "value": "$2.31M",
+        "value": "$2.37M",
         "sub": "Partial-job value waiting on trailing trades",
         "tone": "good"
       }
@@ -7288,25 +7301,25 @@
     "kpisPartial": [
       {
         "label": "Partial Jobs",
-        "value": "86",
-        "sub": "61.9% of In Progress",
+        "value": "81",
+        "sub": "71.7% of In Progress",
         "tone": "warn"
       },
       {
         "label": "Trapped Value",
-        "value": "$2.31M",
+        "value": "$2.37M",
         "sub": "Recoverable contract value",
         "tone": "good"
       },
       {
         "label": "Open WOs on Partials",
-        "value": "101",
-        "sub": "Across 86 jobs",
+        "value": "96",
+        "sub": "Across 81 jobs",
         "tone": "info"
       },
       {
         "label": "RTS Ready Today",
-        "value": "31",
+        "value": "50",
         "sub": "No blocker, dispatch now",
         "tone": "good"
       },
@@ -7320,25 +7333,25 @@
     "kpisHolds": [
       {
         "label": "Total Holds",
-        "value": "263",
+        "value": "277",
         "sub": "WOs in On Hold status",
         "tone": "crit"
       },
       {
         "label": "Pending Permit",
-        "value": "170",
-        "sub": "64.6% of all holds",
+        "value": "178",
+        "sub": "64.3% of all holds",
         "tone": "warn"
       },
       {
         "label": "Pending Sales",
-        "value": "31",
+        "value": "20",
         "sub": "Awaiting sales disposition",
         "tone": "warn"
       },
       {
         "label": "Avg Hold Age",
-        "value": "22d",
+        "value": "24d",
         "sub": "Mean days in hold across all sub-statuses",
         "tone": "info"
       }
@@ -7346,19 +7359,19 @@
     "kpisSales": [
       {
         "label": "Active Reps",
-        "value": "113",
+        "value": "107",
         "sub": "Reps with at least one open WO",
         "tone": "info"
       },
       {
         "label": "Stuck Value >30d",
-        "value": "$1.80M",
+        "value": "$2.30M",
         "sub": "Sum of stale value across all reps",
         "tone": "crit"
       },
       {
         "label": "Reps with Stuck Work",
-        "value": "47",
+        "value": "57",
         "sub": "Reps carrying any >30d WO",
         "tone": "warn"
       },
@@ -7372,26 +7385,26 @@
     "kpisBacklog": [
       {
         "label": "Not Started Jobs",
-        "value": "487",
-        "sub": "77.8% of book",
+        "value": "492",
+        "sub": "81.3% of book",
         "tone": "info"
       },
       {
         "label": "Not Started Value",
-        "value": "$10.22M",
+        "value": "$10.54M",
         "sub": "Signed and waiting",
         "tone": "good"
       },
       {
         "label": "Oldest Not Started",
-        "value": "263d",
+        "value": "287d",
         "sub": "Days in status, oldest job",
         "tone": "crit"
       },
       {
         "label": "Top Branch Concentration",
         "value": "Columbus",
-        "sub": "225 jobs (46.2% of backlog)",
+        "sub": "213 jobs (43.3% of backlog)",
         "tone": "warn"
       }
     ],
@@ -7399,25 +7412,25 @@
       {
         "id": "ch-wo-status",
         "labels": [
-          "On Hold",
           "Ready to Schedule",
+          "On Hold",
           "Scheduled",
           "Completed",
-          "In Progress",
           "Requires Additional Service",
+          "In Progress",
           "New"
         ],
         "datasets": [
           {
             "label": "Work Orders",
             "data": [
-              263,
-              260,
-              254,
-              100,
-              41,
-              20,
-              1
+              339,
+              277,
+              159,
+              97,
+              19,
+              17,
+              3
             ]
           }
         ]
@@ -7426,102 +7439,102 @@
         "id": "ch-branch",
         "labels": [
           "Columbus",
-          "Detroit Metro",
           "Cleveland",
+          "Detroit Metro",
           "DC Metro",
-          "Nashville",
-          "Richmond",
           "Cincinnati",
           "Dayton",
+          "Nashville",
+          "Richmond",
           "Grand Rapids",
-          "Knoxville",
           "Greenville",
-          "Raleigh"
+          "Raleigh",
+          "Knoxville"
         ],
         "datasets": [
           {
             "label": "Completed",
             "data": [
-              44,
-              16,
-              12,
-              11,
-              2,
-              5,
+              39,
+              13,
+              17,
+              7,
               4,
               1,
-              2,
-              0,
-              2,
-              1
+              4,
+              1,
+              3,
+              3,
+              3,
+              2
             ]
           },
           {
             "label": "Open",
             "data": [
-              19,
-              12,
-              8,
-              7,
+              16,
+              4,
               5,
-              5,
-              0,
               1,
+              4,
+              1,
+              4,
               3,
               0,
+              0,
               1,
-              1
+              0
             ]
           },
           {
             "label": "On Hold",
             "data": [
-              105,
-              53,
-              52,
-              15,
+              83,
+              90,
+              51,
+              11,
+              5,
+              10,
               7,
-              6,
-              6,
-              7,
-              6,
-              2,
-              2,
-              2
+              5,
+              0,
+              8,
+              4,
+              3
             ]
           },
           {
             "label": "RTS",
             "data": [
-              142,
+              177,
+              71,
               39,
-              43,
-              5,
-              6,
               1,
+              8,
               4,
               3,
-              9,
-              5,
-              3,
-              0
+              7,
+              16,
+              4,
+              6,
+              3
             ]
           },
           {
             "label": "Scheduled",
             "data": [
-              103,
-              33,
-              25,
-              23,
-              20,
-              8,
-              10,
-              11,
-              3,
+              66,
+              19,
+              21,
+              16,
+              5,
               9,
-              4,
-              5
+              6,
+              6,
+              1,
+              2,
+              2,
+              6
             ]
           }
         ]
@@ -7529,8 +7542,8 @@
       {
         "id": "ch-wo-aging",
         "labels": [
-          "On Hold",
           "Completed",
+          "On Hold",
           "Requires Additional Service",
           "Ready to Schedule",
           "Scheduled",
@@ -7541,24 +7554,24 @@
           {
             "label": "Avg Days",
             "data": [
-              22,
-              21,
-              13,
-              11,
-              6,
-              1,
+              29,
+              24,
+              17,
+              17,
+              12,
+              2,
               0
             ]
           },
           {
             "label": "Max Days",
             "data": [
-              273,
-              95,
-              78,
-              178,
               119,
-              4,
+              297,
+              76,
+              202,
+              115,
+              6,
               0
             ]
           }
@@ -7570,32 +7583,30 @@
           "Roofing",
           "Gutters",
           "Siding",
-          "Masonry",
-          "Metal",
           "Windows",
           "Rack Mounted Solar",
+          "Metal",
+          "Masonry",
           "Electrical",
-          "Painting",
           "Flat Roof",
           "Carpentry",
-          "Insulation",
+          "Painting",
           "GAF Solar"
         ],
         "datasets": [
           {
             "label": "Completed",
             "data": [
-              79,
-              12,
-              3,
-              4,
+              73,
+              11,
+              6,
+              0,
+              0,
+              2,
+              2,
               1,
-              0,
-              0,
-              0,
-              0,
               1,
-              0,
+              1,
               0,
               0
             ]
@@ -7603,19 +7614,18 @@
           {
             "label": "Open",
             "data": [
-              437,
-              248,
-              96,
-              12,
+              403,
+              247,
+              114,
+              13,
               11,
-              10,
-              8,
-              6,
+              9,
+              7,
               4,
-              3,
-              2,
               1,
-              1
+              1,
+              2,
+              2
             ]
           }
         ]
@@ -7623,20 +7633,20 @@
       {
         "id": "ch-incomplete-status",
         "labels": [
-          "Scheduled",
           "Ready to Schedule",
+          "Scheduled",
           "On Hold",
-          "In Progress",
-          "Requires Additional Service"
+          "Requires Additional Service",
+          "In Progress"
         ],
         "datasets": [
           {
             "label": "WOs",
             "data": [
-              38,
-              31,
+              50,
               18,
-              8,
+              12,
+              10,
               6
             ]
           }
@@ -7656,11 +7666,11 @@
           {
             "label": "Open WOs",
             "data": [
-              49,
-              17,
-              18,
-              6,
-              3,
+              19,
+              14,
+              39,
+              14,
+              2,
               8
             ]
           }
@@ -7670,34 +7680,34 @@
         "id": "ch-backlog",
         "labels": [
           "Columbus",
-          "Detroit Metro",
           "Cleveland",
+          "Detroit Metro",
           "DC Metro",
-          "Nashville",
           "Dayton",
           "Cincinnati",
-          "Knoxville",
-          "Grand Rapids",
           "Richmond",
+          "Grand Rapids",
+          "Nashville",
           "Raleigh",
-          "Greenville"
+          "Greenville",
+          "Knoxville"
         ],
         "datasets": [
           {
             "label": "Jobs",
             "data": [
-              225,
-              81,
-              70,
-              23,
-              22,
-              15,
-              13,
-              12,
+              213,
+              99,
+              77,
+              20,
+              18,
+              14,
               11,
+              10,
+              9,
+              8,
               7,
-              5,
-              3
+              6
             ]
           }
         ]
@@ -7723,159 +7733,159 @@
         "rows": [
           [
             "Columbus",
-            413,
-            44,
-            105,
-            142,
-            103,
-            10,
-            9,
-            62,
-            277,
-            6131060.75
-          ],
-          [
-            "Detroit Metro",
-            153,
-            16,
-            53,
+            381,
             39,
-            33,
-            9,
-            3,
-            45,
-            109,
-            2517434.52
+            83,
+            177,
+            66,
+            10,
+            6,
+            41,
+            258,
+            5829159.09
           ],
           [
             "Cleveland",
-            140,
-            12,
-            52,
-            43,
-            25,
-            4,
-            3,
-            43,
-            85,
-            1635039.16
+            197,
+            13,
+            90,
+            71,
+            19,
+            1,
+            2,
+            73,
+            114,
+            2333799.76
+          ],
+          [
+            "Detroit Metro",
+            133,
+            17,
+            51,
+            39,
+            21,
+            0,
+            5,
+            39,
+            97,
+            2002710.97
           ],
           [
             "DC Metro",
-            61,
-            11,
-            15,
-            5,
-            23,
-            5,
-            2,
-            3,
-            37,
-            1006044.43
-          ],
-          [
-            "Nashville",
-            40,
-            2,
+            36,
             7,
-            6,
-            20,
-            4,
+            11,
+            1,
+            16,
             1,
             0,
-            29,
-            603627.62
-          ],
-          [
-            "Richmond",
-            25,
-            5,
-            6,
-            1,
-            8,
-            5,
-            0,
-            0,
-            14,
-            561761.98
+            3,
+            27,
+            701138.4
           ],
           [
             "Cincinnati",
-            24,
+            26,
             4,
-            6,
+            5,
+            8,
+            5,
+            0,
+            2,
             4,
-            10,
-            0,
-            0,
-            6,
-            17,
-            330792.8
+            18,
+            479014.15
           ],
           [
             "Dayton",
-            23,
+            25,
             1,
+            10,
+            4,
+            9,
+            0,
+            1,
+            8,
+            19,
+            465609.23
+          ],
+          [
+            "Nashville",
+            24,
+            4,
             7,
             3,
-            11,
+            6,
             1,
+            3,
             0,
+            16,
+            402781.88
+          ],
+          [
+            "Richmond",
+            22,
+            1,
             5,
-            17,
-            419457.97
+            7,
+            6,
+            3,
+            0,
+            0,
+            14,
+            531003.38
           ],
           [
             "Grand Rapids",
-            23,
-            2,
-            6,
-            9,
+            20,
             3,
-            2,
+            0,
+            16,
             1,
-            5,
-            16,
-            252223.73
-          ],
-          [
-            "Knoxville",
-            16,
-            0,
-            2,
-            5,
-            9,
             0,
             0,
             0,
-            12,
-            169633.5
+            13,
+            220339.83
           ],
           [
             "Greenville",
-            12,
-            2,
-            2,
+            17,
             3,
+            8,
             4,
-            1,
+            2,
             0,
-            1,
-            6,
-            77985.32
+            0,
+            8,
+            10,
+            202051.84
           ],
           [
             "Raleigh",
-            9,
-            1,
+            16,
+            3,
+            4,
+            6,
             2,
-            0,
-            5,
-            0,
             1,
             0,
-            7,
-            140122.87
+            2,
+            11,
+            226829.72
+          ],
+          [
+            "Knoxville",
+            14,
+            2,
+            3,
+            3,
+            6,
+            0,
+            0,
+            0,
+            8,
+            147385.1
           ]
         ]
       },
@@ -7891,39 +7901,33 @@
         "rows": [
           [
             "Pending Permit",
-            166,
-            15,
-            234
+            177,
+            16,
+            258
           ],
           [
             "Pending Material",
-            45,
-            21,
-            77
-          ],
-          [
-            "Pending Sales",
-            30,
-            38,
-            273
+            52,
+            27,
+            101
           ],
           [
             "Homeowner Request",
-            17,
-            71,
-            263
+            26,
+            60,
+            287
+          ],
+          [
+            "Pending Sales",
+            19,
+            51,
+            297
           ],
           [
             "Pending HOA",
-            4,
-            15,
-            30
-          ],
-          [
-            "Pending Deposit",
-            1,
-            32,
-            32
+            3,
+            18,
+            25
           ]
         ]
       },
@@ -7941,61 +7945,55 @@
             "Gutters",
             56,
             56,
-            1411849.93
+            1536313.62
           ],
           [
             "Siding",
-            17,
-            17,
-            359612.56
+            15,
+            15,
+            348110.35
           ],
           [
             "Roofing",
             13,
             13,
-            427148.03
+            444095.58
           ],
           [
-            "Metal",
-            4,
-            4,
-            191855.48
+            "Windows",
+            3,
+            3,
+            41230
           ],
           [
             "Rack Mounted Solar",
-            4,
-            4,
-            194912.25
+            3,
+            3,
+            167063.25
+          ],
+          [
+            "Electrical",
+            2,
+            2,
+            46793.51
           ],
           [
             "Masonry",
             2,
             2,
-            42724.11
+            104381.87
           ],
           [
             "Painting",
-            2,
-            2,
-            57038.75
+            1,
+            1,
+            53821.45
           ],
           [
-            "Windows",
+            "Metal",
             1,
             1,
-            11959
-          ],
-          [
-            "Insulation",
-            1,
-            1,
-            21849
-          ],
-          [
-            "Electrical",
-            1,
-            1,
-            10988
+            40300
           ]
         ]
       },
@@ -8009,26 +8007,30 @@
         "rows": [
           [
             "Ready to Schedule",
-            117
+            138
           ],
           [
             "On Hold",
-            66
+            67
           ],
           [
             "Scheduled",
-            58
+            35
           ],
           [
             "Completed",
-            12
+            11
           ],
           [
             "In Progress",
-            6
+            3
           ],
           [
             "Requires Additional Service",
+            3
+          ],
+          [
+            "New",
             1
           ]
         ]
@@ -8047,107 +8049,99 @@
         "rows": [
           [
             "Roofing",
-            516,
-            79,
-            437,
-            508,
-            11892493.08
+            476,
+            73,
+            403,
+            471,
+            11262373.47
           ],
           [
             "Gutters",
-            260,
-            12,
-            248,
-            259,
-            5975735.58
+            258,
+            11,
+            247,
+            258,
+            5851811.05
           ],
           [
             "Siding",
-            99,
-            3,
-            96,
-            98,
-            1853498.69
-          ],
-          [
-            "Masonry",
-            16,
-            4,
-            12,
-            16,
-            513593.87
-          ],
-          [
-            "Metal",
-            12,
-            1,
-            11,
-            11,
-            657775.31
+            120,
+            6,
+            114,
+            120,
+            2445882.84
           ],
           [
             "Windows",
-            10,
+            13,
             0,
-            10,
-            10,
-            200146.7
+            13,
+            13,
+            261148.14
           ],
           [
             "Rack Mounted Solar",
-            8,
+            11,
             0,
-            8,
+            11,
+            9,
+            400550.31
+          ],
+          [
+            "Metal",
+            11,
+            2,
+            9,
+            10,
+            517846.4
+          ],
+          [
+            "Masonry",
+            9,
+            2,
             7,
-            329004.61
+            9,
+            260930.24
           ],
           [
             "Electrical",
-            6,
-            0,
-            6,
-            6,
-            138195.07
-          ],
-          [
-            "Painting",
+            5,
+            1,
             4,
-            0,
-            4,
-            4,
-            207261.2
+            5,
+            179507.98
           ],
           [
             "Flat Roof",
-            4,
+            2,
             1,
-            3,
-            4,
-            104186
+            1,
+            2,
+            40730
           ],
           [
             "Carpentry",
             2,
-            0,
+            1,
+            1,
             2,
-            2,
-            258796.83
+            260284.83
           ],
           [
-            "Insulation",
-            1,
+            "Painting",
+            2,
             0,
-            1,
-            1,
-            21849
+            2,
+            2,
+            152821.45
           ],
           [
             "GAF Solar",
-            1,
+            2,
             0,
-            1,
-            1,
-            35132
+            2,
+            2,
+            94954
           ]
         ]
       },
@@ -8165,7 +8159,7 @@
           ],
           [
             "Metal",
-            12
+            11
           ]
         ]
       },
@@ -8183,10 +8177,18 @@
         "rows": [
           [
             "Hunter Carrington Scott",
-            6,
-            3,
+            4,
+            2,
             239596.83,
             2,
+            1
+          ],
+          [
+            "Cole Burgess",
+            16,
+            13,
+            167092,
+            6,
             1
           ],
           [
@@ -8198,108 +8200,100 @@
             2
           ],
           [
-            "Gary Benedict Jr",
+            "Derrick Sieber",
             11,
-            8,
-            109351.42,
+            7,
+            99000,
             2,
             1
           ],
           [
-            "Brian Ogrin",
-            32,
-            19,
-            98359.43,
-            5,
-            1
-          ],
-          [
-            "Mark Daggett",
-            14,
-            10,
-            87200,
-            3,
-            1
-          ],
-          [
-            "Matthew Ross",
-            21,
-            14,
-            76181,
-            3,
-            2
-          ],
-          [
-            "Cole Burgess",
-            27,
-            19,
-            68660,
-            4,
+            "Sam Scorziell",
+            17,
+            11,
+            88572.4,
+            2,
             1
           ],
           [
             "Kevin Ditty",
+            9,
+            6,
+            88467.69,
+            5,
+            1
+          ],
+          [
+            "Brian Ogrin",
+            23,
+            13,
+            83730.43,
+            5,
+            1
+          ],
+          [
+            "James Cole Dionisi",
+            15,
+            12,
+            82913,
+            4,
+            1
+          ],
+          [
+            "Frank Butts",
+            26,
+            13,
+            70731.34,
+            5,
+            1
+          ],
+          [
+            "Rudy Mendez",
+            5,
+            2,
+            64655,
+            4,
+            1
+          ],
+          [
+            "Jacen Craft",
+            7,
+            4,
+            59240,
+            2,
+            1
+          ],
+          [
+            "Mark Daggett",
+            18,
+            15,
+            58700,
+            2,
+            1
+          ],
+          [
+            "Clay Hastings",
+            20,
+            17,
+            55456.71,
+            3,
+            1
+          ],
+          [
+            "Bryce Fink",
             11,
             8,
-            63618.27,
-            4,
-            1
-          ],
-          [
-            "Luca Benedetti",
-            6,
-            3,
-            44770.98,
-            4,
-            1
-          ],
-          [
-            "Jake Caldwell",
-            12,
-            8,
-            44487.56,
-            1,
-            1
-          ],
-          [
-            "Scott Scaperato",
-            29,
-            17,
-            43347.38,
-            6,
-            1
-          ],
-          [
-            "Eric England",
-            4,
-            2,
-            42725.52,
-            1,
-            1
-          ],
-          [
-            "Noah Jenkins",
-            2,
-            1,
-            41831.11,
+            52759.35,
             2,
             1
           ],
           [
-            "Richard Rice",
-            13,
-            10,
-            38261,
-            3,
-            1
-          ],
-          [
-            "Gary Holm",
+            "Morgan King",
+            11,
             6,
-            5,
-            37846,
-            3,
-            1
+            49950.67,
+            4,
+            2
           ]
         ]
       },
@@ -8315,75 +8309,75 @@
         "rows": [
           [
             "Columbus",
-            225,
-            4864529.35,
-            108
-          ],
-          [
-            "Detroit Metro",
-            81,
-            1675658,
-            263
+            213,
+            4652206.88,
+            132
           ],
           [
             "Cleveland",
-            70,
-            1258887.35,
-            56
+            99,
+            1923559.85,
+            61
+          ],
+          [
+            "Detroit Metro",
+            77,
+            1465945.66,
+            287
           ],
           [
             "DC Metro",
-            23,
-            514589.56,
-            95
-          ],
-          [
-            "Nashville",
-            22,
-            427310.13,
-            43
+            20,
+            432034,
+            110
           ],
           [
             "Dayton",
-            15,
-            370868.97,
-            23
+            18,
+            422809.2,
+            24
           ],
           [
             "Cincinnati",
-            13,
-            230742,
-            91
-          ],
-          [
-            "Knoxville",
-            12,
-            169633.5,
-            10
-          ],
-          [
-            "Grand Rapids",
-            11,
-            193189.38,
-            32
+            14,
+            348811.02,
+            115
           ],
           [
             "Richmond",
-            7,
-            384683.39,
-            114
+            11,
+            476284.28,
+            101
+          ],
+          [
+            "Grand Rapids",
+            10,
+            165924.38,
+            51
+          ],
+          [
+            "Nashville",
+            9,
+            269626.34,
+            67
           ],
           [
             "Raleigh",
-            5,
-            81793.35,
-            43
+            8,
+            133930.2,
+            26
           ],
           [
             "Greenville",
-            3,
-            43293.31,
-            4
+            7,
+            146738.62,
+            12
+          ],
+          [
+            "Knoxville",
+            6,
+            104980.1,
+            34
           ]
         ]
       },
@@ -8408,18 +8402,8 @@
             "Roofing",
             "Homeowner Request",
             "Cole Burgess",
-            263,
+            287,
             44826
-          ],
-          [
-            "Job-108163",
-            "Mayank Srivastava",
-            "Richmond",
-            "Metal",
-            "Pending Sales",
-            "Luca Benedetti",
-            114,
-            29205.81
           ],
           [
             "Job-108368",
@@ -8428,7 +8412,7 @@
             "Gutters",
             "Homeowner Request",
             "Bill Applegate",
-            108,
+            132,
             3241.17
           ],
           [
@@ -8438,18 +8422,8 @@
             "Gutters",
             "",
             "Gary Holm",
-            100,
+            124,
             9000
-          ],
-          [
-            "Job-108962",
-            "Kent Mccullough",
-            "DC Metro",
-            "Roofing",
-            "Pending Permit",
-            "Derrick Sieber",
-            95,
-            20300
           ],
           [
             "Job-106057",
@@ -8458,7 +8432,7 @@
             "Roofing",
             "",
             "Wes McCorkle",
-            91,
+            115,
             19675.69
           ],
           [
@@ -8468,17 +8442,17 @@
             "Roofing",
             "Pending Sales",
             "Dan Haske",
-            86,
+            110,
             24567
           ],
           [
             "Job-099374",
             "Good Shepard Baptist Church",
             "Richmond",
-            "Metal",
+            "Carpentry",
             "Pending Material",
             "Hunter Carrington Scott",
-            77,
+            101,
             239596.83
           ],
           [
@@ -8488,7 +8462,7 @@
             "Roofing",
             "Homeowner Request",
             "James Cole Dionisi",
-            72,
+            96,
             36148
           ],
           [
@@ -8498,7 +8472,7 @@
             "Metal",
             "",
             "Zachary Schneider",
-            65,
+            89,
             3200
           ],
           [
@@ -8508,7 +8482,7 @@
             "Roofing",
             "Pending Sales",
             "Matthew Ross",
-            63,
+            87,
             38862
           ],
           [
@@ -8518,38 +8492,58 @@
             "Masonry",
             "",
             "Donald Richard",
-            60,
+            84,
             3000
-          ],
-          [
-            "Job-111444",
-            "James Sharples",
-            "Detroit Metro",
-            "Roofing",
-            "Pending Permit",
-            "Richard Rice",
-            60,
-            12718
           ],
           [
             "Job-109118",
             "Joshua Vandixhorn",
             "Columbus",
-            "Roofing",
+            "Metal",
             "Pending Material",
             "Evan Kelley",
-            59,
+            83,
             27521
           ],
           [
-            "Job-102764",
-            "Reghu Niar",
-            "Richmond",
-            "Gutters",
+            "Job-111397",
+            "Carol Bobbitt",
+            "Columbus",
+            "Roofing",
             "",
-            "Noah Jenkins",
-            56,
-            41831.11
+            "Storm Drumm",
+            80,
+            30000
+          ],
+          [
+            "Job-111901",
+            "Suzanne Groot",
+            "Detroit Metro",
+            "Gutters",
+            "Homeowner Request",
+            "Matthew Ross",
+            76,
+            8800
+          ],
+          [
+            "Job-112431",
+            "Karen Slanaker",
+            "Nashville",
+            "Roofing",
+            "",
+            "Kevin Ditty",
+            67,
+            21663.51
+          ],
+          [
+            "Job-110381",
+            "Ricki Jolin",
+            "Detroit Metro",
+            "Roofing",
+            "Homeowner Request",
+            "Cole Burgess",
+            62,
+            18945
           ]
         ]
       }
@@ -8557,54 +8551,54 @@
     "computedExtras": {
       "permitsByBranch": [
         {
+          "branch": "Cleveland",
+          "permits": 73
+        },
+        {
           "branch": "Columbus",
-          "permits": 62
+          "permits": 41
         },
         {
           "branch": "Detroit Metro",
-          "permits": 45
-        },
-        {
-          "branch": "Cleveland",
-          "permits": 43
-        },
-        {
-          "branch": "Cincinnati",
-          "permits": 6
+          "permits": 39
         },
         {
           "branch": "Dayton",
-          "permits": 5
+          "permits": 8
         },
         {
-          "branch": "Grand Rapids",
-          "permits": 5
+          "branch": "Greenville",
+          "permits": 8
+        },
+        {
+          "branch": "Cincinnati",
+          "permits": 4
         },
         {
           "branch": "DC Metro",
           "permits": 3
         },
         {
-          "branch": "Greenville",
-          "permits": 1
+          "branch": "Raleigh",
+          "permits": 2
         }
       ]
     },
     "actionPlan": {
-      "strategicGoal": "Convert $2.31M of trapped partial-job revenue into billable revenue, reduce $1.80M of at-risk contract value, and clear the not-started backlog without adding headcount.",
+      "strategicGoal": "Convert $2.37M of trapped partial-job revenue into billable revenue, reduce $2.30M of at-risk contract value, and clear the not-started backlog without adding headcount.",
       "immediate": [
-        "Dispatch the 31 RTS WOs sitting on partial jobs. No blocker, no hold, just dispatch.",
-        "Re-dispatch the 20 RAS WOs (oldest at 78 days). These are pure re-work fastballs.",
-        "Gutters sweep: 56 open WOs across 56 partial jobs blocking $1.41M. Highest single-trade leverage in the book.",
-        "Columbus permit sweep: 62 pending-permit WOs concentrated at one branch. AHJ-relations problem, not a company-wide one.",
-        "Close out the 4 zombie jobs (all WOs Completed, parent still In Progress). Pure paperwork."
+        "Dispatch the 50 RTS WOs sitting on partial jobs. No blocker, no hold, just dispatch.",
+        "Re-dispatch the 19 RAS WOs (oldest at 76 days). These are pure re-work fastballs.",
+        "Gutters sweep: 56 open WOs across 56 partial jobs blocking $1.54M. Highest single-trade leverage in the book.",
+        "Cleveland permit sweep: 73 pending-permit WOs concentrated at one branch. AHJ-relations problem, not a company-wide one.",
+        "Close out the 6 zombie jobs (all WOs Completed, parent still In Progress). Pure paperwork."
       ],
       "structural": [
         "Stand up a partial-job dispatch SLA: any job that crosses 14 days with at least one Completed WO and at least one open WO triggers a daily stand-up review.",
         "Add a Permit Aging escalation path: any pending-permit WO over 14 days routes to the branch GM with a daily AHJ touchpoint requirement.",
         "Trade-specific dispatch surge for the dominant trailing trade (currently Gutters): evaluate whether sub-fleet expansion or schedule re-balance moves the number faster than headcount.",
         "Pending Sales disposition cadence: weekly meeting with the top stuck reps to triage. Most are dispositions, not deals to lose.",
-        "Not-Started intake review: 487 jobs ($10.22M) sit waiting. Audit the dispatch trigger so jobs do not languish post-signature."
+        "Not-Started intake review: 492 jobs ($10.54M) sit waiting. Audit the dispatch trigger so jobs do not languish post-signature."
       ],
       "cadence": [
         "Weekly Monday Action Plan refresh: re-baseline the Immediate list every 7 days.",
@@ -8613,7 +8607,7 @@
         "Monthly Salesperson View read: surface the top stuck reps to sales leadership for joint disposition.",
         "Quarterly Trade Analysis read: validate that Roofing-to-Gutters cadence still matches install volume."
       ],
-      "bottomLine": "The book is healthy in volume terms. The drag is in the middle of the funnel: partial jobs trap $2.31M, holds are concentrated in permits, and the not-started cohort needs an intake audit. The fix list is operational, not strategic. The top three workstreams (RTS dispatch, RAS re-dispatch, permit sweep) move the number without adding headcount."
+      "bottomLine": "The book is healthy in volume terms. The drag is in the middle of the funnel: partial jobs trap $2.37M, holds are concentrated in permits, and the not-started cohort needs an intake audit. The fix list is operational, not strategic. The top three workstreams (RTS dispatch, RAS re-dispatch, permit sweep) move the number without adding headcount."
     }
   }
 }
