@@ -1,7 +1,7 @@
 # Residential Revenue Forecast: Operating Rules
 
 Owner: Greg Graven, COO, Feazel Roofing
-Last revised: 2026-06-12
+Last revised: 2026-07-06
 Audience: Claude agents and human collaborators working on Feazel residential revenue forecasting in any project context.
 
 ## Executive summary
@@ -111,7 +111,7 @@ Tabs (12 total, IDs `tab0` through `tab11`):
 
 Styling: brand banner embedded as base64. Page-shell + brand-bar + page-header structure. Tab nav uses `class="page-nav"`. Profitability and Budget Recovery tabs use the `kpi good` / `kpi crit` modifier classes for green/red emphasis (mandatory call-outs). Right-aligned table headers use `<th class="right">` which is now selected by `table.data th.right` for correct CSS specificity.
 
-Subtitle format: `V5 Model with Job Type Analysis &bull; Data as of <Month DD, YYYY> &bull; Deduped by Job Number &bull; Cycle &amp; conversion unlocked`. The data-as-of date is the max date across NetSuite invoicing and Forecasting Report inputs.
+Subtitle format (updated 2026-06-16): `Realistic Forecast &bull; Data as of <Month DD, YYYY> &bull; Deduped by Job Number &bull; Realistic vs Budget`. The data-as-of date is the max date across NetSuite invoicing and Forecasting Report inputs. Prior format named "V5 Model with Job Type Analysis"; per Greg's 2026-06-16 decision the dashboard shows Realistic as the only forecast, so V5 is no longer named anywhere in the rendered output (it still runs as the engine that produces the Realistic numbers).
 
 ### 3.2 V5 Excel model (Revenue Forecast Model.xlsx)
 
@@ -184,6 +184,8 @@ Anything marked Locked stays locked until Greg approves a change explicitly in c
 2026-06-12 (month-roll fix, approved by Greg): closed/active month anchors made dynamic (ACTIVE_IDX/CLOSED_IDX); closed-month WIP windows corrected; Net = Invoiced + WIP change enforced on the closed-month line (model WIP estimate used when GL 40003 is blank, GL wins when present); Realistic builder de-frozen from May 22 (active month dynamic, closed months take actuals, YTD double-count fixed); wip_reference.pkl regenerated.
 2026-06-12 (budget display fix, approved by Greg): Budget labels repointed to the original plan; actuals-overlaid blend kept internal. Tab 10 hard-coded $125.6M and 4/12 plan-to-date replaced with live plan math.
 2026-06-12 (reporting baseline, approved by Greg): Realistic Forecast adopted as the source of truth for reporting. Headline KPIs, variance, and recovery math report against the Realistic landing; budget stays as a reference line everywhere; optimizer and weekly targets continue to solve against budget. Realistic Jun-Dec override tables move to a monthly recalibration review with explicit approval required for changes.
+2026-06-16 (Realistic-only display, approved by Greg): the dashboard shows Realistic vs Budget ONLY. All V5 references removed from the rendered output (subtitle, footer, Exec Summary tiles, Monthly Forecast table and chart, active-month card, Budget Requirements labels). The Monthly Forecast chart and table compare Realistic Net vs Budget Net; the Exec chart compares Realistic Invoiced vs Budget; the active-month card shows the Realistic full-month figures. V5 (refresh_v5.py) still runs as the engine that produces the Realistic numbers and the budget-solve targets; it is simply never named in what Greg or the org sees. File-upload resolvers also made prefix-tolerant (Cowork UUID-prefixed names) and able to search the working folder. NOTE: the Cowork project settings text still mandates the old "V5 Model with Job Type Analysis" subtitle; that lives outside these files and must be updated by Greg in project settings.
+2026-07-06 (doc sync, no methodology change): merged the diverged copies of this file. The 2026-06-16 Realistic-only display entry and updated subtitle format existed only in the Forecasting Process copy; the 2026-05-22 Period-bucketing rule (Section 6.1 block and changelog entry) existed only in this canonical copy. Both now carry the full set. Command Center CLAUDE.md updated the same day.
 
 ### 4.4 Cycle time stages
 

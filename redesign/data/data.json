@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "builtAt": "2026-07-06T17:05:06.558Z",
+    "builtAt": "2026-07-06T17:37:13.657Z",
     "pipelineVersion": "2.0.0",
     "lobs": [
       "residential",
@@ -10,7 +10,7 @@
   },
   "residential": {
     "_meta": {
-      "builtAt": "2026-07-06T17:05:05.152Z",
+      "builtAt": "2026-07-06T17:37:12.319Z",
       "pipelineVersion": "2.0.0",
       "lob": "residential",
       "lastBuiltProjects": [
@@ -23,26 +23,26 @@
         {
           "id": "installs-ytd",
           "version": "1.0-rules-encoded",
-          "elapsedMs": 112,
-          "builtAt": "2026-07-06T17:05:05.152Z"
+          "elapsedMs": 110,
+          "builtAt": "2026-07-06T17:37:12.319Z"
         },
         {
           "id": "sales-overview",
           "version": "1.0-rules-encoded",
-          "elapsedMs": 580,
-          "builtAt": "2026-07-06T17:05:05.152Z"
+          "elapsedMs": 570,
+          "builtAt": "2026-07-06T17:37:12.319Z"
         },
         {
           "id": "revenue-forecast",
           "version": "V5-baseline-2026-05-04-shell-1.1",
-          "elapsedMs": 17,
-          "builtAt": "2026-07-06T17:05:05.152Z"
+          "elapsedMs": 15,
+          "builtAt": "2026-07-06T17:37:12.319Z"
         },
         {
           "id": "backlog",
           "version": "1.0-rules-encoded",
           "elapsedMs": 42,
-          "builtAt": "2026-07-06T17:05:05.152Z"
+          "builtAt": "2026-07-06T17:37:12.319Z"
         }
       ]
     },
@@ -61,7 +61,7 @@
         "multiTradeJobs": 652,
         "singleTradeJobs": 1499,
         "multiTradePct": 30.3,
-        "lastBuild": "2026-07-06T17:05:05.152Z"
+        "lastBuild": "2026-07-06T17:37:12.319Z"
       },
       "tabs": [
         {
@@ -7216,7 +7216,7 @@
         "totalWOs": 911,
         "portfolioValue": 13541823.35,
         "avgDaysInStatus": 16,
-        "lastBuild": "2026-07-06T17:05:05.040Z"
+        "lastBuild": "2026-07-06T17:37:12.209Z"
       },
       "tabs": [
         {
@@ -8623,7 +8623,7 @@
   },
   "multiFamily": {
     "_meta": {
-      "builtAt": "2026-07-06T17:05:05.322Z",
+      "builtAt": "2026-07-06T17:37:12.493Z",
       "pipelineVersion": "2.0.0",
       "lob": "multi-family",
       "lastBuiltProjects": [
@@ -8637,25 +8637,25 @@
           "id": "sales-overview",
           "version": "1.0-rules-encoded",
           "elapsedMs": 19,
-          "builtAt": "2026-07-06T17:05:05.322Z"
+          "builtAt": "2026-07-06T17:37:12.493Z"
         },
         {
           "id": "revenue-forecast",
           "version": "V5-baseline-2026-05-04-shell-1.1",
-          "elapsedMs": 113,
-          "builtAt": "2026-07-06T17:05:05.322Z"
+          "elapsedMs": 121,
+          "builtAt": "2026-07-06T17:37:12.493Z"
         },
         {
           "id": "backlog",
           "version": "1.0-rules-encoded",
-          "elapsedMs": 15,
-          "builtAt": "2026-07-06T17:05:05.322Z"
+          "elapsedMs": 14,
+          "builtAt": "2026-07-06T17:37:12.493Z"
         },
         {
           "id": "installs-ytd",
           "version": "1.0-rules-encoded",
-          "elapsedMs": 20,
-          "builtAt": "2026-07-06T17:05:05.322Z"
+          "elapsedMs": 19,
+          "builtAt": "2026-07-06T17:37:12.493Z"
         }
       ]
     },
@@ -12016,7 +12016,7 @@
         "totalWOs": 352,
         "portfolioValue": 17245799.09,
         "avgDaysInStatus": 40,
-        "lastBuild": "2026-07-06T17:05:05.301Z"
+        "lastBuild": "2026-07-06T17:37:12.474Z"
       },
       "tabs": [
         {
@@ -13309,7 +13309,7 @@
         "multiTradeJobs": 20,
         "singleTradeJobs": 155,
         "multiTradePct": 11.4,
-        "lastBuild": "2026-07-06T17:05:05.322Z"
+        "lastBuild": "2026-07-06T17:37:12.493Z"
       },
       "tabs": [
         {
@@ -14504,7 +14504,7 @@
   },
   "service": {
     "_meta": {
-      "builtAt": "2026-07-06T17:05:06.553Z",
+      "builtAt": "2026-07-06T17:37:13.652Z",
       "pipelineVersion": "2.0.0",
       "lob": "service",
       "lastBuiltProjects": [
@@ -14515,14 +14515,14 @@
         {
           "id": "revenue-forecast",
           "version": "V5-baseline-2026-05-04-shell-1.1",
-          "elapsedMs": 596,
-          "builtAt": "2026-07-06T17:05:06.553Z"
+          "elapsedMs": 548,
+          "builtAt": "2026-07-06T17:37:13.652Z"
         },
         {
           "id": "service-calls",
           "version": "Service-Calls-v1.1-2026-05-07",
-          "elapsedMs": 632,
-          "builtAt": "2026-07-06T17:05:06.553Z"
+          "elapsedMs": 609,
+          "builtAt": "2026-07-06T17:37:13.652Z"
         }
       ]
     },
