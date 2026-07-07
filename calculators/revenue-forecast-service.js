@@ -21,6 +21,11 @@ const netsuite = require('./lib/netsuite-invoices');
 const PROJECT_ID = 'revenue-forecast';
 const SERVICE_VERSION = 'Service-v1.0-2026-05-06';
 const FY = 2026;
+// LOCKED (Greg, 2026-07-06): FY2026 Service annual budget, the board
+// number. The Service Budget XLSX Total-2026 cell is validated against
+// this constant; on mismatch the locked value wins and the build warns
+// loudly. Changing this number requires Greg's explicit approval.
+const LOCKED_ANNUAL_BUDGET = 6_800_179.48;
 
 const MONTH_LONG = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 const MONTH_SHORT = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
@@ -507,9 +512,19 @@ function run(opts) {
   }
 
   // ---- budget ----
+  // The headline annual budget is LOCKED to the board number (see
+  // LOCKED_ANNUAL_BUDGET above). The XLSX still supplies the per-month
+  // plan cells; its Total-2026 cell is only a cross-check.
   const budget = files.budget ? parseBudget(files.budget) : null;
-  const annualBudget = budget ? budget.annual : 6_800_000;
+  const annualBudget = LOCKED_ANNUAL_BUDGET;
   const monthlyBudget = budget ? budget.monthly : new Array(12).fill(annualBudget / 12);
+  if (budget && budget.explicitAnnual > 0 && Math.abs(budget.explicitAnnual - LOCKED_ANNUAL_BUDGET) > 1) {
+    console.log('  [service-revenue] BUDGET LOCK WARNING: XLSX "Total 2026" cell shows $' +
+      Math.round(budget.explicitAnnual).toLocaleString() +
+      ' but the locked board budget is $' + Math.round(LOCKED_ANNUAL_BUDGET).toLocaleString() + '.');
+    console.log('    Using the LOCKED value. If the board plan really changed, update');
+    console.log('    LOCKED_ANNUAL_BUDGET in calculators/revenue-forecast-service.js (Greg approval required).');
+  }
   if (budget && Math.abs(budget.discrepancy) > 1) {
     console.log('  [service-revenue] BUDGET WARNING: monthly cells sum to $' +
       Math.round(budget.summedMonthly).toLocaleString() +

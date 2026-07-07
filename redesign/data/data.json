@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "builtAt": "2026-07-07T15:18:29.043Z",
+    "builtAt": "2026-07-07T15:24:35.145Z",
     "pipelineVersion": "2.0.0",
     "lobs": [
       "residential",
@@ -10,7 +10,7 @@
   },
   "residential": {
     "_meta": {
-      "builtAt": "2026-07-07T15:18:27.663Z",
+      "builtAt": "2026-07-07T15:24:33.262Z",
       "pipelineVersion": "2.0.0",
       "lob": "residential",
       "lastBuiltProjects": [
@@ -23,26 +23,26 @@
         {
           "id": "installs-ytd",
           "version": "1.0-rules-encoded",
-          "elapsedMs": 117,
-          "builtAt": "2026-07-07T15:18:27.663Z"
+          "elapsedMs": 143,
+          "builtAt": "2026-07-07T15:24:33.262Z"
         },
         {
           "id": "sales-overview",
           "version": "1.0-rules-encoded",
-          "elapsedMs": 584,
-          "builtAt": "2026-07-07T15:18:27.663Z"
+          "elapsedMs": 766,
+          "builtAt": "2026-07-07T15:24:33.262Z"
         },
         {
           "id": "revenue-forecast",
           "version": "V5-baseline-2026-05-04-shell-1.1",
-          "elapsedMs": 2851,
-          "builtAt": "2026-07-07T15:18:27.663Z"
+          "elapsedMs": 763,
+          "builtAt": "2026-07-07T15:24:33.262Z"
         },
         {
           "id": "backlog",
           "version": "1.0-rules-encoded",
-          "elapsedMs": 35,
-          "builtAt": "2026-07-07T15:18:27.663Z"
+          "elapsedMs": 50,
+          "builtAt": "2026-07-07T15:24:33.262Z"
         }
       ]
     },
@@ -61,7 +61,7 @@
         "multiTradeJobs": 652,
         "singleTradeJobs": 1499,
         "multiTradePct": 30.3,
-        "lastBuild": "2026-07-07T15:18:27.663Z"
+        "lastBuild": "2026-07-07T15:24:33.262Z"
       },
       "tabs": [
         {
@@ -7239,7 +7239,7 @@
         "totalWOs": 911,
         "portfolioValue": 13541823.35,
         "avgDaysInStatus": 16,
-        "lastBuild": "2026-07-07T15:18:27.544Z"
+        "lastBuild": "2026-07-07T15:24:33.117Z"
       },
       "tabs": [
         {
@@ -8646,7 +8646,7 @@
   },
   "multiFamily": {
     "_meta": {
-      "builtAt": "2026-07-07T15:18:27.834Z",
+      "builtAt": "2026-07-07T15:24:33.485Z",
       "pipelineVersion": "2.0.0",
       "lob": "multi-family",
       "lastBuiltProjects": [
@@ -8659,26 +8659,26 @@
         {
           "id": "sales-overview",
           "version": "1.0-rules-encoded",
-          "elapsedMs": 19,
-          "builtAt": "2026-07-07T15:18:27.834Z"
+          "elapsedMs": 32,
+          "builtAt": "2026-07-07T15:24:33.485Z"
         },
         {
           "id": "revenue-forecast",
           "version": "V5-baseline-2026-05-04-shell-1.1",
-          "elapsedMs": 110,
-          "builtAt": "2026-07-07T15:18:27.834Z"
+          "elapsedMs": 144,
+          "builtAt": "2026-07-07T15:24:33.485Z"
         },
         {
           "id": "backlog",
           "version": "1.0-rules-encoded",
-          "elapsedMs": 15,
-          "builtAt": "2026-07-07T15:18:27.834Z"
+          "elapsedMs": 18,
+          "builtAt": "2026-07-07T15:24:33.485Z"
         },
         {
           "id": "installs-ytd",
           "version": "1.0-rules-encoded",
-          "elapsedMs": 21,
-          "builtAt": "2026-07-07T15:18:27.834Z"
+          "elapsedMs": 24,
+          "builtAt": "2026-07-07T15:24:33.485Z"
         }
       ]
     },
@@ -12039,7 +12039,7 @@
         "totalWOs": 352,
         "portfolioValue": 17245799.09,
         "avgDaysInStatus": 40,
-        "lastBuild": "2026-07-07T15:18:27.813Z"
+        "lastBuild": "2026-07-07T15:24:33.460Z"
       },
       "tabs": [
         {
@@ -13332,7 +13332,7 @@
         "multiTradeJobs": 20,
         "singleTradeJobs": 155,
         "multiTradePct": 11.4,
-        "lastBuild": "2026-07-07T15:18:27.834Z"
+        "lastBuild": "2026-07-07T15:24:33.485Z"
       },
       "tabs": [
         {
@@ -14527,7 +14527,7 @@
   },
   "service": {
     "_meta": {
-      "builtAt": "2026-07-07T15:18:29.039Z",
+      "builtAt": "2026-07-07T15:24:35.116Z",
       "pipelineVersion": "2.0.0",
       "lob": "service",
       "lastBuiltProjects": [
@@ -14538,14 +14538,14 @@
         {
           "id": "revenue-forecast",
           "version": "V5-baseline-2026-05-04-shell-1.1",
-          "elapsedMs": 573,
-          "builtAt": "2026-07-07T15:18:29.039Z"
+          "elapsedMs": 774,
+          "builtAt": "2026-07-07T15:24:35.116Z"
         },
         {
           "id": "service-calls",
           "version": "Service-Calls-v1.1-2026-05-07",
-          "elapsedMs": 629,
-          "builtAt": "2026-07-07T15:18:29.039Z"
+          "elapsedMs": 852,
+          "builtAt": "2026-07-07T15:24:35.116Z"
         }
       ]
     },
@@ -14611,9 +14611,9 @@
         }
       ],
       "execSummary": {
-        "budget": 6800179.4799999995,
+        "budget": 6800179.48,
         "modelAnnualInvoiced": 5826429.634285707,
-        "gap": -973749.8457142925,
+        "gap": -973749.8457142934,
         "narrative": "7 months of FY2026 Service activity reported, $3.4M invoiced YTD. Run-rate annualizes to $5.83M against the $6.8M plan, a $974K shortfall (14.3% uplift needed)."
       },
       "monthRevenue": {
@@ -14691,14 +14691,14 @@
         }
       },
       "weeklyTargetsHeader": {
-        "avgWeeklyNeed": 130772.6823076923,
+        "avgWeeklyNeed": 130772.68230769232,
         "recent4WkAvg": 0,
         "gap": 0
       },
       "budgetRecoveryHeader": {
-        "fullYearBudget": 6800179.4799999995,
-        "gap": 973749.8457142925,
-        "upliftPct": 14.319472722421327,
+        "fullYearBudget": 6800179.48,
+        "gap": 973749.8457142934,
+        "upliftPct": 14.31947272242134,
         "aprilGap": 132460.09465102846,
         "q1OriginalBudget": 1118550.2246066653,
         "q1Actual": 1464105.0800000005,

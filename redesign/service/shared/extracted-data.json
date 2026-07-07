@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "builtAt": "2026-07-07T15:18:29.039Z",
+    "builtAt": "2026-07-07T15:24:35.116Z",
     "pipelineVersion": "2.0.0",
     "lob": "service",
     "lastBuiltProjects": [
@@ -11,14 +11,14 @@
       {
         "id": "revenue-forecast",
         "version": "V5-baseline-2026-05-04-shell-1.1",
-        "elapsedMs": 573,
-        "builtAt": "2026-07-07T15:18:29.039Z"
+        "elapsedMs": 774,
+        "builtAt": "2026-07-07T15:24:35.116Z"
       },
       {
         "id": "service-calls",
         "version": "Service-Calls-v1.1-2026-05-07",
-        "elapsedMs": 629,
-        "builtAt": "2026-07-07T15:18:29.039Z"
+        "elapsedMs": 852,
+        "builtAt": "2026-07-07T15:24:35.116Z"
       }
     ]
   },
@@ -84,9 +84,9 @@
       }
     ],
     "execSummary": {
-      "budget": 6800179.4799999995,
+      "budget": 6800179.48,
       "modelAnnualInvoiced": 5826429.634285707,
-      "gap": -973749.8457142925,
+      "gap": -973749.8457142934,
       "narrative": "7 months of FY2026 Service activity reported, $3.4M invoiced YTD. Run-rate annualizes to $5.83M against the $6.8M plan, a $974K shortfall (14.3% uplift needed)."
     },
     "monthRevenue": {
@@ -164,14 +164,14 @@
       }
     },
     "weeklyTargetsHeader": {
-      "avgWeeklyNeed": 130772.6823076923,
+      "avgWeeklyNeed": 130772.68230769232,
       "recent4WkAvg": 0,
       "gap": 0
     },
     "budgetRecoveryHeader": {
-      "fullYearBudget": 6800179.4799999995,
-      "gap": 973749.8457142925,
-      "upliftPct": 14.319472722421327,
+      "fullYearBudget": 6800179.48,
+      "gap": 973749.8457142934,
+      "upliftPct": 14.31947272242134,
       "aprilGap": 132460.09465102846,
       "q1OriginalBudget": 1118550.2246066653,
       "q1Actual": 1464105.0800000005,

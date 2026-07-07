@@ -21,6 +21,11 @@ const netsuite = require('./lib/netsuite-invoices');
 const PROJECT_ID = 'revenue-forecast';
 const MF_VERSION = 'MF-v1.1-2026-05-04';   // v1.1 adds monthly-schedule parsing
 const FY = 2026;
+// LOCKED (Greg, 2026-07-06): FY2026 Multi-Family annual budget, the board
+// number. The Commercial Budget XLSX Total-2026 cell is validated against
+// this constant; on mismatch the locked value wins and the build warns
+// loudly. Changing this number requires Greg's explicit approval.
+const LOCKED_ANNUAL_BUDGET = 51_673_207;
 const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 const MONTHS_LONG = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 
@@ -463,15 +468,25 @@ function run(opts) {
   }
 
   // ---- budget ----
+  // The headline annual budget is LOCKED to the board number (see
+  // LOCKED_ANNUAL_BUDGET above). The XLSX still supplies the per-month
+  // plan cells; its Total-2026 cell is only a cross-check.
   const budget = files.budget ? parseBudget(files.budget) : null;
-  const annualBudget = budget ? budget.annual : 51_673_207;
+  const annualBudget = LOCKED_ANNUAL_BUDGET;
   const monthlyBudget = budget ? budget.monthly : new Array(12).fill(annualBudget / 12);
+  if (budget && budget.explicitAnnual > 0 && Math.abs(budget.explicitAnnual - LOCKED_ANNUAL_BUDGET) > 1) {
+    console.log('  [mf-revenue] BUDGET LOCK WARNING: XLSX "Total 2026" cell shows $' +
+      Math.round(budget.explicitAnnual).toLocaleString() +
+      ' but the locked board budget is $' + LOCKED_ANNUAL_BUDGET.toLocaleString() + '.');
+    console.log('    Using the LOCKED value. If the board plan really changed, update');
+    console.log('    LOCKED_ANNUAL_BUDGET in calculators/revenue-forecast-mf.js (Greg approval required).');
+  }
   if (budget && Math.abs(budget.discrepancy) > 1) {
     console.log('  [mf-revenue] BUDGET WARNING: monthly cells sum to $' +
       Math.round(budget.summedMonthly).toLocaleString() +
       ' but "Total 2026" cell shows $' + Math.round(budget.explicitAnnual).toLocaleString() +
       ' (diff $' + Math.round(budget.discrepancy).toLocaleString() + ').');
-    console.log('    Using explicit annual for headline, monthly cells for per-month gaps.');
+    console.log('    Using locked annual for headline, monthly cells for per-month gaps.');
   }
 
   // ---- forecasting report ----

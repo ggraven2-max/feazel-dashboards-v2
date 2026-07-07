@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "builtAt": "2026-07-07T15:18:27.834Z",
+    "builtAt": "2026-07-07T15:24:33.485Z",
     "pipelineVersion": "2.0.0",
     "lob": "multi-family",
     "lastBuiltProjects": [
@@ -13,26 +13,26 @@
       {
         "id": "sales-overview",
         "version": "1.0-rules-encoded",
-        "elapsedMs": 19,
-        "builtAt": "2026-07-07T15:18:27.834Z"
+        "elapsedMs": 32,
+        "builtAt": "2026-07-07T15:24:33.485Z"
       },
       {
         "id": "revenue-forecast",
         "version": "V5-baseline-2026-05-04-shell-1.1",
-        "elapsedMs": 110,
-        "builtAt": "2026-07-07T15:18:27.834Z"
+        "elapsedMs": 144,
+        "builtAt": "2026-07-07T15:24:33.485Z"
       },
       {
         "id": "backlog",
         "version": "1.0-rules-encoded",
-        "elapsedMs": 15,
-        "builtAt": "2026-07-07T15:18:27.834Z"
+        "elapsedMs": 18,
+        "builtAt": "2026-07-07T15:24:33.485Z"
       },
       {
         "id": "installs-ytd",
         "version": "1.0-rules-encoded",
-        "elapsedMs": 21,
-        "builtAt": "2026-07-07T15:18:27.834Z"
+        "elapsedMs": 24,
+        "builtAt": "2026-07-07T15:24:33.485Z"
       }
     ]
   },
@@ -3393,7 +3393,7 @@
       "totalWOs": 352,
       "portfolioValue": 17245799.09,
       "avgDaysInStatus": 40,
-      "lastBuild": "2026-07-07T15:18:27.813Z"
+      "lastBuild": "2026-07-07T15:24:33.460Z"
     },
     "tabs": [
       {
@@ -4686,7 +4686,7 @@
       "multiTradeJobs": 20,
       "singleTradeJobs": 155,
       "multiTradePct": 11.4,
-      "lastBuild": "2026-07-07T15:18:27.834Z"
+      "lastBuild": "2026-07-07T15:24:33.485Z"
     },
     "tabs": [
       {
