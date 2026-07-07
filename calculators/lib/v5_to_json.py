@@ -81,7 +81,18 @@ def main():
     bs = pickle.load(open(BUDGET_PKL, 'rb'))
 
     months = dd['months_label']
-    budget_inv = list(bs.get('budget_inv', dd['budget_inv']))
+    # budget_inv from the solve pickle is the ACTUALS-OVERLAID series
+    # (closed months = NetSuite actuals, remaining months = adjusted solve
+    # targets). Per Greg's 2026-06-12 budget-display decision, that blend
+    # stays INTERNAL; every displayed budget figure uses the ORIGINAL
+    # board plan (recovery_plan.orig_budget_inv, $125.89M invoiced FY2026).
+    # Fix 2026-07-06: the emitter previously summed the blend and labeled
+    # it "Annual Budget", so the dashboard showed a plan that shrank or
+    # grew with actuals and read as "budget from April on".
+    budget_solve_inv = list(bs.get('budget_inv', dd['budget_inv']))
+    _rp0 = bs.get('recovery_plan', {}) or {}
+    budget_inv = [float(x) for x in _rp0.get('orig_budget_inv', budget_solve_inv)]
+    full_year_budget_plan = float(_rp0.get('full_year_budget', sum(budget_inv)))
     rev_model = list(bs.get('rev_model', dd['rev_model']))
     rev_known = list(dd.get('rev_from_known', bs.get('rev_from_known', [0] * 12)))
     required_sales = list(dd.get('required_sales', []))
@@ -109,7 +120,7 @@ def main():
     may_wip = float(dd.get('may_wip_change', 0))
     may_net = float(dd.get('may_net_rev', may_inv + may_wip))
 
-    annual_budget = sum(budget_inv)
+    annual_budget = full_year_budget_plan
     annual_model = sum(rev_model)
     annual_gap = annual_budget - annual_model
 
@@ -135,7 +146,7 @@ def main():
         {'label': '4-Week Avg Weekly Sales', 'value': fmt_money_short(weekly_avg),   'sub': 'Trend: {:+,.0f}/week'.format(weekly_slope)},
         {'label': 'Current Week (Projected)','value': fmt_money_short(cw_proj),      'sub': 'WTD: ' + fmt_money_short(cw_wtd)},
         {'label': 'Annual Forecast',         'value': fmt_money_short(annual_model), 'sub': 'Model invoiced revenue'},
-        {'label': 'Annual Budget',           'value': fmt_money_short(annual_budget),'sub': 'Residential plan'},
+        {'label': 'Annual Budget',           'value': fmt_money_short(annual_budget),'sub': 'Board plan · full year'},
         {'label': 'Forecast vs Budget',      'value': '{}{}'.format('-' if annual_gap > 0 else '+', fmt_money_short(abs(annual_gap))).replace('--', '-'),
          'sub': '{:.1f}% {} plan'.format(abs(annual_gap) / annual_budget * 100 if annual_budget else 0,
                                          'under' if annual_gap > 0 else 'over')},
@@ -598,6 +609,7 @@ def main():
         # Raw arrays so downstream consumers can recompute without re-running Python:
         'monthsLabel': months,
         'budgetInv': budget_inv,
+        'budgetSolveInv': budget_solve_inv,
         'revModel': rev_model,
         'revFromKnown': rev_known,
         'requiredSales': required_sales,

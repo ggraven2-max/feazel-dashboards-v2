@@ -1,8 +1,8 @@
-/* AUTO-GENERATED — do not edit. Generated 2026-07-06T19:07:41.319Z (residential) */
+/* AUTO-GENERATED — do not edit. Generated 2026-07-07T15:18:27.663Z (residential) */
 window.FZ = window.FZ || {};
 window.FZ.data = {
   "_meta": {
-    "builtAt": "2026-07-06T19:07:41.319Z",
+    "builtAt": "2026-07-07T15:18:27.663Z",
     "pipelineVersion": "2.0.0",
     "lob": "residential",
     "lastBuiltProjects": [
@@ -15,26 +15,26 @@ window.FZ.data = {
       {
         "id": "installs-ytd",
         "version": "1.0-rules-encoded",
-        "elapsedMs": 122,
-        "builtAt": "2026-07-06T19:07:41.319Z"
+        "elapsedMs": 117,
+        "builtAt": "2026-07-07T15:18:27.663Z"
       },
       {
         "id": "sales-overview",
         "version": "1.0-rules-encoded",
-        "elapsedMs": 660,
-        "builtAt": "2026-07-06T19:07:41.319Z"
+        "elapsedMs": 584,
+        "builtAt": "2026-07-07T15:18:27.663Z"
       },
       {
         "id": "revenue-forecast",
         "version": "V5-baseline-2026-05-04-shell-1.1",
-        "elapsedMs": 570,
-        "builtAt": "2026-07-06T19:07:41.319Z"
+        "elapsedMs": 2851,
+        "builtAt": "2026-07-07T15:18:27.663Z"
       },
       {
         "id": "backlog",
         "version": "1.0-rules-encoded",
-        "elapsedMs": 45,
-        "builtAt": "2026-07-06T19:07:41.319Z"
+        "elapsedMs": 35,
+        "builtAt": "2026-07-07T15:18:27.663Z"
       }
     ]
   },
@@ -42,7 +42,7 @@ window.FZ.data = {
     "_source": "calculator/installs-ytd.js v1.0-rules-encoded",
     "title": "Residential Installs YTD",
     "subtitle": "Invoiced Jobs - Jan 06, 2026 - Jul 06, 2026 - De-Duplicated at Job Level - 2,151 Jobs - 14 Markets - 30 PMs",
-    "generated": "2026-07-06",
+    "generated": "2026-07-07",
     "headerMeta": {
       "trueRevenue": 40620799.31,
       "uniqueJobs": 2151,
@@ -53,7 +53,7 @@ window.FZ.data = {
       "multiTradeJobs": 652,
       "singleTradeJobs": 1499,
       "multiTradePct": 30.3,
-      "lastBuild": "2026-07-06T19:07:41.319Z"
+      "lastBuild": "2026-07-07T15:18:27.663Z"
     },
     "tabs": [
       {
@@ -4829,8 +4829,8 @@ window.FZ.data = {
   },
   "REVENUE_FORECAST": {
     "title": "Residential Revenue Forecast",
-    "subtitle": "V5 Model with Job Type Analysis · Data as of July 06, 2026",
-    "runDate": "July 06, 2026",
+    "subtitle": "V5 Model with Job Type Analysis · Data as of July 07, 2026",
+    "runDate": "July 07, 2026",
     "tabs": [
       {
         "id": "executive",
@@ -4895,12 +4895,12 @@ window.FZ.data = {
       {
         "label": "4-Week Avg Weekly Sales",
         "value": "$2.1M",
-        "sub": "Trend: -136,527/week"
+        "sub": "Trend: -146,338/week"
       },
       {
         "label": "Current Week (Projected)",
-        "value": "$935K",
-        "sub": "WTD: $3K"
+        "value": "$1.2M",
+        "sub": "WTD: $121K"
       },
       {
         "label": "Annual Forecast",
@@ -4909,13 +4909,13 @@ window.FZ.data = {
       },
       {
         "label": "Annual Budget",
-        "value": "$108.2M",
-        "sub": "Residential plan"
+        "value": "$126.1M",
+        "sub": "Board plan · full year"
       },
       {
         "label": "Forecast vs Budget",
-        "value": "-$428K",
-        "sub": "0.4% under plan"
+        "value": "-$18.3M",
+        "sub": "14.5% under plan"
       },
       {
         "label": "Active Pipeline",
@@ -4924,39 +4924,39 @@ window.FZ.data = {
       }
     ],
     "execSummary": {
-      "budget": 108191315.75,
+      "budget": 126105724,
       "modelAnnualInvoiced": 107763277.5088,
-      "gap": 428038.2412,
-      "narrative": "The V5 model projects $107.8M in annual invoiced revenue against a $108.2M plan. The challenge is timing, not volume: Q1 ramped slowly so Q2 invoicing will lag. If the current weekly pace of $2.1M holds, H2 should catch up as earlier sales convert to invoiced revenue."
+      "gap": 18342446.4912,
+      "narrative": "The V5 model projects $107.8M in annual invoiced revenue against a $126.1M plan. The challenge is timing, not volume: Q1 ramped slowly so Q2 invoicing will lag. If the current weekly pace of $2.1M holds, H2 should catch up as earlier sales convert to invoiced revenue."
     },
     "monthRevenue": {
       "april": {
         "invoiced": 8405959.810000002,
-        "wipChange": -2114212.0923,
-        "netRevenue": 6291747.717700003,
-        "beginningWip": 4092844.1662,
-        "endingWip": 1978632.0738,
+        "wipChange": -1991998.9645,
+        "netRevenue": 6413960.845500003,
+        "beginningWip": 4167089.2044,
+        "endingWip": 2175090.24,
         "materialCost": 3845692.2836,
         "laborCost": 2481394.9262,
-        "grossProfit": 2647124.0079,
-        "grossMarginPct": 29.497
+        "grossProfit": 2769337.1357,
+        "grossMarginPct": 30.4442
       },
       "may": {
         "invoiced": 8564976.120000001,
-        "wipChange": -1727975.2193,
-        "netRevenue": 6837000.900700001,
-        "beginningWip": 1978632.0738,
-        "endingWip": 250656.8545,
+        "wipChange": -1873088.5544,
+        "netRevenue": 6691887.565600001,
+        "beginningWip": 2175090.24,
+        "endingWip": 302001.6856,
         "materialCost": 3760595.0942,
         "laborCost": 2426486.8061,
-        "grossProfit": 2616986.2431,
-        "grossMarginPct": 29.7247
+        "grossProfit": 2246251.2473,
+        "grossMarginPct": 26.6354
       }
     },
     "weeklyTargetsHeader": {
       "avgWeeklyNeed": 2446864.438,
-      "recent4WkAvg": 2122710.165,
-      "gap": 324154.273,
+      "recent4WkAvg": 2093277.3375,
+      "gap": 353587.1005,
       "productionAvgWeeklyNeed": 2452727.7393,
       "productionCycleStart": 13,
       "productionCycleComplete": 8,
@@ -4993,7 +4993,7 @@ window.FZ.data = {
       "stages": [
         {
           "label": "New Sales",
-          "subtitle": "159 jobs · 6d avg",
+          "subtitle": "159 jobs · 7d avg",
           "value": 3008233.71,
           "jobs": 159,
           "color": "#3b82f6",
@@ -5054,12 +5054,12 @@ window.FZ.data = {
               "value": 10766.09
             }
           ],
-          "avgDays": 6.3,
-          "medianDays": 4
+          "avgDays": 7.3,
+          "medianDays": 5
         },
         {
           "label": "Backlog",
-          "subtitle": "491 jobs · 27d avg",
+          "subtitle": "491 jobs · 28d avg",
           "value": 10502638.53,
           "jobs": 491,
           "color": "#f97316",
@@ -5125,8 +5125,8 @@ window.FZ.data = {
               "value": 104980.1
             }
           ],
-          "avgDays": 26.9,
-          "medianDays": 17
+          "avgDays": 27.9,
+          "medianDays": 18
         },
         {
           "label": "In Progress",
@@ -5317,21 +5317,21 @@ window.FZ.data = {
             14956779,
             22042607.0107,
             11923147.0041,
-            8493211.5795,
-            -6463567.4205
+            8615424.7074,
+            -6341354.2926
           ],
           [
             "Jul 2026",
             10167762,
             25012596.8026,
             12011784.9053,
-            9677994.682,
-            -489767.318
+            9532881.3469,
+            -634880.6531
           ],
           [
             "Aug 2026",
             14285167,
-            9426003.0115,
+            9432241.5615,
             15498361.4922,
             13413978.4458,
             -871188.5542
@@ -5411,7 +5411,7 @@ window.FZ.data = {
           ],
           [
             "Aug 2026",
-            9426003.0115,
+            9432241.5615,
             297420.0846,
             14216055.9154,
             15498361.4922
@@ -6511,9 +6511,9 @@ window.FZ.data = {
               2631176.24,
               1834261.62,
               2463404.11,
-              1561998.69,
-              935096.0579,
-              1711265.2873
+              1444267.38,
+              1167245.5986,
+              1642588.6898
             ]
           }
         ]
@@ -6551,8 +6551,8 @@ window.FZ.data = {
             "data": [
               9056090.5167,
               8630389.7234,
-              8493211.5795,
-              9677994.682,
+              8615424.7074,
+              9532881.3469,
               13413978.4458,
               13776836.5507,
               13568850.5082,
@@ -6612,12 +6612,12 @@ window.FZ.data = {
           {
             "label": "Budget",
             "data": [
-              3312733.06,
-              2855781.11,
-              6228299.34,
-              8405959.81,
-              8564976.12,
-              11088423.31,
+              4269114,
+              4505158,
+              8125926,
+              12344293,
+              14292330,
+              14833760,
               10752016,
               14513476,
               12228745,
@@ -6782,6 +6782,20 @@ window.FZ.data = {
       "Dec 2026"
     ],
     "budgetInv": [
+      4269114,
+      4505158,
+      8125926,
+      12344293,
+      14292330,
+      14833760,
+      10752016,
+      14513476,
+      12228745,
+      13652917,
+      10772169,
+      5815820
+    ],
+    "budgetSolveInv": [
       3312733.06,
       2855781.11,
       6228299.34,
@@ -6936,8 +6950,8 @@ window.FZ.data = {
         "budget_rev": 10752016,
         "pipeline_backlog": 18090848.95,
         "new_sales_backlog": 6921747.8526,
-        "pipe_invoicing": 16842519.51,
-        "future_invoicing": 1711265.3,
+        "pipe_invoicing": 16836280.96,
+        "future_invoicing": 1674621.89,
         "rev_from_backlog": 650110.7149,
         "revenue_gap": 10101905.2851,
         "adjusted_required_sales": 12011784.9053,
@@ -6945,18 +6959,18 @@ window.FZ.data = {
       },
       {
         "month": "Aug 2026",
-        "total_backlog": 9426003.0115,
-        "wip_est": 5655601.8069,
-        "not_started": 3770401.2046,
+        "total_backlog": 9432241.5615,
+        "wip_est": 5659344.9369,
+        "not_started": 3772896.6246,
         "budget_rev": 14513476,
-        "pipeline_backlog": 1248329.44,
+        "pipeline_backlog": 1254567.99,
         "new_sales_backlog": 8177673.5715,
-        "pipe_invoicing": 1248329.44,
+        "pipe_invoicing": 1254567.99,
         "future_invoicing": 0,
         "rev_from_backlog": 297420.0846,
         "revenue_gap": 14216055.9154,
         "adjusted_required_sales": 15498361.4922,
-        "backlog_surplus": -6072358.4807
+        "backlog_surplus": -6066119.9307
       },
       {
         "month": "Sep 2026",
@@ -7217,7 +7231,7 @@ window.FZ.data = {
       "totalWOs": 911,
       "portfolioValue": 13541823.35,
       "avgDaysInStatus": 16,
-      "lastBuild": "2026-07-06T19:07:41.195Z"
+      "lastBuild": "2026-07-07T15:18:27.544Z"
     },
     "tabs": [
       {

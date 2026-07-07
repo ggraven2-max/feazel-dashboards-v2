@@ -1,8 +1,8 @@
-/* AUTO-GENERATED — do not edit. Generated 2026-07-06T19:07:41.536Z (multi-family) */
+/* AUTO-GENERATED — do not edit. Generated 2026-07-07T15:18:27.834Z (multi-family) */
 window.FZ = window.FZ || {};
 window.FZ.data = {
   "_meta": {
-    "builtAt": "2026-07-06T19:07:41.536Z",
+    "builtAt": "2026-07-07T15:18:27.834Z",
     "pipelineVersion": "2.0.0",
     "lob": "multi-family",
     "lastBuiltProjects": [
@@ -15,26 +15,26 @@ window.FZ.data = {
       {
         "id": "sales-overview",
         "version": "1.0-rules-encoded",
-        "elapsedMs": 29,
-        "builtAt": "2026-07-06T19:07:41.536Z"
+        "elapsedMs": 19,
+        "builtAt": "2026-07-07T15:18:27.834Z"
       },
       {
         "id": "revenue-forecast",
         "version": "V5-baseline-2026-05-04-shell-1.1",
-        "elapsedMs": 141,
-        "builtAt": "2026-07-06T19:07:41.536Z"
+        "elapsedMs": 110,
+        "builtAt": "2026-07-07T15:18:27.834Z"
       },
       {
         "id": "backlog",
         "version": "1.0-rules-encoded",
-        "elapsedMs": 17,
-        "builtAt": "2026-07-06T19:07:41.536Z"
+        "elapsedMs": 15,
+        "builtAt": "2026-07-07T15:18:27.834Z"
       },
       {
         "id": "installs-ytd",
         "version": "1.0-rules-encoded",
-        "elapsedMs": 23,
-        "builtAt": "2026-07-06T19:07:41.536Z"
+        "elapsedMs": 21,
+        "builtAt": "2026-07-07T15:18:27.834Z"
       }
     ]
   },
@@ -1618,8 +1618,8 @@ window.FZ.data = {
   "REVENUE_FORECAST": {
     "_source": "calculator/revenue-forecast-mf.js MF-v1.1-2026-05-04",
     "title": "Multi-Family Revenue Forecast",
-    "subtitle": "MF-v1 · Job-by-job event model · Data through 2026-07-06",
-    "runDate": "2026-07-06",
+    "subtitle": "MF-v1 · Job-by-job event model · Data through 2026-07-07",
+    "runDate": "2026-07-07",
     "methodologyLock": {
       "version": "MF-v1.1-2026-05-04",
       "lockedOn": "2026-05-04",
@@ -3395,7 +3395,7 @@ window.FZ.data = {
       "totalWOs": 352,
       "portfolioValue": 17245799.09,
       "avgDaysInStatus": 40,
-      "lastBuild": "2026-07-06T19:07:41.512Z"
+      "lastBuild": "2026-07-07T15:18:27.813Z"
     },
     "tabs": [
       {
@@ -4677,7 +4677,7 @@ window.FZ.data = {
     "_source": "calculator/installs-ytd.js v1.0-rules-encoded",
     "title": "Residential Installs YTD",
     "subtitle": "Invoiced Jobs - Jan 08, 2026 - Jul 01, 2026 - De-Duplicated at Job Level - 175 Jobs - 11 Markets - 10 PMs",
-    "generated": "2026-07-06",
+    "generated": "2026-07-07",
     "headerMeta": {
       "trueRevenue": 22287721.71,
       "uniqueJobs": 175,
@@ -4688,7 +4688,7 @@ window.FZ.data = {
       "multiTradeJobs": 20,
       "singleTradeJobs": 155,
       "multiTradePct": 11.4,
-      "lastBuild": "2026-07-06T19:07:41.536Z"
+      "lastBuild": "2026-07-07T15:18:27.834Z"
     },
     "tabs": [
       {

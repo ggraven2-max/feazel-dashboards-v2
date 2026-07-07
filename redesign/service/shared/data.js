@@ -1,8 +1,8 @@
-/* AUTO-GENERATED — do not edit. Generated 2026-07-06T19:07:42.981Z (service) */
+/* AUTO-GENERATED — do not edit. Generated 2026-07-07T15:18:29.039Z (service) */
 window.FZ = window.FZ || {};
 window.FZ.data = {
   "_meta": {
-    "builtAt": "2026-07-06T19:07:42.981Z",
+    "builtAt": "2026-07-07T15:18:29.039Z",
     "pipelineVersion": "2.0.0",
     "lob": "service",
     "lastBuiltProjects": [
@@ -13,14 +13,14 @@ window.FZ.data = {
       {
         "id": "revenue-forecast",
         "version": "V5-baseline-2026-05-04-shell-1.1",
-        "elapsedMs": 694,
-        "builtAt": "2026-07-06T19:07:42.981Z"
+        "elapsedMs": 573,
+        "builtAt": "2026-07-07T15:18:29.039Z"
       },
       {
         "id": "service-calls",
         "version": "Service-Calls-v1.1-2026-05-07",
-        "elapsedMs": 745,
-        "builtAt": "2026-07-06T19:07:42.981Z"
+        "elapsedMs": 629,
+        "builtAt": "2026-07-07T15:18:29.039Z"
       }
     ]
   },
@@ -28,7 +28,7 @@ window.FZ.data = {
     "_source": "calculator/revenue-forecast-service.js Service-v1.0-2026-05-06",
     "title": "Service Revenue Forecast",
     "subtitle": "Service-v1 · Budget-anchored forecast · Data through 2026-07-06",
-    "runDate": "2026-07-06",
+    "runDate": "2026-07-07",
     "methodologyLock": {
       "version": "Service-v1.0-2026-05-06",
       "lockedOn": "2026-05-06",
