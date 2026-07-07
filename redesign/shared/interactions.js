@@ -190,6 +190,14 @@
   function setupStickyTopbar() {
     const topbar = document.querySelector('.topbar');
     if (!topbar) return;
+    // 2026-07-06: the glass fill lives on the header stack (topbar + subnav
+    // as one sticky unit) so BOTH rows go opaque on scroll. Toggle the same
+    // class on every sticky chrome piece present on the page.
+    const chrome = [
+      topbar,
+      document.querySelector('.header-stack'),
+      document.querySelector('.subnav')
+    ].filter(Boolean);
     const ENTER = 24, EXIT = 4;
     let scrolled = false;
     let raf = null;
@@ -199,7 +207,7 @@
       const next = scrolled ? (y > EXIT) : (y > ENTER);
       if (next !== scrolled) {
         scrolled = next;
-        topbar.classList.toggle('is-scrolled', scrolled);
+        chrome.forEach(el => el.classList.toggle('is-scrolled', scrolled));
       }
     };
     const onScroll = () => {

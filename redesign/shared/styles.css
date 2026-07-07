@@ -1641,16 +1641,45 @@ strong { color: #ffffff; }
 
 
 /* ============================================================
-   TOPBAR — transparent so it dissolves into the body mesh.
-   The desktop topbar previously used --surface (was white). On the
-   dark theme we want the breadcrumb + freshness stamp to read like a
-   floating row, not a separate white bar pinned to the top.
+   TOPBAR + HEADER STACK — dissolved at rest, solid glass on scroll.
+   The topbar itself stays transparent; the .header-stack (topbar +
+   subnav as one sticky unit) owns the fill. At scroll-top the stack
+   dissolves into the body mesh. Once scrolled (.is-scrolled, toggled
+   by interactions.js), the WHOLE stack gets a near-opaque navy glass
+   so page content can never bleed through the breadcrumbs or the tab
+   row. Fix 2026-07-06: previously only the topbar blurred (8px, no
+   fill) and the subnav inherited the 4% white --surface, so text
+   scrolled visibly through both rows.
    ============================================================ */
 .topbar {
   background: transparent !important;
   border-bottom: 1px solid rgba(255,255,255,0.08) !important;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+}
+.header-stack {
+  background: transparent;
+  border-bottom-color: rgba(255,255,255,0.08);
+  transition: background 280ms ease, border-color 280ms ease, box-shadow 280ms ease;
+}
+.header-stack.is-scrolled {
+  background: rgba(22,32,58,0.94);
+  backdrop-filter: saturate(140%) blur(16px);
+  -webkit-backdrop-filter: saturate(140%) blur(16px);
+  border-bottom-color: rgba(255,255,255,0.12);
+  box-shadow: 0 8px 28px -10px rgba(0,0,0,0.45);
+}
+/* No backdrop-filter support: go fully opaque so nothing bleeds. */
+@supports not (backdrop-filter: blur(1px)) {
+  .header-stack.is-scrolled { background: #16203a; }
+}
+/* The subnav inside the stack must not paint its own translucent
+   --surface over the stack's glass; the stack owns the fill. */
+.header-stack .subnav { background: transparent; }
+/* Standalone subnav (any page not using the stack wrapper): give it
+   the same scrolled-glass fill so tabs never go see-through. */
+.subnav.is-scrolled {
+  background: rgba(22,32,58,0.94);
+  backdrop-filter: saturate(140%) blur(16px);
+  -webkit-backdrop-filter: saturate(140%) blur(16px);
 }
 .topbar-crumbs { color: rgba(255,255,255,0.55); }
 .topbar-crumbs .crumb-current { color: #ffffff; }
