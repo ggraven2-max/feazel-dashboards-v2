@@ -60,3 +60,8 @@ data/*.json
 # Backup files from sed
 *.bak
 
+
+# Path to Plan is live measurement, rebuilt every refresh. Committing it would
+# put a stale gap in the repo and invite someone to read it as current.
+plan/path-to-plan.json
+plan/_attic/

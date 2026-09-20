@@ -1,8 +1,8 @@
-/* AUTO-GENERATED — do not edit. Generated 2026-09-20T16:46:58.597Z (multi-family) */
+/* AUTO-GENERATED — do not edit. Generated 2026-09-20T17:02:51.204Z (multi-family) */
 window.FZ = window.FZ || {};
 window.FZ.data = {
   "_meta": {
-    "builtAt": "2026-09-20T16:46:58.597Z",
+    "builtAt": "2026-09-20T17:02:51.204Z",
     "pipelineVersion": "2.0.0",
     "lob": "multi-family",
     "lastBuiltProjects": [
@@ -15,26 +15,26 @@ window.FZ.data = {
       {
         "id": "sales-overview",
         "version": "1.0-rules-encoded",
-        "elapsedMs": 61,
-        "builtAt": "2026-09-20T16:46:58.596Z"
+        "elapsedMs": 54,
+        "builtAt": "2026-09-20T17:02:51.204Z"
       },
       {
         "id": "revenue-forecast",
         "version": "V5-baseline-2026-05-04-shell-1.1",
-        "elapsedMs": 175,
-        "builtAt": "2026-09-20T16:46:58.596Z"
+        "elapsedMs": 157,
+        "builtAt": "2026-09-20T17:02:51.204Z"
       },
       {
         "id": "backlog",
         "version": "1.0-rules-encoded",
-        "elapsedMs": 22,
-        "builtAt": "2026-09-20T16:46:58.597Z"
+        "elapsedMs": 19,
+        "builtAt": "2026-09-20T17:02:51.204Z"
       },
       {
         "id": "installs-ytd",
         "version": "1.0-rules-encoded",
-        "elapsedMs": 36,
-        "builtAt": "2026-09-20T16:46:58.597Z"
+        "elapsedMs": 34,
+        "builtAt": "2026-09-20T17:02:51.204Z"
       }
     ]
   },
@@ -1572,6 +1572,7 @@ window.FZ.data = {
       "netsuiteInvoiceCount": 320,
       "netsuiteLatestDate": "2026-09-18"
     },
+    "pathToPlan": null,
     "commentary": {
       "whatsWorking": [
         "Sales Trajectory: Monthly sales moved from January $3.49M to September $2.94M (-16%). Annualized run rate: $60.39M.",
@@ -3194,7 +3195,7 @@ window.FZ.data = {
       "totalWOs": 484,
       "portfolioValue": 24482809.59,
       "avgDaysInStatus": 54,
-      "lastBuild": "2026-09-20T16:46:58.559Z"
+      "lastBuild": "2026-09-20T17:02:51.169Z"
     },
     "tabs": [
       {
@@ -4438,7 +4439,7 @@ window.FZ.data = {
       "multiTradeJobs": 33,
       "singleTradeJobs": 270,
       "multiTradePct": 10.9,
-      "lastBuild": "2026-09-20T16:46:58.596Z"
+      "lastBuild": "2026-09-20T17:02:51.204Z"
     },
     "tabs": [
       {

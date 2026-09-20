@@ -36,6 +36,16 @@ fi
 ./preflight.sh
 echo
 
+# Path to Plan is LIVE measurement, built inside the model run itself by
+# revenue-forecast.js, so it can never quote a different day's gap than the
+# forecast beside it. Sales Overview runs BEFORE revenue-forecast in the
+# project order, so it consumes the measurement from this run's model pass;
+# a first-ever run therefore needs the model pass to happen first, which is
+# what this extra call is for. It costs about four seconds.
+echo "==> Running the V5 model and measuring the path to plan"
+node pipeline/build.js --lob residential --project revenue-forecast
+
+echo
 echo "==> Building all 10 dashboards"
 node pipeline/build.js
 

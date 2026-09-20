@@ -69,6 +69,38 @@ It fired on 2026-09-20 for multi-family at 26%, and the movement was real: the
 baseline was a 39-day-old build and August closed at $7.99M, the strongest
 month of the year.
 
+## The Path to Plan tab
+
+The residential Budget Recovery tab is now **Path to Plan**, rebuilt on every
+refresh rather than anchored to Q1. It answers four questions the old tab did
+not:
+
+1. **How big is the gap**, in dollars still to invoice by 12/31 and days left.
+2. **How much is already sold.** Work in the backlog converts on throughput
+   alone. Separating it from what must be newly sold turns one vague number
+   into a production problem and a sales problem, which have different owners.
+3. **What a sale is still worth.** Median sale-to-invoice is 29 days, p75 is
+   50. A sale made in late December cannot be produced and billed before year
+   end. The tab shows, week by week, what a dollar sold then is actually worth
+   this year. It falls below 75% in mid-November and below half in early
+   December.
+4. **Is plan reachable**, stated plainly, with the reasons underneath.
+
+Plus the production lever: finished-but-unbilled work broken out by what is
+blocking it, and what a day of cycle-time reduction is worth as year end
+approaches (small in September, large in December).
+
+It is built by `build-path-to-plan.py`, which runs **inside** the V5 model pass
+in `revenue-forecast.js`. That placement is deliberate: the model runs in an
+ephemeral work directory with its date set to the DATA date, so measuring
+anywhere else would quote a different day's gap than the forecast beside it.
+Sales Overview refuses to build under `FEAZEL_STRICT` if the two disagree.
+
+A caveat the tab states on itself: conversion rates come from jobs that *did*
+invoice, so they read optimistic, and the hold-pace landing zone sits above the
+V5 model's number. V5 remains the forecast of record. This tab decomposes where
+the remaining revenue can come from; it is not a competing forecast.
+
 ## Known gaps
 
 **Budget reconciliation: monthly cells do not sum to the Total 2026 cell.**

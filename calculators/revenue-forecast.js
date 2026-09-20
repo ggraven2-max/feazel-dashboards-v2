@@ -378,6 +378,36 @@ function run(opts) {
       throw new Error('refresh_v5.py ran but did not produce expected pickles');
     }
 
+    // Step 1b: measure the path to plan, in the work dir, while the model's
+    // pickles still exist. This MUST happen here rather than as a separate
+    // step against FEAZEL_FORECAST_SRC: the model runs in an ephemeral work
+    // dir with cfg.date set to the DATA date, so a later run against the
+    // source folder would read a different day's artifacts and the Budget
+    // Recovery tab would quote a different gap than the forecast beside it.
+    // Non-fatal by design: a measurement failure degrades that one tab, it
+    // does not cost us the forecast.
+    try {
+      const ptp = path.join(REPO_ROOT, 'build-path-to-plan.py');
+      if (fs.existsSync(ptp)) {
+        // runPython's 4th argument is extra ENV, not argv, so the paths go
+        // through the environment: read the model from this work dir, write
+        // the measurement into the repo.
+        const measured = runPython(pythonCmd, ptp, workDir, {
+          FEAZEL_FORECAST_SRC: workDir,
+          FEAZEL_PTP_OUT: REPO_ROOT
+        });
+        if (measured.status === 0) {
+          (measured.stdout || '').split('\n').forEach(l => l && console.log('  ' + l));
+        } else {
+          console.error('  [' + PROJECT_ID + '] path-to-plan measurement failed (exit ' +
+                        measured.status + '); Budget Recovery falls back to the static view.');
+          if (measured.stderr) console.error('    ' + measured.stderr.slice(-600));
+        }
+      }
+    } catch (e) {
+      console.error('  [' + PROJECT_ID + '] path-to-plan measurement skipped: ' + e.message);
+    }
+
     // Step 2: run v5_to_json.py to emit the REVENUE_FORECAST JSON
     console.log('  [' + PROJECT_ID + '] running v5_to_json.py …');
     const emit = runPython(pythonCmd, path.join(workDir, 'v5_to_json.py'), workDir);

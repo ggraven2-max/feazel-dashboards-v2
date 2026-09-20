@@ -1276,101 +1276,150 @@
   })();
 
   // ============================================================
-  // BUDGET RECOVERY (Q1 INVOICED basis, NetSuite is canonical)
-  // Switched from Q1 sales to Q1 invoiced 2026-05 per Greg.
-  // Pulls Jan/Feb/Mar invoiced from REVENUE_FORECAST.netsuiteInvoiced.monthly
-  // and compares to the residential budget invoiced for those months.
+  // PATH TO PLAN (live, forward-looking)
+  //
+  // Replaces the Q1-invoiced Budget Recovery view. That one answered "how
+  // much more per week must we sell", which is arithmetic on a shrinking
+  // window: it inflates on its own and was anchored to Q1 and the April
+  // active month, so it stopped meaning anything in May.
+  //
+  // This renders D.pathToPlan, rebuilt on every refresh inside the V5 model
+  // run. It answers four questions instead: how big is the remaining gap,
+  // how much of it is already sold, what is a sale still worth this late in
+  // the year, and is plan actually reachable. Falls back to the old Q1 block
+  // when the measurement is unavailable.
   // ============================================================
   (function () {
+    var P = D.pathToPlan;
     var rf = (window.FZ && window.FZ.data && window.FZ.data.REVENUE_FORECAST) || {};
-    var ns = rf.netsuiteInvoiced || {};
-    var br = D.budgetRecovery || {};
-    // Aggregated NetSuite rollups (Location + Sum of Amount) have no per-month
-    // detail. Treat Q1 as unavailable rather than reading zeros as actuals.
-    var aggOnly = !!ns.aggregatedOnly;
-    var monthly = (!aggOnly && ns.monthly && ns.monthly.length === 12) ? ns.monthly : null;
-    var budgetInv = (rf.budgetInv && rf.budgetInv.length === 12) ? rf.budgetInv : null;
 
-    var q1Inv = monthly ? (monthly[0] + monthly[1] + monthly[2]) : null;
-    var q1InvBudget = budgetInv ? (budgetInv[0] + budgetInv[1] + budgetInv[2]) : null;
-    var q1Shortfall = (q1Inv != null && q1InvBudget != null) ? (q1Inv - q1InvBudget) : null;
-    var fullYearBudget = br.fullYearBudget || (rf.execSummary && rf.execSummary.budget) || 0;
-    var annualForecast = (rf.execSummary && rf.execSummary.modelAnnualInvoiced) || 0;
-    var annualGap = (fullYearBudget > 0 && annualForecast > 0) ? (annualForecast - fullYearBudget) : null;
-    var ytdActual = ns.totalInvoiced || 0;     // works in both formats
+    if (!P || !P.gap) {
+      pages['budget-recovery'] = {
+        eyebrow: 'BUDGET RECOVERY',
+        title: 'Budget Recovery',
+        intro: 'The live path-to-plan measurement is unavailable for this build, so this tab has nothing current to show.',
+        tags: [{ kind: 'warn', text: 'Measurement missing' }],
+        sections: [{
+          kind: 'callout', tone: 'warn', title: 'Rebuild required',
+          body: 'This tab is built by <code>build-path-to-plan.py</code>, which runs inside the V5 model pass. Re-run the daily refresh. If it keeps failing, the model itself did not complete.'
+        }]
+      };
+      return;
+    }
+
+    var g = P.gap, b = P.bridge, sw = P.sellingWindow || {}, pf = P.pullForward || {};
+    var cap = P.capacity || {}, v = P.verdict || {}, mc = P.modelComparison || {};
+    var m = function (x) { return fmt.money(x, { short: true }); };
+    var toneFor = { 'not-reachable': 'crit', 'at-risk': 'warn', 'on-track': 'good', 'unknown': 'info' };
+    var tone = toneFor[v.band] || 'info';
+    var calloutTone = v.band === 'not-reachable' ? 'danger' : (v.band === 'at-risk' ? 'warn' : 'success');
+
+    var sections = [];
+
+    // 1. The verdict, stated plainly.
+    sections.push({
+      kind: 'callout', tone: calloutTone,
+      title: v.headline || 'Path to plan',
+      body: '<ul><li>' + (v.reasons || []).join('</li><li>') + '</li></ul>'
+    });
+
+    // 2. The gap, in the only terms that matter.
+    sections.push({
+      kind: 'kpi-row', cols: 4,
+      items: [
+        { label: 'Still to invoice', value: m(g.stillToInvoice), sub: 'Budget ' + m(g.fullYearBudget) + ' less ' + m(g.invoicedYtd) + ' booked', tone: 'crit' },
+        { label: 'Time left', value: g.daysRemaining + ' days', sub: g.weeksRemaining + ' selling weeks to 12/31', tone: 'navy' },
+        { label: 'Already sold', value: m(b.alreadySoldLands), sub: 'Converts without new selling', tone: 'good' },
+        { label: 'Must be newly sold', value: m(b.mustBeNewlySoldGross), sub: 'Gross, to net ' + m(b.mustBeNewlySoldNet) + ' at ' + Math.round(b.meanCapturePct) + '% capture', tone: tone }
+      ]
+    });
+
+    // 3. Bridge: a production problem or a sales problem.
+    sections.push({
+      kind: 'table',
+      heading: 'Where the remaining ' + m(g.stillToInvoice) + ' can come from',
+      caption: 'Work already sold converts on throughput alone. Everything below it has to be sold first, and then produced and invoiced before 12/31.',
+      headers: ['Source', { label: 'Value', num: true }, { label: 'Converts by 12/31', num: true }, { label: 'Lands in ' + P.fiscalYear, num: true }, 'What it depends on'],
+      rows: (b.rows || []).map(function (r) {
+        return [r.label, m(r.amount), Math.round(r.convertPct) + '%', m(r.lands), r.note];
+      }).concat([
+        ['Already sold, total', '', '', m(b.alreadySoldLands), 'Production throughput'],
+        ['Must be newly sold', '', Math.round(b.meanCapturePct) + '%', m(b.mustBeNewlySoldNet), 'Requires ' + m(b.mustBeNewlySoldGross) + ' of gross sales']
+      ])
+    });
+
+    // 4. The selling-window decay. The piece that was missing entirely.
+    sections.push({
+      kind: 'table',
+      heading: 'What a sale is still worth, week by week',
+      caption: 'Median sale-to-invoice is 29 days, p75 is 50. A sale made late in December cannot be produced and billed before year end, so its contribution to ' + P.fiscalYear + ' revenue is close to zero. Push effort to the top of this table, not the bottom.',
+      headers: ['Week of', { label: 'Days to 12/31', num: true }, { label: 'Lands this year', num: true }, { label: '$1M sold becomes', num: true }],
+      rows: (sw.weeks || []).map(function (w) {
+        return [w.weekStart, w.daysToYearEnd, Math.round(w.capturePct) + '%', m(w.valueOfOneMillion)];
+      })
+    });
+
+    if (sw.belowThreeQuartersFrom) {
+      sections.push({
+        kind: 'callout', tone: 'warn', title: 'The selling window closes before the year does',
+        body: 'From <strong>' + sw.belowThreeQuartersFrom + '</strong>, under 75% of what is sold still invoices in ' + P.fiscalYear +
+              (sw.belowHalfFrom ? ', and from <strong>' + sw.belowHalfFrom + '</strong> under half of it does' : '') +
+              '. Sales capacity spent after that point is building next year’s revenue, which is fine, but it should not be counted toward this year’s recovery.'
+      });
+    }
+
+    // 5. The production lever. Revenue with no selling attached.
+    var cai = pf.completedAwaitingInvoice;
+    if (cai && cai.total) {
+      sections.push({
+        kind: 'table',
+        heading: 'Finished work that is not billed: ' + m(cai.total),
+        caption: cai.jobs + ' jobs, median ' + cai.medianAgeDays + ' days old. No selling and no scheduling required. The sub-status names the blocker, and two of these are process problems we own.',
+        headers: ['Blocked on', { label: 'Jobs', num: true }, { label: 'Amount', num: true }],
+        rows: (cai.byReason || []).map(function (r) { return [r.reason, r.jobs, m(r.amount)]; })
+      });
+    }
+
+    if ((pf.leverageCurve || []).length) {
+      sections.push({
+        kind: 'table',
+        heading: 'What one day of cycle-time reduction is worth',
+        caption: 'Small today, because almost everything in the ' + m(pf.backlogTotal) + ' backlog already clears year end. It rises sharply as the boundary approaches. This is when to spend on throughput, not whether to.',
+        headers: ['As of', { label: 'Days before 12/31', num: true }, { label: 'One day is worth', num: true }],
+        rows: pf.leverageCurve.map(function (r) { return [r.onDate, r.daysBeforeYearEnd, m(r.worthPerDay)]; })
+      });
+    }
+
+    // 6. Scenario bands, replacing the single inflating quota.
+    sections.push({
+      kind: 'table',
+      heading: 'Where the year lands',
+      caption: 'Required pace is ' + m(cap.requiredPerWeek) + ' per week against a demonstrated ' + m(cap.demonstratedPerWeek) +
+               (cap.trendPerWeek < 0 ? ', with sales trending down ' + m(Math.abs(cap.trendPerWeek)) + ' per week' : '') + '.',
+      headers: ['Scenario', { label: 'Weekly sales', num: true }, { label: 'New-sale revenue', num: true }, { label: 'Year lands at', num: true }, 'Note'],
+      rows: (P.scenarios || []).map(function (s) {
+        return [s.name, m(s.weeklySales), m(s.newSalesRevenue), m(s.landsAt), s.note];
+      })
+    });
+
+    sections.push({
+      kind: 'callout', tone: 'info', title: 'How to read these numbers',
+      body: 'Conversion rates come from jobs that <em>did</em> invoice, so they run optimistic: stalled jobs are under-represented. That is why the hold-pace landing zone of ' + m(mc.paceLandingZone) +
+            ' sits above the V5 model’s ' + m(mc.v5FullYear) + '. <strong>V5 remains the forecast of record.</strong> This tab is a decomposition of where the remaining revenue can come from, not a competing forecast.'
+    });
 
     pages['budget-recovery'] = {
-      eyebrow: 'BUDGET RECOVERY · Q1 INVOICED BASIS',
-      title: 'Budget Recovery',
-      intro: aggOnly
-        ? 'The path back to the residential plan, measured against booked invoiced revenue (NetSuite AR). The latest NetSuite export is a branch-aggregated rollup, so YTD and per-branch totals are available but Q1 monthly detail is not. See the callout below for how to unlock the per-month view.'
-        : 'The path back to the residential plan, measured against booked invoiced revenue (NetSuite AR) rather than signed sales. Q1 numbers below are the invoices booked through 3/31, not contracts signed.',
+      eyebrow: 'PATH TO PLAN · LIVE AS OF ' + (P.modelRunDate || ''),
+      title: 'Path to Plan',
+      intro: 'What is left to invoice this year, where it can come from, and whether the plan is reachable. Rebuilt on every refresh against the current model run, so nothing here is anchored to a quarter that has closed.',
       tags: [
-        aggOnly
-          ? { kind: 'warn', text: 'YTD ' + fmt.money(ytdActual, { short: true }) + ' (branch rollup, no Q1 detail)' }
-          : { kind: q1Shortfall != null && q1Shortfall < 0 ? 'danger' : 'success', text: q1Shortfall != null ? 'Q1 ' + (q1Shortfall >= 0 ? '+' : '') + fmt.money(q1Shortfall, { short: true }) + ' vs plan' : 'Q1 data pending' },
-        annualGap != null
-          ? { kind: annualGap < 0 ? 'warn' : 'success', text: 'Annual ' + (annualGap >= 0 ? '+' : '') + fmt.money(annualGap, { short: true }) }
-          : { kind: 'info', text: 'Annual plan pending' }
+        { kind: v.band === 'not-reachable' ? 'danger' : (v.band === 'at-risk' ? 'warn' : 'success'),
+          text: m(g.stillToInvoice) + ' in ' + g.daysRemaining + ' days' },
+        { kind: 'info', text: m(b.alreadySoldLands) + ' already sold' },
+        { kind: cap.liftRequiredPct >= 35 ? 'danger' : (cap.liftRequiredPct >= 10 ? 'warn' : 'success'),
+          text: '+' + Math.round(cap.liftRequiredPct) + '% pace required' }
       ],
-      sections: [
-        {
-          kind: 'kpi-row', cols: 4,
-          items: [
-            { label: 'Q1 Budget (Invoiced)',  value: q1InvBudget != null ? fmt.money(q1InvBudget, { short: true }) : '—', sub: 'Sum Jan + Feb + Mar plan',     tone: 'navy' },
-            { label: 'Q1 Invoiced (Actual)',   value: q1Inv != null      ? fmt.money(q1Inv, { short: true })      : '—', sub: 'NetSuite AR · Jan-Mar booked', tone: 'good' },
-            { label: 'Q1 Variance',            value: q1Shortfall != null ? (q1Shortfall >= 0 ? '+' : '') + fmt.money(q1Shortfall, { short: true }) : '—', sub: q1Shortfall != null && q1Shortfall < 0 ? 'To recover across Q2-Q4' : 'Tracking to plan', tone: q1Shortfall != null && q1Shortfall < 0 ? 'crit' : 'good' },
-            { label: 'Annual Forecast',        value: annualForecast ? fmt.money(annualForecast, { short: true }) : '—', sub: 'Model invoiced' + (fullYearBudget > 0 ? ' · vs ' + fmt.money(fullYearBudget, { short: true }) : ' · plan pending'), tone: annualGap != null && annualGap < 0 ? 'warn' : 'good' }
-          ]
-        },
-        monthly && budgetInv ? {
-          kind: 'table',
-          heading: 'Q1 invoiced vs plan, by month (NetSuite)',
-          caption: 'NetSuite AR booked invoices (Type = Invoice) per the FORECASTING_RULES.md §5.1 source-of-truth rule',
-          headers: [
-            { label: 'Month', num: false },
-            { label: 'Plan (Invoiced)', num: true },
-            { label: 'Actual (NetSuite)', num: true },
-            { label: 'Variance', num: true },
-            { label: 'Variance %', num: true }
-          ],
-          rows: ['Jan', 'Feb', 'Mar'].map(function (m, i) {
-            var plan = budgetInv[i] || 0;
-            var actual = monthly[i] || 0;
-            var diff = actual - plan;
-            var pct = plan > 0 ? (diff / plan) * 100 : 0;
-            return [
-              m + ' ' + TC.year,
-              fmt.money(plan),
-              fmt.money(actual),
-              (diff >= 0 ? '+' : '') + fmt.money(diff),
-              (pct >= 0 ? '+' : '') + pct.toFixed(1) + '%'
-            ];
-          }).concat([[
-            'Q1 Total',
-            q1InvBudget != null ? fmt.money(q1InvBudget) : '—',
-            q1Inv != null ? fmt.money(q1Inv) : '—',
-            q1Shortfall != null ? ((q1Shortfall >= 0 ? '+' : '') + fmt.money(q1Shortfall)) : '—',
-            (q1Inv != null && q1InvBudget != null && q1InvBudget > 0)
-              ? ((q1Shortfall / q1InvBudget * 100 >= 0 ? '+' : '') + (q1Shortfall / q1InvBudget * 100).toFixed(1) + '%')
-              : '—'
-          ]])
-        } : null,
-        {
-          kind: 'callout',
-          tone: q1Shortfall != null && q1Shortfall < 0 ? 'danger' : aggOnly ? 'warn' : 'success',
-          title: aggOnly
-            ? 'Q1 detail unavailable: NetSuite file is a branch rollup'
-            : q1Shortfall != null && q1Shortfall < 0 ? 'Q1 invoiced shortfall'
-            : q1Shortfall != null && q1Shortfall >= 0 ? 'Q1 ahead of plan'
-            : 'Q1 data not yet locked',
-          body: aggOnly
-            ? 'The latest NetSuite export (<code>' + (ns.source || 'ResInvoicedYTDResults*.csv') + '</code>) is the <strong>branch-aggregated</strong> view: Location + Sum of Amount only, with no Date column. YTD total (<strong>' + fmt.money(ytdActual, { short: true }) + '</strong>) and per-branch splits load fine, but Jan/Feb/Mar cannot be separated. To unlock Q1 vs plan and per-month chart locks, re-export the same NetSuite saved search with the per-invoice columns (Internal ID, Date, Period, Type, Location, Amount) and re-drop into <code>inputs/residential/revenue-forecast/</code>.'
-            : q1Shortfall != null
-              ? 'Q1 booked invoices ' + (q1Shortfall < 0 ? 'underran' : 'exceeded') + ' the plan by <strong>' + fmt.money(Math.abs(q1Shortfall), { short: true }) + '</strong>. The recovery (or excess) flows through to the rest of the year via the V5 monthly bridge. See <strong>Revenue Forecast → Budget Recovery</strong> for the week-by-week schedule and per-market splits.'
-              : 'Q1 invoiced figures will populate once the NetSuite AR export is ingested. Drop the latest <code>ResInvoicedYTDResults*.csv</code> into <code>inputs/residential/revenue-forecast/</code> and rerun the build.'
-        }
-      ].filter(Boolean)
+      sections: sections
     };
   })();
 
