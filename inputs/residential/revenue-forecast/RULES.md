@@ -497,30 +497,38 @@ This is what populates the (red) Budget Recovery tab and what feeds `budgetRecov
 The grid is Sunday-anchored. Every week label is a Sunday, and the schedule the dashboard
 renders inherits that anchor.
 
-> **OPEN GAP as of 2026-09-20.** `week_start` is still the literal `pd.Timestamp('2026-04-19')`,
-> the lock date. It has never advanced. The 2026-09-20 run therefore emitted 37 weekly target
-> rows starting 04/19, of which 22 were already in the past. The Budget Recovery tab lists
-> those 22 dead weeks as live targets.
+> **Changed 2026-09-20 (V5.1).** `week_start` was the literal `pd.Timestamp('2026-04-19')`,
+> the V5 lock date, and had never advanced. The pre-fix run emitted 37 weekly rows starting
+> 04/19, of which 22 had already elapsed, and the Budget Recovery tab listed those dead weeks
+> as live targets. It now resolves to the Sunday on or before the run date:
 >
-> The averaging distortion that follows is uneven, and it lands on production, not sales:
+> ```
+> week_start = TODAY - pd.Timedelta(days=(TODAY.weekday() + 1) % 7)
+> ```
 >
-> | Published | Forward 15 weeks only | Delta |
+> On 2026-09-20 that gives 2026-09-20, exactly 22 weeks after 2026-04-19, so the Sunday anchor
+> and the grid spacing are preserved to the day and only the start point moves.
+>
+> The correction is uneven and lands on production, not sales:
+>
+> | | Before | After |
 > |---|---|---|
-> | `avg_adj_sales` $3,776,668 | $3,750,862 | -0.7 percent |
-> | `avg_adj_prod` $2,931,071 | $3,796,923 | +29.5 percent |
+> | Weekly rows | 37 (22 elapsed) | 15 (all forward) |
+> | `avg_adj_sales` | $3,776,668 | $3,750,862, -0.7 percent |
+> | `avg_adj_prod` | $2,931,071 | $3,796,923, +29.5 percent |
+> | `total_shortfall`, `recovery_ratio`, `adjusted_monthly_inv` | | identical |
 >
 > Sales is nearly unaffected because the catch-up weights front-load into the months with the
-> heavier original budget, which happen to sit inside the elapsed window. Production is
-> understated by 29.5 percent, so the weekly production target on the tab is roughly $866,000
-> per week light against what the recovery plan actually implies.
+> heavier original budget, which sat inside the elapsed window. The weekly production target
+> rises roughly $866,000 per week. Monthly allocation is untouched, and
+> `v5_forecast_summary.json` showed zero differing keys across the change.
 >
-> The in-code comment also mislabels 2026-04-19 as a Saturday. It is a Sunday.
->
-> Fix identified, not yet applied: anchor to the Sunday on or before the run date,
-> `week_start = TODAY - Timedelta(days=(TODAY.weekday() + 1) % 7)`. On 2026-09-20 that
-> resolves to 2026-09-20, which is exactly 22 weeks after 2026-04-19, so the existing grid
-> is preserved to the day and only the start point moves. Tracked in FORECASTING_RULES.md
-> Section 11 as gap #11.
+> The old in-code comment called 2026-04-19 a Saturday. It is a Sunday.
+
+> **Related open gap.** `calculators/sales-overview.js` still carries a static 37-row
+> `weekSchedule` array generated from the April model run. Until it is sourced from the V5
+> JSON bridge, the dashboard's weekly schedule disagrees with the Python model. Gap #12 in
+> FORECASTING_RULES.md Section 11.
 
 ---
 

@@ -588,27 +588,30 @@ The HTML and Excel outputs both contain confidential numbers. Treat them as conf
     future weeks since mid-July. Rolling to 2027 should now require no code edit; it still
     requires a 2027 budget workbook with matching `<Mon> 2027` column headers.
 
-11. **Recovery weekly schedule start is still frozen. Functional, live, not yet fixed.**
-    `week_start = pd.Timestamp('2026-04-19')` in `refresh_v5.py` is the lock date and has never
-    advanced. Consequences on the 2026-09-20 run:
+11. ~~Recovery weekly schedule start frozen~~ **CLOSED 2026-09-20.** `week_start` was the
+    literal `pd.Timestamp('2026-04-19')`, the V5 lock date, and had never advanced. It now
+    resolves to the Sunday on or before the run date:
+    `week_start = TODAY - pd.Timedelta(days=(TODAY.weekday() + 1) % 7)`. The Sunday anchor is
+    preserved, so the grid is unchanged to the day; only the start point moves.
 
-    - 37 weekly target rows were emitted starting 04/19, of which 22 were already in the past.
-      The Budget Recovery tab lists those 22 dead weeks as live targets.
-    - The averaging distortion lands on production, not sales. `avg_adj_sales` published at
-      $3,776,668 against $3,750,862 for the forward 15 weeks, a 0.7 percent overstatement.
-      `avg_adj_prod` published at $2,931,071 against $3,796,923, a 29.5 percent understatement,
-      roughly $866,000 per week. Sales is nearly unaffected because the catch-up weights
-      front-load into the heavier-budgeted months, which sit inside the elapsed window.
-    - The same frozen grid feeds `weekly_targets`, `production_targets`, `recovery_sales_weeks`
-      and `recovery_prod_weeks`, so the Budget Recovery tab and the weekly sales target both
-      inherit it.
-    - The in-code comment calls 2026-04-19 a Saturday. It is a Sunday.
+    Verified by running the pre-fix and post-fix scripts side by side against the same
+    2026-09-20 inputs:
 
-    Fix identified: `week_start = TODAY - Timedelta(days=(TODAY.weekday() + 1) % 7)`, the Sunday
-    on or before the run date. On 2026-09-20 that resolves to 2026-09-20, exactly 22 weeks after
-    2026-04-19, so the Sunday-anchored grid is preserved to the day and only the start point
-    moves. Deliberately held back from the 2026-09-20 sweep because it changes a published
-    number on the Budget Recovery tab and Greg should see the before-and-after.
+    | | Before | After |
+    |---|---|---|
+    | Weekly rows emitted | 37, of which 22 elapsed | 15, all forward |
+    | First week | 04/19/2026 | 09/20/2026 |
+    | `avg_adj_sales` | $3,776,668 | $3,750,862 (-0.7%) |
+    | `avg_adj_prod` | $2,931,071 | **$3,796,923 (+29.5%)** |
+    | `total_shortfall` | $15,524,395 | $15,524,395 (same) |
+    | `recovery_ratio` | 1.4190 | 1.4190 (same) |
+    | `adjusted_monthly_inv` | | identical |
+    | `v5_forecast_summary.json` | | zero differing keys |
+
+    The correction is confined to the weekly schedule. Monthly allocation, shortfall and
+    recovery ratio are untouched. The operational consequence is that the weekly production
+    target rises roughly $866,000 per week, from $2.93M to $3.80M, because it is no longer
+    averaged across 22 weeks that had already elapsed.
 
 12. **Static weekly target table in the JS.** `calculators/sales-overview.js` carries a
     `weekSchedule` array of 37 hardcoded `{ wk, mo, target }` rows generated from the April model
@@ -706,10 +709,20 @@ keys. The `end_date` change was initially reported here as a live defect; on mea
 was worth $0 with `wip_reference.pkl` staged and $9,800 without it, so it is immaterial rather
 than material, and it is recorded that way.
 
-**Deliberately not fixed in this pass.** The recovery weekly schedule start (`week_start`),
-the static `weekSchedule` table in `sales-overview.js`, and the duplicated `FY` constants
-across the JS calculators. Gaps #11, #12 and #13 in Section 11. The first of those changes a
-published number and is held for Greg's review.
+**Recovery weekly schedule start (`week_start`), fixed same day after review.** Held back
+from the sweep above because it changes a published number, then approved and applied. Now
+anchored to the Sunday on or before the run date. Weekly production target corrects from
+$2,931,071 to $3,796,923, a 29.5 percent increase, because it is no longer averaged across
+22 elapsed weeks. Everything else holds: `v5_forecast_summary.json` shows zero differing
+keys, and `total_shortfall`, `recovery_ratio` and `adjusted_monthly_inv` are identical.
+Verified by running the pre-fix and post-fix scripts side by side against the same inputs.
+See gap #11 in Section 11 for the full table.
+
+**Still not fixed.** The static `weekSchedule` table in `sales-overview.js` and the
+duplicated `FY` constants across the JS calculators. Gaps #12 and #13 in Section 11. Note
+that gap #12 now matters more, not less: the JS table still carries the April-vintage
+37-week schedule, so the dashboard and the Python model disagree until it is wired to the
+JSON bridge.
 
 ### 2026-05-11 (methodology dynamization, forecast tab rule, fixes)
 
