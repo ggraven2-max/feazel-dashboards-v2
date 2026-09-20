@@ -41,6 +41,10 @@ ROUTES=(
   "GregProfitabilityResResults*.csv|residential/revenue-forecast"
   "Residential Budget*.xlsx|residential/revenue-forecast"
   "Jobs with Work Orders - Residential*.xlsx|residential/backlog"
+  # Completed-awaiting-invoice (NOT the YTD cycle-time report; disjoint patterns,
+  # the literal "-" after "Jobs" is what keeps them apart). Inert in the
+  # revenue-forecast calculators today, staged there for stuck-job analysis.
+  "Residential Completed Jobs-*.xlsx|residential/revenue-forecast"
   # ---- multi-family (Commercial exports) ----
   "Commercial Turned in YTD*.xlsx|multi-family/sales-overview"
   "Commercial Completed Jobs YTD*.xlsx|multi-family/sales-overview|multi-family/installs-ytd"
@@ -50,11 +54,13 @@ ROUTES=(
   "GregProfitabilityMFResults*.csv|multi-family/revenue-forecast"
   "*Commercial Budget*.xlsx|multi-family/revenue-forecast"
   "Jobs with Work Orders - Commercial*.xlsx|multi-family/backlog"
+  "Commercial Completed Jobs-*.xlsx|multi-family/revenue-forecast"
   # ---- service ----
   "ServiceInvoicedYTDResults*.csv|service/revenue-forecast"
   "GregProfitabilityServiceResults*.csv|service/revenue-forecast"
   "All Jobs with WOs and SAs*.xlsx|service/revenue-forecast"
   "*Service Budget*.xlsx|service/revenue-forecast"
+  "Service Completed Jobs YTD*.xlsx|service/revenue-forecast"
   "Service Appointments YTD*.xlsx|service/service-calls"
 )
 
@@ -105,6 +111,22 @@ mkdir -p "$UPLOADS"
 cp "$DROP"/* "$UPLOADS/" 2>/dev/null || true
 echo
 echo "  full drop also copied to $UPLOADS (the V5 model reads from there)"
+
+# A consolidated "Budget <year>.xlsx" carries all three LOBs stacked in one
+# sheet. Both the MF and Service parsers take the FIRST "Total 40000 Revenue"
+# row in the first sheet, which in that file is the COMPANY row, so pointing
+# them at it directly would have multi-family read the $181M company plan as
+# its own. Split it instead.
+CONSOLIDATED=""
+while IFS= read -r -d "" b; do CONSOLIDATED="$b"; done \
+  < <(find "$DROP" -maxdepth 1 -type f -name "Budget*.xlsx" -print0 2>/dev/null)
+if [ -n "$CONSOLIDATED" ] && [ -x ./split-budget.py ]; then
+  echo
+  echo "==> Consolidated budget found: $(basename "$CONSOLIDATED")"
+  python3 ./split-budget.py "$CONSOLIDATED" "$REPO/inputs/multi-family/revenue-forecast" --only "Multi Family" || true
+  python3 ./split-budget.py "$CONSOLIDATED" "$REPO/inputs/service/revenue-forecast"      --only "Service"      || true
+  PLACED["$(basename "$CONSOLIDATED")"]=1
+fi
 
 echo
 UNROUTED=0

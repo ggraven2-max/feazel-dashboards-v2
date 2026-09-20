@@ -19,14 +19,14 @@ MAX_AGE_DAYS="${FEAZEL_MAX_AGE_DAYS:-3}"
 # dashboard|REQ:pattern,REQ:pattern|OPT:pattern,...
 SPECS=(
   "residential/sales-overview|Residential Turned in YTD*.xlsx,Residential Completed Jobs YTD*.xlsx|Closing Percent By Branch*.xlsx"
-  "residential/revenue-forecast|Residential Forecasting Report*.xlsx,ResInvoicedYTDResults*.csv,Residential Budget*.xlsx|Sold Not Processed*.xlsx,Contracts Signed YTD - Residential*.xlsx,GregProfitabilityResResults*.csv"
+  "residential/revenue-forecast|Residential Forecasting Report*.xlsx,ResInvoicedYTDResults*.csv,Residential Budget*.xlsx|Sold Not Processed*.xlsx,Contracts Signed YTD - Residential*.xlsx,GregProfitabilityResResults*.csv,Residential Completed Jobs-*.xlsx"
   "residential/backlog|Jobs with Work Orders - Residential*.xlsx|"
   "residential/installs-ytd|Residential Completed Jobs YTD*.xlsx|"
   "multi-family/sales-overview|Commercial Turned in YTD*.xlsx,Commercial Completed Jobs YTD*.xlsx|"
-  "multi-family/revenue-forecast|Commercial Forecasting Report*.xlsx|*Commercial Budget*.xlsx,Contracts Signed YTD - Commercial*.xlsx,MFInvoicedYTDResults*.csv,GregProfitabilityMFResults*.csv"
+  "multi-family/revenue-forecast|Commercial Forecasting Report*.xlsx,*Commercial Budget*.xlsx|Contracts Signed YTD - Commercial*.xlsx,MFInvoicedYTDResults*.csv,GregProfitabilityMFResults*.csv,Commercial Completed Jobs-*.xlsx"
   "multi-family/backlog|Jobs with Work Orders - Commercial*.xlsx|"
   "multi-family/installs-ytd|Commercial Completed Jobs YTD*.xlsx|"
-  "service/revenue-forecast|ServiceInvoicedYTDResults*.csv|*Service Budget*.xlsx,GregProfitabilityServiceResults*.csv,All Jobs with WOs and SAs*.xlsx"
+  "service/revenue-forecast|ServiceInvoicedYTDResults*.csv,*Service Budget*.xlsx|GregProfitabilityServiceResults*.csv,All Jobs with WOs and SAs*.xlsx,Service Completed Jobs YTD*.xlsx"
   "service/service-calls|Service Appointments YTD*.xlsx|"
 )
 

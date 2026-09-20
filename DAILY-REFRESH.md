@@ -71,13 +71,34 @@ month of the year.
 
 ## Known gaps
 
-**Multi-family and service monthly Plan columns are a flat annual/12 split.**
-`2026 Commercial Budget.xlsx` and `2026 Service Budget.xlsx` are missing. The
-annual budgets are correct, locked board constants ($51,673,207 MF,
-$6,800,179 service). The monthly gap columns on those two tabs are not
-meaningful until the real budget files land. These were Mahlet's NetSuite
-exports and need a new owner. Drop them in the two revenue-forecast input
-folders and the flat plan resolves itself.
+**Budget reconciliation: monthly cells do not sum to the Total 2026 cell.**
+Resolved 2026-09-20 in the sense that real monthly plans are now loaded, but
+the underlying workbook does not tie out and the build says so on every run:
+
+| LOB | Months sum to | Total 2026 cell | Gap |
+|---|---|---|---|
+| Multi-family | $49,728,651 | $51,673,207 | **$1,944,556** |
+| Service | $6,942,033 | $6,800,179 | -$141,853 |
+| Residential | $123,956,895 | $125,932,927 | $1,976,033 |
+
+$1,799,826 of the multi-family gap is a **sign flip**: the `40003 - Sales:Work
+in Progress` row's monthly cells sum to -$899,913 while its Total 2026 cell
+reads +$899,913, same magnitude, opposite sign.
+
+The locked board constants match the Total 2026 cells, so the headline annual
+budgets are unaffected and the calculators keep using them. The consequence is
+that monthly gaps will never sum to the annual gap. Until the workbook ties
+out, treat the annual number and the monthly variance as two separate
+statements, and do not add the monthly gaps up expecting the annual one.
+
+**A consolidated budget splits automatically.** Drop `Budget <year>.xlsx`
+(all three LOBs stacked in one sheet) into the daily drop and `route-drop.sh`
+generates the per-LOB files with `split-budget.py`. Do not point the
+calculators at the consolidated file directly: both the MF and Service parsers
+take the FIRST "Total 40000 Revenue" row in the first sheet, which in that file
+is the COMPANY row, so multi-family would read the $181M company plan as its
+own. Residential is deliberately not regenerated, because its existing budget
+file carries a second "Actual" sheet the consolidated export does not have.
 
 **Residential plan constants are hand-maintained.** `PLAN_WEEKLY_TARGETS` and
 `PLAN_BUDGET_RECOVERY` in `calculators/sales-overview.js` are regenerated from
@@ -92,14 +113,20 @@ KPIs do not move. Do not chase it.
 
 ## Files not routed
 
-Three exports in the daily drop are not claimed by any dashboard:
+All exports in the daily drop are now routed. Three of them are **staged but
+inert**: they land in a folder but no calculator reads them yet.
 
-- `Commercial Completed Jobs-*.xlsx` (the non-YTD variant)
-- `Residential Completed Jobs-*.xlsx` (the non-YTD variant)
-- `Service Completed Jobs YTD-*.xlsx`
+| File | Routed to | What it is |
+|---|---|---|
+| `Residential Completed Jobs-*.xlsx` | residential/revenue-forecast | 111 jobs, $1.93M, sitting in Completed awaiting invoice, with an `Age` column |
+| `Commercial Completed Jobs-*.xlsx` | multi-family/revenue-forecast | same shape, 5 jobs, $427K |
+| `Service Completed Jobs YTD-*.xlsx` | service/revenue-forecast | 1,841 rows with full cycle-time stamps |
 
-The router names them at the end of its run. If one of these should feed a
-tab, add a route in `route-drop.sh` and a requirement in `preflight.sh`.
+Note the two patterns are disjoint: the literal `-` after "Jobs" is what
+separates `Completed Jobs-*` (awaiting invoice) from `Completed Jobs YTD-*`
+(cycle times). Do **not** route the non-YTD file into a `sales-overview`
+folder: that calculator picks its completed file with a bare `/completed/i`
+match and the 111-row file could silently displace the 4,682-row YTD one.
 
 ## Inputs do not travel with the repo
 

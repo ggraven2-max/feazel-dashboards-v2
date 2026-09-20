@@ -1,8 +1,8 @@
-/* AUTO-GENERATED — do not edit. Generated 2026-09-20T16:20:55.561Z (multi-family) */
+/* AUTO-GENERATED — do not edit. Generated 2026-09-20T16:39:39.403Z (multi-family) */
 window.FZ = window.FZ || {};
 window.FZ.data = {
   "_meta": {
-    "builtAt": "2026-09-20T16:20:55.561Z",
+    "builtAt": "2026-09-20T16:39:39.403Z",
     "pipelineVersion": "2.0.0",
     "lob": "multi-family",
     "lastBuiltProjects": [
@@ -15,26 +15,26 @@ window.FZ.data = {
       {
         "id": "sales-overview",
         "version": "1.0-rules-encoded",
-        "elapsedMs": 57,
-        "builtAt": "2026-09-20T16:20:55.561Z"
+        "elapsedMs": 54,
+        "builtAt": "2026-09-20T16:39:39.403Z"
       },
       {
         "id": "revenue-forecast",
         "version": "V5-baseline-2026-05-04-shell-1.1",
-        "elapsedMs": 156,
-        "builtAt": "2026-09-20T16:20:55.561Z"
+        "elapsedMs": 163,
+        "builtAt": "2026-09-20T16:39:39.403Z"
       },
       {
         "id": "backlog",
         "version": "1.0-rules-encoded",
-        "elapsedMs": 20,
-        "builtAt": "2026-09-20T16:20:55.561Z"
+        "elapsedMs": 19,
+        "builtAt": "2026-09-20T16:39:39.403Z"
       },
       {
         "id": "installs-ytd",
         "version": "1.0-rules-encoded",
-        "elapsedMs": 38,
-        "builtAt": "2026-09-20T16:20:55.561Z"
+        "elapsedMs": 34,
+        "builtAt": "2026-09-20T16:39:39.403Z"
       }
     ]
   },
@@ -1284,29 +1284,29 @@ window.FZ.data = {
     },
     "budgetRecovery": {
       "fullYearBudget": 51673207,
-      "sourceFile": "(MF budget XLSX not found, using flat 1/12 split)",
-      "totalToRecover": 1132049.7,
-      "upliftPct": 6.6,
-      "q1Budget": 12918301.75,
+      "sourceFile": "2026 Commercial Budget.xlsx",
+      "totalToRecover": 0,
+      "upliftPct": -20.2,
+      "q1Budget": 4533497.2,
       "q1Actual": 5414371.34,
-      "q1Shortfall": -7503930.41,
-      "aprilGap": 510495.45,
-      "aprilBudget": 4306100.58,
+      "q1Shortfall": 880874.14,
+      "aprilGap": 1583469.55,
+      "aprilBudget": 3233126.48,
       "aprilFcst": 4816596.03,
       "adjWeeklySalesAvg": 1019802.89,
-      "origWeeklySalesAvg": 956911.24,
-      "salesDeltaPerWeek": 62891.65,
+      "origWeeklySalesAvg": 1277185.2,
+      "salesDeltaPerWeek": -257382.31,
       "weeksRemaining": 18,
       "adjWeeklyProdAvg": 1019802.89,
-      "origWeeklyProdAvg": 956911.24,
-      "prodDeltaPerWeek": 62891.65,
+      "origWeeklyProdAvg": 1277185.2,
+      "prodDeltaPerWeek": -257382.31,
       "monthlyBridge": [
         {
           "mo": "Jan 2026",
           "monthIdx": 0,
-          "origBudget": 4306100.58,
-          "fcst": 4306100.58,
-          "recovTarget": 4306100.58,
+          "origBudget": 664114.1,
+          "fcst": 664114.1,
+          "recovTarget": 1085061.87,
           "catchUp": 0,
           "status": "Actual",
           "liveActual": 1085061.87,
@@ -1315,9 +1315,9 @@ window.FZ.data = {
         {
           "mo": "Feb 2026",
           "monthIdx": 1,
-          "origBudget": 4306100.58,
-          "fcst": 4306100.58,
-          "recovTarget": 4306100.58,
+          "origBudget": 788730.42,
+          "fcst": 788730.42,
+          "recovTarget": 788730.42,
           "catchUp": 0,
           "status": "Actual",
           "liveActual": 363231.03,
@@ -1326,9 +1326,9 @@ window.FZ.data = {
         {
           "mo": "Mar 2026",
           "monthIdx": 2,
-          "origBudget": 4306100.58,
-          "fcst": 4306100.58,
-          "recovTarget": 4306100.58,
+          "origBudget": 3080652.68,
+          "fcst": 3080652.68,
+          "recovTarget": 3966078.44,
           "catchUp": 0,
           "status": "Actual",
           "liveActual": 3966078.44,
@@ -1337,8 +1337,8 @@ window.FZ.data = {
         {
           "mo": "Apr 2026",
           "monthIdx": 3,
-          "origBudget": 4306100.58,
-          "fcst": 4306100.58,
+          "origBudget": 3233126.48,
+          "fcst": 3233126.48,
           "recovTarget": 4816596.03,
           "catchUp": 0,
           "status": "Actual",
@@ -1348,9 +1348,9 @@ window.FZ.data = {
         {
           "mo": "May 2026",
           "monthIdx": 4,
-          "origBudget": 4306100.58,
-          "fcst": 4306100.58,
-          "recovTarget": 5965958.91,
+          "origBudget": 6618395.96,
+          "fcst": 6618395.96,
+          "recovTarget": 6618395.96,
           "catchUp": 0,
           "status": "Actual",
           "liveActual": 5965958.91,
@@ -1359,8 +1359,8 @@ window.FZ.data = {
         {
           "mo": "Jun 2026",
           "monthIdx": 5,
-          "origBudget": 4306100.58,
-          "fcst": 4306100.58,
+          "origBudget": 3664695.3,
+          "fcst": 3664695.3,
           "recovTarget": 5981269.68,
           "catchUp": 0,
           "status": "Actual",
@@ -1370,9 +1370,9 @@ window.FZ.data = {
         {
           "mo": "Jul 2026",
           "monthIdx": 6,
-          "origBudget": 4306100.58,
-          "fcst": 4306100.58,
-          "recovTarget": 5112126.06,
+          "origBudget": 5298470.3,
+          "fcst": 5298470.3,
+          "recovTarget": 5298470.3,
           "catchUp": 0,
           "status": "Actual",
           "liveActual": 5112126.06,
@@ -1381,8 +1381,8 @@ window.FZ.data = {
         {
           "mo": "Aug 2026",
           "monthIdx": 7,
-          "origBudget": 4306100.58,
-          "fcst": 4306100.58,
+          "origBudget": 5335688.23,
+          "fcst": 5335688.23,
           "recovTarget": 6026432.95,
           "catchUp": 0,
           "status": "Actual",
@@ -1392,9 +1392,9 @@ window.FZ.data = {
         {
           "mo": "Sep 2026",
           "monthIdx": 8,
-          "origBudget": 4306100.58,
-          "fcst": 4306100.58,
-          "recovTarget": 4306100.58,
+          "origBudget": 4474155.35,
+          "fcst": 4474155.35,
+          "recovTarget": 4474155.35,
           "catchUp": 0,
           "status": "Active",
           "liveActual": 1536242.33,
@@ -1403,30 +1403,30 @@ window.FZ.data = {
         {
           "mo": "Oct 2026",
           "monthIdx": 9,
-          "origBudget": 4306100.58,
-          "fcst": 4306100.58,
-          "recovTarget": 4589113.01,
-          "catchUp": 283012.42,
+          "origBudget": 7363288.71,
+          "fcst": 7363288.71,
+          "recovTarget": 7363288.71,
+          "catchUp": 0,
           "status": "Recovery",
           "deals": 0
         },
         {
           "mo": "Nov 2026",
           "monthIdx": 10,
-          "origBudget": 4306100.58,
-          "fcst": 4306100.58,
-          "recovTarget": 4589113.01,
-          "catchUp": 283012.42,
+          "origBudget": 5872277.99,
+          "fcst": 5872277.99,
+          "recovTarget": 5872277.99,
+          "catchUp": 0,
           "status": "Recovery",
           "deals": 0
         },
         {
           "mo": "Dec 2026",
           "monthIdx": 11,
-          "origBudget": 4306100.58,
-          "fcst": 4306100.58,
-          "recovTarget": 4589113.01,
-          "catchUp": 283012.42,
+          "origBudget": 5279611.49,
+          "fcst": 5279611.49,
+          "recovTarget": 5279611.49,
+          "catchUp": 0,
           "status": "Recovery",
           "deals": 0
         }
@@ -1434,137 +1434,137 @@ window.FZ.data = {
       "adjSalesByMarket": [
         {
           "market": "Columbus",
-          "recovTarget": 2078137.71,
+          "recovTarget": 1972147.94,
           "original": 2057324.68,
-          "delta": 20813.03
+          "delta": -85176.74
         },
         {
           "market": "Detroit Metro",
-          "recovTarget": 1396374.95,
+          "recovTarget": 1325156.64,
           "original": 1382389.93,
-          "delta": 13985.02
+          "delta": -57233.29
         },
         {
           "market": "Raleigh",
-          "recovTarget": 1025295.72,
+          "recovTarget": 973003.29,
           "original": 1015027.14,
-          "delta": 10268.57
+          "delta": -42023.85
         },
         {
           "market": "Cleveland",
-          "recovTarget": 834371.23,
+          "recovTarget": 791816.39,
           "original": 826014.81,
-          "delta": 8356.42
+          "delta": -34198.42
         },
         {
           "market": "Cincinnati",
-          "recovTarget": 388398.94,
+          "recovTarget": 368589.7,
           "original": 384509.03,
-          "delta": 3889.91
+          "delta": -15919.33
         },
         {
           "market": "DC Metro",
-          "recovTarget": 202392.72,
+          "recovTarget": 192070.23,
           "original": 200365.71,
-          "delta": 2027.01
+          "delta": -8295.48
         },
         {
           "market": "Nashville",
-          "recovTarget": 127331.83,
+          "recovTarget": 120837.62,
           "original": 126056.57,
-          "delta": 1275.26
+          "delta": -5218.96
         },
         {
           "market": "Dayton",
-          "recovTarget": 74820.92,
+          "recovTarget": 71004.88,
           "original": 74071.57,
-          "delta": 749.35
+          "delta": -3066.69
         },
         {
           "market": "Richmond",
-          "recovTarget": 67131.84,
+          "recovTarget": 63707.96,
           "original": 66459.5,
-          "delta": 672.34
+          "delta": -2751.54
         },
         {
           "market": "Indianapolis",
-          "recovTarget": 46127.55,
+          "recovTarget": 43774.94,
           "original": 45665.57,
-          "delta": 461.98
+          "delta": -1890.63
         },
         {
           "market": "Knoxville",
-          "recovTarget": 39216.98,
+          "recovTarget": 37216.83,
           "original": 38824.21,
-          "delta": 392.77
+          "delta": -1607.39
         }
       ],
       "adjProdByMarket": [
         {
           "market": "Columbus",
-          "recovTarget": 2078137.71,
+          "recovTarget": 1972147.94,
           "original": 2057324.68,
-          "delta": 20813.03
+          "delta": -85176.74
         },
         {
           "market": "Detroit Metro",
-          "recovTarget": 1396374.95,
+          "recovTarget": 1325156.64,
           "original": 1382389.93,
-          "delta": 13985.02
+          "delta": -57233.29
         },
         {
           "market": "Raleigh",
-          "recovTarget": 1025295.72,
+          "recovTarget": 973003.29,
           "original": 1015027.14,
-          "delta": 10268.57
+          "delta": -42023.85
         },
         {
           "market": "Cleveland",
-          "recovTarget": 834371.23,
+          "recovTarget": 791816.39,
           "original": 826014.81,
-          "delta": 8356.42
+          "delta": -34198.42
         },
         {
           "market": "Cincinnati",
-          "recovTarget": 388398.94,
+          "recovTarget": 368589.7,
           "original": 384509.03,
-          "delta": 3889.91
+          "delta": -15919.33
         },
         {
           "market": "DC Metro",
-          "recovTarget": 202392.72,
+          "recovTarget": 192070.23,
           "original": 200365.71,
-          "delta": 2027.01
+          "delta": -8295.48
         },
         {
           "market": "Nashville",
-          "recovTarget": 127331.83,
+          "recovTarget": 120837.62,
           "original": 126056.57,
-          "delta": 1275.26
+          "delta": -5218.96
         },
         {
           "market": "Dayton",
-          "recovTarget": 74820.92,
+          "recovTarget": 71004.88,
           "original": 74071.57,
-          "delta": 749.35
+          "delta": -3066.69
         },
         {
           "market": "Richmond",
-          "recovTarget": 67131.84,
+          "recovTarget": 63707.96,
           "original": 66459.5,
-          "delta": 672.34
+          "delta": -2751.54
         },
         {
           "market": "Indianapolis",
-          "recovTarget": 46127.55,
+          "recovTarget": 43774.94,
           "original": 45665.57,
-          "delta": 461.98
+          "delta": -1890.63
         },
         {
           "market": "Knoxville",
-          "recovTarget": 39216.98,
+          "recovTarget": 37216.83,
           "original": 38824.21,
-          "delta": 392.77
+          "delta": -1607.39
         }
       ],
       "actualSource": "NetSuite AR · invoiced revenue",
@@ -1636,9 +1636,9 @@ window.FZ.data = {
       },
       {
         "label": "YTD vs Plan",
-        "value": "−$3.9M",
-        "sub": "Plan YTD: $38.75M",
-        "trend": "negative"
+        "value": "+$2.94M",
+        "sub": "Plan YTD: $31.91M",
+        "trend": "positive"
       },
       {
         "label": "YTD vs Forecast",
@@ -1648,7 +1648,7 @@ window.FZ.data = {
       },
       {
         "label": "Plan-Rest Forecast",
-        "value": "$47.77M",
+        "value": "$52.67M",
         "sub": "YTD actual + remaining-month plan"
       },
       {
@@ -1658,9 +1658,9 @@ window.FZ.data = {
       },
       {
         "label": "Forecast vs Budget",
-        "value": "−$3.9M",
-        "sub": "7.6% uplift needed",
-        "trend": "negative"
+        "value": "+$998K",
+        "sub": "ahead of plan",
+        "trend": "positive"
       },
       {
         "label": "Current WIP",
@@ -1676,8 +1676,8 @@ window.FZ.data = {
     "execSummary": {
       "budget": 51673207,
       "modelAnnualInvoiced": 46470663.06666668,
-      "gap": -3901907.9499999955,
-      "narrative": "9 months of FY2026 MF activity reported, $34.85M invoiced YTD. Run-rate annualizes to $46.47M against the $51.67M plan, a $3.9M shortfall (7.6% uplift needed)."
+      "gap": 998208.8185590208,
+      "narrative": "9 months of FY2026 MF activity reported, $34.85M invoiced YTD. Run-rate annualizes to $46.47M against the $51.67M plan, a surplus."
     },
     "monthRevenue": {
       "jan": {
@@ -1686,8 +1686,8 @@ window.FZ.data = {
         "netRevenue": 1085061.87,
         "startingCount": 5,
         "completingCount": 14,
-        "plan": 4306100.583333333,
-        "gap": -3221038.713333333
+        "plan": 639122.2851245126,
+        "gap": 445939.5848754875
       },
       "feb": {
         "invoiced": 363231.03,
@@ -1695,8 +1695,8 @@ window.FZ.data = {
         "netRevenue": 363231.03,
         "startingCount": 10,
         "completingCount": 10,
-        "plan": 4306100.583333333,
-        "gap": -3942869.5533333328
+        "plan": 759049.0680259366,
+        "gap": -395818.0380259366
       },
       "mar": {
         "invoiced": 3966078.4399999995,
@@ -1704,8 +1704,8 @@ window.FZ.data = {
         "netRevenue": 3966078.4399999995,
         "startingCount": 29,
         "completingCount": 33,
-        "plan": 4306100.583333333,
-        "gap": -340022.14333333354
+        "plan": 2964722.142117475,
+        "gap": 1001356.2978825243
       },
       "apr": {
         "invoiced": 4816596.029999999,
@@ -1713,8 +1713,8 @@ window.FZ.data = {
         "netRevenue": 4816596.029999999,
         "startingCount": 31,
         "completingCount": 37,
-        "plan": 4306100.583333333,
-        "gap": 510495.4466666663
+        "plan": 3111458.078051097,
+        "gap": 1705137.951948902
       },
       "may": {
         "invoiced": 5965958.91,
@@ -1722,8 +1722,8 @@ window.FZ.data = {
         "netRevenue": 5965958.91,
         "startingCount": 23,
         "completingCount": 39,
-        "plan": 4306100.583333333,
-        "gap": 1659858.3266666671
+        "plan": 6369333.738681715,
+        "gap": -403374.82868171483
       },
       "jun": {
         "invoiced": 5981269.680000001,
@@ -1731,8 +1731,8 @@ window.FZ.data = {
         "netRevenue": 5981269.680000001,
         "startingCount": 40,
         "completingCount": 36,
-        "plan": 4306100.583333333,
-        "gap": 1675169.0966666676
+        "plan": 3526786.183669391,
+        "gap": 2454483.4963306095
       },
       "jul": {
         "invoiced": 5112126.0600000005,
@@ -1740,8 +1740,8 @@ window.FZ.data = {
         "netRevenue": 5112126.0600000005,
         "startingCount": 37,
         "completingCount": 65,
-        "plan": 4306100.583333333,
-        "gap": 806025.4766666675
+        "plan": 5099079.268445946,
+        "gap": 13046.791554054245
       },
       "aug": {
         "invoiced": 6026432.949999999,
@@ -1749,8 +1749,8 @@ window.FZ.data = {
         "netRevenue": 6026432.949999999,
         "startingCount": 50,
         "completingCount": 51,
-        "plan": 4306100.583333333,
-        "gap": 1720332.3666666662
+        "plan": 5134896.622445581,
+        "gap": 891536.3275544187
       },
       "sep": {
         "invoiced": 1536242.33,
@@ -1758,8 +1758,8 @@ window.FZ.data = {
         "netRevenue": 1536242.33,
         "startingCount": 18,
         "completingCount": 15,
-        "plan": 4306100.583333333,
-        "gap": -2769858.253333333
+        "plan": 4305784.787290315,
+        "gap": -2769542.457290315
       },
       "oct": {
         "invoiced": 0,
@@ -1767,8 +1767,8 @@ window.FZ.data = {
         "netRevenue": 0,
         "startingCount": 0,
         "completingCount": 0,
-        "plan": 4306100.583333333,
-        "gap": -4306100.583333333
+        "plan": 7086194.828295313,
+        "gap": -7086194.828295313
       },
       "nov": {
         "invoiced": 0,
@@ -1776,8 +1776,8 @@ window.FZ.data = {
         "netRevenue": 0,
         "startingCount": 0,
         "completingCount": 0,
-        "plan": 4306100.583333333,
-        "gap": -4306100.583333333
+        "plan": 5651293.539092463,
+        "gap": -5651293.539092463
       },
       "dec": {
         "invoiced": 0,
@@ -1785,8 +1785,8 @@ window.FZ.data = {
         "netRevenue": 0,
         "startingCount": 0,
         "completingCount": 0,
-        "plan": 4306100.583333333,
-        "gap": -4306100.583333333
+        "plan": 5080930.151171241,
+        "gap": -5080930.151171241
       }
     },
     "weeklyTargetsHeader": {
@@ -1800,8 +1800,8 @@ window.FZ.data = {
     },
     "budgetRecoveryHeader": {
       "fullYearBudget": 51673207,
-      "gap": 3901907.9499999955,
-      "upliftPct": 7.551124028357665,
+      "gap": 0,
+      "upliftPct": 0,
       "aprilGap": 0,
       "q1OriginalBudget": 0,
       "q1Actual": 0,
@@ -2214,7 +2214,7 @@ window.FZ.data = {
     },
     "commentary": {
       "actionableRecommendations": [
-        "Annualized pace is $3.9M short of the $51.67M plan. Push to invoice WIP balance ($7.0M) faster, or accelerate starts."
+        "Tracking ahead of plan by $998K."
       ],
       "strategyHighlights": []
     },
@@ -2257,8 +2257,8 @@ window.FZ.data = {
           [
             "January",
             "$1.09M",
-            "$4.31M",
-            "$-3.22M",
+            "$639K",
+            "$446K",
             "$307K",
             "$2.08M",
             14,
@@ -2267,8 +2267,8 @@ window.FZ.data = {
           [
             "February",
             "$363K",
-            "$4.31M",
-            "$-3.94M",
+            "$759K",
+            "$-396K",
             "$404K",
             "$2.22M",
             10,
@@ -2277,8 +2277,8 @@ window.FZ.data = {
           [
             "March",
             "$3.97M",
-            "$4.31M",
-            "$-340K",
+            "$2.96M",
+            "$1M",
             "$7.8M",
             "$6.19M",
             33,
@@ -2287,8 +2287,8 @@ window.FZ.data = {
           [
             "April",
             "$4.82M",
-            "$4.31M",
-            "$510K",
+            "$3.11M",
+            "$1.71M",
             "$5.63M",
             "$8.17M",
             37,
@@ -2297,8 +2297,8 @@ window.FZ.data = {
           [
             "May",
             "$5.97M",
-            "$4.31M",
-            "$1.66M",
+            "$6.37M",
+            "$-403K",
             "$5.19M",
             "$4.94M",
             39,
@@ -2307,8 +2307,8 @@ window.FZ.data = {
           [
             "June",
             "$5.98M",
-            "$4.31M",
-            "$1.68M",
+            "$3.53M",
+            "$2.45M",
             "$4.4M",
             "$5.59M",
             36,
@@ -2317,8 +2317,8 @@ window.FZ.data = {
           [
             "July",
             "$5.11M",
-            "$4.31M",
-            "$806K",
+            "$5.1M",
+            "$13K",
             "$4.77M",
             "$5.15M",
             65,
@@ -2327,8 +2327,8 @@ window.FZ.data = {
           [
             "August",
             "$6.03M",
-            "$4.31M",
-            "$1.72M",
+            "$5.13M",
+            "$892K",
             "$4.47M",
             "$5.15M",
             51,
@@ -2347,8 +2347,8 @@ window.FZ.data = {
           [
             "October",
             "$0",
-            "$4.31M",
-            "$-4.31M",
+            "$7.09M",
+            "$-7.09M",
             "$0",
             "$6.95M",
             0,
@@ -2357,8 +2357,8 @@ window.FZ.data = {
           [
             "November",
             "$0",
-            "$4.31M",
-            "$-4.31M",
+            "$5.65M",
+            "$-5.65M",
             "$0",
             "$6.95M",
             0,
@@ -2367,8 +2367,8 @@ window.FZ.data = {
           [
             "December",
             "$0",
-            "$4.31M",
-            "$-4.31M",
+            "$5.08M",
+            "$-5.08M",
             "$0",
             "$6.95M",
             0,
@@ -2906,18 +2906,18 @@ window.FZ.data = {
               {
                 "label": "Plan",
                 "data": [
-                  4306100.583333333,
-                  4306100.583333333,
-                  4306100.583333333,
-                  4306100.583333333,
-                  4306100.583333333,
-                  4306100.583333333,
-                  4306100.583333333,
-                  4306100.583333333,
-                  4306100.583333333,
-                  4306100.583333333,
-                  4306100.583333333,
-                  4306100.583333333
+                  639122.2851245126,
+                  759049.0680259366,
+                  2964722.142117475,
+                  3111458.078051097,
+                  6369333.738681715,
+                  3526786.183669391,
+                  5099079.268445946,
+                  5134896.622445581,
+                  4305784.787290315,
+                  7086194.828295313,
+                  5651293.539092463,
+                  5080930.151171241
                 ],
                 "type": "line",
                 "borderColor": "#b23a2c",
@@ -3114,18 +3114,18 @@ window.FZ.data = {
       "Dec"
     ],
     "budgetInv": [
-      4306100.583333333,
-      4306100.583333333,
-      4306100.583333333,
-      4306100.583333333,
-      4306100.583333333,
-      4306100.583333333,
-      4306100.583333333,
-      4306100.583333333,
-      4306100.583333333,
-      4306100.583333333,
-      4306100.583333333,
-      4306100.583333333
+      639122.2851245126,
+      759049.0680259366,
+      2964722.142117475,
+      3111458.078051097,
+      6369333.738681715,
+      3526786.183669391,
+      5099079.268445946,
+      5134896.622445581,
+      4305784.787290315,
+      7086194.828295313,
+      5651293.539092463,
+      5080930.151171241
     ],
     "revModel": [
       1085061.87,
@@ -3156,18 +3156,18 @@ window.FZ.data = {
       0
     ],
     "requiredSales": [
-      4306100.583333333,
-      4306100.583333333,
-      4306100.583333333,
-      4306100.583333333,
-      4306100.583333333,
-      4306100.583333333,
-      4306100.583333333,
-      4306100.583333333,
-      4306100.583333333,
-      4306100.583333333,
-      4306100.583333333,
-      4306100.583333333
+      639122.2851245126,
+      759049.0680259366,
+      2964722.142117475,
+      3111458.078051097,
+      6369333.738681715,
+      3526786.183669391,
+      5099079.268445946,
+      5134896.622445581,
+      4305784.787290315,
+      7086194.828295313,
+      5651293.539092463,
+      5080930.151171241
     ],
     "backlogData": [
       2081200.16,
@@ -3194,7 +3194,7 @@ window.FZ.data = {
       "totalWOs": 484,
       "portfolioValue": 24482809.59,
       "avgDaysInStatus": 54,
-      "lastBuild": "2026-09-20T16:20:55.522Z"
+      "lastBuild": "2026-09-20T16:39:39.368Z"
     },
     "tabs": [
       {
@@ -4438,7 +4438,7 @@ window.FZ.data = {
       "multiTradeJobs": 33,
       "singleTradeJobs": 270,
       "multiTradePct": 10.9,
-      "lastBuild": "2026-09-20T16:20:55.561Z"
+      "lastBuild": "2026-09-20T16:39:39.403Z"
     },
     "tabs": [
       {
