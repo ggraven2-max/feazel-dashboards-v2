@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "builtAt": "2026-09-20T01:06:21.523Z",
+    "builtAt": "2026-09-20T14:18:08.998Z",
     "pipelineVersion": "2.0.0",
     "lob": "residential",
     "lastBuiltProjects": [
@@ -13,45 +13,45 @@
       {
         "id": "installs-ytd",
         "version": "1.0-rules-encoded",
-        "elapsedMs": 2,
-        "builtAt": "2026-09-20T01:06:21.523Z"
+        "elapsedMs": 184,
+        "builtAt": "2026-09-20T14:18:08.998Z"
       },
       {
         "id": "sales-overview",
         "version": "1.0-rules-encoded",
-        "elapsedMs": 831,
-        "builtAt": "2026-09-20T01:06:21.523Z"
+        "elapsedMs": 1093,
+        "builtAt": "2026-09-20T14:18:08.998Z"
       },
       {
         "id": "revenue-forecast",
         "version": "V5-baseline-2026-05-04-shell-1.1",
-        "elapsedMs": 3906,
-        "builtAt": "2026-09-20T01:06:21.523Z"
+        "elapsedMs": 3985,
+        "builtAt": "2026-09-20T14:18:08.998Z"
       },
       {
         "id": "backlog",
         "version": "1.0-rules-encoded",
-        "elapsedMs": 53,
-        "builtAt": "2026-09-20T01:06:21.523Z"
+        "elapsedMs": 56,
+        "builtAt": "2026-09-20T14:18:08.998Z"
       }
     ]
   },
   "INSTALLS_YTD": {
     "_source": "calculator/installs-ytd.js v1.0-rules-encoded",
     "title": "Residential Installs YTD",
-    "subtitle": "Invoiced Jobs - Jan 06, 2026 - Aug 11, 2026 - De-Duplicated at Job Level - 2,728 Jobs - 14 Markets - 31 PMs",
-    "generated": "2026-08-12",
+    "subtitle": "Invoiced Jobs - Jan 06, 2026 - Sep 18, 2026 - De-Duplicated at Job Level - 3,331 Jobs - 14 Markets - 32 PMs",
+    "generated": "2026-09-20",
     "headerMeta": {
-      "trueRevenue": 52303477.97,
-      "uniqueJobs": 2728,
+      "trueRevenue": 63915795.73,
+      "uniqueJobs": 3331,
       "markets": 14,
-      "pms": 31,
-      "medianComplete": 26.5,
+      "pms": 32,
+      "medianComplete": 26.6,
       "avgStart": 26.1,
-      "multiTradeJobs": 845,
-      "singleTradeJobs": 1883,
-      "multiTradePct": 31,
-      "lastBuild": "2026-08-12T15:33:10.137Z"
+      "multiTradeJobs": 1057,
+      "singleTradeJobs": 2274,
+      "multiTradePct": 31.7,
+      "lastBuild": "2026-09-20T14:18:08.998Z"
     },
     "tabs": [
       {
@@ -94,17 +94,17 @@
     "kpis": [
       {
         "label": "True Revenue",
-        "value": "$52.30M",
-        "sub": "2,728 unique jobs invoiced"
+        "value": "$63.92M",
+        "sub": "3,331 unique jobs invoiced"
       },
       {
         "label": "Avg Contract Value",
-        "value": "$19,173",
+        "value": "$19,188",
         "sub": "Per job (deduped)"
       },
       {
         "label": "Median Days to Complete",
-        "value": "26.5d",
+        "value": "26.6d",
         "sub": "Job-level median"
       },
       {
@@ -114,30 +114,30 @@
       },
       {
         "label": "Multi-Trade Jobs",
-        "value": "845",
-        "sub": "31.0% of book"
+        "value": "1,057",
+        "sub": "31.7% of book"
       },
       {
         "label": "Single-Trade Jobs",
-        "value": "1,883",
-        "sub": "69.0% of book"
+        "value": "2,274",
+        "sub": "68.3% of book"
       }
     ],
     "kpisMultiTrade": [
       {
         "label": "Multi-Trade Avg Contract",
-        "value": "$24,990",
-        "sub": "+50.9% vs single-trade"
+        "value": "$24,606",
+        "sub": "+47.6% vs single-trade"
       },
       {
         "label": "Single-Trade Avg Contract",
-        "value": "$16,562",
+        "value": "$16,670",
         "sub": "Baseline ticket"
       },
       {
         "label": "Completion Time Gap",
-        "value": "+18.1d",
-        "sub": "MT 39.5d vs ST 21.4d"
+        "value": "+19.2d",
+        "sub": "MT 40.6d vs ST 21.5d"
       }
     ],
     "monthly": [
@@ -190,7 +190,7 @@
         "m": "2026-06",
         "label": "June",
         "key": "2026-06",
-        "rev": 11030368.94,
+        "rev": 11029046.94,
         "jobs": 556,
         "med": 28.5,
         "start": 24.4
@@ -199,7 +199,7 @@
         "m": "2026-07",
         "label": "July",
         "key": "2026-07",
-        "rev": 10649035.21,
+        "rev": 10653578.21,
         "jobs": 536,
         "med": 30.5,
         "start": 26.7
@@ -208,10 +208,19 @@
         "m": "2026-08",
         "label": "August",
         "key": "2026-08",
-        "rev": 2484608.9,
-        "jobs": 114,
-        "med": 26.5,
-        "start": 25.3
+        "rev": 9082863.3,
+        "jobs": 451,
+        "med": 29.5,
+        "start": 26.8
+      },
+      {
+        "m": "2026-09",
+        "label": "September",
+        "key": "2026-09",
+        "rev": 5010842.36,
+        "jobs": 266,
+        "med": 27.6,
+        "start": 24.6
       }
     ],
     "charts": [
@@ -225,7 +234,8 @@
           "2026-05",
           "2026-06",
           "2026-07",
-          "2026-08"
+          "2026-08",
+          "2026-09"
         ],
         "datasets": [
           {
@@ -236,9 +246,10 @@
               5913056.86,
               7878201.39,
               8377996.95,
-              11030368.94,
-              10649035.21,
-              2484608.9
+              11029046.94,
+              10653578.21,
+              9082863.3,
+              5010842.36
             ]
           },
           {
@@ -251,7 +262,8 @@
               459,
               556,
               536,
-              114
+              451,
+              266
             ]
           }
         ]
@@ -266,7 +278,8 @@
           "2026-05",
           "2026-06",
           "2026-07",
-          "2026-08"
+          "2026-08",
+          "2026-09"
         ],
         "datasets": [
           {
@@ -279,7 +292,8 @@
               21.7,
               28.5,
               30.5,
-              26.5
+              29.5,
+              27.6
             ]
           },
           {
@@ -292,7 +306,8 @@
               22,
               24.4,
               26.7,
-              25.3
+              26.8,
+              24.6
             ]
           }
         ]
@@ -306,13 +321,13 @@
           {
             "label": "Multi-Trade",
             "data": [
-              845
+              1057
             ]
           },
           {
             "label": "Single-Trade",
             "data": [
-              1883
+              2274
             ]
           }
         ]
@@ -322,10 +337,10 @@
         "labels": [
           "Gutters + Roofing",
           "Gutters + Siding",
-          "Gutters + Roofing + Siding",
           "Roofing + Siding",
-          "Metal + Roofing",
+          "Gutters + Roofing + Siding",
           "Masonry + Roofing",
+          "Metal + Roofing",
           "Gutters + Masonry + Roofing",
           "Painting + Roofing"
         ],
@@ -333,14 +348,14 @@
           {
             "label": "Jobs",
             "data": [
-              548,
-              55,
-              46,
-              40,
-              19,
-              18,
-              16,
-              12
+              687,
+              64,
+              61,
+              61,
+              22,
+              21,
+              17,
+              14
             ]
           }
         ]
@@ -351,10 +366,10 @@
           "Columbus",
           "Detroit Metro",
           "Nashville",
-          "DC Metro",
           "Cleveland",
-          "Richmond",
+          "DC Metro",
           "Dayton",
+          "Richmond",
           "Cincinnati",
           "Raleigh",
           "Knoxville",
@@ -367,19 +382,19 @@
           {
             "label": "MT %",
             "data": [
-              30,
-              27.6,
-              34,
-              41.1,
-              40.3,
-              35.7,
-              26.5,
-              24.4,
-              15.2,
-              30.7,
+              31,
               29,
-              41.4,
+              32.8,
+              39.2,
+              38.7,
+              27.3,
+              34.7,
+              26.8,
+              21.7,
+              32.3,
               33.3,
+              41.4,
+              36.7,
               100
             ]
           }
@@ -391,10 +406,10 @@
           "Columbus",
           "Detroit Metro",
           "Nashville",
-          "DC Metro",
           "Cleveland",
-          "Richmond",
+          "DC Metro",
           "Dayton",
+          "Richmond",
           "Cincinnati",
           "Raleigh",
           "Knoxville",
@@ -407,17 +422,17 @@
           {
             "label": "MT Median",
             "data": [
-              45.7,
-              48.7,
+              46.6,
+              49.6,
               21.7,
-              22.6,
-              41.7,
-              34.5,
-              33.5,
-              38.1,
-              45.5,
-              26.6,
-              31.1,
+              43.7,
+              22.7,
+              35.6,
+              30.1,
+              39.5,
+              33,
+              27.1,
+              28.2,
               64.6,
               56.5,
               346.7
@@ -427,18 +442,18 @@
             "label": "ST Median",
             "data": [
               21.5,
-              24.5,
-              19.5,
+              25.6,
+              18.5,
+              28.5,
               14.5,
-              25.5,
-              11.5,
-              21.6,
-              20.7,
+              21.4,
+              12.5,
               21.5,
-              18.2,
-              19.8,
+              21.4,
+              17.6,
+              20.4,
               20.7,
-              34.1,
+              35.5,
               0
             ]
           }
@@ -450,10 +465,10 @@
           "Columbus",
           "Detroit Metro",
           "Nashville",
-          "DC Metro",
           "Cleveland",
-          "Richmond",
+          "DC Metro",
           "Dayton",
+          "Richmond",
           "Cincinnati",
           "Raleigh",
           "Knoxville",
@@ -466,19 +481,19 @@
           {
             "label": "Revenue",
             "data": [
-              18154178.82,
-              7814889.31,
-              4752754.64,
-              3841759.62,
-              3527453.35,
-              2847522.82,
-              2835986.77,
-              2565213.81,
-              1941421.29,
-              1752606.82,
-              1269075.32,
+              23389656.3,
+              9167839.27,
+              5551310.2,
+              4450760.16,
+              4412690.31,
+              3272220.38,
+              3262558.32,
+              3025209.81,
+              2414608.46,
+              2201224.45,
+              1604313.41,
               608668.35,
-              358252.64,
+              521041.9,
               33694.41
             ]
           }
@@ -490,10 +505,10 @@
           "Columbus",
           "Detroit Metro",
           "Nashville",
-          "DC Metro",
           "Cleveland",
-          "Richmond",
+          "DC Metro",
           "Dayton",
+          "Richmond",
           "Cincinnati",
           "Raleigh",
           "Knoxville",
@@ -506,19 +521,19 @@
           {
             "label": "Median Days",
             "data": [
-              28.1,
-              30.6,
-              20.6,
-              19.5,
+              28.5,
               31.5,
-              18.6,
+              19.6,
+              34.6,
+              18.1,
               24.5,
-              24.6,
-              22.5,
-              21.5,
+              17.5,
+              25.7,
+              22.6,
+              22,
               22,
               44.5,
-              35.7,
+              39,
               346.7
             ]
           }
@@ -530,38 +545,38 @@
           "Mason Bryant",
           "Eric Isakov",
           "Richard Williams",
-          "Jason Andrews",
           "Landon Little",
+          "Jason Andrews",
           "Brandon Skrzypek",
           "Joseph Yager",
           "Alex Dubanoski",
           "Shawn Oehlstrom",
-          "Brandon Harter",
-          "Alejandro Alvarado",
           "Drew Bailey",
-          "Abraham Santiago",
           "Kaden Carter",
+          "Brandon Harter",
+          "Abraham Santiago",
+          "Alejandro Alvarado",
           "Galo Munive"
         ],
         "datasets": [
           {
             "label": "Fractional Revenue",
             "data": [
-              4499428.58,
-              3752870.23,
-              3160920.72,
-              3114193.25,
-              3112238.65,
-              3051696.6,
-              2774636.96,
-              2631739.45,
-              2478736.75,
-              2439174.43,
-              2192107.05,
-              2033922.28,
-              1983207.45,
-              1954196.97,
-              1904864.46
+              5368564.9,
+              4889944.73,
+              4299483.22,
+              3955834.78,
+              3484556.7,
+              3476165.91,
+              3262770.18,
+              3046774.95,
+              2754637.17,
+              2690482.28,
+              2489287.23,
+              2483522.89,
+              2390221.8,
+              2372905.49,
+              2276200.99
             ]
           }
         ]
@@ -572,176 +587,183 @@
           "Mason Bryant",
           "Eric Isakov",
           "Richard Williams",
-          "Jason Andrews",
           "Landon Little",
+          "Jason Andrews",
           "Brandon Skrzypek",
           "Joseph Yager",
           "Alex Dubanoski",
           "Shawn Oehlstrom",
-          "Brandon Harter",
-          "Alejandro Alvarado",
           "Drew Bailey",
-          "Abraham Santiago",
           "Kaden Carter",
+          "Brandon Harter",
+          "Abraham Santiago",
+          "Alejandro Alvarado",
           "Galo Munive",
           "Joseph Jones",
           "Brady Weingartner",
-          "Levi Nieman - INACTIVE",
           "Daniel Galli",
-          "Austin Weingartner",
-          "Joshua Collins",
-          "Michael Blevins",
           "Malik Ford",
+          "Joshua Collins",
+          "Levi Nieman - INACTIVE",
+          "Michael Blevins",
+          "Austin Weingartner-INACTIVE",
+          "Adam Marrero",
           "Chad Williams",
           "Cody Mitchell",
-          "Adam Marrero",
           "(Unassigned)",
           "Neil Laux",
           "Mike Scott",
           "Justin Milliron",
-          "Chris Atkins"
+          "Chris Atkins",
+          "Michael McLaughlin"
         ],
         "datasets": [
           {
             "label": "PMs",
             "data": [
               {
-                "x": 29.5,
-                "y": 4499428.58,
-                "wos": 282,
+                "x": 30.1,
+                "y": 5368564.9,
+                "wos": 344,
                 "name": "Mason Bryant"
               },
               {
-                "x": 29.5,
-                "y": 3752870.23,
-                "wos": 215,
+                "x": 28.4,
+                "y": 4889944.73,
+                "wos": 292,
                 "name": "Eric Isakov"
               },
               {
-                "x": 32.5,
-                "y": 3160920.72,
-                "wos": 225,
+                "x": 31.5,
+                "y": 4299483.22,
+                "wos": 292,
                 "name": "Richard Williams"
               },
               {
-                "x": 32.6,
-                "y": 3114193.25,
-                "wos": 281,
-                "name": "Jason Andrews"
-              },
-              {
                 "x": 32.5,
-                "y": 3112238.65,
-                "wos": 181,
+                "y": 3955834.78,
+                "wos": 238,
                 "name": "Landon Little"
               },
               {
-                "x": 33,
-                "y": 3051696.6,
-                "wos": 165,
+                "x": 35.4,
+                "y": 3484556.7,
+                "wos": 327,
+                "name": "Jason Andrews"
+              },
+              {
+                "x": 34.5,
+                "y": 3476165.91,
+                "wos": 191,
                 "name": "Brandon Skrzypek"
               },
               {
-                "x": 27.5,
-                "y": 2774636.96,
-                "wos": 218,
+                "x": 27.6,
+                "y": 3262770.18,
+                "wos": 250,
                 "name": "Joseph Yager"
               },
               {
-                "x": 18.6,
-                "y": 2631739.45,
-                "wos": 182,
+                "x": 18.1,
+                "y": 3046774.95,
+                "wos": 219,
                 "name": "Alex Dubanoski"
               },
               {
-                "x": 33.5,
-                "y": 2478736.75,
-                "wos": 245,
+                "x": 35.5,
+                "y": 2754637.17,
+                "wos": 277,
                 "name": "Shawn Oehlstrom"
               },
               {
-                "x": 22.5,
-                "y": 2439174.43,
-                "wos": 134,
-                "name": "Brandon Harter"
-              },
-              {
-                "x": 20.6,
-                "y": 2192107.05,
-                "wos": 159,
-                "name": "Alejandro Alvarado"
-              },
-              {
-                "x": 23.4,
-                "y": 2033922.28,
-                "wos": 286,
+                "x": 28.4,
+                "y": 2690482.28,
+                "wos": 344,
                 "name": "Drew Bailey"
               },
               {
-                "x": 20,
-                "y": 1983207.45,
-                "wos": 107,
-                "name": "Abraham Santiago"
-              },
-              {
-                "x": 22.5,
-                "y": 1954196.97,
-                "wos": 123,
+                "x": 22.6,
+                "y": 2489287.23,
+                "wos": 175,
                 "name": "Kaden Carter"
               },
               {
-                "x": 20.6,
-                "y": 1904864.46,
-                "wos": 161,
+                "x": 23.5,
+                "y": 2483522.89,
+                "wos": 138,
+                "name": "Brandon Harter"
+              },
+              {
+                "x": 18.5,
+                "y": 2390221.8,
+                "wos": 128,
+                "name": "Abraham Santiago"
+              },
+              {
+                "x": 20.4,
+                "y": 2372905.49,
+                "wos": 173,
+                "name": "Alejandro Alvarado"
+              },
+              {
+                "x": 19.6,
+                "y": 2276200.99,
+                "wos": 195,
                 "name": "Galo Munive"
               },
               {
                 "x": 21.5,
-                "y": 1635067.08,
-                "wos": 127,
+                "y": 2051833.4,
+                "wos": 156,
                 "name": "Joseph Jones"
               },
               {
-                "x": 22.4,
-                "y": 1533937.26,
-                "wos": 80,
+                "x": 22.5,
+                "y": 1836459.26,
+                "wos": 95,
                 "name": "Brady Weingartner"
               },
               {
+                "x": 54.1,
+                "y": 1308828.03,
+                "wos": 121,
+                "name": "Daniel Galli"
+              },
+              {
+                "x": 36.5,
+                "y": 1255364.69,
+                "wos": 76,
+                "name": "Malik Ford"
+              },
+              {
+                "x": 38.5,
+                "y": 1235999.37,
+                "wos": 89,
+                "name": "Joshua Collins"
+              },
+              {
                 "x": 35.5,
-                "y": 1181729.04,
+                "y": 1189570.54,
                 "wos": 73,
                 "name": "Levi Nieman - INACTIVE"
               },
               {
-                "x": 52.5,
-                "y": 1001771.82,
-                "wos": 99,
-                "name": "Daniel Galli"
-              },
-              {
-                "x": 27.5,
-                "y": 890861.23,
-                "wos": 59,
-                "name": "Austin Weingartner"
-              },
-              {
-                "x": 32.4,
-                "y": 795138.7,
-                "wos": 54,
-                "name": "Joshua Collins"
-              },
-              {
                 "x": 22,
-                "y": 678349.53,
-                "wos": 59,
+                "y": 1105342.34,
+                "wos": 88,
                 "name": "Michael Blevins"
               },
               {
-                "x": 33.5,
-                "y": 587158.57,
-                "wos": 32,
-                "name": "Malik Ford"
+                "x": 28,
+                "y": 957635.57,
+                "wos": 66,
+                "name": "Austin Weingartner-INACTIVE"
+              },
+              {
+                "x": 18,
+                "y": 884300.51,
+                "wos": 69,
+                "name": "Adam Marrero"
               },
               {
                 "x": 60.7,
@@ -756,40 +778,40 @@
                 "name": "Cody Mitchell"
               },
               {
-                "x": 16.6,
-                "y": 520324.72,
-                "wos": 47,
-                "name": "Adam Marrero"
-              },
-              {
-                "x": 32.6,
-                "y": 407631.03,
-                "wos": 47,
+                "x": 34.5,
+                "y": 439651.36,
+                "wos": 53,
                 "name": "(Unassigned)"
               },
               {
-                "x": 28.6,
-                "y": 372525.79,
-                "wos": 21,
+                "x": 31.6,
+                "y": 419909.18,
+                "wos": 24,
                 "name": "Neil Laux"
               },
               {
-                "x": 55,
-                "y": 139604.67,
-                "wos": 20,
+                "x": 55.5,
+                "y": 255627.4,
+                "wos": 33,
                 "name": "Mike Scott"
               },
               {
-                "x": 82.1,
-                "y": 115626.25,
-                "wos": 16,
+                "x": 69.1,
+                "y": 194800.27,
+                "wos": 24,
                 "name": "Justin Milliron"
               },
               {
-                "x": 58.7,
-                "y": 104789.49,
-                "wos": 20,
+                "x": 60.2,
+                "y": 135034.25,
+                "wos": 24,
                 "name": "Chris Atkins"
+              },
+              {
+                "x": 36.5,
+                "y": 92385.53,
+                "wos": 9,
+                "name": "Michael McLaughlin"
               }
             ]
           }
@@ -807,11 +829,12 @@
           "Painting",
           "GAF Solar",
           "Rack Mounted Solar",
-          "Flat Roof",
           "Electrical",
+          "Flat Roof",
           "Other",
           "Carpentry",
           "Insulation",
+          "Stucco",
           "Unspecified",
           "Door"
         ],
@@ -819,20 +842,21 @@
           {
             "label": "Revenue",
             "data": [
-              38447206.58,
-              8413426.73,
-              2523382.43,
-              761282.71,
-              579216.05,
-              518769.59,
-              303905.64,
+              47049638.34,
+              10296785.1,
+              3252274.09,
+              852903.48,
+              669386.17,
+              536854.93,
+              353583.35,
               284699.67,
-              136916.61,
-              128035.8,
-              124497.42,
-              49452.6,
+              224510.57,
+              158590.49,
+              133835.8,
+              59520.6,
               14672,
               10924.5,
+              10527,
               4786.5,
               2303.15
             ]
@@ -851,11 +875,12 @@
           "Painting",
           "GAF Solar",
           "Rack Mounted Solar",
-          "Flat Roof",
           "Electrical",
+          "Flat Roof",
           "Other",
           "Carpentry",
           "Insulation",
+          "Stucco",
           "Unspecified",
           "Door"
         ],
@@ -863,22 +888,23 @@
           {
             "label": "Median Days",
             "data": [
-              26.6,
-              32.6,
-              46.4,
-              78.6,
-              60.5,
-              61.6,
-              49.9,
+              27.4,
+              34.4,
+              49.5,
+              72.5,
+              60.1,
+              62.4,
+              47.4,
               78.2,
-              58.7,
-              58.6,
-              37,
-              36.6,
+              63.5,
+              43,
+              56.6,
+              43.7,
               51.7,
               39.5,
+              30.5,
               84.4,
-              67.5
+              67.6
             ]
           }
         ]
@@ -891,27 +917,31 @@
           "Amanda Wade - INACTIVE",
           "Bradley Essex - INACTIVE",
           "Thomas Hayes",
-          "Morgan Valois",
-          "Brenda Dixon",
-          "Bruce Lemon Jr.",
-          "Kayla Wright",
           "Ethan Wolfe",
+          "Allison Webb",
+          "Bruce Lemon Jr.",
+          "Morgan Valois",
+          "Brenda Dixon-INACTIVE",
+          "Kayla Wright",
+          "Jeff Craft",
           "Brandi Cordray"
         ],
         "datasets": [
           {
             "label": "Jobs",
             "data": [
-              983,
-              742,
-              471,
-              288,
-              179,
-              22,
-              14,
-              17,
+              1138,
+              926,
+              501,
+              297,
+              209,
+              97,
+              61,
+              49,
+              23,
+              19,
               9,
-              2,
+              1,
               1
             ]
           }
@@ -925,27 +955,31 @@
           "Amanda Wade - INACTIVE",
           "Bradley Essex - INACTIVE",
           "Thomas Hayes",
-          "Morgan Valois",
-          "Brenda Dixon",
-          "Bruce Lemon Jr.",
-          "Kayla Wright",
           "Ethan Wolfe",
+          "Allison Webb",
+          "Bruce Lemon Jr.",
+          "Morgan Valois",
+          "Brenda Dixon-INACTIVE",
+          "Kayla Wright",
+          "Jeff Craft",
           "Brandi Cordray"
         ],
         "datasets": [
           {
             "label": "Median Complete",
             "data": [
-              27.7,
-              24.6,
-              21.5,
               28.7,
-              29.4,
-              127.1,
-              21,
-              15.5,
+              25.6,
+              23.4,
+              29.6,
+              31.6,
+              19.6,
+              14.6,
+              21.4,
+              127.6,
+              28.5,
               39.6,
-              10.6,
+              47.5,
               42.6
             ]
           }
@@ -959,25 +993,29 @@
           "Amanda Wade - INACTIVE",
           "Bradley Essex - INACTIVE",
           "Thomas Hayes",
-          "Morgan Valois",
-          "Brenda Dixon",
-          "Bruce Lemon Jr.",
-          "Kayla Wright",
           "Ethan Wolfe",
+          "Allison Webb",
+          "Bruce Lemon Jr.",
+          "Morgan Valois",
+          "Brenda Dixon-INACTIVE",
+          "Kayla Wright",
+          "Jeff Craft",
           "Brandi Cordray"
         ],
         "datasets": [
           {
             "label": "MT %",
             "data": [
-              35.4,
-              28,
-              25.3,
-              33.7,
-              29.6,
-              54.5,
-              21.4,
-              11.8,
+              36.2,
+              29.7,
+              27.7,
+              34.3,
+              32.1,
+              20.6,
+              13.1,
+              26.5,
+              56.5,
+              26.3,
               33.3,
               0,
               0
@@ -993,11 +1031,13 @@
           "Amanda Wade - INACTIVE",
           "Bradley Essex - INACTIVE",
           "Thomas Hayes",
-          "Morgan Valois",
-          "Brenda Dixon",
-          "Bruce Lemon Jr.",
-          "Kayla Wright",
           "Ethan Wolfe",
+          "Allison Webb",
+          "Bruce Lemon Jr.",
+          "Morgan Valois",
+          "Brenda Dixon-INACTIVE",
+          "Kayla Wright",
+          "Jeff Craft",
           "Brandi Cordray"
         ],
         "datasets": [
@@ -1005,52 +1045,64 @@
             "label": "Creators",
             "data": [
               {
-                "x": 27.7,
-                "y": 19974.74,
-                "jobs": 983,
+                "x": 28.7,
+                "y": 19749.03,
+                "jobs": 1138,
                 "name": "Brandon Vera"
               },
               {
-                "x": 24.6,
-                "y": 20337.73,
-                "jobs": 742,
+                "x": 25.6,
+                "y": 20171.3,
+                "jobs": 926,
                 "name": "David Schwan"
               },
               {
-                "x": 21.5,
-                "y": 16204.93,
-                "jobs": 471,
+                "x": 23.4,
+                "y": 16919.52,
+                "jobs": 501,
                 "name": "Amanda Wade - INACTIVE"
               },
               {
-                "x": 28.7,
-                "y": 18478.22,
-                "jobs": 288,
+                "x": 29.6,
+                "y": 18603.51,
+                "jobs": 297,
                 "name": "Bradley Essex - INACTIVE"
               },
               {
-                "x": 29.4,
-                "y": 16907.66,
-                "jobs": 179,
+                "x": 31.6,
+                "y": 17720.59,
+                "jobs": 209,
                 "name": "Thomas Hayes"
               },
               {
-                "x": 127.1,
-                "y": 27650.06,
-                "jobs": 22,
+                "x": 19.6,
+                "y": 17227.99,
+                "jobs": 97,
+                "name": "Ethan Wolfe"
+              },
+              {
+                "x": 14.6,
+                "y": 18681.41,
+                "jobs": 61,
+                "name": "Allison Webb"
+              },
+              {
+                "x": 21.4,
+                "y": 16324.51,
+                "jobs": 49,
+                "name": "Bruce Lemon Jr."
+              },
+              {
+                "x": 127.6,
+                "y": 27851.14,
+                "jobs": 23,
                 "name": "Morgan Valois"
               },
               {
-                "x": 21,
-                "y": 32204.52,
-                "jobs": 14,
-                "name": "Brenda Dixon"
-              },
-              {
-                "x": 15.5,
-                "y": 15229.68,
-                "jobs": 17,
-                "name": "Bruce Lemon Jr."
+                "x": 28.5,
+                "y": 29217.67,
+                "jobs": 19,
+                "name": "Brenda Dixon-INACTIVE"
               },
               {
                 "x": 39.6,
@@ -1059,10 +1111,10 @@
                 "name": "Kayla Wright"
               },
               {
-                "x": 10.6,
-                "y": 22445,
-                "jobs": 2,
-                "name": "Ethan Wolfe"
+                "x": 47.5,
+                "y": 16913.44,
+                "jobs": 1,
+                "name": "Jeff Craft"
               },
               {
                 "x": 42.6,
@@ -1093,124 +1145,124 @@
         "rows": [
           [
             "Columbus",
-            964,
-            18154178.82,
-            18832.14,
-            28.1,
-            29.4,
-            30,
-            45.7,
+            1219,
+            23389656.3,
+            19187.58,
+            28.5,
+            29,
+            31,
+            46.6,
             21.5
           ],
           [
             "Detroit Metro",
-            413,
-            7814889.31,
-            18922.25,
-            30.6,
-            34.7,
-            27.6,
-            48.7,
-            24.5
+            487,
+            9167839.27,
+            18825.13,
+            31.5,
+            34.6,
+            29,
+            49.6,
+            25.6
           ],
           [
             "Nashville",
-            209,
-            4752754.64,
-            22740.45,
-            20.6,
-            19,
-            34,
+            244,
+            5551310.2,
+            22751.27,
+            19.6,
+            19.3,
+            32.8,
             21.7,
-            19.5
-          ],
-          [
-            "DC Metro",
-            192,
-            3841759.62,
-            20009.16,
-            19.5,
-            19.8,
-            41.1,
-            22.6,
-            14.5
+            18.5
           ],
           [
             "Cleveland",
-            211,
-            3527453.35,
-            16717.79,
+            268,
+            4450760.16,
+            16607.31,
+            34.6,
             31.5,
-            29.9,
-            40.3,
-            41.7,
-            25.5
+            39.2,
+            43.7,
+            28.5
           ],
           [
-            "Richmond",
-            140,
-            2847522.82,
-            20339.45,
-            18.6,
-            16.6,
-            35.7,
-            34.5,
-            11.5
+            "DC Metro",
+            230,
+            4412690.31,
+            19185.61,
+            18.1,
+            19.2,
+            38.7,
+            22.7,
+            14.5
           ],
           [
             "Dayton",
-            155,
-            2835986.77,
-            18296.69,
+            172,
+            3272220.38,
+            19024.54,
             24.5,
             20.4,
-            26.5,
-            33.5,
-            21.6
+            27.3,
+            35.6,
+            21.4
+          ],
+          [
+            "Richmond",
+            167,
+            3262558.32,
+            19536.28,
+            17.5,
+            15.6,
+            34.7,
+            30.1,
+            12.5
           ],
           [
             "Cincinnati",
-            131,
-            2565213.81,
-            19581.78,
-            24.6,
-            22.4,
-            24.4,
-            38.1,
-            20.7
-          ],
-          [
-            "Raleigh",
-            99,
-            1941421.29,
-            19610.32,
-            22.5,
-            21.9,
-            15.2,
-            45.5,
+            153,
+            3025209.81,
+            19772.61,
+            25.7,
+            22,
+            26.8,
+            39.5,
             21.5
           ],
           [
+            "Raleigh",
+            129,
+            2414608.46,
+            18717.9,
+            22.6,
+            21.8,
+            21.7,
+            33,
+            21.4
+          ],
+          [
             "Knoxville",
-            101,
-            1752606.82,
-            17352.54,
-            21.5,
-            16.8,
-            30.7,
-            26.6,
-            18.2
+            124,
+            2201224.45,
+            17751.81,
+            22,
+            16.1,
+            32.3,
+            27.1,
+            17.6
           ],
           [
             "Greenville",
-            62,
-            1269075.32,
-            20468.96,
+            78,
+            1604313.41,
+            20568.12,
             22,
-            17.5,
-            29,
-            31.1,
-            19.8
+            18.9,
+            33.3,
+            28.2,
+            20.4
           ],
           [
             "NOVA",
@@ -1225,14 +1277,14 @@
           ],
           [
             "Grand Rapids",
-            21,
-            358252.64,
-            17059.65,
-            35.7,
-            33.9,
-            33.3,
+            30,
+            521041.9,
+            17368.06,
+            39,
+            37.5,
+            36.7,
             56.5,
-            34.1
+            35.5
           ],
           [
             "Greensboro",
@@ -1262,210 +1314,219 @@
         "rows": [
           [
             "Mason Bryant",
-            282,
-            245,
-            4499428.58,
-            15955.42,
-            29.5,
-            26.1
+            344,
+            300,
+            5368564.9,
+            15606.29,
+            30.1,
+            25.4
           ],
           [
             "Eric Isakov",
-            215,
-            182,
-            3752870.23,
-            17455.21,
-            29.5,
-            28.3
+            292,
+            247,
+            4889944.73,
+            16746.39,
+            28.4,
+            26.3
           ],
           [
             "Richard Williams",
-            225,
-            202,
-            3160920.72,
-            14048.54,
-            32.5,
-            30
-          ],
-          [
-            "Jason Andrews",
-            281,
-            230,
-            3114193.25,
-            11082.54,
-            32.6,
-            35.8
+            292,
+            263,
+            4299483.22,
+            14724.26,
+            31.5,
+            29.9
           ],
           [
             "Landon Little",
-            181,
-            169,
-            3112238.65,
-            17194.69,
+            238,
+            219,
+            3955834.78,
+            16621.15,
             32.5,
-            30.8
+            29.1
+          ],
+          [
+            "Jason Andrews",
+            327,
+            271,
+            3484556.7,
+            10656.14,
+            35.4,
+            36.4
           ],
           [
             "Brandon Skrzypek",
-            165,
-            162,
-            3051696.6,
-            18495.13,
-            33,
-            32.1
+            191,
+            187,
+            3476165.91,
+            18199.82,
+            34.5,
+            32.3
           ],
           [
             "Joseph Yager",
-            218,
-            175,
-            2774636.96,
-            12727.69,
-            27.5,
-            21.4
+            250,
+            201,
+            3262770.18,
+            13051.08,
+            27.6,
+            21.2
           ],
           [
             "Alex Dubanoski",
-            182,
-            137,
-            2631739.45,
-            14460.11,
-            18.6,
-            17.2
-          ],
-          [
-            "Shawn Oehlstrom",
-            245,
-            171,
-            2478736.75,
-            10117.29,
-            33.5,
-            30.9
-          ],
-          [
-            "Brandon Harter",
-            134,
-            104,
-            2439174.43,
-            18202.79,
-            22.5,
-            20
-          ],
-          [
-            "Alejandro Alvarado",
-            159,
-            116,
-            2192107.05,
-            13786.84,
-            20.6,
-            17
-          ],
-          [
-            "Drew Bailey",
-            286,
-            265,
-            2033922.28,
-            7111.62,
-            23.4,
-            25.6
-          ],
-          [
-            "Abraham Santiago",
-            107,
-            88,
-            1983207.45,
-            18534.65,
-            20,
-            19.2
-          ],
-          [
-            "Kaden Carter",
-            123,
-            103,
-            1954196.97,
-            15887.78,
-            22.5,
-            21.9
-          ],
-          [
-            "Galo Munive",
-            161,
-            120,
-            1904864.46,
-            11831.46,
-            20.6,
-            22.7
-          ],
-          [
-            "Joseph Jones",
-            127,
-            97,
-            1635067.08,
-            12874.54,
-            21.5,
+            219,
+            164,
+            3046774.95,
+            13912.21,
+            18.1,
             16.1
           ],
           [
+            "Shawn Oehlstrom",
+            277,
+            197,
+            2754637.17,
+            9944.54,
+            35.5,
+            32.1
+          ],
+          [
+            "Drew Bailey",
+            344,
+            321,
+            2690482.28,
+            7821.17,
+            28.4,
+            26.5
+          ],
+          [
+            "Kaden Carter",
+            175,
+            138,
+            2489287.23,
+            14224.5,
+            22.6,
+            22.1
+          ],
+          [
+            "Brandon Harter",
+            138,
+            108,
+            2483522.89,
+            17996.54,
+            23.5,
+            20.4
+          ],
+          [
+            "Abraham Santiago",
+            128,
+            105,
+            2390221.8,
+            18673.61,
+            18.5,
+            19.1
+          ],
+          [
+            "Alejandro Alvarado",
+            173,
+            129,
+            2372905.49,
+            13716.22,
+            20.4,
+            17.4
+          ],
+          [
+            "Galo Munive",
+            195,
+            148,
+            2276200.99,
+            11672.83,
+            19.6,
+            21.3
+          ],
+          [
+            "Joseph Jones",
+            156,
+            119,
+            2051833.4,
+            13152.78,
+            21.5,
+            15.6
+          ],
+          [
             "Brady Weingartner",
-            80,
-            79,
-            1533937.26,
-            19174.22,
-            22.4,
-            21
+            95,
+            94,
+            1836459.26,
+            19331.15,
+            22.5,
+            20.9
+          ],
+          [
+            "Daniel Galli",
+            121,
+            96,
+            1308828.03,
+            10816.76,
+            54.1,
+            39.6
+          ],
+          [
+            "Malik Ford",
+            76,
+            73,
+            1255364.69,
+            16517.96,
+            36.5,
+            34.3
+          ],
+          [
+            "Joshua Collins",
+            89,
+            88,
+            1235999.37,
+            13887.63,
+            38.5,
+            31.8
           ],
           [
             "Levi Nieman - INACTIVE",
             73,
             72,
-            1181729.04,
-            16188.07,
+            1189570.54,
+            16295.49,
             35.5,
-            40.8
-          ],
-          [
-            "Daniel Galli",
-            99,
-            76,
-            1001771.82,
-            10118.91,
-            52.5,
-            38.4
-          ],
-          [
-            "Austin Weingartner",
-            59,
-            55,
-            890861.23,
-            15099.34,
-            27.5,
-            24
-          ],
-          [
-            "Joshua Collins",
-            54,
-            53,
-            795138.7,
-            14724.79,
-            32.4,
-            28.2
+            40.2
           ],
           [
             "Michael Blevins",
-            59,
-            44,
-            678349.53,
-            11497.45,
+            88,
+            64,
+            1105342.34,
+            12560.71,
             22,
-            15.7
+            19.2
           ],
           [
-            "Malik Ford",
-            32,
-            32,
-            587158.57,
-            18348.71,
-            33.5,
-            40.9
+            "Austin Weingartner-INACTIVE",
+            66,
+            62,
+            957635.57,
+            14509.63,
+            28,
+            23.4
+          ],
+          [
+            "Adam Marrero",
+            69,
+            56,
+            884300.51,
+            12815.95,
+            18,
+            18.7
           ],
           [
             "Chad Williams",
@@ -1486,58 +1547,58 @@
             21.2
           ],
           [
-            "Adam Marrero",
-            47,
-            38,
-            520324.72,
-            11070.74,
-            16.6,
-            17.6
-          ],
-          [
             "(Unassigned)",
+            53,
             47,
-            42,
-            407631.03,
-            8673,
-            32.6,
-            32.8
+            439651.36,
+            8295.31,
+            34.5,
+            35
           ],
           [
             "Neil Laux",
+            24,
             21,
-            18,
-            372525.79,
-            17739.32,
-            28.6,
-            30.4
+            419909.18,
+            17496.22,
+            31.6,
+            28.7
           ],
           [
             "Mike Scott",
-            20,
-            20,
-            139604.67,
-            6980.23,
-            55,
-            33.5
+            33,
+            33,
+            255627.4,
+            7746.28,
+            55.5,
+            32.8
           ],
           [
             "Justin Milliron",
-            16,
-            14,
-            115626.25,
-            7226.64,
-            82.1,
-            60.7
+            24,
+            22,
+            194800.27,
+            8116.68,
+            69.1,
+            57.7
           ],
           [
             "Chris Atkins",
+            24,
             20,
-            17,
-            104789.49,
-            5239.47,
-            58.7,
-            48.3
+            135034.25,
+            5626.43,
+            60.2,
+            51.9
+          ],
+          [
+            "Michael McLaughlin",
+            9,
+            9,
+            92385.53,
+            10265.06,
+            36.5,
+            28.8
           ]
         ]
       },
@@ -1554,52 +1615,52 @@
         "rows": [
           [
             "Roofing",
-            2454,
-            38447206.58,
-            15667.16,
-            26.6
+            3011,
+            47049638.34,
+            15625.92,
+            27.4
           ],
           [
             "Gutters",
-            884,
-            8413426.73,
-            9517.45,
-            32.6
+            1090,
+            10296785.1,
+            9446.59,
+            34.4
           ],
           [
             "Siding",
-            260,
-            2523382.43,
-            9705.32,
-            46.4
+            328,
+            3252274.09,
+            9915.47,
+            49.5
           ],
           [
             "Metal",
-            43,
-            761282.71,
-            17704.25,
-            78.6
+            48,
+            852903.48,
+            17768.82,
+            72.5
           ],
           [
             "Masonry",
-            47,
-            579216.05,
-            12323.75,
-            60.5
+            58,
+            669386.17,
+            11541.14,
+            60.1
           ],
           [
             "Windows",
-            47,
-            518769.59,
-            11037.65,
-            61.6
+            53,
+            536854.93,
+            10129.34,
+            62.4
           ],
           [
             "Painting",
-            20,
-            303905.64,
-            15195.28,
-            49.9
+            25,
+            353583.35,
+            14143.33,
+            47.4
           ],
           [
             "GAF Solar",
@@ -1610,31 +1671,31 @@
           ],
           [
             "Rack Mounted Solar",
-            15,
-            136916.61,
-            9127.77,
-            58.7
-          ],
-          [
-            "Flat Roof",
-            12,
-            128035.8,
-            10669.65,
-            58.6
+            21,
+            224510.57,
+            10690.98,
+            63.5
           ],
           [
             "Electrical",
-            12,
-            124497.42,
-            10374.78,
-            37
+            14,
+            158590.49,
+            11327.89,
+            43
+          ],
+          [
+            "Flat Roof",
+            13,
+            133835.8,
+            10295.06,
+            56.6
           ],
           [
             "Other",
-            6,
-            49452.6,
-            8242.1,
-            36.6
+            7,
+            59520.6,
+            8502.94,
+            43.7
           ],
           [
             "Carpentry",
@@ -1651,6 +1712,13 @@
             39.5
           ],
           [
+            "Stucco",
+            1,
+            10527,
+            10527,
+            30.5
+          ],
+          [
             "Unspecified",
             1,
             4786.5,
@@ -1662,7 +1730,7 @@
             1,
             2303.15,
             2303.15,
-            67.5
+            67.6
           ]
         ]
       },
@@ -1682,83 +1750,103 @@
         "rows": [
           [
             "Brandon Vera",
-            983,
-            19635165.2,
-            19974.74,
-            "27.7d",
-            "24.8d",
-            35.4,
-            19974.74
+            1138,
+            22474391.63,
+            19749.03,
+            "28.7d",
+            "25.6d",
+            36.2,
+            19749.03
           ],
           [
             "David Schwan",
-            742,
-            15090592.6,
-            20337.73,
-            "24.6d",
-            "24.2d",
-            28,
-            20337.73
+            926,
+            18678627.35,
+            20171.3,
+            "25.6d",
+            "24.3d",
+            29.7,
+            20171.3
           ],
           [
             "Amanda Wade - INACTIVE",
-            471,
-            7632521.47,
-            16204.93,
-            "21.5d",
-            "26.1d",
-            25.3,
-            16204.93
+            501,
+            8476678.66,
+            16919.52,
+            "23.4d",
+            "27.6d",
+            27.7,
+            16919.52
           ],
           [
             "Bradley Essex - INACTIVE",
-            288,
-            5321726.2,
-            18478.22,
-            "28.7d",
-            "27.1d",
-            33.7,
-            18478.22
+            297,
+            5525243.78,
+            18603.51,
+            "29.6d",
+            "28.2d",
+            34.3,
+            18603.51
           ],
           [
             "Thomas Hayes",
-            179,
-            3026470.36,
-            16907.66,
-            "29.4d",
-            "32.7d",
-            29.6,
-            16907.66
+            209,
+            3703603.78,
+            17720.59,
+            "31.6d",
+            "33.6d",
+            32.1,
+            17720.59
           ],
           [
-            "Morgan Valois",
-            22,
-            608301.32,
-            27650.06,
-            "127.1d",
-            "100.8d",
-            54.5,
-            27650.06
+            "Ethan Wolfe",
+            97,
+            1671114.66,
+            17227.99,
+            "19.6d",
+            "17d",
+            20.6,
+            17227.99
           ],
           [
-            "Brenda Dixon",
-            14,
-            450863.22,
-            32204.52,
-            "21d",
-            "29.6d",
-            21.4,
-            32204.52
+            "Allison Webb",
+            61,
+            1139566.21,
+            18681.41,
+            "14.6d",
+            "11.8d",
+            13.1,
+            18681.41
           ],
           [
             "Bruce Lemon Jr.",
-            17,
-            258904.54,
-            15229.68,
-            "15.5d",
-            "10.7d",
-            11.8,
-            15229.68
+            49,
+            799901.11,
+            16324.51,
+            "21.4d",
+            "18.5d",
+            26.5,
+            16324.51
+          ],
+          [
+            "Morgan Valois",
+            23,
+            640576.32,
+            27851.14,
+            "127.6d",
+            "103.6d",
+            56.5,
+            27851.14
+          ],
+          [
+            "Brenda Dixon-INACTIVE",
+            19,
+            555135.73,
+            29217.67,
+            "28.5d",
+            "28.7d",
+            26.3,
+            29217.67
           ],
           [
             "Kayla Wright",
@@ -1771,14 +1859,14 @@
             25382.56
           ],
           [
-            "Ethan Wolfe",
-            2,
-            44890,
-            22445,
-            "10.6d",
-            "6.4d",
+            "Jeff Craft",
+            1,
+            16913.44,
+            16913.44,
+            "47.5d",
+            "45.3d",
             0,
-            22445
+            16913.44
           ],
           [
             "Brandi Cordray",
@@ -1815,31 +1903,49 @@
         ],
         "rows": [
           [
+            "Allison Webb",
+            6,
+            2,
+            42,
+            4,
+            2,
+            3,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1,
+            1,
+            61
+          ],
+          [
             "Amanda Wade - INACTIVE",
             0,
-            0,
-            343,
+            1,
+            365,
             0,
             2,
             1,
             0,
             0,
-            50,
+            53,
             0,
             0,
             1,
-            74,
+            78,
             0,
-            471
+            501
           ],
           [
             "Bradley Essex - INACTIVE",
-            69,
-            123,
+            70,
+            129,
             2,
             0,
-            82,
-            12,
+            83,
+            13,
             0,
             0,
             0,
@@ -1848,7 +1954,7 @@
             0,
             0,
             0,
-            288
+            297
           ],
           [
             "Brandi Cordray",
@@ -1870,27 +1976,27 @@
           ],
           [
             "Brandon Vera",
-            44,
-            67,
-            267,
-            190,
-            68,
-            143,
-            14,
+            58,
+            96,
+            301,
+            220,
+            81,
+            152,
+            18,
             0,
             7,
             0,
             29,
             0,
             14,
-            140,
-            983
+            162,
+            1138
           ],
           [
-            "Brenda Dixon",
+            "Brenda Dixon-INACTIVE",
             0,
             2,
-            11,
+            16,
             0,
             0,
             1,
@@ -1902,61 +2008,79 @@
             0,
             0,
             0,
-            14
+            19
           ],
           [
             "Bruce Lemon Jr.",
             0,
+            12,
+            23,
+            4,
             1,
-            11,
-            2,
-            0,
-            2,
-            0,
-            0,
+            3,
             1,
             0,
+            2,
             0,
             0,
             0,
             0,
-            17
+            3,
+            49
           ],
           [
             "David Schwan",
             14,
-            9,
-            319,
-            0,
-            0,
-            75,
+            13,
+            385,
             2,
             0,
-            4,
-            101,
+            90,
+            3,
             0,
-            208,
-            10,
+            16,
+            124,
             0,
-            742
+            243,
+            35,
+            1,
+            926
           ],
           [
             "Ethan Wolfe",
+            1,
+            0,
+            73,
             0,
             0,
-            2,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
+            22,
+            1,
             0,
             0,
             0,
             0,
-            2
+            0,
+            0,
+            0,
+            97
+          ],
+          [
+            "Jeff Craft",
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
           ],
           [
             "Kayla Wright",
@@ -1983,7 +2107,7 @@
             0,
             0,
             0,
-            20,
+            21,
             0,
             0,
             0,
@@ -1992,17 +2116,17 @@
             0,
             0,
             0,
-            22
+            23
           ],
           [
             "Thomas Hayes",
             4,
-            6,
-            2,
+            10,
+            4,
             0,
             3,
-            159,
-            5,
+            181,
+            7,
             0,
             0,
             0,
@@ -2010,25 +2134,25 @@
             0,
             0,
             0,
-            179
+            209
           ],
           [
             "Total",
-            131,
-            211,
-            964,
-            192,
-            155,
-            413,
-            21,
+            153,
+            268,
+            1219,
+            230,
+            172,
+            487,
+            30,
             1,
-            62,
-            101,
+            78,
+            124,
             29,
-            209,
-            99,
-            140,
-            2728
+            244,
+            129,
+            167,
+            3331
           ]
         ]
       }
@@ -2037,16 +2161,16 @@
       "areasOfConcern": [
         "Chad Williams: 53 WOs, $575K revenue, 60.7-day median complete, top-volume PM with the slowest cycle in the network.",
         "Multi-trade penalty is severe in 1 markets: NOVA MT 64.6d vs ST 20.7d.",
-        "Days to Start averages 26.1 days company-wide and 34.7 days in Detroit Metro (a sold job sits weeks before a crew touches it)."
+        "Days to Start averages 26.1 days company-wide and 37.5 days in Grand Rapids (a sold job sits weeks before a crew touches it)."
       ],
       "watchList": [
-        "Gutters-only work runs at 32.6-day median complete versus 26.6 days for roofing, 23% slower cycle on the lowest-priced trade."
+        "Gutters-only work runs at 34.4-day median complete versus 27.4 days for roofing, 26% slower cycle on the lowest-priced trade."
       ],
       "positivesToBuildOn": [
         "June delivered $11.03M across 556 invoiced jobs at 28.5-day median complete, the highest revenue month and one of the fastest cycles of the year.",
-        "Richmond hits 18.6-day median complete and a $20,339 average contract on 140 jobs.",
-        "Multi-trade jobs carry a $24,990 average contract versus $16,562 for single-trade, a 51% revenue lift per job.",
-        "Nashville is the best-balanced market: 20.6-day median complete, 34.0% multi-trade attach, $22,740 average contract on 209 jobs."
+        "Richmond hits 17.5-day median complete and a $19,536 average contract on 167 jobs.",
+        "Multi-trade jobs carry a $24,606 average contract versus $16,670 for single-trade, a 48% revenue lift per job.",
+        "Nashville is the best-balanced market: 19.6-day median complete, 32.8% multi-trade attach, $22,751 average contract on 244 jobs."
       ]
     }
   },
@@ -2055,7 +2179,7 @@
     "title": "Residential Sales Overview",
     "subtitle": "YTD 2026",
     "lastSigned": "2026-09-17",
-    "ytdDays": 262,
+    "ytdDays": 263,
     "rowCount": 4489,
     "tabs": [
       {
@@ -2151,8 +2275,8 @@
       },
       {
         "label": "Annualized Sales Rate",
-        "value": "~$106.92M",
-        "sub": "Based on 262 days YTD"
+        "value": "~$106.51M",
+        "sub": "Based on 263 days YTD"
       },
       {
         "label": "Install vs Repair",
@@ -3934,7 +4058,7 @@
     },
     "commentary": {
       "whatsWorking": [
-        "Sales Trajectory: Monthly sales moved from January $3.26M to September $5.19M (+59%). Annualized run rate: $106.92M.",
+        "Sales Trajectory: Monthly sales moved from January $3.26M to September $5.19M (+59%). Annualized run rate: $106.51M.",
         "Premium Deal Types: Insurance averages $20,635 per deal. Retail-Financing averages $20,713 (highest per-deal value). Retail-No Financing averages $13,667 (the volume engine).",
         "Sold Conversion: 4,384 of 4,489 signed contracts (97.7%) have made it to Sold status for $74.80M in confirmed sales."
       ],
@@ -4487,7 +4611,7 @@
           [
             "Oct 2026",
             13483638.9808,
-            20584838.3234,
+            20605863.5134,
             13622192.9974,
             13610007.8135,
             126368.8327
@@ -4565,7 +4689,7 @@
           ],
           [
             "Oct 2026",
-            20584838.3234,
+            20605863.5134,
             67658.9328,
             13497003.301,
             13622192.9974
@@ -6128,7 +6252,7 @@
         "budget_rev": 14242102.8235,
         "pipeline_backlog": 21816907.05,
         "new_sales_backlog": 7853121.1248,
-        "pipe_invoicing": 12101170.41,
+        "pipe_invoicing": 12080145.22,
         "future_invoicing": 0,
         "rev_from_backlog": 162933.9529,
         "revenue_gap": 14079168.8706,
@@ -6137,18 +6261,18 @@
       },
       {
         "month": "Oct 2026",
-        "total_backlog": 20584838.3234,
-        "wip_est": 12350902.9941,
-        "not_started": 8233935.3294,
+        "total_backlog": 20605863.5134,
+        "wip_est": 12363518.1081,
+        "not_started": 8242345.4054,
         "budget_rev": 13564662.2337,
-        "pipeline_backlog": 9715736.64,
+        "pipeline_backlog": 9736761.83,
         "new_sales_backlog": 10869101.6834,
-        "pipe_invoicing": 9522162.86,
+        "pipe_invoicing": 9543188.05,
         "future_invoicing": 0,
         "rev_from_backlog": 67658.9328,
         "revenue_gap": 13497003.301,
         "adjusted_required_sales": 13622192.9974,
-        "backlog_surplus": 6962645.326
+        "backlog_surplus": 6983670.516
       },
       {
         "month": "Nov 2026",
@@ -6355,7 +6479,7 @@
       "totalWOs": 1232,
       "portfolioValue": 18309021.22,
       "avgDaysInStatus": 14,
-      "lastBuild": "2026-09-20T01:06:21.519Z"
+      "lastBuild": "2026-09-20T14:18:08.812Z"
     },
     "tabs": [
       {
