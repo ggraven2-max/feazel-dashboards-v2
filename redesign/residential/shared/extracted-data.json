@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "builtAt": "2026-09-20T16:02:37.800Z",
+    "builtAt": "2026-09-20T16:20:55.285Z",
     "pipelineVersion": "2.0.0",
     "lob": "residential",
     "lastBuiltProjects": [
@@ -13,26 +13,26 @@
       {
         "id": "installs-ytd",
         "version": "1.0-rules-encoded",
-        "elapsedMs": 184,
-        "builtAt": "2026-09-20T16:02:37.800Z"
+        "elapsedMs": 202,
+        "builtAt": "2026-09-20T16:20:55.285Z"
       },
       {
         "id": "sales-overview",
         "version": "1.0-rules-encoded",
-        "elapsedMs": 1084,
-        "builtAt": "2026-09-20T16:02:37.800Z"
+        "elapsedMs": 1103,
+        "builtAt": "2026-09-20T16:20:55.285Z"
       },
       {
         "id": "revenue-forecast",
         "version": "V5-baseline-2026-05-04-shell-1.1",
-        "elapsedMs": 4090,
-        "builtAt": "2026-09-20T16:02:37.800Z"
+        "elapsedMs": 4369,
+        "builtAt": "2026-09-20T16:20:55.285Z"
       },
       {
         "id": "backlog",
         "version": "1.0-rules-encoded",
-        "elapsedMs": 53,
-        "builtAt": "2026-09-20T16:02:37.800Z"
+        "elapsedMs": 56,
+        "builtAt": "2026-09-20T16:20:55.285Z"
       }
     ]
   },
@@ -51,7 +51,7 @@
       "multiTradeJobs": 1057,
       "singleTradeJobs": 2274,
       "multiTradePct": 31.7,
-      "lastBuild": "2026-09-20T16:02:37.800Z"
+      "lastBuild": "2026-09-20T16:20:55.285Z"
     },
     "tabs": [
       {
@@ -4544,7 +4544,7 @@
           [
             "Oct 2026",
             13483638.9808,
-            17645910.7165,
+            17674313.5365,
             13470316.1018,
             13641411.6593,
             157772.6785
@@ -4622,7 +4622,7 @@
           ],
           [
             "Oct 2026",
-            17645910.7165,
+            17674313.5365,
             1957135.2185,
             11607527.0153,
             13470316.1018
@@ -6094,7 +6094,7 @@
         "budget_rev": 14242102.8235,
         "pipeline_backlog": 22100569.13,
         "new_sales_backlog": 0,
-        "pipe_invoicing": 12017389.4,
+        "pipe_invoicing": 11988986.58,
         "future_invoicing": 0,
         "rev_from_backlog": 5004671.3411,
         "revenue_gap": 9237431.4824,
@@ -6103,18 +6103,18 @@
       },
       {
         "month": "Oct 2026",
-        "total_backlog": 17645910.7165,
-        "wip_est": 10587546.4299,
-        "not_started": 7058364.2866,
+        "total_backlog": 17674313.5365,
+        "wip_est": 10604588.1219,
+        "not_started": 7069725.4146,
         "budget_rev": 13564662.2337,
-        "pipeline_backlog": 10083179.73,
+        "pipeline_backlog": 10111582.55,
         "new_sales_backlog": 7562730.9865,
-        "pipe_invoicing": 9889605.95,
+        "pipe_invoicing": 9918008.77,
         "future_invoicing": 9846373.16,
         "rev_from_backlog": 1957135.2185,
         "revenue_gap": 11607527.0153,
         "adjusted_required_sales": 13470316.1018,
-        "backlog_surplus": 4175594.6147
+        "backlog_surplus": 4203997.4347
       },
       {
         "month": "Nov 2026",
@@ -6321,7 +6321,7 @@
       "totalWOs": 1234,
       "portfolioValue": 18290973.11,
       "avgDaysInStatus": 16,
-      "lastBuild": "2026-09-20T16:02:37.614Z"
+      "lastBuild": "2026-09-20T16:20:55.080Z"
     },
     "tabs": [
       {
