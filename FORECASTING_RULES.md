@@ -567,7 +567,7 @@ The HTML and Excel outputs both contain confidential numbers. Treat them as conf
 5. Branch remap dictionary is duplicated across pipelines. A future cleanup should centralize it. Not urgent.
 6. V5 internal variable names (`total_inv_apr`, `wip_change_apr`, `inv_may`, etc.) are historical: they actually mean "previous closed month" and "current active month" relative to TODAY. After two more month-closes, refactor to `prev_month_*` and `cur_month_*` for clarity.
 7. The HTML Tab 0 active-month and previous-month box labels and variable names are still hardcoded (May / April). When May closes, Tab 0 needs a manual edit. Roughly 25 lines of the t0 builder. Future enhancement: derive from TODAY and from V5's `cur_month_label` / `closed_month_label`.
-8. **Required-sales Pass-2 (structural fix, deferred)**: The current model's `S_known` lumps all of `snp_total` into the April slot (as `apr_with_snp = S_apr + snp_total`). This means May-signed contracts that are now in SNP get attributed to April vintage, not May. The Pass-1 fix (added 2026-05-11) credits current-month MTD actuals against `required_sales` post-hoc via `remaining_required_sales`, but does not re-architect `S_known`. The full structural fix requires re-attributing SNP by signing month so MTD can be added to `S_known` without double-counting. Defer until Q3 unless required-sales numbers begin to diverge materially from operating reality.
+8. ~~**Required-sales Pass-2 (structural fix, deferred)**~~ **CLOSED 2026-09-20, see change log**: The current model's `S_known` lumps all of `snp_total` into the April slot (as `apr_with_snp = S_apr + snp_total`). This means May-signed contracts that are now in SNP get attributed to April vintage, not May. The Pass-1 fix (added 2026-05-11) credits current-month MTD actuals against `required_sales` post-hoc via `remaining_required_sales`, but does not re-architect `S_known`. The full structural fix requires re-attributing SNP by signing month so MTD can be added to `S_known` without double-counting. Defer until Q3 unless required-sales numbers begin to diverge materially from operating reality.
 9. PCT_PRIOR currently caps at 100% for jobs in IP longer than the expected cycle. Some of these are likely stuck (permit hold, customer issue). Future enhancement: add a `days_in_ip > N × expected` "stuck" classification that excludes those jobs from forecast WIP.
 10. `months_label` is hardcoded to 2026 months. When 2027 planning begins, extend the list and update related indexing.
 
@@ -594,6 +594,36 @@ WTD: Week To Date.
 Y / YTD: Year / Year To Date.
 
 ## 13. Change log
+
+### 2026-09-20 (V5.1: known/solved boundary unlocked, SNP attributed by signing month)
+
+Approved by Greg Graven. The Controller seat is open and the prior finance lead has
+left the company, so the finance counter-signature called for in the sign-off process
+was not available. Recorded here as a single-approver change.
+
+- **Known/solved boundary now follows the data.** `S_known` was hardcoded to Oct-Dec
+  2025 plus Jan-Apr 2026, with `n_unk = 8`. April was simply where the data ended at
+  the 2026-04-19 lock, and the boundary never advanced. From May onward the optimizer
+  kept solving for months that had already closed with real actuals, and
+  `required_sales` came back byte-identical on every run for five months.
+  `LAST_KNOWN_IDX` is now derived from `ACTIVE_IDX`: every month before the active
+  month is known, and `n_unk` shrinks on its own as the year progresses.
+- **SNP attributed by signing month**, which closes gap #8 in Section 11. The whole
+  SNP balance was previously added to April as `apr_with_snp`. On 2026-09-20 that put
+  $1,605,979 of September-signed contracts on an April vintage. SNP signed in a closed
+  month now joins `S_known` for that month; SNP signed in the active month or later is
+  credited once against the active month's MTD, which is the double-count the deferred
+  fix was waiting on.
+- **YTD double-count in the seasonal projection fixed.** `ytd_actual_total` summed
+  every 2026 month present, while the projection below it treated only Jan-Apr as
+  actual. May onward was therefore netted out of remaining need and then handed a
+  fresh projection. Both now use the same boundary.
+- Optimizer smoothness anchor moved from `apr_s` to the last known month.
+- **Not changed**: the conversion curve, the cycle-time hierarchy, the WIP constants,
+  and the MMU treatment. Revenue outputs held flat against the run immediately prior:
+  closed month, active month and invoiced YTD all identical, `model_full_year` moved
+  0.02% on the optimizer re-solve.
+- Prior version retained as `refresh_v5_V5.0_pre-2026-09-20.py`.
 
 ### 2026-05-11 (methodology dynamization, forecast tab rule, fixes)
 
