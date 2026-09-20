@@ -36,6 +36,10 @@ const netsuite = require('./lib/netsuite-invoices');
 const v5Crosscheck = require('./lib/v5-excel-crosscheck');
 
 const PROJECT_ID = 'revenue-forecast';
+// Strict mode. The silent snapshot fallback below is convenient for ad-hoc
+// builds and dangerous for the daily publish, where a quietly stale forecast
+// reads exactly like a real one. FEAZEL_STRICT=1 turns fallback into failure.
+const STRICT = process.env.FEAZEL_STRICT === '1';
 // Version string format: V5-baseline-<YYYY-MM-DD of last lock change>-shell-<wrapper rev>
 // Last lock change: 2026-05-04 (NetSuite invoicing canonical, closed-month auto-detection).
 const VERSION = 'V5-baseline-2026-05-04-shell-1.1';
@@ -156,10 +160,17 @@ function copyOrLink(srcDir, files, destDir) {
     const src = path.join(srcDir, name);
     const dest = path.join(destDir, name);
     if (!fs.existsSync(src)) return;
+    // Copy, do not symlink. refresh_v5.py computes its fallback input folder as
+    // Path(__file__).resolve().parent, and .resolve() follows a symlink right
+    // back to the source folder, where superseded exports live. find_file()
+    // then globs BOTH folders and takes the newest mtime. That is how a
+    // ResInvoicedYTDResults CSV dated 2026-07-01 was picked up on 2026-09-18
+    // and shifted the closed month from Aug to Jun. Copying keeps __file__
+    // inside the work dir so each run stays isolated.
     try {
-      fs.symlinkSync(src, dest);
+      fs.copyFileSync(src, dest);
     } catch (e) {
-      try { fs.copyFileSync(src, dest); } catch (e2) { /* ignore */ }
+      try { fs.symlinkSync(src, dest); } catch (e2) { /* ignore */ }
     }
   });
 }
@@ -184,6 +195,11 @@ function classifyInputs(files) {
       cfg.budget = full;
     }
     else if (!cfg.profitability && lower.includes('profitability')) cfg.profitability = full;
+    // NetSuite AR export. refresh_v5.py resolves this one by glob rather than
+    // from the config (see its find_file calls), so the point of classifying
+    // it here is to get it staged into the work dir's mnt/uploads/, which is
+    // the first folder find_file() searches.
+    else if (!cfg.netsuite && lower.includes('resinvoicedytdresults')) cfg.netsuite = full;
   }
   return cfg;
 }
@@ -260,6 +276,37 @@ function run(opts) {
     return readFromExtracted(snapshotPath);
   }
 
+  // Freshness gate. Stale inputs do not raise, they produce a plausible and
+  // wrong forecast, so check the data date before spending five minutes on it.
+  const MAX_STALE_DAYS = 5;
+  // As-of date for the model. It must track the DATA, not the wall clock.
+  // refresh_v5.py uses cfg.date as TODAY, and the active-month shape blend
+  // divides elapsed month by expected month. Passing the clock against
+  // two-day-old exports shrinks the active month for no real reason.
+  let dataAsOf = null;
+  try {
+    const nsProbe = netsuite.parseInvoices(inputDir);
+    if (nsProbe && nsProbe.latestDate) {
+      const ageDays = Math.floor((Date.now() - new Date(nsProbe.latestDate).getTime()) / 86400000);
+      const stamp = String(new Date(nsProbe.latestDate).toISOString()).slice(0, 10);
+      dataAsOf = stamp;
+      if (ageDays > MAX_STALE_DAYS) {
+        console.error('  [' + PROJECT_ID + '] STALE INPUT: newest invoice date in ' +
+          nsProbe.fileName + ' is ' + stamp + ', ' + ageDays +
+          ' days old (limit ' + MAX_STALE_DAYS + ').');
+        console.error('    Drop a current ResInvoicedYTDResults*.csv in ' +
+          path.relative(REPO_ROOT, inputDir) + '/ and rerun.');
+        if (STRICT) throw new Error('NetSuite export is ' + ageDays + ' days stale');
+        return readFromExtracted(snapshotPath);
+      }
+      console.log('  [' + PROJECT_ID + '] freshness ok: NetSuite max date ' + stamp +
+        ' (' + ageDays + 'd old)');
+    }
+  } catch (err) {
+    if (STRICT) throw err;
+    console.log('  [' + PROJECT_ID + '] freshness probe could not run: ' + err.message);
+  }
+
   // Stage a work directory: V5 Python source + a forecast_config.json pointing
   // at our uploaded inputs. The Python will read its inputs from the explicit
   // paths in the config rather than the mnt/uploads/ glob.
@@ -289,8 +336,11 @@ function run(opts) {
 
     // Write forecast_config.json
     const configPayload = Object.assign({
-      date: new Date().toISOString().slice(0, 10)
+      date: dataAsOf || new Date().toISOString().slice(0, 10)
     }, cfg);
+    if (dataAsOf) {
+      console.log('  [' + PROJECT_ID + '] model as-of date: ' + dataAsOf + ' (from the data, not the clock)');
+    }
     fs.writeFileSync(path.join(workDir, 'forecast_config.json'), JSON.stringify(configPayload, null, 2));
 
     // refresh_v5.py has a Python gotcha: cfg.get(key, find_file('*pattern*'))
@@ -520,6 +570,14 @@ function applyNetSuiteOverride(out, inputDir) {
 }
 
 function readFromExtracted(snapshotPath) {
+  console.error('  [' + PROJECT_ID + '] ------------------------------------------------');
+  console.error('  [' + PROJECT_ID + '] USING THE PREVIOUS SNAPSHOT. The revenue forecast');
+  console.error('  [' + PROJECT_ID + '] in this build was NOT recomputed from the current');
+  console.error('  [' + PROJECT_ID + '] inputs. Do not publish it as today\'s number.');
+  console.error('  [' + PROJECT_ID + '] ------------------------------------------------');
+  if (STRICT) {
+    throw new Error('revenue-forecast fell back to the previous snapshot and FEAZEL_STRICT=1');
+  }
   const extractedPath = snapshotPath || DEFAULT_SNAPSHOT_PATH;
   if (!fs.existsSync(extractedPath)) {
     return buildStub('no extracted snapshot found');

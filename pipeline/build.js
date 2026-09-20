@@ -111,18 +111,41 @@ function writeCombinedDataJson(allLobOutputs) {
   // copy at the repo-root `data/` location for local consumers and for
   // backwards compatibility with anything that imported by file path before
   // the publish-path move.
-  const combined = {
-    _meta: {
-      builtAt: timestamp(),
-      pipelineVersion: '2.0.0',
-      lobs: Object.keys(allLobOutputs)
+  // Seed from the last published document so a scoped build refreshes only the
+  // LOBs it actually ran and leaves the rest byte-identical. Without this,
+  // `--lob residential` rewrote data.json with residential alone and dropped
+  // multiFamily and service from the file the site and the iOS app both fetch.
+  // This mirrors the same carry-forward buildLob() already does per project.
+  const seedPath = path.join(ROOT, 'redesign', 'data', 'data.json');
+  let combined = {};
+  if (fs.existsSync(seedPath)) {
+    try {
+      combined = JSON.parse(fs.readFileSync(seedPath, 'utf8'));
+    } catch (err) {
+      console.warn('  warning: could not parse the existing combined data.json, starting fresh');
+      combined = {};
     }
+  }
+  const toCamel = function (lob) {
+    return lob.replace(/-([a-z])/g, function (_, c) { return c.toUpperCase(); });
+  };
+  const builtKeys = Object.keys(allLobOutputs).map(toCamel);
+  const carried = Object.keys(combined).filter(function (k) {
+    return k !== '_meta' && builtKeys.indexOf(k) === -1;
+  });
+  combined._meta = {
+    builtAt: timestamp(),
+    pipelineVersion: '2.0.0',
+    lobs: Object.keys(allLobOutputs),
+    lobsCarriedForward: carried
   };
   Object.keys(allLobOutputs).forEach(function (lob) {
     // Use camelCase key in the combined doc to keep iOS / JS consumers happy
-    const camelKey = lob.replace(/-([a-z])/g, function (_, c) { return c.toUpperCase(); });
-    combined[camelKey] = allLobOutputs[lob];
+    combined[toCamel(lob)] = allLobOutputs[lob];
   });
+  if (carried.length) {
+    console.log('  carried forward unchanged: ' + carried.join(', '));
+  }
   const payload = JSON.stringify(combined, null, 2);
 
   // Repo-root /data/ (gitignored, local-only)
