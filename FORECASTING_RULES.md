@@ -565,11 +565,60 @@ The HTML and Excel outputs both contain confidential numbers. Treat them as conf
 3. The legacy `build_dashboard_v5.py` and `Topline Forecasting - 4.03.26.xlsx` files in the working folder are not used by the canonical pipeline. They can be archived but doing so requires Greg's approval.
 4. The wip_reference.pkl baseline was calibrated before the 2026-04-30 unlock. Once a few more closed months are available, recalibrate against actuals.
 5. Branch remap dictionary is duplicated across pipelines. A future cleanup should centralize it. Not urgent.
-6. V5 internal variable names (`total_inv_apr`, `wip_change_apr`, `inv_may`, etc.) are historical: they actually mean "previous closed month" and "current active month" relative to TODAY. After two more month-closes, refactor to `prev_month_*` and `cur_month_*` for clarity.
-7. The HTML Tab 0 active-month and previous-month box labels and variable names are still hardcoded (May / April). When May closes, Tab 0 needs a manual edit. Roughly 25 lines of the t0 builder. Future enhancement: derive from TODAY and from V5's `cur_month_label` / `closed_month_label`.
+6. **Cosmetic, open.** V5 internal variable names (`total_inv_apr`, `wip_change_apr`, `inv_may`,
+   `apr_budget`, `apr_gap`, `may_dec_weights`, `apr_with_snp`, `APRIL_START`) are April-vintage.
+   They mean "previous closed month", "active month" and "recovery window" relative to TODAY, and
+   as of 2026-09-20 the bounds behind them are all derived (`APRIL_START = CLOSED_MONTH_START`,
+   `MAY_START = CUR_MONTH_START`). The math is month-agnostic; only the labels mislead. A reader
+   auditing the file will reasonably assume April is hardcoded when it is not, which is the actual
+   cost of leaving this. Rename to `closed_*` / `active_*` / `rest_*` in a single mechanical pass
+   with a before-and-after JSON diff to prove zero behaviour change. Not urgent, but it should not
+   sit indefinitely: it is the single largest source of false positives in any future date audit.
+7. ~~HTML Tab 0 month labels hardcoded~~ **CLOSED 2026-09-20.** Tab 0's active-month and
+   previous-month box labels, the Excel detail-tab name, and the dashboard prose ranges now all
+   derive from `cur_month_idx` via `months_label`. The Excel tab that read "April-May Detail" for
+   five months now reads "Aug-Sep Detail" and will roll on its own. No month name is written into
+   `build_dashboard_v5.py` or `build_excel_v5.py` any longer.
 8. ~~**Required-sales Pass-2 (structural fix, deferred)**~~ **CLOSED 2026-09-20, see change log**: The current model's `S_known` lumps all of `snp_total` into the April slot (as `apr_with_snp = S_apr + snp_total`). This means May-signed contracts that are now in SNP get attributed to April vintage, not May. The Pass-1 fix (added 2026-05-11) credits current-month MTD actuals against `required_sales` post-hoc via `remaining_required_sales`, but does not re-architect `S_known`. The full structural fix requires re-attributing SNP by signing month so MTD can be added to `S_known` without double-counting. Defer until Q3 unless required-sales numbers begin to diverge materially from operating reality.
 9. PCT_PRIOR currently caps at 100% for jobs in IP longer than the expected cycle. Some of these are likely stuck (permit hold, customer issue). Future enhancement: add a `days_in_ip > N × expected` "stuck" classification that excludes those jobs from forecast WIP.
-10. `months_label` is hardcoded to 2026 months. When 2027 planning begins, extend the list and update related indexing.
+10. ~~`months_label` hardcoded to 2026~~ **CLOSED 2026-09-20.** `FY` is derived (from
+    `forecast_config.json` if present, else the run year, overridable with the `FEAZEL_FY`
+    environment variable), `PY = FY - 1`, and `months_label` is generated from `FY`. The model
+    horizon is `FY_END` rather than the literal `2026-07-13` that had silently produced zero
+    future weeks since mid-July. Rolling to 2027 should now require no code edit; it still
+    requires a 2027 budget workbook with matching `<Mon> 2027` column headers.
+
+11. **Recovery weekly schedule start is still frozen. Functional, live, not yet fixed.**
+    `week_start = pd.Timestamp('2026-04-19')` in `refresh_v5.py` is the lock date and has never
+    advanced. Consequences on the 2026-09-20 run:
+
+    - 37 weekly target rows were emitted starting 04/19, of which 22 were already in the past.
+      The Budget Recovery tab lists those 22 dead weeks as live targets.
+    - The averaging distortion lands on production, not sales. `avg_adj_sales` published at
+      $3,776,668 against $3,750,862 for the forward 15 weeks, a 0.7 percent overstatement.
+      `avg_adj_prod` published at $2,931,071 against $3,796,923, a 29.5 percent understatement,
+      roughly $866,000 per week. Sales is nearly unaffected because the catch-up weights
+      front-load into the heavier-budgeted months, which sit inside the elapsed window.
+    - The same frozen grid feeds `weekly_targets`, `production_targets`, `recovery_sales_weeks`
+      and `recovery_prod_weeks`, so the Budget Recovery tab and the weekly sales target both
+      inherit it.
+    - The in-code comment calls 2026-04-19 a Saturday. It is a Sunday.
+
+    Fix identified: `week_start = TODAY - Timedelta(days=(TODAY.weekday() + 1) % 7)`, the Sunday
+    on or before the run date. On 2026-09-20 that resolves to 2026-09-20, exactly 22 weeks after
+    2026-04-19, so the Sunday-anchored grid is preserved to the day and only the start point
+    moves. Deliberately held back from the 2026-09-20 sweep because it changes a published
+    number on the Budget Recovery tab and Greg should see the before-and-after.
+
+12. **Static weekly target table in the JS.** `calculators/sales-overview.js` carries a
+    `weekSchedule` array of 37 hardcoded `{ wk, mo, target }` rows generated from the April model
+    run. It does not refresh with the Python pipeline. Same defect class as gap #11 and should be
+    fixed in the same pass, by sourcing `weekSchedule` from the V5 JSON bridge.
+
+13. **Fiscal-year constants duplicated across the JS calculators.** Six calculators each declare
+    their own `const FY = 2026`. Centralize in `calculators/lib/fiscal-year.js` and import.
+    Attempted 2026-09-20; the device connection dropped mid-edit and the change did not apply.
+    Repo is in a clean state, safe to retry.
 
 ## 12. Glossary
 
@@ -624,6 +673,43 @@ was not available. Recorded here as a single-approver change.
   closed month, active month and invoiced YTD all identical, `model_full_year` moved
   0.02% on the optimizer re-solve.
 - Prior version retained as `refresh_v5_V5.0_pre-2026-09-20.py`.
+
+#### Hardcoded-date sweep (same day, separate pass)
+
+Greg asked for a systematic audit of every date literal in the rules and the methodology,
+then a fix for everything found, functional and cosmetic. Roughly 130 literals across four
+Python files. What moved:
+
+| Was | Now | Class |
+|---|---|---|
+| `months_label` literal 2026 list | generated from `FY` | functional |
+| `FY` / `PY` written as 2026 / 2025 throughout | `FY` derived, `PY = FY - 1`, `FEAZEL_FY` override | functional |
+| `end_date = pd.Timestamp('2026-07-13')` | `FY_END` | functional, had produced zero future weeks since mid-July |
+| Actuals-overlay fallback `['Jan 2026','Feb 2026','Mar 2026']` | `months_label[:ACTIVE_IDX]` | functional, latent |
+| `if s_idx >= 7` in the seasonal projection | `if s_idx >= _n_known` | functional, see below |
+| Excel detail tab named "April-May Detail" | `f'{CLOSED_ABBR}-{ACTIVE_ABBR} Detail'` | cosmetic |
+| Dashboard prose "Actuals shown for Jan-Apr" | derived from `cur_month_idx` | cosmetic |
+| Realistic Forecast output filename and month labels | derived from `FY` | cosmetic |
+
+**A regression I introduced and then fixed, recorded because it matters for the audit trail.**
+Unfreezing the known/solved boundary left a dependent literal behind at line 938:
+`if s_idx >= 7` was the same April boundary expressed a second way. With the boundary moved
+and that line unchanged, May through August were counted twice and the backlog requirement
+came out at $30,494,142 against a correct $22,100,569. Corrected to `if s_idx >= _n_known`
+so the two can no longer drift apart. The lesson for the next audit: a frozen boundary tends
+to be encoded in more than one place, and grepping for the date literal alone will not find
+the integer that equals it.
+
+**Verification.** Every change was checked by diffing `v5_forecast_summary.json` against a
+baseline captured before the sweep. The fiscal-year parameterisation produced zero differing
+keys. The `end_date` change was initially reported here as a live defect; on measurement it
+was worth $0 with `wip_reference.pkl` staged and $9,800 without it, so it is immaterial rather
+than material, and it is recorded that way.
+
+**Deliberately not fixed in this pass.** The recovery weekly schedule start (`week_start`),
+the static `weekSchedule` table in `sales-overview.js`, and the duplicated `FY` constants
+across the JS calculators. Gaps #11, #12 and #13 in Section 11. The first of those changes a
+published number and is held for Greg's review.
 
 ### 2026-05-11 (methodology dynamization, forecast tab rule, fixes)
 

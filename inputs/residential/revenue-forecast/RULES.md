@@ -118,7 +118,7 @@ Future-dated contracts (signed-on date > today) are pulled back to "yesterday" s
     - `40001 - Sales` (Invoiced Sales) -> `budget_inv`
     - `40003 - Work in Progress` (WIP change) -> `budget_wip_chg`
     - any row containing both `Total` and `40000` -> `budget_net`
-  - Optional `Actual` sheet, same shape, used to overlay Jan-Mar actuals onto the budget rows (RULE-801).
+  - Optional `Actual` sheet, same shape, used to overlay closed-month actuals onto the budget rows (RULE-801).
 
 If the budget file is missing, the model still runs but recovery-plan deltas will be zero.
 
@@ -185,7 +185,21 @@ sum over (job type J, prior month P) of:
   signed[P, J] times conversionCurve[J][M minus P]
 ```
 
-Implemented in `refresh_v5.py` via the `C_mat` 12 by 15 convolution matrix, where columns 0-2 are Oct/Nov/Dec 2025 carryover sales, columns 3-6 are Jan-Apr 2026 known sales, and columns 7-14 are May-Dec 2026 sales solved by the optimizer. See RULE-501.
+Implemented in `refresh_v5.py` via the `C_mat` 12 by 15 convolution matrix. Columns
+0-2 are the prior year's Oct/Nov/Dec carryover sales. The remaining twelve columns
+split at the known/solved boundary: every month **before the active month** is known
+(read from actuals), and the active month onward is solved by the optimizer.
+
+The split position is `_n_known = len(S_known)`, derived from `LAST_KNOWN_IDX`, and it
+advances on its own as months close. On 2026-09-20 with September active, columns 3-10
+are Jan-Aug known and columns 11-14 are Sep-Dec solved.
+
+> **Changed 2026-09-20 (V5.1).** This used to read "columns 3-6 are Jan-Apr 2026 known,
+> columns 7-14 are May-Dec 2026 solved", and the code matched: the boundary was frozen
+> at the 2026-04-19 lock date and never advanced. Four closed months were being solved
+> as unknowns. See the change log in FORECASTING_RULES.md Section 13.
+
+See RULE-501.
 
 ### RULE-102 - WIP bridge
 
@@ -194,7 +208,11 @@ Net Revenue = Invoiced Revenue + Delta WIP
 Delta WIP = WIP_endOfMonth minus WIP_startOfMonth
 ```
 
-April and May get a detailed WIP build via `wip_src` (see RULE-203). All other months use the FP&A `budget_wip_chg` plan number from the Budget file.
+The closed month and the active month get a detailed WIP build via `wip_src` (see
+RULE-203). All other months use the FP&A `budget_wip_chg` plan number from the Budget
+file. The two detailed months are whichever months those are on the run date; the
+variable names in the code (`total_inv_apr`, `wip_change_apr`, `inv_may`) are historical
+and mean "closed month" and "active month" regardless of the calendar.
 
 ### RULE-103 - Gap to budget
 
@@ -202,15 +220,20 @@ April and May get a detailed WIP build via `wip_src` (see RULE-203). All other m
 Annual Gap = sum(orig_budget_inv) minus sum(rev_model)
 ```
 
-A positive gap means the model is below plan and recovery is needed. The recovery plan in RULE-901 reallocates the gap as a uniform percent uplift across May-Dec.
+A positive gap means the model is below plan and recovery is needed. The recovery plan in RULE-901 reallocates the gap as a uniform percent uplift across the remaining open months, which is the active month through December.
 
 ### RULE-104 - Required sales per month (`required_sales`)
 
-The optimizer (`scipy.optimize.minimize`, L-BFGS-B) solves for the eight unknown sales months May-Dec such that, when convolved with the overall conversion curve, they reproduce the invoiced budget month by month. The objective:
+The optimizer (`scipy.optimize.minimize`, L-BFGS-B) solves for the remaining unknown
+sales months, which are the active month through December, such that when convolved
+with the overall conversion curve they reproduce the invoiced budget month by month.
+The count of unknowns is `n_unk = C_mat.shape[1] - _n_known` and shrinks as the year
+progresses: eight with April active, four with September active. The objective:
 
-- Squared error of (modeled invoiced minus budget invoiced), with weights ramping from 0.3 in Jan to 1.0 from Apr onward.
+- Squared error of (modeled invoiced minus budget invoiced), with weights ramping from 0.3 in the first month of the fiscal year to 1.0 from the fourth month onward.
 - Smoothness penalty `lambda = 0.05` on month-over-month differences.
 - Initial guess `$14M`/month, bounds `[$3M, $40M]`/month.
+- Smoothness anchor is the **last known month**, so the first solved month is pulled toward the most recent actual rather than toward a fixed April figure.
 
 `required_sales[t]` is `S_full[t+3]` (the optimizer's answer in contract dollars). It already accounts for the fact that May sales produce revenue in May, Jun, Jul, etc., so callers must NOT divide a single month's revenue gap by `conv[0]`.
 
@@ -240,7 +263,7 @@ For `days_created_to_ip`, `days_ip_to_complete`, `days_complete_to_invoice`, `da
 
 ### RULE-203 - WIP source preference
 
-For the April and May detailed WIP build:
+For the detailed WIP build of the closed month and the active month:
 
 1. If `wip_reference.pkl` exists in the working directory, use it (this is the validated baseline pickled on 2026-04-16, lives in the Forecasting Process folder).
 2. Else if `v4_forecast_detail.pkl` exists, fall back to V4.
@@ -248,23 +271,34 @@ For the April and May detailed WIP build:
 
 The reference exists because Greg validated specific cycle assumptions against actual Q1 invoicing and pickled the result. Re-using that baseline keeps the WIP number defensible to the auditors.
 
-### RULE-204 - WIP categories (April detailed)
+### RULE-204 - WIP categories (closed month, detailed)
+
+Bounds are `CLOSED_MONTH_START` and `CLOSED_MONTH_END`, both derived from `cur_month_idx`.
 
 ```
-cat1 = jobs with eff_ip_date  < April start AND eff_invoice_date > April end, valued at PCT_PRIOR (0.90)
-cat2 = jobs with April start <= eff_ip_date < TODAY  AND eff_invoice_date > April end, valued at PCT_NEW (0.75)
-cat3 = jobs with TODAY <= eff_ip_date <= April end   AND eff_invoice_date > April end, valued at PCT_NEW (0.75)
-ending_wip_april = cat1 + cat2 + cat3
-beg_wip_april = (jobs IP'd before April AND not invoiced before April).amount.sum() * PCT_PRIOR
-wip_change_april = ending_wip_april minus beg_wip_april
-net_rev_april = invoiced_april + wip_change_april
+cat1 = eff_ip_date <  CLOSED_START                             AND eff_invoice_date > CLOSED_END, at PCT_PRIOR (0.90)
+cat2 = CLOSED_START <= eff_ip_date <= min(TODAY, CLOSED_END)   AND eff_invoice_date > CLOSED_END, at PCT_NEW   (0.75)
+cat3 = TODAY        <= eff_ip_date <= CLOSED_END               AND eff_invoice_date > CLOSED_END, at PCT_NEW   (0.75)
+ending_wip_closed = cat1 + cat2 + cat3
+beg_wip_closed    = (IP'd before CLOSED_START AND not invoiced before CLOSED_START).amount.sum() * PCT_PRIOR
+wip_change_closed = ending_wip_closed minus beg_wip_closed
+net_rev_closed    = invoiced_closed + wip_change_closed
 ```
 
-### RULE-205 - WIP categories (May forecast)
+`refresh_v5.py` aliases these as `APRIL_START = CLOSED_MONTH_START` and
+`APRIL_END = CLOSED_MONTH_END`, so the downstream variables still read `cat1`, `beg_wip_apr`,
+`ending_wip_apr`, `wip_change_apr`. The names are April-vintage; the bounds are not. Once
+TODAY is past `CLOSED_END`, cat3 is empty by construction and cat2 covers the whole month.
+
+> **Changed 2026-06-12.** cat2 was capped at `CLOSED_END`. It had been `< TODAY`, which pulled
+> active-month IP dates into the closed month's ending WIP.
+
+### RULE-205 - WIP categories (active month, forecast)
 
 ```
-ending_wip_may = (jobs IP'd in May, valued at PCT_NEW)
-              + (jobs IP'd before May AND not yet invoiced by May end, valued at PCT_PRIOR)
+ending_wip_active = (IP'd within the active month, valued at PCT_NEW)
+                  + (IP'd before the active month AND not yet invoiced by its end, at PCT_PRIOR)
+wip_change_active = ending_wip_active minus ending_wip_closed
 wip_change_may = ending_wip_may minus ending_wip_april
 net_rev_may   = invoiced_may + wip_change_may
 ```
@@ -317,11 +351,18 @@ fc_complete = fc_ip + (Retail-NoFin IP-to-C per branch)
 fc_invoice  = fc_complete + (bill days per branch)
 ```
 
-SNP dollars are added to April sales via `apr_with_snp` for the budget solve (RULE-104).
+SNP dollars are attributed to the month each contract was signed and added to that month's
+sales for the budget solve (RULE-104). Rows with no usable signed date fall to the last known
+month. `apr_with_snp` survives as the variable name for the aggregate.
+
+> **Changed 2026-09-20 (V5.1).** All SNP dollars used to land on April regardless of signed
+> date, which both inflated April and starved every month after it. Closes gap #8 in
+> FORECASTING_RULES.md Section 11.
 
 ### RULE-502 - Future weekly sales generation
 
-Starting the Monday after `current_week_start`, through 2026-07-13, generate a "Future Wk MM/DD" row for every (branch, job type) combo at:
+Starting the Monday after `current_week_start`, through `FY_END`, generate a "Future Wk MM/DD"
+row for every (branch, job type) combo at:
 
 ```
 amount = base_proj * branch_share * job_type_share
@@ -341,7 +382,7 @@ For active jobs (status in Not Started, In Progress, Completed), the forecast lo
 
 ### RULE-601 - Cost-of-revenue assumptions (V5 LOCKED)
 
-For April and May only (the detailed P&L months):
+For the closed month and the active month only (the detailed P&L months):
 
 ```
 MARGIN        = 0.40   (assumed gross margin on new IP value)
@@ -353,7 +394,7 @@ PCT_PRIOR     = 0.90   (% of PRIOR-month IP value carried as WIP)
 
 These are the "WIP constants" lock item. Material 35% + Labor 22% is the implied MMU baseline (effectively 43% gross margin on new IP, then trued up against actual invoicing).
 
-### RULE-602 - April / May derived KPIs
+### RULE-602 - Closed / active month derived KPIs
 
 ```
 month_mat = total_new_ip_val_month * MATERIAL_PCT
@@ -389,9 +430,20 @@ Any contract with `Contract signed on > today` is pulled back to `today minus 1 
 
 ---
 
-### RULE-801 - Actuals overlay (Jan-Mar)
+### RULE-801 - Actuals overlay (closed months)
 
-If the Budget workbook contains an `Actual` sheet with the same row structure (a header row with `Jan 2026` and a `40001 - Sales` row), the values for Jan, Feb, Mar are overlaid onto `budget_inv`, `budget_wip_chg`, `budget_net` in the model. This is what makes the year-to-date numbers "actuals" rather than "plan" inside the forecast.
+If the Budget workbook contains an `Actual` sheet with the same row structure (a header row of `<Mon> <FY>` labels and a `40001 - Sales` row), the values for every closed month are overlaid onto `budget_inv`, `budget_wip_chg`, `budget_net` in the model. This is what makes the year-to-date numbers "actuals" rather than "plan" inside the forecast.
+
+The overlay window is resolved in this order:
+
+1. `auto_closed_months`, the months NetSuite reports as closed. This is the normal path.
+2. Fallback: `months_label[:ACTIVE_IDX]`, every month strictly before the active month.
+
+Neither path names a month. On 2026-09-20 with September active, the window was Jan-Aug.
+
+> **Changed 2026-09-20 (V5.1).** The fallback used to be a hardcoded `Jan`, `Feb`, `Mar` list.
+> If NetSuite auto-detection ever failed, the model would have silently reverted to a
+> three-month overlay and treated Apr-Aug plan figures as if they were actuals.
 
 The original budget is preserved as `orig_budget_inv` for shortfall math (RULE-901).
 
@@ -399,25 +451,76 @@ The original budget is preserved as `orig_budget_inv` for shortfall math (RULE-9
 
 ### RULE-901 - Budget recovery plan
 
-YTD shortfall = `orig_budget_inv[Jan..Mar].sum() minus budget_inv[Jan..Mar].sum()` (positive = behind plan).
-April gap = `orig_budget_inv[Apr] minus rev_model[Apr]` (positive = April forecast also short).
-Total to recover = YTD shortfall + April gap.
+The plan splits the year at `ACTIVE_IDX` into three windows, none of which name a month:
 
-May-Dec gets reallocated:
+| Window | Slice | Treatment |
+|---|---|---|
+| Closed | `[:ACTIVE_IDX]` | Actuals, locked in. Nothing to recover here, the miss is already banked. |
+| Active | `[ACTIVE_IDX]` | Forecast accepted as-is. No catch-up asked of a month already two thirds gone. |
+| Recovery | `[ACTIVE_IDX+1:]` | Original budget plus the full catch-up allocation. |
 
 ```
-adjusted_monthly_inv[Jan..Mar] = budget_inv[Jan..Mar]   (locked actuals)
-adjusted_monthly_inv[Apr]      = rev_model[Apr]         (accept April forecast)
-adjusted_monthly_inv[May..Dec] = orig_budget_inv[May..Dec] + total_shortfall * may_dec_weight
+ytd_shortfall  = orig_budget_inv[:ACTIVE_IDX].sum() - budget_inv[:ACTIVE_IDX].sum()
+active_gap     = orig_budget_inv[ACTIVE_IDX] - rev_model[ACTIVE_IDX]
+total_shortfall = ytd_shortfall + active_gap
+
+adjusted_monthly_inv[:ACTIVE_IDX]   = budget_inv[:ACTIVE_IDX]
+adjusted_monthly_inv[ACTIVE_IDX]    = rev_model[ACTIVE_IDX]
+adjusted_monthly_inv[ACTIVE_IDX+1:] = orig_budget_inv[ACTIVE_IDX+1:]
+                                      + total_shortfall * rest_weights
 ```
 
-`may_dec_weight` is the per-month share of the original May-Dec budget. Recovery weekly sales targets scale by `recovery_ratio = adjusted_may_dec_total / model_may_dec_total`.
+Both positive values mean behind plan. `rest_weights` is each remaining month's share of
+the original budget for the recovery window, so a heavier budgeted month absorbs a heavier
+share of the catch-up. Recovery weekly sales targets scale by
+`recovery_ratio = adjusted_rest_total / model_rest_total`.
+
+The variable names in `refresh_v5.py` still read `apr_budget`, `apr_forecast`, `apr_gap`,
+`may_dec_orig`, `may_dec_weights`, `may_dec_total_orig` and `adj_may_dec_total`. Those are
+April-vintage names on month-agnostic math: read `apr_*` as "active month" and `may_dec_*`
+as "recovery window". Renaming them is cosmetic and deferred.
+
+> **Note on scale.** As the year runs on, the recovery window shrinks while the shortfall
+> does not, so `recovery_ratio` climbs mechanically. On 2026-09-20 it was 1.419x against
+> Oct-Dec, meaning the plan asks the remaining quarter to deliver 42 percent above model.
+> That is arithmetic, not a sales target anyone has agreed to. Treat a high ratio late in
+> the year as a signal to reset the budget, not as a quota.
 
 This is what populates the (red) Budget Recovery tab and what feeds `budgetRecoveryHeader.upliftPct` in the dashboard JSON.
 
 ### RULE-902 - Recovery weekly schedule
 
-`recovery_sales_weeks` and `recovery_prod_weeks` are generated from `2026-04-19` (the chosen Saturday start of the next full week at lock time) through `2026-12-31`, with each week's target prorated by days-in-month.
+`recovery_sales_weeks` and `recovery_prod_weeks` (and the non-recovery `weekly_targets` and
+`production_targets` that share the same grid) are generated from `week_start` through
+`FY_END`, with each week's target prorated by days-in-month.
+
+The grid is Sunday-anchored. Every week label is a Sunday, and the schedule the dashboard
+renders inherits that anchor.
+
+> **OPEN GAP as of 2026-09-20.** `week_start` is still the literal `pd.Timestamp('2026-04-19')`,
+> the lock date. It has never advanced. The 2026-09-20 run therefore emitted 37 weekly target
+> rows starting 04/19, of which 22 were already in the past. The Budget Recovery tab lists
+> those 22 dead weeks as live targets.
+>
+> The averaging distortion that follows is uneven, and it lands on production, not sales:
+>
+> | Published | Forward 15 weeks only | Delta |
+> |---|---|---|
+> | `avg_adj_sales` $3,776,668 | $3,750,862 | -0.7 percent |
+> | `avg_adj_prod` $2,931,071 | $3,796,923 | +29.5 percent |
+>
+> Sales is nearly unaffected because the catch-up weights front-load into the months with the
+> heavier original budget, which happen to sit inside the elapsed window. Production is
+> understated by 29.5 percent, so the weekly production target on the tab is roughly $866,000
+> per week light against what the recovery plan actually implies.
+>
+> The in-code comment also mislabels 2026-04-19 as a Saturday. It is a Sunday.
+>
+> Fix identified, not yet applied: anchor to the Sunday on or before the run date,
+> `week_start = TODAY - Timedelta(days=(TODAY.weekday() + 1) % 7)`. On 2026-09-20 that
+> resolves to 2026-09-20, which is exactly 22 weeks after 2026-04-19, so the existing grid
+> is preserved to the day and only the start point moves. Tracked in FORECASTING_RULES.md
+> Section 11 as gap #11.
 
 ---
 
@@ -509,6 +612,16 @@ The full enumeration of table and chart IDs lives in `calculators/lib/v5_to_json
 | 2026-04-19 | V5 | Locked: cycle hierarchy + conversion curves + WIP factor 0.18 + MMU 35/22 split | Greg + Mahlet |
 | 2026-04-19 | V5 | NOVA branch merged into DC Metro | Greg |
 | 2026-05-01 | V5-shell-1.0 | Calculator wired to shell out to Python (`refresh_v5.py` + `v5_to_json.py`); fallback to extracted-data.json preserved | Greg |
+| 2026-06-12 | V5 | Month-roll fix: cat2 capped at closed-month end (RULE-204); Budget displays restored to the original locked plan rather than the actuals blend | Greg |
+| 2026-09-20 | V5.1 | Known/solved boundary unfrozen: advances with the active month instead of sitting at April (RULE-101, RULE-104) | Greg |
+| 2026-09-20 | V5.1 | SNP attributed to signed month rather than dumped on April (RULE-403, RULE-104) | Greg |
+| 2026-09-20 | V5.1 | Hardcoded-date sweep: FY/PY derived, `months_label` generated, actuals-overlay fallback and future-weekly horizon made dynamic (RULE-801, RULE-502) | Greg |
+
+**Scope note on V5.1.** None of the 2026-09-20 changes touch a locked constant. The cycle-time
+hierarchy, conversion curves, WIP factor 0.18 and the 35/22 MMU split are untouched. What changed
+is which months the model treats as known, which is a date boundary, not a methodology parameter.
+Verified by diffing `v5_forecast_summary.json` against a captured baseline: the fiscal-year
+parameterisation produced zero differing keys.
 
 ---
 
