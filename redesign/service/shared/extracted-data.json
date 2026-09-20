@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "builtAt": "2026-09-20T16:39:41.751Z",
+    "builtAt": "2026-09-20T16:47:01.261Z",
     "pipelineVersion": "2.0.0",
     "lob": "service",
     "lastBuiltProjects": [
@@ -11,14 +11,14 @@
       {
         "id": "revenue-forecast",
         "version": "V5-baseline-2026-05-04-shell-1.1",
-        "elapsedMs": 926,
-        "builtAt": "2026-09-20T16:39:41.751Z"
+        "elapsedMs": 1024,
+        "builtAt": "2026-09-20T16:47:01.261Z"
       },
       {
         "id": "service-calls",
         "version": "Service-Calls-v1.1-2026-05-07",
-        "elapsedMs": 1416,
-        "builtAt": "2026-09-20T16:39:41.751Z"
+        "elapsedMs": 1633,
+        "builtAt": "2026-09-20T16:47:01.261Z"
       }
     ]
   },

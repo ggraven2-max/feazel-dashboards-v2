@@ -613,10 +613,31 @@ The HTML and Excel outputs both contain confidential numbers. Treat them as conf
     target rises roughly $866,000 per week, from $2.93M to $3.80M, because it is no longer
     averaged across 22 weeks that had already elapsed.
 
-12. **Static weekly target table in the JS.** `calculators/sales-overview.js` carries a
-    `weekSchedule` array of 37 hardcoded `{ wk, mo, target }` rows generated from the April model
-    run. It does not refresh with the Python pipeline. Same defect class as gap #11 and should be
-    fixed in the same pass, by sourcing `weekSchedule` from the V5 JSON bridge.
+12. ~~Static weekly target table in the JS~~ **CLOSED 2026-09-20.** The whole
+    class of defect is closed, not just the one array. `PLAN_WEEKLY_TARGETS` and
+    `PLAN_BUDGET_RECOVERY` were a hand-maintained copy of model output that
+    nothing derived and nothing checked, which is how they reached five months
+    stale: 6.9% uplift published against 41.9% modeled, and a weekly production
+    target 30% light.
+
+    The fix removes the copy rather than refreshing it more often:
+
+    - `publish-plan.py` derives the plan from the V5 model and writes
+      `plan/residential-plan.json`, dated and attributed, requiring `--approve`.
+    - `calculators/sales-overview.js` reads that snapshot. The old constants
+      survive only as a fallback that logs loudly when used.
+    - Staleness gate, measured against the model run behind the snapshot so a
+      stale model does not also read as a stale plan: warn at 21 days, fail at
+      45 under `FEAZEL_STRICT`.
+    - Publishing stays OUT of the daily build. RULE-018's intent holds, a target
+      that moves every morning is not a target, and there is a second reason:
+      the recovery window shrinks while the shortfall does not, so the uplift
+      climbs mechanically. An automatic republish would hand the field a rising
+      quota nobody signed off on. The publisher warns above 25%.
+
+    Verified by rebuilding: `residential/SALES_OVERVIEW` came back byte-identical
+    to the hand-maintained version, so the derivation is faithful rather than
+    merely plausible.
 
 13. **Fiscal-year constants duplicated across the JS calculators.** Six calculators each declare
     their own `const FY = 2026`. Centralize in `calculators/lib/fiscal-year.js` and import.

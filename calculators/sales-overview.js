@@ -11,6 +11,7 @@ const io = require('./lib/io');
 const agg = require('./lib/aggregate');
 
 const PROJECT_ID = 'sales-overview';
+const STRICT = process.env.FEAZEL_STRICT === '1';
 const VERSION = '1.0-rules-encoded';
 // Defaults point at residential. Pipeline overrides via opts.inputDir + opts.snapshotPath
 // when running per-LOB. Direct invocation falls back to residential paths.
@@ -47,6 +48,85 @@ const MONTH_NAMES = [
 // Forecast V5 model dated 2026-04-19. Update only when the
 // budget plan changes, not on a daily refresh.
 // ────────────────────────────────────────────────────────────
+// ────────────────────────────────────────────────────────────
+// Plan snapshot (RULE-018, derived not stored).
+//
+// The weekly targets and budget recovery plan are DERIVED from the V5 model
+// and published to plan/residential-plan.json by publish-plan.py. This
+// calculator reads that snapshot. It does not compute the plan and it does
+// not edit it.
+//
+// They used to be hand-maintained constants below. Nothing derived them and
+// nothing detected drift, so on 2026-09-20 they were five months stale: the
+// dashboard showed a 6.9% recovery uplift while the model said 41.9%, and a
+// weekly production target 30% light. The constants are kept ONLY as a
+// fallback so a missing snapshot degrades loudly rather than crashing.
+//
+// Publishing is deliberate and requires approval:
+//     python3 publish-plan.py --dry-run
+//     python3 publish-plan.py --approve "<reason>"
+// It is not part of the daily build, because the recovery window shrinks as
+// the year runs while the shortfall does not, so the uplift climbs on its
+// own. A nightly republish would push a rising quota to the field that
+// nobody signed off on.
+// ────────────────────────────────────────────────────────────
+const PLAN_SNAPSHOT_PATH = path.join(__dirname, '..', 'plan', 'residential-plan.json');
+// Assigned once per run(); the build helpers below read it.
+let PLAN = {};
+// Plan review cadence. Warn past this, fail past the hard limit. Staleness
+// here is a review-cadence problem, not a data problem, so the daily build is
+// not blocked by a plan that is merely a few weeks old.
+const PLAN_WARN_DAYS = 21;
+const PLAN_FAIL_DAYS = 45;
+
+function loadPlanSnapshot(modelRunDate) {
+  let snap = null;
+  try {
+    if (fs.existsSync(PLAN_SNAPSHOT_PATH)) {
+      snap = JSON.parse(fs.readFileSync(PLAN_SNAPSHOT_PATH, 'utf8'));
+    }
+  } catch (e) {
+    console.error('  [' + PROJECT_ID + '] plan snapshot unreadable: ' + e.message);
+    snap = null;
+  }
+
+  if (!snap || !snap.weeklyTargets || !snap.budgetRecovery) {
+    console.error('  [' + PROJECT_ID + '] PLAN SNAPSHOT MISSING at plan/residential-plan.json.');
+    console.error('    Falling back to the in-file constants, which are a frozen copy and');
+    console.error('    WILL be wrong. Regenerate with: python3 publish-plan.py --approve "<reason>"');
+    return { weekly: PLAN_WEEKLY_TARGETS, recovery: PLAN_BUDGET_RECOVERY, stale: true, source: 'fallback-constants' };
+  }
+
+  // Age is measured against the model run the snapshot was built from, not
+  // the clock, so a stale MODEL does not also read as a stale PLAN.
+  const basis = snap.modelRunDate || snap.generatedAt;
+  const ref = modelRunDate ? new Date(modelRunDate) : new Date();
+  // Clamp at zero: the residential model as-of date tracks the newest booked
+  // NetSuite invoice, which lags the clock by a day or two, so a snapshot
+  // published today is legitimately newer than that reference. A negative age
+  // means current, not time travel.
+  const rawAge = basis ? Math.floor((ref - new Date(basis)) / 86400000) : null;
+  const age = rawAge === null ? null : Math.max(0, rawAge);
+
+  if (age !== null && age >= PLAN_FAIL_DAYS) {
+    const msg = 'plan snapshot is ' + age + ' days behind the model (limit ' + PLAN_FAIL_DAYS + '). ' +
+                'Review it and run publish-plan.py, or the dashboard keeps showing an old plan.';
+    console.error('  [' + PROJECT_ID + '] STALE PLAN: ' + msg);
+    if (STRICT) throw new Error(msg);
+  } else if (age !== null && age >= PLAN_WARN_DAYS) {
+    console.log('  [' + PROJECT_ID + '] plan snapshot is ' + age + ' days behind the model. ' +
+                'Worth a review (warn at ' + PLAN_WARN_DAYS + ', fail at ' + PLAN_FAIL_DAYS + ').');
+  } else if (age !== null) {
+    console.log('  [' + PROJECT_ID + '] plan snapshot current' +
+                (age > 0 ? ', ' + age + 'd behind the model' : '') +
+                ' (published ' + (snap.modelRunDate || '?') + ').');
+  }
+
+  return { weekly: snap.weeklyTargets, recovery: snap.budgetRecovery, stale: false,
+           source: 'plan/residential-plan.json', modelRunDate: snap.modelRunDate,
+           approvedReason: snap.approvedReason, ageDays: age };
+}
+
 // ────────────────────────────────────────────────────────────
 // Plan constants (RULE-018).
 // REGENERATED 2026-09-20 from the corrected Revenue Forecast V5
@@ -269,10 +349,27 @@ function fmtDate(d) {
 // ────────────────────────────────────────────────────────────
 // Main entrypoint
 // ────────────────────────────────────────────────────────────
+// Reference date for plan-age: the model run behind the last published
+// snapshot of this LOB, so a stale MODEL does not also read as a stale PLAN.
+function lastModelRunDate(snapshotPath) {
+  try {
+    if (snapshotPath && fs.existsSync(snapshotPath)) {
+      const d = JSON.parse(fs.readFileSync(snapshotPath, 'utf8'));
+      const rf = d && d.REVENUE_FORECAST;
+      if (rf && rf.runDate) return rf.runDate;
+    }
+  } catch (e) { /* fall through to the clock */ }
+  return null;
+}
+
 function run(opts) {
   opts = opts || {};
   const inputDir = opts.inputDir || DEFAULT_INPUT_DIR;
   const snapshotPath = opts.snapshotPath || DEFAULT_SNAPSHOT_PATH;
+  // Residential only: multi-family builds its plan live from the Commercial
+  // budget in buildMfWeeklyTargets/buildMfBudgetRecovery and has no snapshot.
+  PLAN = /multi-family/.test(opts.inputDir || '') ? {}
+       : loadPlanSnapshot(lastModelRunDate(snapshotPath));
   const inputs = io.listInputs(inputDir);
   console.log('  [' + PROJECT_ID + '] inputs found: ' + inputs.length);
   inputs.forEach(f => console.log('    - ' + f.name));
@@ -1138,18 +1235,19 @@ function buildWeeklyTargets(rows) {
   const last4 = sortedWeeks.slice(0, 4);
   const recent4WkAvg = last4.length ? mean(last4.map(w => w[1])) : 0;
 
-  return Object.assign({}, PLAN_WEEKLY_TARGETS, { recent4WkAvg: round(recent4WkAvg) });
+  return Object.assign({}, (PLAN.weekly || PLAN_WEEKLY_TARGETS), { recent4WkAvg: round(recent4WkAvg) });
 }
 
 function buildBudgetRecovery(monthly) {
-  // Live monthly actuals merged into the locked monthlyBridge where available.
+  // Live monthly actuals merged into the published plan's monthlyBridge.
+  const plan = PLAN.recovery || PLAN_BUDGET_RECOVERY;
   const liveByKey = {};
   monthly.forEach(m => { liveByKey[m.label + ' ' + m.key.split('-')[0]] = m.amount; });
-  const monthlyBridge = PLAN_BUDGET_RECOVERY.monthlyBridge.map(b => {
+  const monthlyBridge = (plan.monthlyBridge || []).map(b => {
     const live = liveByKey[b.mo];
     return Object.assign({}, b, live != null ? { liveActual: live } : {});
   });
-  return Object.assign({}, PLAN_BUDGET_RECOVERY, { monthlyBridge: monthlyBridge });
+  return Object.assign({}, plan, { monthlyBridge: monthlyBridge });
 }
 
 // ────────────────────────────────────────────────────────────
@@ -1647,8 +1745,8 @@ function emptyShape() {
     repairHeavy: [],
     salesCycle: { kpis: [], byJobType: [], byMarket: [], starInsuranceClosers: [] },
     completedBilling: { headers: [], rows: [], totalJobs: 0, totalAmount: 0 },
-    weeklyTargets_BUDGET: PLAN_WEEKLY_TARGETS,
-    budgetRecovery: PLAN_BUDGET_RECOVERY,
+    weeklyTargets_BUDGET: (PLAN.weekly || PLAN_WEEKLY_TARGETS),
+    budgetRecovery: (PLAN.recovery || PLAN_BUDGET_RECOVERY),
     commentary: { whatsWorking: [], whatNeedsAttention: [], criticalRisks: [], strengthsToAmplify: [], fixList: [], actionPlan: { thisWeek: [], thisMonth: [], thisQuarter: [] } }
   };
 }

@@ -100,11 +100,27 @@ is the COMPANY row, so multi-family would read the $181M company plan as its
 own. Residential is deliberately not regenerated, because its existing budget
 file carries a second "Actual" sheet the consolidated export does not have.
 
-**Residential plan constants are hand-maintained.** `PLAN_WEEKLY_TARGETS` and
-`PLAN_BUDGET_RECOVERY` in `calculators/sales-overview.js` are regenerated from
-the V5 model by hand, not by the build. They were five months stale before
-2026-09-20. Until they are sourced from the V5 JSON bridge, they will drift
-again. Tracked as gap #12 in `FORECASTING_RULES.md` Section 11.
+**Residential plan is now derived, not stored.** Closed 2026-09-20. The weekly
+targets and budget recovery plan live in `plan/residential-plan.json`, derived
+from the V5 model. `calculators/sales-overview.js` reads that snapshot; the old
+constants remain only as a loud fallback.
+
+Publishing is deliberate and never part of the daily build:
+
+```bash
+python3 publish-plan.py --dry-run                  # preview the change
+python3 publish-plan.py --approve "<reason>"       # publish, recording why
+```
+
+It is separate from the build on purpose. The recovery window shrinks as the
+year runs while the shortfall does not, so the uplift climbs on its own. A
+nightly republish would push a rising quota to the field that nobody approved.
+The publisher warns when the uplift is 25% or more for exactly that reason.
+
+Staleness is measured against the model run behind the snapshot, so a stale
+model does not also read as a stale plan. Warn at 21 days, hard fail at 45.
+If the snapshot goes missing the build still runs, on the frozen fallback
+constants, and says loudly that it did.
 
 **Small run-to-run variance.** Rebuilding the same inputs can move residential
 backlog bucketing by a few tens of thousands of dollars (observed: $28,403 on
