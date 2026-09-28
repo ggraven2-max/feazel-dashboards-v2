@@ -1,8 +1,8 @@
-/* AUTO-GENERATED — do not edit. Generated 2026-09-28T16:06:25.682Z (service) */
+/* AUTO-GENERATED — do not edit. Generated 2026-09-28T18:40:36.583Z (service) */
 window.FZ = window.FZ || {};
 window.FZ.data = {
   "_meta": {
-    "builtAt": "2026-09-28T16:06:25.682Z",
+    "builtAt": "2026-09-28T18:40:36.583Z",
     "pipelineVersion": "2.0.0",
     "lob": "service",
     "lastBuiltProjects": [
@@ -13,14 +13,14 @@ window.FZ.data = {
       {
         "id": "revenue-forecast",
         "version": "V5-baseline-2026-05-04-shell-1.1",
-        "elapsedMs": 2594,
-        "builtAt": "2026-09-28T16:06:25.682Z"
+        "elapsedMs": 802,
+        "builtAt": "2026-09-28T18:40:36.583Z"
       },
       {
         "id": "service-calls",
         "version": "Service-Calls-v1.1-2026-05-07",
-        "elapsedMs": 3853,
-        "builtAt": "2026-09-28T16:06:25.682Z"
+        "elapsedMs": 1187,
+        "builtAt": "2026-09-28T18:40:36.583Z"
       }
     ]
   },

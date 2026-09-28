@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "builtAt": "2026-09-28T16:06:19.229Z",
+    "builtAt": "2026-09-28T18:40:34.591Z",
     "pipelineVersion": "2.0.0",
     "lob": "multi-family",
     "lastBuiltProjects": [
@@ -13,26 +13,26 @@
       {
         "id": "sales-overview",
         "version": "1.0-rules-encoded",
-        "elapsedMs": 147,
-        "builtAt": "2026-09-28T16:06:19.229Z"
+        "elapsedMs": 45,
+        "builtAt": "2026-09-28T18:40:34.591Z"
       },
       {
         "id": "revenue-forecast",
         "version": "V5-baseline-2026-05-04-shell-1.1",
-        "elapsedMs": 393,
-        "builtAt": "2026-09-28T16:06:19.229Z"
+        "elapsedMs": 138,
+        "builtAt": "2026-09-28T18:40:34.591Z"
       },
       {
         "id": "backlog",
         "version": "1.0-rules-encoded",
-        "elapsedMs": 52,
-        "builtAt": "2026-09-28T16:06:19.229Z"
+        "elapsedMs": 15,
+        "builtAt": "2026-09-28T18:40:34.591Z"
       },
       {
         "id": "installs-ytd",
         "version": "1.0-rules-encoded",
-        "elapsedMs": 91,
-        "builtAt": "2026-09-28T16:06:19.229Z"
+        "elapsedMs": 32,
+        "builtAt": "2026-09-28T18:40:34.591Z"
       }
     ]
   },
@@ -41,7 +41,7 @@
     "title": "Residential Sales Overview",
     "subtitle": "YTD 2026",
     "lastSigned": "2026-09-23",
-    "ytdDays": 270,
+    "ytdDays": 271,
     "rowCount": 527,
     "tabs": [
       {
@@ -137,8 +137,8 @@
       },
       {
         "label": "Annualized Sales Rate",
-        "value": "~$59.50M",
-        "sub": "Based on 270 days YTD"
+        "value": "~$59.28M",
+        "sub": "Based on 271 days YTD"
       },
       {
         "label": "Install vs Repair",
@@ -1568,7 +1568,7 @@
     "pathToPlan": null,
     "commentary": {
       "whatsWorking": [
-        "Sales Trajectory: Monthly sales moved from January $3.49M to September $3.43M (-2%). Annualized run rate: $59.50M.",
+        "Sales Trajectory: Monthly sales moved from January $3.49M to September $3.43M (-2%). Annualized run rate: $59.28M.",
         "Premium Deal Types: Insurance averages $495,513 per deal. Retail-Financing averages $32,200 (highest per-deal value). Retail-No Financing averages $62,305 (the volume engine).",
         "Sold Conversion: 522 of 527 signed contracts (99.1%) have made it to Sold status for $44.01M in confirmed sales."
       ],
@@ -3154,7 +3154,7 @@
       "totalWOs": 435,
       "portfolioValue": 22052898.77,
       "avgDaysInStatus": 53,
-      "lastBuild": "2026-09-28T16:06:19.138Z"
+      "lastBuild": "2026-09-28T18:40:34.559Z"
     },
     "tabs": [
       {
@@ -4415,7 +4415,7 @@
       "multiTradeJobs": 37,
       "singleTradeJobs": 286,
       "multiTradePct": 11.5,
-      "lastBuild": "2026-09-28T16:06:19.229Z"
+      "lastBuild": "2026-09-28T18:40:34.591Z"
     },
     "tabs": [
       {
