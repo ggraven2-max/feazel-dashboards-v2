@@ -46,10 +46,11 @@ ROUTES=(
   # revenue-forecast calculators today, staged there for stuck-job analysis.
   "Residential Completed Jobs-*.xlsx|residential/revenue-forecast"
   # ---- multi-family (Commercial exports) ----
-  "Commercial Turned in YTD*.xlsx|multi-family/sales-overview"
+  # Multi-Family sales page reads Contracts Signed YTD - Commercial since 2026-11-02
+  # (RULE-001 source change, Greg). Turned in YTD - Commercial is no longer routed.
   "Commercial Completed Jobs YTD*.xlsx|multi-family/sales-overview|multi-family/installs-ytd"
   "Commercial Forecasting Report*.xlsx|multi-family/revenue-forecast"
-  "Contracts Signed YTD - Commercial*.xlsx|multi-family/revenue-forecast"
+  "Contracts Signed YTD - Commercial*.xlsx|multi-family/revenue-forecast|multi-family/sales-overview"
   "MFInvoicedYTDResults*.csv|multi-family/revenue-forecast"
   "GregProfitabilityMFResults*.csv|multi-family/revenue-forecast"
   "*Commercial Budget*.xlsx|multi-family/revenue-forecast"
@@ -65,6 +66,14 @@ ROUTES=(
 )
 
 STAMP="$(date +%Y%m%d-%H%M%S)"
+
+# One-time cleanup after the 2026-11-02 source change: a leftover Turned in YTD file in
+# the MF sales folder is retired so the page has a single sales source.
+for old in "$REPO/inputs/multi-family/sales-overview"/Commercial\ Turned\ in\ YTD*.xlsx; do
+  [ -f "$old" ] || continue
+  mkdir -p "$REPO/inputs/multi-family/sales-overview/_superseded/$STAMP"
+  mv "$old" "$REPO/inputs/multi-family/sales-overview/_superseded/$STAMP/"
+done
 declare -A PLACED=()
 ROUTED=0
 

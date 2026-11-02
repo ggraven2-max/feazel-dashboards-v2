@@ -2,7 +2,7 @@
 
 > **Owner:** Greg Graven (COO)
 > **Methodology version:** 1.0 (rules encoded)
-> **Last reviewed:** 2026-05-01 by Greg
+> **Last reviewed:** 2026-05-01 by Greg (MF source change 2026-11-02, see below)
 > **Calculator file:** `calculators/sales-overview.js`
 
 ---
@@ -10,6 +10,24 @@
 ## What this dashboard answers
 
 How is the residential sales book pacing in 2026, by branch, by rep, by job type, and by week. Where is the rework risk, where is the billing risk, and where is the budget gap.
+
+## Multi-Family source change (2026-11-02, Greg)
+
+On the Multi-Family page, RULE-001 reads **Contracts Signed YTD - Commercial**
+(Salesforce report 00OQj00000nQsi5MAC, folder Daily Dashboard Reports), not Commercial
+Turned in YTD. Signed Contracts YTD therefore ties to that report's total, including the
+small commercial service and repair tickets that go straight to Closed - Sold and never
+appear in the stage-history Turned in report (about 4,500 tickets, $3.2M on 2026-11-02).
+
+- The report gained `Sold job type` and `Service Type` on 2026-11-02. The calculator's
+  Install/Repair split still uses `Sold Job Service Type`, and days-to-close still uses
+  `Date Created`; the daily extract adds both as extra columns. They differ from the
+  report's `Service Type` / `Created Date` (16 contracts, $5.8M, are Inspection in Service
+  Type but Install in Sold Job Service Type), so switching the split to `Service Type`
+  would be a separate decision.
+- The calculator prefers a file containing `contracts signed`, falling back to `turned`.
+  Residential is unchanged (Residential Turned in YTD).
+- Expect lower averages (avg deal size) and more Repair volume than under Turned in.
 
 ## Expected input files
 

@@ -433,8 +433,13 @@ function run(opts) {
     return readFromExtracted(snapshotPath);
   }
 
-  // Match inputs by leading text (RULE: filename-flexible)
-  const turnedFile = inputs.find(f => /turned/i.test(f.name) && /\.xlsx?$/i.test(f.name));
+  // Match inputs by leading text (RULE: filename-flexible).
+  // RULE-001 source: a "Contracts Signed YTD" export wins when present (Multi-Family
+  // since 2026-11-02, so the page matches the Contracts Signed YTD - Commercial
+  // report); otherwise the "Turned in YTD" export (Residential).
+  const turnedFile =
+    inputs.find(f => /contracts signed/i.test(f.name) && /\.xlsx?$/i.test(f.name)) ||
+    inputs.find(f => /turned/i.test(f.name) && /\.xlsx?$/i.test(f.name));
   const completedFile = inputs.find(f => /completed/i.test(f.name) && /\.xlsx?$/i.test(f.name));
   // Optional: Closing Percent By Branch export (opportunity-level, used for
   // close rate and Net Sales per Lead Issued metrics on the Markets tab).
