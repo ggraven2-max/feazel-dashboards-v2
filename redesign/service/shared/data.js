@@ -1,8 +1,8 @@
-/* AUTO-GENERATED — do not edit. Generated 2026-11-02T17:33:51.127Z (service) */
+/* AUTO-GENERATED — do not edit. Generated 2026-11-02T17:40:08.998Z (service) */
 window.FZ = window.FZ || {};
 window.FZ.data = {
   "_meta": {
-    "builtAt": "2026-11-02T17:33:51.127Z",
+    "builtAt": "2026-11-02T17:40:08.998Z",
     "pipelineVersion": "2.0.0",
     "lob": "service",
     "lastBuiltProjects": [
@@ -13,14 +13,14 @@ window.FZ.data = {
       {
         "id": "revenue-forecast",
         "version": "V5-baseline-2026-05-04-shell-1.1",
-        "elapsedMs": 742,
-        "builtAt": "2026-11-02T17:33:51.127Z"
+        "elapsedMs": 701,
+        "builtAt": "2026-11-02T17:40:08.998Z"
       },
       {
         "id": "service-calls",
         "version": "Service-Calls-v1.1-2026-05-07",
-        "elapsedMs": 1071,
-        "builtAt": "2026-11-02T17:33:51.127Z"
+        "elapsedMs": 1034,
+        "builtAt": "2026-11-02T17:40:08.998Z"
       }
     ]
   },
@@ -1017,8 +1017,8 @@ window.FZ.data = {
       "latestInvoiceDate": "2026-10-30"
     },
     "installServiceOverlap": {
-      "sourceFile": "All Jobs with WOs and SAs-2026-11-02-12-29-39.xlsx",
-      "rowCount": 22124,
+      "sourceFile": "All Jobs with WOs and SAs-2026-11-02-12-35-59.xlsx",
+      "rowCount": 22125,
       "totals": {
         "installJobs": 5149,
         "installJobsWithSvc": 716,
@@ -1027,7 +1027,7 @@ window.FZ.data = {
         "repairWOsAtInstallAccts": 7035,
         "hoursAtInstallAccts": 0,
         "avgHoursPerWO": 0,
-        "repairAmtAtInstallAccts": 4937325
+        "repairAmtAtInstallAccts": 4937675
       },
       "buckets": {
         "<1h": 0,
@@ -1051,7 +1051,7 @@ window.FZ.data = {
           "installJobsWithSvc": 92,
           "repairWOs": 1105,
           "hours": 0,
-          "repairAmt": 965547.6199999999
+          "repairAmt": 965897.6199999999
         },
         {
           "branch": "Cleveland",
@@ -1145,95 +1145,79 @@ window.FZ.data = {
       "tradeRows": [
         {
           "trade": "Roofing",
-          "installJobs": 3591,
-          "installJobsWithSvc": 483,
+          "installJobs": 3600,
+          "installJobsWithSvc": 496,
           "repairWOs": 5966,
           "hours": 0,
-          "repairAmt": 4146802.160000001
+          "repairAmt": 4147152.160000001
         },
         {
           "trade": "Gutters",
-          "installJobs": 988,
-          "installJobsWithSvc": 134,
+          "installJobs": 968,
+          "installJobsWithSvc": 129,
           "repairWOs": 533,
           "hours": 0,
           "repairAmt": 378436.74
         },
         {
           "trade": "Siding",
-          "installJobs": 369,
-          "installJobsWithSvc": 61,
+          "installJobs": 387,
+          "installJobsWithSvc": 63,
           "repairWOs": 392,
           "hours": 0,
           "repairAmt": 312515.79000000004
         },
         {
           "trade": "Other",
-          "installJobs": 12,
-          "installJobsWithSvc": 9,
+          "installJobs": 13,
+          "installJobsWithSvc": 6,
           "repairWOs": 34,
           "hours": 0,
           "repairAmt": 19395
         },
         {
           "trade": "Windows",
-          "installJobs": 43,
-          "installJobsWithSvc": 8,
+          "installJobs": 37,
+          "installJobsWithSvc": 6,
           "repairWOs": 76,
           "hours": 0,
           "repairAmt": 42188.45999999999
         },
         {
-          "trade": "Masonry",
-          "installJobs": 30,
+          "trade": "Flat Roof",
+          "installJobs": 23,
           "installJobsWithSvc": 5,
+          "repairWOs": 0,
+          "hours": 0,
+          "repairAmt": 0
+        },
+        {
+          "trade": "Masonry",
+          "installJobs": 31,
+          "installJobsWithSvc": 4,
           "repairWOs": 19,
           "hours": 0,
           "repairAmt": 25855
         },
         {
-          "trade": "Flat Roof",
-          "installJobs": 19,
-          "installJobsWithSvc": 4,
-          "repairWOs": 0,
-          "hours": 0,
-          "repairAmt": 0
-        },
-        {
-          "trade": "Rack Mounted Solar",
-          "installJobs": 21,
-          "installJobsWithSvc": 3,
-          "repairWOs": 0,
-          "hours": 0,
-          "repairAmt": 0
-        },
-        {
-          "trade": "Skylights",
-          "installJobs": 16,
-          "installJobsWithSvc": 3,
-          "repairWOs": 1,
-          "hours": 0,
-          "repairAmt": 4400
-        },
-        {
-          "trade": "Painting",
-          "installJobs": 11,
-          "installJobsWithSvc": 3,
-          "repairWOs": 4,
-          "hours": 0,
-          "repairAmt": 0
-        },
-        {
           "trade": "Carpentry",
-          "installJobs": 8,
+          "installJobs": 6,
           "installJobsWithSvc": 2,
           "repairWOs": 9,
           "hours": 0,
           "repairAmt": 6450
         },
         {
-          "trade": "Electrical",
-          "installJobs": 4,
+          "trade": "Skylights",
+          "installJobs": 14,
+          "installJobsWithSvc": 2,
+          "repairWOs": 1,
+          "hours": 0,
+          "repairAmt": 4400
+        },
+        {
+          "trade": "Rack Mounted Solar",
+          "installJobs": 25,
           "installJobsWithSvc": 1,
           "repairWOs": 0,
           "hours": 0,
@@ -1241,9 +1225,17 @@ window.FZ.data = {
         },
         {
           "trade": "Metal",
-          "installJobs": 28,
-          "installJobsWithSvc": 0,
+          "installJobs": 26,
+          "installJobsWithSvc": 1,
           "repairWOs": 0,
+          "hours": 0,
+          "repairAmt": 0
+        },
+        {
+          "trade": "Painting",
+          "installJobs": 7,
+          "installJobsWithSvc": 1,
+          "repairWOs": 4,
           "hours": 0,
           "repairAmt": 0
         },
@@ -1264,8 +1256,24 @@ window.FZ.data = {
           "repairAmt": 1282
         },
         {
-          "trade": "Stucco",
+          "trade": "Electrical",
           "installJobs": 3,
+          "installJobsWithSvc": 0,
+          "repairWOs": 0,
+          "hours": 0,
+          "repairAmt": 0
+        },
+        {
+          "trade": "Stucco",
+          "installJobs": 2,
+          "installJobsWithSvc": 0,
+          "repairWOs": 0,
+          "hours": 0,
+          "repairAmt": 0
+        },
+        {
+          "trade": "Insulation",
+          "installJobs": 1,
           "installJobsWithSvc": 0,
           "repairWOs": 0,
           "hours": 0,
@@ -1589,7 +1597,7 @@ window.FZ.data = {
           "jobNumber": "Job-108176",
           "account": "Stonegate Property Management - Northern Kentucky",
           "branch": "Cincinnati",
-          "trade": "Roofing",
+          "trade": "Gutters",
           "salesperson": "Mark Leedy",
           "installAmt": 33431,
           "acctRepairWOs": 72,
@@ -1757,28 +1765,28 @@ window.FZ.data = {
   "SERVICE_CALLS": {
     "_source": "calculator/service-calls.js Service-Calls-v1.1-2026-05-07",
     "title": "Service Calls YTD",
-    "subtitle": "Service Appointments · 13,638 calls across 97 techs · ",
-    "sourceFile": "Service Appointments YTD-2026-11-02-12-29-39.xlsx",
+    "subtitle": "Service Appointments · 13,638 calls across 97 techs · 2026-01 through 2026-11",
+    "sourceFile": "Service Appointments YTD-2026-11-02-12-35-59.xlsx",
     "headerMeta": {
       "totalAppts": 13638,
       "uniqTechs": 97,
       "uniqWOs": 11011,
       "uniqAccounts": 3924,
       "uniqJobs": 10451,
-      "totalHours": 25173.1,
+      "totalHours": 25176.3,
       "totalBillable": 15560,
       "networkBillRatio": 0.618,
-      "totalContract": 10101556.4,
+      "totalContract": 10101906.4,
       "avgMinPerAppt": 111,
-      "aptsCompleted": 0,
-      "aptsOpen": 13638,
-      "monthsCovered": 0
+      "aptsCompleted": 9391,
+      "aptsOpen": 4247,
+      "monthsCovered": 11
     },
     "kpis": [
       {
         "label": "Appointments YTD",
         "value": "13,638",
-        "sub": "0 months · 11,011 work orders",
+        "sub": "11 months · 11,011 work orders",
         "tone": "info"
       },
       {
@@ -1789,7 +1797,7 @@ window.FZ.data = {
       },
       {
         "label": "Total Hours",
-        "value": "25,173.1 h",
+        "value": "25,176.3 h",
         "sub": "avg 111 min/appt",
         "tone": "info"
       },
@@ -1807,12 +1815,101 @@ window.FZ.data = {
       },
       {
         "label": "Open Appointments",
-        "value": "13,638",
+        "value": "4,247",
         "sub": "no Actual End in Salesforce",
         "tone": "warn"
       }
     ],
-    "monthly": [],
+    "monthly": [
+      {
+        "key": "2026-01",
+        "label": "2026-01",
+        "count": 412,
+        "hours": 760.8,
+        "billable": 1399,
+        "contract": 192724.02
+      },
+      {
+        "key": "2026-02",
+        "label": "2026-02",
+        "count": 1038,
+        "hours": 2543.4,
+        "billable": 3909.5,
+        "contract": 452392.68
+      },
+      {
+        "key": "2026-03",
+        "label": "2026-03",
+        "count": 1105,
+        "hours": 2682.4,
+        "billable": 3831,
+        "contract": 577924.02
+      },
+      {
+        "key": "2026-04",
+        "label": "2026-04",
+        "count": 952,
+        "hours": 2939.3,
+        "billable": 3512.5,
+        "contract": 432876.04
+      },
+      {
+        "key": "2026-05",
+        "label": "2026-05",
+        "count": 832,
+        "hours": 1926.6,
+        "billable": 1062,
+        "contract": 433550.28
+      },
+      {
+        "key": "2026-06",
+        "label": "2026-06",
+        "count": 971,
+        "hours": 2346.4,
+        "billable": 1079.5,
+        "contract": 672856.84
+      },
+      {
+        "key": "2026-07",
+        "label": "2026-07",
+        "count": 1046,
+        "hours": 1761.5,
+        "billable": 135,
+        "contract": 652566.69
+      },
+      {
+        "key": "2026-08",
+        "label": "2026-08",
+        "count": 1215,
+        "hours": 3977.5,
+        "billable": 100,
+        "contract": 635320.04
+      },
+      {
+        "key": "2026-09",
+        "label": "2026-09",
+        "count": 989,
+        "hours": 3672.6,
+        "billable": 244.5,
+        "contract": 601739.97
+      },
+      {
+        "key": "2026-10",
+        "label": "2026-10",
+        "count": 1001,
+        "hours": 2547,
+        "billable": 286,
+        "contract": 642709.61
+      },
+      {
+        "key": "2026-11",
+        "label": "2026-11",
+        "count": 29,
+        "hours": 18.9,
+        "billable": 1,
+        "contract": 18568.91
+      }
+    ],
     "techRows": [
       {
         "tech": "(unassigned)",
@@ -1895,7 +1992,7 @@ window.FZ.data = {
       {
         "tech": "Kevin Green",
         "count": 576,
-        "hours": 1013.4,
+        "hours": 1014.7,
         "billHours": 382.5,
         "billRatio": 0.377,
         "avgMinPerAppt": 106,
@@ -1947,7 +2044,7 @@ window.FZ.data = {
       {
         "tech": "Wayne Young",
         "count": 423,
-        "hours": 840.3,
+        "hours": 840.5,
         "billHours": 6,
         "billRatio": 0.006999999999999999,
         "avgMinPerAppt": 119,
@@ -1959,15 +2056,15 @@ window.FZ.data = {
       },
       {
         "tech": "Ricardo Nunez",
-        "count": 414,
-        "hours": 1286,
+        "count": 415,
+        "hours": 1287.7,
         "billHours": 650,
         "billRatio": 0.505,
         "avgMinPerAppt": 186,
-        "contract": 332731,
-        "avgContract": 804,
-        "jobs": 377,
-        "accounts": 143,
+        "contract": 333081,
+        "avgContract": 803,
+        "jobs": 378,
+        "accounts": 144,
         "branches": "Detroit, Grand Rapids"
       },
       {
@@ -2193,15 +2290,15 @@ window.FZ.data = {
       },
       {
         "tech": "Ethan Epperson",
-        "count": 160,
+        "count": 159,
         "hours": 671,
         "billHours": 815.5,
         "billRatio": 1.215,
-        "avgMinPerAppt": 252,
+        "avgMinPerAppt": 253,
         "contract": 115437,
-        "avgContract": 721,
-        "jobs": 149,
-        "accounts": 69,
+        "avgContract": 726,
+        "jobs": 148,
+        "accounts": 68,
         "branches": "Columbus, Detroit, Grand Rapids"
       },
       {
@@ -3082,7 +3179,7 @@ window.FZ.data = {
         "count": 4473,
         "techs": 44,
         "accounts": 1557,
-        "hours": 5494.2,
+        "hours": 5494.4,
         "billHours": 3559.5,
         "contract": 2707937.95,
         "avgMinPerAppt": 74
@@ -3092,7 +3189,7 @@ window.FZ.data = {
         "count": 2395,
         "techs": 8,
         "accounts": 311,
-        "hours": 5522.4,
+        "hours": 5523.7,
         "billHours": 1571,
         "contract": 1188526.6,
         "avgMinPerAppt": 138
@@ -3102,9 +3199,9 @@ window.FZ.data = {
         "count": 2138,
         "techs": 22,
         "accounts": 561,
-        "hours": 4272,
+        "hours": 4273.7,
         "billHours": 3169,
-        "contract": 2625693.02,
+        "contract": 2626043.02,
         "avgMinPerAppt": 120
       },
       {
@@ -3222,7 +3319,7 @@ window.FZ.data = {
         "account": "Priestley Management Company",
         "count": 421,
         "jobs": 302,
-        "hours": 803.2,
+        "hours": 804.5,
         "billHours": 334,
         "contract": 309793,
         "branches": "Raleigh"
@@ -3312,9 +3409,9 @@ window.FZ.data = {
         "account": "Compass Management Professionals",
         "count": 223,
         "jobs": 170,
-        "hours": 272.8,
+        "hours": 274.5,
         "billHours": 250.5,
-        "contract": 193216.94,
+        "contract": 193566.94,
         "branches": "Detroit"
       },
       {
@@ -3436,7 +3533,358 @@ window.FZ.data = {
       }
     ],
     "woStats": {
-      "stuck": [],
+      "stuck": [
+        {
+          "wo": "00200898",
+          "account": "Tonya Molett",
+          "branch": "Detroit",
+          "tech": "Ricardo Nunez",
+          "appointments": 2,
+          "hours": 2.6,
+          "billHours": 5,
+          "contract": 0,
+          "hoursPer100": 0,
+          "oldest": "2026-02-11",
+          "newest": "2026-08-04",
+          "spanDays": 174
+        },
+        {
+          "wo": "00198478",
+          "account": "Barrett & Stokely Inc",
+          "branch": "Columbus",
+          "tech": "Darren Vaught",
+          "appointments": 3,
+          "hours": 8.8,
+          "billHours": 1,
+          "contract": 4900,
+          "hoursPer100": 0.2,
+          "oldest": "2026-01-21",
+          "newest": "2026-06-24",
+          "spanDays": 154
+        },
+        {
+          "wo": "00202568",
+          "account": "Associa On Call",
+          "branch": "Columbus",
+          "tech": "Matt Velazquez",
+          "appointments": 3,
+          "hours": 2.5,
+          "billHours": 1,
+          "contract": 350,
+          "hoursPer100": 0.7,
+          "oldest": "2026-03-20",
+          "newest": "2026-08-21",
+          "spanDays": 154
+        },
+        {
+          "wo": "00204241",
+          "account": "Kramer Triad Management - Troy",
+          "branch": "Detroit",
+          "tech": "Ethan Epperson",
+          "appointments": 2,
+          "hours": 2.6,
+          "billHours": 1.5,
+          "contract": 0,
+          "hoursPer100": 0,
+          "oldest": "2026-04-24",
+          "newest": "2026-09-02",
+          "spanDays": 131
+        },
+        {
+          "wo": "00203665",
+          "account": "Capital Property Solutions",
+          "branch": "Columbus",
+          "tech": "Matt Velazquez",
+          "appointments": 2,
+          "hours": 1.2,
+          "billHours": 2,
+          "contract": 350,
+          "hoursPer100": 0.3,
+          "oldest": "2026-03-30",
+          "newest": "2026-07-27",
+          "spanDays": 119
+        },
+        {
+          "wo": "00219825",
+          "account": "Kare Condominium Management Company",
+          "branch": "Cleveland",
+          "tech": "David Frindt",
+          "appointments": 5,
+          "hours": 5.5,
+          "billHours": 0,
+          "contract": 0,
+          "hoursPer100": 0,
+          "oldest": "2026-06-10",
+          "newest": "2026-10-05",
+          "spanDays": 117
+        },
+        {
+          "wo": "00206354",
+          "account": "Associated Property Management, LLC",
+          "branch": "Cleveland",
+          "tech": "Richard Hoffman",
+          "appointments": 3,
+          "hours": 3.8,
+          "billHours": 1.5,
+          "contract": 350,
+          "hoursPer100": 1.1,
+          "oldest": "2026-03-23",
+          "newest": "2026-07-16",
+          "spanDays": 115
+        },
+        {
+          "wo": "00201158",
+          "account": "Lawrence Community Management Group, Inc",
+          "branch": "Cleveland",
+          "tech": "Richard Hoffman",
+          "appointments": 5,
+          "hours": 6.1,
+          "billHours": 357.5,
+          "contract": 35750,
+          "hoursPer100": 0,
+          "oldest": "2026-03-09",
+          "newest": "2026-06-30",
+          "spanDays": 113
+        },
+        {
+          "wo": "00212471",
+          "account": "Terese M Coon",
+          "branch": "Cleveland",
+          "tech": "David Frindt",
+          "appointments": 6,
+          "hours": 5.1,
+          "billHours": 0,
+          "contract": 1001.63,
+          "hoursPer100": 0.5,
+          "oldest": "2026-04-30",
+          "newest": "2026-08-19",
+          "spanDays": 111
+        },
+        {
+          "wo": "00205653",
+          "account": "Capital Property Solutions",
+          "branch": "Columbus",
+          "tech": "Jose Cartagena",
+          "appointments": 2,
+          "hours": 3.8,
+          "billHours": 5,
+          "contract": 500,
+          "hoursPer100": 0.8,
+          "oldest": "2026-03-17",
+          "newest": "2026-07-06",
+          "spanDays": 111
+        },
+        {
+          "wo": "00206614",
+          "account": "Maurice Potvin",
+          "branch": "Columbus",
+          "tech": "Darren Vaught",
+          "appointments": 2,
+          "hours": 0.7,
+          "billHours": 1,
+          "contract": 0,
+          "hoursPer100": 0,
+          "oldest": "2026-04-06",
+          "newest": "2026-07-25",
+          "spanDays": 110
+        },
+        {
+          "wo": "00199135",
+          "account": "In Rhodes Management, Inc",
+          "branch": "Detroit",
+          "tech": "Ethan Epperson",
+          "appointments": 2,
+          "hours": 7.4,
+          "billHours": 3,
+          "contract": 350,
+          "hoursPer100": 2.1,
+          "oldest": "2026-01-20",
+          "newest": "2026-05-08",
+          "spanDays": 108
+        },
+        {
+          "wo": "00208245",
+          "account": "Stephen Russell",
+          "branch": "Columbus",
+          "tech": "Matt Large",
+          "appointments": 4,
+          "hours": 4.6,
+          "billHours": 1,
+          "contract": 0,
+          "hoursPer100": 0,
+          "oldest": "2026-03-31",
+          "newest": "2026-07-16",
+          "spanDays": 107
+        },
+        {
+          "wo": "00210416",
+          "account": "Associa On Call",
+          "branch": "Columbus",
+          "tech": "Wilver Velasquez",
+          "appointments": 3,
+          "hours": 1.9,
+          "billHours": 1,
+          "contract": 350,
+          "hoursPer100": 0.5,
+          "oldest": "2026-05-07",
+          "newest": "2026-08-14",
+          "spanDays": 99
+        },
+        {
+          "wo": "00213025",
+          "account": "Singh Management",
+          "branch": "Detroit",
+          "tech": "Will Vickers",
+          "appointments": 3,
+          "hours": 1.5,
+          "billHours": 1,
+          "contract": 350,
+          "hoursPer100": 0.4,
+          "oldest": "2026-04-27",
+          "newest": "2026-08-03",
+          "spanDays": 98
+        },
+        {
+          "wo": "00198374",
+          "account": "Capital Property Solutions",
+          "branch": "Columbus",
+          "tech": "Darren Vaught",
+          "appointments": 3,
+          "hours": 1.1,
+          "billHours": 1.5,
+          "contract": 350,
+          "hoursPer100": 0.3,
+          "oldest": "2026-01-09",
+          "newest": "2026-04-14",
+          "spanDays": 95
+        },
+        {
+          "wo": "00207898",
+          "account": "Adam Ferne",
+          "branch": "Columbus",
+          "tech": "Matt Velazquez",
+          "appointments": 5,
+          "hours": 6.8,
+          "billHours": 3,
+          "contract": 0,
+          "hoursPer100": 0,
+          "oldest": "2026-04-13",
+          "newest": "2026-07-15",
+          "spanDays": 93
+        },
+        {
+          "wo": "00198210",
+          "account": "Towne Properties - Columbus",
+          "branch": "Columbus",
+          "tech": "Jose Cartagena",
+          "appointments": 3,
+          "hours": 7.8,
+          "billHours": 17,
+          "contract": 1700,
+          "hoursPer100": 0.5,
+          "oldest": "2026-01-19",
+          "newest": "2026-04-22",
+          "spanDays": 93
+        },
+        {
+          "wo": "00215725",
+          "account": "Associa - Community Management Corporation DC Market - Opp# 254255",
+          "branch": "DC Metro",
+          "tech": "Santos Alfaro-Delcid",
+          "appointments": 2,
+          "hours": 5.7,
+          "billHours": 6,
+          "contract": 775,
+          "hoursPer100": 0.7,
+          "oldest": "2026-05-18",
+          "newest": "2026-08-19",
+          "spanDays": 93
+        },
+        {
+          "wo": "00223081",
+          "account": "David Rustom",
+          "branch": "Detroit",
+          "tech": "Will Vickers",
+          "appointments": 4,
+          "hours": 5.9,
+          "billHours": 0,
+          "contract": 0,
+          "hoursPer100": 0,
+          "oldest": "2026-07-06",
+          "newest": "2026-10-06",
+          "spanDays": 92
+        },
+        {
+          "wo": "00199422",
+          "account": "Haddon Communitites",
+          "branch": "Columbus",
+          "tech": "Nick Velazquez",
+          "appointments": 4,
+          "hours": 4.3,
+          "billHours": 3.5,
+          "contract": 0,
+          "hoursPer100": 0,
+          "oldest": "2026-01-29",
+          "newest": "2026-04-29",
+          "spanDays": 90
+        },
+        {
+          "wo": "00206923",
+          "account": "Teri Umbarger",
+          "branch": "Columbus",
+          "tech": "Matt Large",
+          "appointments": 3,
+          "hours": 2.2,
+          "billHours": 2,
+          "contract": 0,
+          "hoursPer100": 0,
+          "oldest": "2026-03-31",
+          "newest": "2026-06-29",
+          "spanDays": 90
+        },
+        {
+          "wo": "00198404",
+          "account": "3292: Grant Clarke",
+          "branch": "Nashville",
+          "tech": "Rene Alvarado",
+          "appointments": 4,
+          "hours": 4.6,
+          "billHours": 6,
+          "contract": 0,
+          "hoursPer100": 0,
+          "oldest": "2026-01-13",
+          "newest": "2026-04-13",
+          "spanDays": 90
+        },
+        {
+          "wo": "00216419",
+          "account": "David Swartz",
+          "branch": "Detroit",
+          "tech": "Ethan Epperson",
+          "appointments": 2,
+          "hours": 3.2,
+          "billHours": 0,
+          "contract": 0,
+          "hoursPer100": 0,
+          "oldest": "2026-06-03",
+          "newest": "2026-08-31",
+          "spanDays": 89
+        },
+        {
+          "wo": "00204757",
+          "account": "BLS Property Management",
+          "branch": "Detroit",
+          "tech": "Will Vickers",
+          "appointments": 2,
+          "hours": 3.6,
+          "billHours": 7,
+          "contract": 700,
+          "hoursPer100": 0.5,
+          "oldest": "2026-03-30",
+          "newest": "2026-06-25",
+          "spanDays": 87
+        }
+      ],
       "inProgress60Plus": [
         {
           "wo": "00231102",
@@ -3469,7 +3917,7 @@ window.FZ.data = {
           "trade": "Roofing",
           "status": "In Progress",
           "subStatus": "Quote Required",
-          "days": 61.07,
+          "days": 61.08,
           "contract": 350,
           "contractSigned": null,
           "hasSA": false
@@ -3529,7 +3977,7 @@ window.FZ.data = {
           "trade": "Roofing",
           "status": "In Progress",
           "subStatus": "Quote Required",
-          "days": 47.18,
+          "days": 47.19,
           "contract": 350,
           "contractSigned": null,
           "hasSA": false
@@ -3541,7 +3989,7 @@ window.FZ.data = {
           "trade": "Roofing",
           "status": "In Progress",
           "subStatus": "Quote Required",
-          "days": 47.15,
+          "days": 47.16,
           "contract": 350,
           "contractSigned": null,
           "hasSA": false
@@ -3577,7 +4025,7 @@ window.FZ.data = {
           "trade": "Roofing",
           "status": "In Progress",
           "subStatus": "Quote Required",
-          "days": 46,
+          "days": 46.01,
           "contract": 350,
           "contractSigned": null,
           "hasSA": false
@@ -3637,7 +4085,7 @@ window.FZ.data = {
           "trade": "Roofing",
           "status": "In Progress",
           "subStatus": "Quote Required",
-          "days": 41.04,
+          "days": 41.05,
           "contract": 350,
           "contractSigned": null,
           "hasSA": false
@@ -3673,7 +4121,7 @@ window.FZ.data = {
           "trade": "Roofing",
           "status": "In Progress",
           "subStatus": "Quote Required",
-          "days": 39.96,
+          "days": 39.97,
           "contract": 0,
           "contractSigned": null,
           "hasSA": false
@@ -3721,7 +4169,7 @@ window.FZ.data = {
           "trade": "Roofing",
           "status": "In Progress",
           "subStatus": "",
-          "days": 35.04,
+          "days": 35.05,
           "contract": 350,
           "contractSigned": null,
           "hasSA": false
@@ -3769,7 +4217,7 @@ window.FZ.data = {
           "trade": "Roofing",
           "status": "In Progress",
           "subStatus": "Quote Required",
-          "days": 33.17,
+          "days": 33.18,
           "contract": 0,
           "contractSigned": null,
           "hasSA": false
@@ -3781,7 +4229,7 @@ window.FZ.data = {
           "trade": "Gutters",
           "status": "In Progress",
           "subStatus": "Quote Required",
-          "days": 31.93,
+          "days": 31.94,
           "contract": 350,
           "contractSigned": null,
           "hasSA": false
@@ -3793,7 +4241,7 @@ window.FZ.data = {
           "trade": "Roofing",
           "status": "In Progress",
           "subStatus": "Quote Required",
-          "days": 31.18,
+          "days": 31.19,
           "contract": 350,
           "contractSigned": null,
           "hasSA": false
@@ -3817,7 +4265,7 @@ window.FZ.data = {
           "trade": "Roofing",
           "status": "In Progress",
           "subStatus": "Quote Required",
-          "days": 28.15,
+          "days": 28.16,
           "contract": 0,
           "contractSigned": null,
           "hasSA": false
@@ -3829,7 +4277,7 @@ window.FZ.data = {
           "trade": "Roofing",
           "status": "In Progress",
           "subStatus": "Quote Required",
-          "days": 27.91,
+          "days": 27.92,
           "contract": 350,
           "contractSigned": null,
           "hasSA": false
@@ -3847,6 +4295,18 @@ window.FZ.data = {
           "hasSA": false
         },
         {
+          "wo": "00238242",
+          "account": "Associated Property Management, LLC",
+          "branch": "Cleveland",
+          "trade": "Gutters",
+          "status": "In Progress",
+          "subStatus": "Quote Required",
+          "days": 27.01,
+          "contract": 350,
+          "contractSigned": null,
+          "hasSA": false
+        },
+        {
           "wo": "00237446",
           "account": "Kare Condominium Management Company",
           "branch": "Cleveland",
@@ -3859,13 +4319,13 @@ window.FZ.data = {
           "hasSA": false
         },
         {
-          "wo": "00238242",
-          "account": "Associated Property Management, LLC",
-          "branch": "Cleveland",
-          "trade": "Gutters",
+          "wo": "00235557",
+          "account": "Associa - Community Management Corporation DC Market - Opp# 254255",
+          "branch": "DC Metro",
+          "trade": "Roofing",
           "status": "In Progress",
-          "subStatus": "Quote Required",
-          "days": 27,
+          "subStatus": "",
+          "days": 26.95,
           "contract": 350,
           "contractSigned": null,
           "hasSA": false
@@ -3895,25 +4355,13 @@ window.FZ.data = {
           "hasSA": false
         },
         {
-          "wo": "00235557",
-          "account": "Associa - Community Management Corporation DC Market - Opp# 254255",
-          "branch": "DC Metro",
-          "trade": "Roofing",
-          "status": "In Progress",
-          "subStatus": "",
-          "days": 26.94,
-          "contract": 350,
-          "contractSigned": null,
-          "hasSA": false
-        },
-        {
           "wo": "00238236",
           "account": "Associated Property Management, LLC",
           "branch": "Cleveland",
           "trade": "Roofing",
           "status": "In Progress",
           "subStatus": "Quote Required",
-          "days": 26.89,
+          "days": 26.9,
           "contract": 350,
           "contractSigned": null,
           "hasSA": false
@@ -3925,7 +4373,7 @@ window.FZ.data = {
           "trade": "Roofing",
           "status": "In Progress",
           "subStatus": "Quote Required",
-          "days": 25.01,
+          "days": 25.02,
           "contract": 0,
           "contractSigned": null,
           "hasSA": false
@@ -3937,7 +4385,7 @@ window.FZ.data = {
           "trade": "Roofing",
           "status": "In Progress",
           "subStatus": "",
-          "days": 24.98,
+          "days": 24.99,
           "contract": 350,
           "contractSigned": null,
           "hasSA": false
@@ -3949,7 +4397,7 @@ window.FZ.data = {
           "trade": "Roofing",
           "status": "In Progress",
           "subStatus": "Quote Required",
-          "days": 20.98,
+          "days": 20.99,
           "contract": 350,
           "contractSigned": null,
           "hasSA": false
@@ -3961,7 +4409,7 @@ window.FZ.data = {
           "trade": "Roofing",
           "status": "In Progress",
           "subStatus": "",
-          "days": 20.15,
+          "days": 20.16,
           "contract": 0,
           "contractSigned": null,
           "hasSA": false
@@ -4033,7 +4481,7 @@ window.FZ.data = {
           "trade": "Roofing",
           "status": "In Progress",
           "subStatus": "Quote Required",
-          "days": 17.19,
+          "days": 17.2,
           "contract": 350,
           "contractSigned": null,
           "hasSA": false
@@ -4045,7 +4493,7 @@ window.FZ.data = {
           "trade": "Roofing",
           "status": "In Progress",
           "subStatus": "Quote Required",
-          "days": 17,
+          "days": 17.01,
           "contract": 0,
           "contractSigned": null,
           "hasSA": false
@@ -4057,7 +4505,7 @@ window.FZ.data = {
           "trade": "Roofing",
           "status": "In Progress",
           "subStatus": "Quote Required",
-          "days": 16.14,
+          "days": 16.15,
           "contract": 350,
           "contractSigned": null,
           "hasSA": false
@@ -4081,7 +4529,7 @@ window.FZ.data = {
           "trade": "Roofing",
           "status": "In Progress",
           "subStatus": "Quote Required",
-          "days": 14.05,
+          "days": 14.06,
           "contract": 350,
           "contractSigned": null,
           "hasSA": false
@@ -4095,7 +4543,7 @@ window.FZ.data = {
           "trade": "Roofing",
           "status": "Pending Insurance Claim",
           "subStatus": "",
-          "days": 299.02,
+          "days": 299.03,
           "contract": 350,
           "contractSigned": null,
           "hasSA": false
@@ -4131,7 +4579,7 @@ window.FZ.data = {
           "trade": "Roofing",
           "status": "Pending Insurance Claim",
           "subStatus": "",
-          "days": 242.04,
+          "days": 242.05,
           "contract": 350,
           "contractSigned": null,
           "hasSA": false
@@ -4155,7 +4603,7 @@ window.FZ.data = {
           "trade": "GAF Solar",
           "status": "Ready to Schedule",
           "subStatus": "",
-          "days": 157.91,
+          "days": 157.92,
           "contract": 0,
           "contractSigned": null,
           "hasSA": false
@@ -4215,7 +4663,7 @@ window.FZ.data = {
           "trade": "Roofing",
           "status": "On Hold",
           "subStatus": "Pending Deposit",
-          "days": 88.06,
+          "days": 88.07,
           "contract": 168762.5,
           "contractSigned": null,
           "hasSA": false
@@ -4239,7 +4687,7 @@ window.FZ.data = {
           "trade": "Roofing",
           "status": "Pending Estimate Approval",
           "subStatus": "",
-          "days": 81.92,
+          "days": 81.93,
           "contract": 350,
           "contractSigned": null,
           "hasSA": false
@@ -4251,7 +4699,7 @@ window.FZ.data = {
           "trade": "Roofing",
           "status": "On Hold",
           "subStatus": "Pending Sales",
-          "days": 75.1,
+          "days": 75.11,
           "contract": 1501.82,
           "contractSigned": null,
           "hasSA": false
@@ -4275,7 +4723,7 @@ window.FZ.data = {
           "trade": "Roofing",
           "status": "Ready to Schedule",
           "subStatus": "",
-          "days": 66.05,
+          "days": 66.06,
           "contract": 20993,
           "contractSigned": null,
           "hasSA": false
@@ -4353,6 +4801,18 @@ window.FZ.data = {
           "hasSA": false
         },
         {
+          "wo": "00222403",
+          "account": "RowCal Construction & Maintenance TN, LLC",
+          "branch": "Nashville",
+          "trade": "Roofing",
+          "status": "Pending Estimate Approval",
+          "subStatus": "",
+          "days": 46.72,
+          "contract": 350,
+          "contractSigned": null,
+          "hasSA": false
+        },
+        {
           "wo": "00228877",
           "account": "Steve & Nancy Fry",
           "branch": "Nashville",
@@ -4361,18 +4821,6 @@ window.FZ.data = {
           "subStatus": "",
           "days": 46.72,
           "contract": 0,
-          "contractSigned": null,
-          "hasSA": false
-        },
-        {
-          "wo": "00222403",
-          "account": "RowCal Construction & Maintenance TN, LLC",
-          "branch": "Nashville",
-          "trade": "Roofing",
-          "status": "Pending Estimate Approval",
-          "subStatus": "",
-          "days": 46.71,
-          "contract": 350,
           "contractSigned": null,
           "hasSA": false
         },
@@ -4392,7 +4840,7 @@ window.FZ.data = {
       "notStartedByStatus": [
         {
           "status": "Scheduled",
-          "count": 346,
+          "count": 344,
           "avgDays": 9.5,
           "maxDays": 90
         },
@@ -4427,7 +4875,7 @@ window.FZ.data = {
           "maxDays": 299
         }
       ],
-      "notStartedTotal": 650,
+      "notStartedTotal": 648,
       "multiTouch": [
         {
           "wo": "00220969",
@@ -4439,9 +4887,9 @@ window.FZ.data = {
           "billHours": 31.5,
           "contract": 12452,
           "hoursPer100": 0.5,
-          "oldest": null,
-          "newest": null,
-          "spanDays": 0
+          "oldest": "2026-07-27",
+          "newest": "2026-07-29",
+          "spanDays": 2
         },
         {
           "wo": "00233652",
@@ -4453,9 +4901,9 @@ window.FZ.data = {
           "billHours": 56,
           "contract": 20000,
           "hoursPer100": 0.2,
-          "oldest": null,
-          "newest": null,
-          "spanDays": 0
+          "oldest": "2026-09-17",
+          "newest": "2026-10-21",
+          "spanDays": 34
         },
         {
           "wo": "00236151",
@@ -4467,9 +4915,9 @@ window.FZ.data = {
           "billHours": 0,
           "contract": 0,
           "hoursPer100": 0,
-          "oldest": null,
-          "newest": null,
-          "spanDays": 0
+          "oldest": "2026-09-30",
+          "newest": "2026-10-29",
+          "spanDays": 29
         },
         {
           "wo": "00223483",
@@ -4481,9 +4929,9 @@ window.FZ.data = {
           "billHours": 0,
           "contract": 8500,
           "hoursPer100": 0.3,
-          "oldest": null,
-          "newest": null,
-          "spanDays": 0
+          "oldest": "2026-07-02",
+          "newest": "2026-09-08",
+          "spanDays": 68
         },
         {
           "wo": "00222298",
@@ -4495,9 +4943,9 @@ window.FZ.data = {
           "billHours": 0,
           "contract": 350,
           "hoursPer100": 2.9,
-          "oldest": null,
-          "newest": null,
-          "spanDays": 0
+          "oldest": "2026-06-24",
+          "newest": "2026-09-02",
+          "spanDays": 70
         },
         {
           "wo": "00199364",
@@ -4509,9 +4957,9 @@ window.FZ.data = {
           "billHours": 35,
           "contract": 0,
           "hoursPer100": 0,
-          "oldest": null,
-          "newest": null,
-          "spanDays": 0
+          "oldest": "2026-02-03",
+          "newest": "2026-03-20",
+          "spanDays": 45
         },
         {
           "wo": "00199282",
@@ -4523,9 +4971,9 @@ window.FZ.data = {
           "billHours": 17,
           "contract": 1700,
           "hoursPer100": 0.4,
-          "oldest": null,
-          "newest": null,
-          "spanDays": 0
+          "oldest": "2026-02-04",
+          "newest": "2026-03-16",
+          "spanDays": 40
         },
         {
           "wo": "00202821",
@@ -4537,9 +4985,9 @@ window.FZ.data = {
           "billHours": 4,
           "contract": 400,
           "hoursPer100": 0.2,
-          "oldest": null,
-          "newest": null,
-          "spanDays": 0
+          "oldest": "2026-03-05",
+          "newest": "2026-03-16",
+          "spanDays": 11
         },
         {
           "wo": "00212471",
@@ -4551,9 +4999,9 @@ window.FZ.data = {
           "billHours": 0,
           "contract": 1001.63,
           "hoursPer100": 0.5,
-          "oldest": null,
-          "newest": null,
-          "spanDays": 0
+          "oldest": "2026-04-30",
+          "newest": "2026-08-19",
+          "spanDays": 111
         },
         {
           "wo": "00231609",
@@ -4565,9 +5013,9 @@ window.FZ.data = {
           "billHours": 0,
           "contract": 350,
           "hoursPer100": 2.5,
-          "oldest": null,
-          "newest": null,
-          "spanDays": 0
+          "oldest": "2026-08-22",
+          "newest": "2026-09-16",
+          "spanDays": 25
         },
         {
           "wo": "00218367",
@@ -4579,9 +5027,9 @@ window.FZ.data = {
           "billHours": 0,
           "contract": 350,
           "hoursPer100": 2.2,
-          "oldest": null,
-          "newest": null,
-          "spanDays": 0
+          "oldest": "2026-05-22",
+          "newest": "2026-07-09",
+          "spanDays": 48
         },
         {
           "wo": "00219852",
@@ -4593,9 +5041,9 @@ window.FZ.data = {
           "billHours": 2,
           "contract": 350,
           "hoursPer100": 2,
-          "oldest": null,
-          "newest": null,
-          "spanDays": 0
+          "oldest": "2026-06-15",
+          "newest": "2026-07-02",
+          "spanDays": 17
         },
         {
           "wo": "00213959",
@@ -4607,9 +5055,9 @@ window.FZ.data = {
           "billHours": 4,
           "contract": 2985,
           "hoursPer100": 1,
-          "oldest": null,
-          "newest": null,
-          "spanDays": 0
+          "oldest": "2026-05-07",
+          "newest": "2026-06-01",
+          "spanDays": 25
         },
         {
           "wo": "00198347",
@@ -4621,9 +5069,9 @@ window.FZ.data = {
           "billHours": 26,
           "contract": 0,
           "hoursPer100": 0,
-          "oldest": null,
-          "newest": null,
-          "spanDays": 0
+          "oldest": "2026-01-13",
+          "newest": "2026-03-19",
+          "spanDays": 65
         },
         {
           "wo": "00222675",
@@ -4635,9 +5083,9 @@ window.FZ.data = {
           "billHours": 0,
           "contract": 0,
           "hoursPer100": 0,
-          "oldest": null,
-          "newest": null,
-          "spanDays": 0
+          "oldest": "2026-06-25",
+          "newest": "2026-08-13",
+          "spanDays": 49
         },
         {
           "wo": "00232132",
@@ -4649,9 +5097,9 @@ window.FZ.data = {
           "billHours": 0,
           "contract": 0,
           "hoursPer100": 0,
-          "oldest": null,
-          "newest": null,
-          "spanDays": 0
+          "oldest": "2026-08-31",
+          "newest": "2026-09-22",
+          "spanDays": 22
         },
         {
           "wo": "00235027",
@@ -4663,9 +5111,9 @@ window.FZ.data = {
           "billHours": 0,
           "contract": 0,
           "hoursPer100": 0,
-          "oldest": null,
-          "newest": null,
-          "spanDays": 0
+          "oldest": "2026-09-14",
+          "newest": "2026-10-07",
+          "spanDays": 23
         },
         {
           "wo": "00199830",
@@ -4677,9 +5125,9 @@ window.FZ.data = {
           "billHours": 24,
           "contract": 0,
           "hoursPer100": 0,
-          "oldest": null,
-          "newest": null,
-          "spanDays": 0
+          "oldest": "2026-02-02",
+          "newest": "2026-03-10",
+          "spanDays": 36
         },
         {
           "wo": "00219825",
@@ -4691,9 +5139,9 @@ window.FZ.data = {
           "billHours": 0,
           "contract": 0,
           "hoursPer100": 0,
-          "oldest": null,
-          "newest": null,
-          "spanDays": 0
+          "oldest": "2026-06-10",
+          "newest": "2026-10-05",
+          "spanDays": 117
         },
         {
           "wo": "00201158",
@@ -4705,9 +5153,9 @@ window.FZ.data = {
           "billHours": 357.5,
           "contract": 35750,
           "hoursPer100": 0,
-          "oldest": null,
-          "newest": null,
-          "spanDays": 0
+          "oldest": "2026-03-09",
+          "newest": "2026-06-30",
+          "spanDays": 113
         },
         {
           "wo": "00213400",
@@ -4719,9 +5167,9 @@ window.FZ.data = {
           "billHours": 0,
           "contract": 350,
           "hoursPer100": 1.8,
-          "oldest": null,
-          "newest": null,
-          "spanDays": 0
+          "oldest": "2026-05-06",
+          "newest": "2026-05-12",
+          "spanDays": 6
         },
         {
           "wo": "00202635",
@@ -4733,9 +5181,9 @@ window.FZ.data = {
           "billHours": 8,
           "contract": 800,
           "hoursPer100": 0.4,
-          "oldest": null,
-          "newest": null,
-          "spanDays": 0
+          "oldest": "2026-03-05",
+          "newest": "2026-03-16",
+          "spanDays": 11
         },
         {
           "wo": "00202214",
@@ -4747,9 +5195,9 @@ window.FZ.data = {
           "billHours": 14,
           "contract": 1400,
           "hoursPer100": 0.5,
-          "oldest": null,
-          "newest": null,
-          "spanDays": 0
+          "oldest": "2026-02-27",
+          "newest": "2026-05-11",
+          "spanDays": 73
         },
         {
           "wo": "00207898",
@@ -4761,9 +5209,9 @@ window.FZ.data = {
           "billHours": 3,
           "contract": 0,
           "hoursPer100": 0,
-          "oldest": null,
-          "newest": null,
-          "spanDays": 0
+          "oldest": "2026-04-13",
+          "newest": "2026-07-15",
+          "spanDays": 93
         },
         {
           "wo": "00218587",
@@ -4775,9 +5223,9 @@ window.FZ.data = {
           "billHours": 0,
           "contract": 0,
           "hoursPer100": 0,
-          "oldest": null,
-          "newest": null,
-          "spanDays": 0
+          "oldest": "2026-06-08",
+          "newest": "2026-06-25",
+          "spanDays": 17
         }
       ],
       "disproportionate": [
@@ -4791,8 +5239,8 @@ window.FZ.data = {
           "billHours": 0,
           "contract": 350,
           "hoursPer100": 185.6,
-          "oldest": null,
-          "newest": null,
+          "oldest": "2026-09-30",
+          "newest": "2026-09-30",
           "spanDays": 0
         },
         {
@@ -4805,8 +5253,8 @@ window.FZ.data = {
           "billHours": 0,
           "contract": 350,
           "hoursPer100": 144,
-          "oldest": null,
-          "newest": null,
+          "oldest": "2026-06-02",
+          "newest": "2026-06-02",
           "spanDays": 0
         },
         {
@@ -4819,8 +5267,8 @@ window.FZ.data = {
           "billHours": 0,
           "contract": 350,
           "hoursPer100": 122.4,
-          "oldest": null,
-          "newest": null,
+          "oldest": "2026-09-11",
+          "newest": "2026-09-11",
           "spanDays": 0
         },
         {
@@ -4833,8 +5281,8 @@ window.FZ.data = {
           "billHours": 0,
           "contract": 400,
           "hoursPer100": 114.2,
-          "oldest": null,
-          "newest": null,
+          "oldest": "2026-08-07",
+          "newest": "2026-08-07",
           "spanDays": 0
         },
         {
@@ -4847,8 +5295,8 @@ window.FZ.data = {
           "billHours": 0,
           "contract": 350,
           "hoursPer100": 73.4,
-          "oldest": null,
-          "newest": null,
+          "oldest": "2026-10-15",
+          "newest": "2026-10-15",
           "spanDays": 0
         },
         {
@@ -4861,8 +5309,8 @@ window.FZ.data = {
           "billHours": 0,
           "contract": 350,
           "hoursPer100": 68.9,
-          "oldest": null,
-          "newest": null,
+          "oldest": "2026-09-04",
+          "newest": "2026-09-04",
           "spanDays": 0
         },
         {
@@ -4875,9 +5323,9 @@ window.FZ.data = {
           "billHours": 5.5,
           "contract": 550,
           "hoursPer100": 53,
-          "oldest": null,
-          "newest": null,
-          "spanDays": 0
+          "oldest": "2026-08-28",
+          "newest": "2026-09-11",
+          "spanDays": 14
         },
         {
           "wo": "00218599",
@@ -4889,8 +5337,8 @@ window.FZ.data = {
           "billHours": 0,
           "contract": 350,
           "hoursPer100": 45.9,
-          "oldest": null,
-          "newest": null,
+          "oldest": "2026-05-23",
+          "newest": "2026-05-23",
           "spanDays": 0
         },
         {
@@ -4903,8 +5351,8 @@ window.FZ.data = {
           "billHours": 1.5,
           "contract": 350,
           "hoursPer100": 40.8,
-          "oldest": null,
-          "newest": null,
+          "oldest": "2026-03-12",
+          "newest": "2026-03-12",
           "spanDays": 0
         },
         {
@@ -4917,8 +5365,8 @@ window.FZ.data = {
           "billHours": 2,
           "contract": 350,
           "hoursPer100": 39.5,
-          "oldest": null,
-          "newest": null,
+          "oldest": "2026-02-05",
+          "newest": "2026-02-05",
           "spanDays": 0
         },
         {
@@ -4931,8 +5379,8 @@ window.FZ.data = {
           "billHours": 286,
           "contract": 400,
           "hoursPer100": 35.7,
-          "oldest": null,
-          "newest": null,
+          "oldest": "2026-03-27",
+          "newest": "2026-03-27",
           "spanDays": 0
         },
         {
@@ -4945,8 +5393,8 @@ window.FZ.data = {
           "billHours": 278,
           "contract": 400,
           "hoursPer100": 34.7,
-          "oldest": null,
-          "newest": null,
+          "oldest": "2026-03-27",
+          "newest": "2026-03-27",
           "spanDays": 0
         },
         {
@@ -4959,9 +5407,9 @@ window.FZ.data = {
           "billHours": 0,
           "contract": 1390,
           "hoursPer100": 27.5,
-          "oldest": null,
-          "newest": null,
-          "spanDays": 0
+          "oldest": "2026-07-31",
+          "newest": "2026-08-24",
+          "spanDays": 24
         },
         {
           "wo": "00231618",
@@ -4973,8 +5421,8 @@ window.FZ.data = {
           "billHours": 0,
           "contract": 350,
           "hoursPer100": 25.9,
-          "oldest": null,
-          "newest": null,
+          "oldest": "2026-09-04",
+          "newest": "2026-09-04",
           "spanDays": 0
         },
         {
@@ -4987,8 +5435,8 @@ window.FZ.data = {
           "billHours": 0,
           "contract": 350,
           "hoursPer100": 25.8,
-          "oldest": null,
-          "newest": null,
+          "oldest": "2026-08-22",
+          "newest": "2026-08-22",
           "spanDays": 0
         },
         {
@@ -5001,8 +5449,8 @@ window.FZ.data = {
           "billHours": 1.5,
           "contract": 300,
           "hoursPer100": 23.1,
-          "oldest": null,
-          "newest": null,
+          "oldest": "2026-02-06",
+          "newest": "2026-02-06",
           "spanDays": 0
         },
         {
@@ -5015,9 +5463,9 @@ window.FZ.data = {
           "billHours": 0,
           "contract": 350,
           "hoursPer100": 18.8,
-          "oldest": null,
-          "newest": null,
-          "spanDays": 0
+          "oldest": "2026-08-12",
+          "newest": "2026-08-21",
+          "spanDays": 9
         },
         {
           "wo": "00229062",
@@ -5029,8 +5477,8 @@ window.FZ.data = {
           "billHours": 0,
           "contract": 875,
           "hoursPer100": 18.8,
-          "oldest": null,
-          "newest": null,
+          "oldest": "2026-08-19",
+          "newest": "2026-08-19",
           "spanDays": 0
         },
         {
@@ -5043,8 +5491,8 @@ window.FZ.data = {
           "billHours": 0,
           "contract": 350,
           "hoursPer100": 18.6,
-          "oldest": null,
-          "newest": null,
+          "oldest": "2026-10-16",
+          "newest": "2026-10-16",
           "spanDays": 0
         },
         {
@@ -5057,9 +5505,9 @@ window.FZ.data = {
           "billHours": 0,
           "contract": 350,
           "hoursPer100": 17.3,
-          "oldest": null,
-          "newest": null,
-          "spanDays": 0
+          "oldest": "2026-09-30",
+          "newest": "2026-10-27",
+          "spanDays": 27
         },
         {
           "wo": "00212709",
@@ -5071,8 +5519,8 @@ window.FZ.data = {
           "billHours": 18.5,
           "contract": 3071,
           "hoursPer100": 15.8,
-          "oldest": null,
-          "newest": null,
+          "oldest": "2026-05-12",
+          "newest": "2026-05-12",
           "spanDays": 0
         },
         {
@@ -5085,8 +5533,8 @@ window.FZ.data = {
           "billHours": 90,
           "contract": 300,
           "hoursPer100": 15,
-          "oldest": null,
-          "newest": null,
+          "oldest": "2026-03-31",
+          "newest": "2026-03-31",
           "spanDays": 0
         },
         {
@@ -5099,8 +5547,8 @@ window.FZ.data = {
           "billHours": 1.5,
           "contract": 450,
           "hoursPer100": 14.7,
-          "oldest": null,
-          "newest": null,
+          "oldest": "2026-04-03",
+          "newest": "2026-04-03",
           "spanDays": 0
         },
         {
@@ -5113,8 +5561,8 @@ window.FZ.data = {
           "billHours": 132,
           "contract": 500,
           "hoursPer100": 13.2,
-          "oldest": null,
-          "newest": null,
+          "oldest": "2026-01-16",
+          "newest": "2026-01-16",
           "spanDays": 0
         },
         {
@@ -5127,8 +5575,8 @@ window.FZ.data = {
           "billHours": 0,
           "contract": 350,
           "hoursPer100": 13,
-          "oldest": null,
-          "newest": null,
+          "oldest": "2026-06-03",
+          "newest": "2026-06-03",
           "spanDays": 0
         }
       ]
@@ -5143,7 +5591,7 @@ window.FZ.data = {
         "hours": 960,
         "contract": 0,
         "laborers": 1,
-        "start": null
+        "start": "2026-04-22 08:56"
       },
       {
         "apptNum": "",
@@ -5154,7 +5602,7 @@ window.FZ.data = {
         "hours": 649.7,
         "contract": 350,
         "laborers": 1,
-        "start": null
+        "start": "2026-09-30 10:39"
       },
       {
         "apptNum": "",
@@ -5165,7 +5613,7 @@ window.FZ.data = {
         "hours": 504,
         "contract": 350,
         "laborers": 1,
-        "start": null
+        "start": "2026-06-02 11:03"
       },
       {
         "apptNum": "",
@@ -5176,7 +5624,7 @@ window.FZ.data = {
         "hours": 480,
         "contract": 3071,
         "laborers": 2,
-        "start": null
+        "start": "2026-05-12 08:45"
       },
       {
         "apptNum": "",
@@ -5187,7 +5635,7 @@ window.FZ.data = {
         "hours": 456.7,
         "contract": 400,
         "laborers": 1,
-        "start": null
+        "start": "2026-08-07 13:10"
       },
       {
         "apptNum": "",
@@ -5198,7 +5646,7 @@ window.FZ.data = {
         "hours": 428.5,
         "contract": 350,
         "laborers": 1,
-        "start": null
+        "start": "2026-09-11 14:39"
       },
       {
         "apptNum": "",
@@ -5209,7 +5657,7 @@ window.FZ.data = {
         "hours": 379.9,
         "contract": 1390,
         "laborers": 1,
-        "start": null
+        "start": "2026-08-24 15:06"
       },
       {
         "apptNum": "",
@@ -5220,7 +5668,7 @@ window.FZ.data = {
         "hours": 361.8,
         "contract": 0,
         "laborers": 2,
-        "start": null
+        "start": "2026-02-16 08:30"
       },
       {
         "apptNum": "",
@@ -5231,7 +5679,7 @@ window.FZ.data = {
         "hours": 288,
         "contract": 550,
         "laborers": 1,
-        "start": null
+        "start": "2026-08-28 13:49"
       },
       {
         "apptNum": "",
@@ -5242,7 +5690,7 @@ window.FZ.data = {
         "hours": 257,
         "contract": 350,
         "laborers": 1,
-        "start": null
+        "start": "2026-10-15 13:46"
       },
       {
         "apptNum": "",
@@ -5253,7 +5701,7 @@ window.FZ.data = {
         "hours": 241.2,
         "contract": 350,
         "laborers": 1,
-        "start": null
+        "start": "2026-09-04 13:10"
       },
       {
         "apptNum": "",
@@ -5264,7 +5712,7 @@ window.FZ.data = {
         "hours": 213.4,
         "contract": 0,
         "laborers": 1,
-        "start": null
+        "start": "2026-09-02 10:38"
       },
       {
         "apptNum": "",
@@ -5275,7 +5723,7 @@ window.FZ.data = {
         "hours": 188.9,
         "contract": 0,
         "laborers": 1,
-        "start": null
+        "start": "2026-08-17 16:03"
       },
       {
         "apptNum": "",
@@ -5286,7 +5734,7 @@ window.FZ.data = {
         "hours": 171.6,
         "contract": 0,
         "laborers": 1,
-        "start": null
+        "start": "2026-08-12 09:06"
       },
       {
         "apptNum": "",
@@ -5297,7 +5745,7 @@ window.FZ.data = {
         "hours": 164.7,
         "contract": 875,
         "laborers": 1,
-        "start": null
+        "start": "2026-08-19 12:01"
       },
       {
         "apptNum": "",
@@ -5308,7 +5756,7 @@ window.FZ.data = {
         "hours": 160.6,
         "contract": 350,
         "laborers": 1,
-        "start": null
+        "start": "2026-05-23 17:56"
       },
       {
         "apptNum": "",
@@ -5319,7 +5767,7 @@ window.FZ.data = {
         "hours": 142.9,
         "contract": 400,
         "laborers": 2,
-        "start": null
+        "start": "2026-03-27 13:17"
       },
       {
         "apptNum": "",
@@ -5330,7 +5778,7 @@ window.FZ.data = {
         "hours": 142.6,
         "contract": 350,
         "laborers": 1,
-        "start": null
+        "start": "2026-03-12 12:25"
       },
       {
         "apptNum": "",
@@ -5341,7 +5789,7 @@ window.FZ.data = {
         "hours": 138.8,
         "contract": 400,
         "laborers": 2,
-        "start": null
+        "start": "2026-03-27 17:24"
       },
       {
         "apptNum": "",
@@ -5352,7 +5800,7 @@ window.FZ.data = {
         "hours": 138.3,
         "contract": 350,
         "laborers": 1,
-        "start": null
+        "start": "2026-02-05 13:52"
       },
       {
         "apptNum": "",
@@ -5363,7 +5811,7 @@ window.FZ.data = {
         "hours": 118.7,
         "contract": 0,
         "laborers": 1,
-        "start": null
+        "start": "2026-10-16 10:30"
       },
       {
         "apptNum": "",
@@ -5374,7 +5822,7 @@ window.FZ.data = {
         "hours": 93.6,
         "contract": 0,
         "laborers": 1,
-        "start": null
+        "start": "2026-09-11 11:30"
       },
       {
         "apptNum": "",
@@ -5385,7 +5833,7 @@ window.FZ.data = {
         "hours": 90.6,
         "contract": 350,
         "laborers": 1,
-        "start": null
+        "start": "2026-09-04 17:56"
       },
       {
         "apptNum": "",
@@ -5396,7 +5844,7 @@ window.FZ.data = {
         "hours": 90.3,
         "contract": 350,
         "laborers": 1,
-        "start": null
+        "start": "2026-08-22 14:43"
       },
       {
         "apptNum": "",
@@ -5407,13 +5855,13 @@ window.FZ.data = {
         "hours": 89.7,
         "contract": 0,
         "laborers": 1,
-        "start": null
+        "start": "2026-02-20 14:45"
       }
     ],
     "buckets": {
-      "<30m": 5916,
+      "<30m": 5914,
       "30-60m": 1779,
-      "1-2h": 3258,
+      "1-2h": 3260,
       "2-4h": 1938,
       "4-8h": 507,
       ">8h": 240
@@ -5436,14 +5884,14 @@ window.FZ.data = {
         "Ryan Brady bills 1.03x actual hours (network avg 0.60x). Review crew sizing or labor allocation.",
         "Richard Hoffman averages 277min per appointment vs network 147min. Heavy skew on this tech's book.",
         "Santos Alfaro-Delcid averages 365min per appointment vs network 147min. Heavy skew on this tech's book.",
-        "Ethan Epperson averages 252min per appointment vs network 147min. Heavy skew on this tech's book.",
+        "Ethan Epperson averages 253min per appointment vs network 147min. Heavy skew on this tech's book.",
         "Daniel Brown averages 1606min per appointment vs network 147min. Heavy skew on this tech's book."
       ],
       "watch": [
         "54 work orders are In Progress 14+ days. Oldest: WO 00231102 (67 days, Walt Weiskopf). Should be closed or escalated.",
-        "650 Repair WOs are not yet started; the oldest has been in \"Pending Insurance Claim\" for 299 days (WO 00198032, Associa Tennessee). Slow-scheduling backlog.",
+        "648 Repair WOs are not yet started; the oldest has been in \"Pending Insurance Claim\" for 299 days (WO 00198032, Associa Tennessee). Slow-scheduling backlog.",
         "25 work orders are eating disproportionate hours vs their contract value. Top offender: WO 00237240 (649.7h on $350 contract).",
-        "13638 appointments have no Actual End — either still in progress or never closed out. Likely a data hygiene problem in Salesforce."
+        "4247 appointments have no Actual End — either still in progress or never closed out. Likely a data hygiene problem in Salesforce."
       ],
       "positives": [
         "Darren Vaught runs 782 appointments at just 70min avg — efficient dispatch density.",
