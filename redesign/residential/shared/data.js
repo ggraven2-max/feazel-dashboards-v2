@@ -1,8 +1,8 @@
-/* AUTO-GENERATED — do not edit. Generated 2026-11-10T14:17:21.461Z (residential) */
+/* AUTO-GENERATED — do not edit. Generated 2026-11-11T14:04:16.067Z (residential) */
 window.FZ = window.FZ || {};
 window.FZ.data = {
   "_meta": {
-    "builtAt": "2026-11-10T14:17:21.461Z",
+    "builtAt": "2026-11-11T14:04:16.067Z",
     "pipelineVersion": "2.0.0",
     "lob": "residential",
     "lastBuiltProjects": [
@@ -15,45 +15,45 @@ window.FZ.data = {
       {
         "id": "installs-ytd",
         "version": "1.0-rules-encoded",
-        "elapsedMs": 161,
-        "builtAt": "2026-11-10T14:17:21.461Z"
+        "elapsedMs": 143,
+        "builtAt": "2026-11-11T14:04:16.067Z"
       },
       {
         "id": "sales-overview",
         "version": "1.0-rules-encoded",
-        "elapsedMs": 787,
-        "builtAt": "2026-11-10T14:17:21.461Z"
+        "elapsedMs": 667,
+        "builtAt": "2026-11-11T14:04:16.067Z"
       },
       {
         "id": "revenue-forecast",
         "version": "V5-baseline-2026-05-04-shell-1.1",
-        "elapsedMs": 2608,
-        "builtAt": "2026-11-10T14:17:21.461Z"
+        "elapsedMs": 2268,
+        "builtAt": "2026-11-11T14:04:16.067Z"
       },
       {
         "id": "backlog",
         "version": "1.0-rules-encoded",
-        "elapsedMs": 29,
-        "builtAt": "2026-11-10T14:17:21.461Z"
+        "elapsedMs": 24,
+        "builtAt": "2026-11-11T14:04:16.067Z"
       }
     ]
   },
   "INSTALLS_YTD": {
     "_source": "calculator/installs-ytd.js v1.0-rules-encoded",
     "title": "Residential Installs YTD",
-    "subtitle": "Invoiced Jobs - Jan 06, 2026 - Nov 09, 2026 - De-Duplicated at Job Level - 4,312 Jobs - 14 Markets - 34 PMs",
-    "generated": "2026-11-10",
+    "subtitle": "Invoiced Jobs - Jan 06, 2026 - Nov 10, 2026 - De-Duplicated at Job Level - 4,332 Jobs - 14 Markets - 34 PMs",
+    "generated": "2026-11-11",
     "headerMeta": {
-      "trueRevenue": 83404491.13,
-      "uniqueJobs": 4312,
+      "trueRevenue": 83783728.3,
+      "uniqueJobs": 4332,
       "markets": 14,
       "pms": 34,
-      "medianComplete": 27.7,
+      "medianComplete": 27.6,
       "avgStart": 26.4,
-      "multiTradeJobs": 1503,
-      "singleTradeJobs": 2809,
+      "multiTradeJobs": 1511,
+      "singleTradeJobs": 2821,
       "multiTradePct": 34.9,
-      "lastBuild": "2026-11-10T14:17:21.461Z"
+      "lastBuild": "2026-11-11T14:04:16.066Z"
     },
     "tabs": [
       {
@@ -96,17 +96,17 @@ window.FZ.data = {
     "kpis": [
       {
         "label": "True Revenue",
-        "value": "$83.40M",
-        "sub": "4,312 unique jobs invoiced"
+        "value": "$83.78M",
+        "sub": "4,332 unique jobs invoiced"
       },
       {
         "label": "Avg Contract Value",
-        "value": "$19,342",
+        "value": "$19,341",
         "sub": "Per job (deduped)"
       },
       {
         "label": "Median Days to Complete",
-        "value": "27.7d",
+        "value": "27.6d",
         "sub": "Job-level median"
       },
       {
@@ -116,24 +116,24 @@ window.FZ.data = {
       },
       {
         "label": "Multi-Trade Jobs",
-        "value": "1,503",
+        "value": "1,511",
         "sub": "34.9% of book"
       },
       {
         "label": "Single-Trade Jobs",
-        "value": "2,809",
+        "value": "2,821",
         "sub": "65.1% of book"
       }
     ],
     "kpisMultiTrade": [
       {
         "label": "Multi-Trade Avg Contract",
-        "value": "$24,122",
-        "sub": "+43.7% vs single-trade"
+        "value": "$24,141",
+        "sub": "+44.0% vs single-trade"
       },
       {
         "label": "Single-Trade Avg Contract",
-        "value": "$16,785",
+        "value": "$16,769",
         "sub": "Baseline ticket"
       },
       {
@@ -237,10 +237,10 @@ window.FZ.data = {
         "m": "2026-11",
         "label": "November",
         "key": "2026-11",
-        "rev": 2934247.26,
-        "jobs": 144,
-        "med": 32.6,
-        "start": 27.5
+        "rev": 3313484.43,
+        "jobs": 164,
+        "med": 32.1,
+        "start": 27.7
       }
     ],
     "charts": [
@@ -273,7 +273,7 @@ window.FZ.data = {
               9084567.23,
               9372427.08,
               12163438.13,
-              2934247.26
+              3313484.43
             ]
           },
           {
@@ -289,7 +289,7 @@ window.FZ.data = {
               451,
               484,
               619,
-              144
+              164
             ]
           }
         ]
@@ -323,7 +323,7 @@ window.FZ.data = {
               29.5,
               28.7,
               32.5,
-              32.6
+              32.1
             ]
           },
           {
@@ -339,7 +339,7 @@ window.FZ.data = {
               26.8,
               26.1,
               27.1,
-              27.5
+              27.7
             ]
           }
         ]
@@ -353,13 +353,13 @@ window.FZ.data = {
           {
             "label": "Multi-Trade",
             "data": [
-              1503
+              1511
             ]
           },
           {
             "label": "Single-Trade",
             "data": [
-              2809
+              2821
             ]
           }
         ]
@@ -380,10 +380,10 @@ window.FZ.data = {
           {
             "label": "Jobs",
             "data": [
-              964,
+              970,
               100,
               94,
-              91,
+              92,
               29,
               23,
               22,
@@ -400,8 +400,8 @@ window.FZ.data = {
           "Cleveland",
           "Nashville",
           "DC Metro",
-          "Richmond",
           "Cincinnati",
+          "Richmond",
           "Dayton",
           "Raleigh",
           "Knoxville",
@@ -414,14 +414,14 @@ window.FZ.data = {
           {
             "label": "MT %",
             "data": [
-              35.4,
-              30.7,
+              35.5,
+              30.9,
               46.4,
               31.5,
-              39.2,
+              38.9,
+              27.4,
               38.3,
-              27.6,
-              28.7,
+              29.2,
               22.8,
               33.5,
               40.6,
@@ -440,8 +440,8 @@ window.FZ.data = {
           "Cleveland",
           "Nashville",
           "DC Metro",
-          "Richmond",
           "Cincinnati",
+          "Richmond",
           "Dayton",
           "Raleigh",
           "Knoxville",
@@ -456,12 +456,12 @@ window.FZ.data = {
             "data": [
               46.7,
               44.6,
-              56.4,
+              56.5,
               21.7,
               22.7,
-              34.1,
               41.6,
-              38.2,
+              34.1,
+              37.7,
               34.6,
               27.1,
               27.7,
@@ -473,13 +473,13 @@ window.FZ.data = {
           {
             "label": "ST Median",
             "data": [
-              21.6,
+              21.5,
               24.5,
               30.6,
               18.7,
               14.5,
-              13.6,
               23.6,
+              13.6,
               22.5,
               19.6,
               17.5,
@@ -499,8 +499,8 @@ window.FZ.data = {
           "Cleveland",
           "Nashville",
           "DC Metro",
-          "Richmond",
           "Cincinnati",
+          "Richmond",
           "Dayton",
           "Raleigh",
           "Knoxville",
@@ -513,13 +513,13 @@ window.FZ.data = {
           {
             "label": "Revenue",
             "data": [
-              31991018.25,
-              11433655.95,
-              6974189.03,
+              32218100.56,
+              11460221.95,
+              7042939.03,
               6394236.01,
-              5500542.05,
+              5538711.55,
+              4196183.31,
               4193255.87,
-              4177513.95,
               3993623.85,
               2776907.75,
               2671292.99,
@@ -539,8 +539,8 @@ window.FZ.data = {
           "Cleveland",
           "Nashville",
           "DC Metro",
-          "Richmond",
           "Cincinnati",
+          "Richmond",
           "Dayton",
           "Raleigh",
           "Knoxville",
@@ -557,9 +557,9 @@ window.FZ.data = {
               29.5,
               40.6,
               20.4,
-              18.7,
+              19.1,
+              27.7,
               20.4,
-              28.4,
               25.6,
               21.6,
               20.6,
@@ -578,12 +578,12 @@ window.FZ.data = {
           "Eric Isakov",
           "Richard Williams",
           "Landon Little",
-          "Brandon Skrzypek",
           "Drew Bailey",
+          "Brandon Skrzypek",
           "Joseph Yager",
           "Alex Dubanoski",
-          "Jason Andrews-INACTIVE",
           "Shawn Oehlstrom",
+          "Jason Andrews-INACTIVE",
           "Alejandro Alvarado",
           "Kaden Carter",
           "Brady Weingartner",
@@ -594,20 +594,20 @@ window.FZ.data = {
           {
             "label": "Fractional Revenue",
             "data": [
-              7022106.98,
-              6801259.13,
+              7060507.31,
+              6860551.68,
               5585264.49,
-              5172101.75,
-              4381735.5,
-              4359970.64,
+              5210540.51,
+              4405561.32,
+              4395490.5,
               4179737.31,
               3836312.23,
+              3677583.18,
               3666269.72,
-              3655083.18,
-              2982325.27,
+              3005106.77,
               2851053.29,
-              2752735.68,
-              2725294.21,
+              2761818.04,
+              2740682.21,
               2483522.89
             ]
           }
@@ -620,12 +620,12 @@ window.FZ.data = {
           "Eric Isakov",
           "Richard Williams",
           "Landon Little",
-          "Brandon Skrzypek",
           "Drew Bailey",
+          "Brandon Skrzypek",
           "Joseph Yager",
           "Alex Dubanoski",
-          "Jason Andrews-INACTIVE",
           "Shawn Oehlstrom",
+          "Jason Andrews-INACTIVE",
           "Alejandro Alvarado",
           "Kaden Carter",
           "Brady Weingartner",
@@ -657,14 +657,14 @@ window.FZ.data = {
             "data": [
               {
                 "x": 31.7,
-                "y": 7022106.98,
-                "wos": 456,
+                "y": 7060507.31,
+                "wos": 458,
                 "name": "Mason Bryant"
               },
               {
                 "x": 29.5,
-                "y": 6801259.13,
-                "wos": 424,
+                "y": 6860551.68,
+                "wos": 429,
                 "name": "Eric Isakov"
               },
               {
@@ -674,27 +674,27 @@ window.FZ.data = {
                 "name": "Richard Williams"
               },
               {
-                "x": 32.7,
-                "y": 5172101.75,
-                "wos": 315,
+                "x": 32.6,
+                "y": 5210540.51,
+                "wos": 318,
                 "name": "Landon Little"
               },
               {
                 "x": 33.5,
-                "y": 4381735.5,
-                "wos": 253,
-                "name": "Brandon Skrzypek"
+                "y": 4405561.32,
+                "wos": 509,
+                "name": "Drew Bailey"
               },
               {
-                "x": 33.5,
-                "y": 4359970.64,
-                "wos": 505,
-                "name": "Drew Bailey"
+                "x": 32.7,
+                "y": 4395490.5,
+                "wos": 256,
+                "name": "Brandon Skrzypek"
               },
               {
                 "x": 30,
                 "y": 4179737.31,
-                "wos": 338,
+                "wos": 339,
                 "name": "Joseph Yager"
               },
               {
@@ -704,21 +704,21 @@ window.FZ.data = {
                 "name": "Alex Dubanoski"
               },
               {
+                "x": 44.4,
+                "y": 3677583.18,
+                "wos": 365,
+                "name": "Shawn Oehlstrom"
+              },
+              {
                 "x": 35.4,
                 "y": 3666269.72,
                 "wos": 358,
                 "name": "Jason Andrews-INACTIVE"
               },
               {
-                "x": 44.4,
-                "y": 3655083.18,
-                "wos": 364,
-                "name": "Shawn Oehlstrom"
-              },
-              {
-                "x": 19.5,
-                "y": 2982325.27,
-                "wos": 215,
+                "x": 20,
+                "y": 3005106.77,
+                "wos": 216,
                 "name": "Alejandro Alvarado"
               },
               {
@@ -728,15 +728,15 @@ window.FZ.data = {
                 "name": "Kaden Carter"
               },
               {
-                "x": 25.2,
-                "y": 2752735.68,
-                "wos": 158,
+                "x": 25.7,
+                "y": 2761818.04,
+                "wos": 159,
                 "name": "Brady Weingartner"
               },
               {
                 "x": 19.7,
-                "y": 2725294.21,
-                "wos": 241,
+                "y": 2740682.21,
+                "wos": 243,
                 "name": "Galo Munive"
               },
               {
@@ -753,8 +753,8 @@ window.FZ.data = {
               },
               {
                 "x": 27.5,
-                "y": 2437443.66,
-                "wos": 153,
+                "y": 2448757.66,
+                "wos": 154,
                 "name": "Malik Ford"
               },
               {
@@ -764,9 +764,9 @@ window.FZ.data = {
                 "name": "Abraham Santiago"
               },
               {
-                "x": 42.5,
-                "y": 2356182.51,
-                "wos": 170,
+                "x": 43,
+                "y": 2401182.51,
+                "wos": 172,
                 "name": "Joshua Collins"
               },
               {
@@ -807,8 +807,8 @@ window.FZ.data = {
               },
               {
                 "x": 42.4,
-                "y": 622895.39,
-                "wos": 72,
+                "y": 677842.39,
+                "wos": 74,
                 "name": "(Unassigned)"
               },
               {
@@ -830,9 +830,9 @@ window.FZ.data = {
                 "name": "Neil Laux"
               },
               {
-                "x": 56.5,
-                "y": 408373.64,
-                "wos": 57,
+                "x": 55.5,
+                "y": 409623.64,
+                "wos": 58,
                 "name": "Mike Scott"
               },
               {
@@ -842,9 +842,9 @@ window.FZ.data = {
                 "name": "Justin Milliron"
               },
               {
-                "x": 52.5,
-                "y": 230033.98,
-                "wos": 38,
+                "x": 49.5,
+                "y": 231530.98,
+                "wos": 40,
                 "name": "Chris Atkins"
               },
               {
@@ -879,8 +879,8 @@ window.FZ.data = {
           "Electrical",
           "Carpentry",
           "Other",
-          "Skylights",
           "Stucco",
+          "Skylights",
           "Insulation",
           "Unspecified",
           "Door"
@@ -889,21 +889,21 @@ window.FZ.data = {
           {
             "label": "Revenue",
             "data": [
-              59919942.58,
-              14387323.73,
-              4671260.13,
+              60129976.53,
+              14482065.91,
+              4682309.63,
               986160.69,
               910821.23,
               683225.48,
               406662.67,
               382764.85,
-              330813.36,
+              376173.36,
               235148.34,
               209645.05,
               94319.85,
               82018.24,
+              55299.72,
               49122.61,
-              37248.17,
               10924.5,
               4786.5,
               2303.15
@@ -927,8 +927,8 @@ window.FZ.data = {
           "Electrical",
           "Carpentry",
           "Other",
-          "Skylights",
           "Stucco",
+          "Skylights",
           "Insulation",
           "Unspecified",
           "Door"
@@ -938,8 +938,8 @@ window.FZ.data = {
             "label": "Median Days",
             "data": [
               27.6,
-              36.5,
-              53.5,
+              36.4,
+              53.4,
               70,
               55.5,
               66.5,
@@ -950,8 +950,8 @@ window.FZ.data = {
               39.5,
               38.1,
               73.6,
+              31,
               54.5,
-              50,
               39.5,
               84.4,
               67.5
@@ -980,13 +980,13 @@ window.FZ.data = {
           {
             "label": "Jobs",
             "data": [
-              1348,
+              1353,
               1112,
               512,
-              348,
-              306,
+              354,
+              311,
               315,
-              247,
+              251,
               70,
               23,
               20,
@@ -1059,10 +1059,10 @@ window.FZ.data = {
               38.7,
               31.7,
               29.1,
-              37.1,
-              33.7,
+              37.6,
+              33.8,
               36.5,
-              31.6,
+              31.5,
               44.3,
               60.9,
               30,
@@ -1096,8 +1096,8 @@ window.FZ.data = {
             "data": [
               {
                 "x": 31.5,
-                "y": 19812.11,
-                "jobs": 1348,
+                "y": 19823.71,
+                "jobs": 1353,
                 "name": "Brandon Vera"
               },
               {
@@ -1114,14 +1114,14 @@ window.FZ.data = {
               },
               {
                 "x": 25.5,
-                "y": 19256.44,
-                "jobs": 348,
+                "y": 19337.46,
+                "jobs": 354,
                 "name": "Allison Webb"
               },
               {
                 "x": 25.7,
-                "y": 19432.09,
-                "jobs": 306,
+                "y": 19209.12,
+                "jobs": 311,
                 "name": "Ethan Wolfe"
               },
               {
@@ -1132,8 +1132,8 @@ window.FZ.data = {
               },
               {
                 "x": 30.6,
-                "y": 18085.12,
-                "jobs": 247,
+                "y": 18165.24,
+                "jobs": 251,
                 "name": "Thomas Hayes"
               },
               {
@@ -1195,35 +1195,35 @@ window.FZ.data = {
         "rows": [
           [
             "Columbus",
-            1617,
-            31991018.25,
-            19784.18,
+            1626,
+            32218100.56,
+            19814.33,
             29.7,
             28.4,
-            35.4,
+            35.5,
             46.7,
-            21.6
+            21.5
           ],
           [
             "Detroit Metro",
-            602,
-            11433655.95,
-            18992.78,
+            606,
+            11460221.95,
+            18911.26,
             29.5,
-            33.1,
-            30.7,
+            33,
+            30.9,
             44.6,
             24.5
           ],
           [
             "Cleveland",
-            386,
-            6974189.03,
-            18067.85,
+            388,
+            7042939.03,
+            18151.9,
             40.6,
             36.8,
             46.4,
-            56.4,
+            56.5,
             30.6
           ],
           [
@@ -1239,14 +1239,25 @@ window.FZ.data = {
           ],
           [
             "DC Metro",
-            293,
-            5500542.05,
-            18773.18,
-            18.7,
-            19.5,
-            39.2,
+            296,
+            5538711.55,
+            18711.86,
+            19.1,
+            19.8,
+            38.9,
             22.7,
             14.5
+          ],
+          [
+            "Cincinnati",
+            223,
+            4196183.31,
+            18816.97,
+            27.7,
+            23.5,
+            27.4,
+            41.6,
+            23.6
           ],
           [
             "Richmond",
@@ -1260,25 +1271,14 @@ window.FZ.data = {
             13.6
           ],
           [
-            "Cincinnati",
-            221,
-            4177513.95,
-            18902.78,
-            28.4,
-            23.5,
-            27.6,
-            41.6,
-            23.6
-          ],
-          [
             "Dayton",
             216,
             3993623.85,
             18489,
             25.6,
             21.2,
-            28.7,
-            38.2,
+            29.2,
+            37.7,
             22.5
           ],
           [
@@ -1364,21 +1364,21 @@ window.FZ.data = {
         "rows": [
           [
             "Mason Bryant",
-            456,
-            395,
-            7022106.98,
-            15399.36,
+            458,
+            397,
+            7060507.31,
+            15415.95,
             31.7,
-            24.7
+            24.8
           ],
           [
             "Eric Isakov",
-            424,
-            351,
-            6801259.13,
-            16040.71,
+            429,
+            354,
+            6860551.68,
+            15991.96,
             29.5,
-            25.5
+            25.4
           ],
           [
             "Richard Williams",
@@ -1391,37 +1391,37 @@ window.FZ.data = {
           ],
           [
             "Landon Little",
-            315,
-            284,
-            5172101.75,
-            16419.37,
-            32.7,
-            28.3
-          ],
-          [
-            "Brandon Skrzypek",
-            253,
-            246,
-            4381735.5,
-            17319.11,
-            33.5,
-            31.8
+            318,
+            287,
+            5210540.51,
+            16385.35,
+            32.6,
+            28.2
           ],
           [
             "Drew Bailey",
-            505,
-            460,
-            4359970.64,
-            8633.61,
+            509,
+            464,
+            4405561.32,
+            8655.33,
             33.5,
             25.9
           ],
           [
+            "Brandon Skrzypek",
+            256,
+            249,
+            4395490.5,
+            17169.88,
+            32.7,
+            31.6
+          ],
+          [
             "Joseph Yager",
-            338,
+            339,
             268,
             4179737.31,
-            12366.09,
+            12329.61,
             30,
             22.1
           ],
@@ -1435,6 +1435,15 @@ window.FZ.data = {
             16.3
           ],
           [
+            "Shawn Oehlstrom",
+            365,
+            272,
+            3677583.18,
+            10075.57,
+            44.4,
+            38.8
+          ],
+          [
             "Jason Andrews-INACTIVE",
             358,
             299,
@@ -1444,22 +1453,13 @@ window.FZ.data = {
             35.9
           ],
           [
-            "Shawn Oehlstrom",
-            364,
-            271,
-            3655083.18,
-            10041.44,
-            44.4,
-            38.8
-          ],
-          [
             "Alejandro Alvarado",
-            215,
-            159,
-            2982325.27,
-            13871.28,
-            19.5,
-            17.8
+            216,
+            160,
+            3005106.77,
+            13912.53,
+            20,
+            18.3
           ],
           [
             "Kaden Carter",
@@ -1472,19 +1472,19 @@ window.FZ.data = {
           ],
           [
             "Brady Weingartner",
-            158,
-            146,
-            2752735.68,
-            17422.38,
-            25.2,
+            159,
+            147,
+            2761818.04,
+            17369.92,
+            25.7,
             23.4
           ],
           [
             "Galo Munive",
-            241,
-            185,
-            2725294.21,
-            11308.27,
+            243,
+            187,
+            2740682.21,
+            11278.53,
             19.7,
             22.3
           ],
@@ -1508,12 +1508,12 @@ window.FZ.data = {
           ],
           [
             "Malik Ford",
-            153,
-            146,
-            2437443.66,
-            15931,
+            154,
+            147,
+            2448757.66,
+            15901.02,
             27.5,
-            29.3
+            29.2
           ],
           [
             "Abraham Santiago",
@@ -1526,11 +1526,11 @@ window.FZ.data = {
           ],
           [
             "Joshua Collins",
+            172,
             170,
-            169,
-            2356182.51,
-            13859.9,
-            42.5,
+            2401182.51,
+            13960.36,
+            43,
             32
           ],
           [
@@ -1589,12 +1589,12 @@ window.FZ.data = {
           ],
           [
             "(Unassigned)",
-            72,
-            65,
-            622895.39,
-            8651.32,
+            74,
+            67,
+            677842.39,
+            9160.03,
             42.4,
-            32.6
+            33.1
           ],
           [
             "Cody Mitchell-INACTIVE",
@@ -1625,12 +1625,12 @@ window.FZ.data = {
           ],
           [
             "Mike Scott",
+            58,
             57,
-            56,
-            408373.64,
-            7164.45,
-            56.5,
-            33.7
+            409623.64,
+            7062.48,
+            55.5,
+            33.3
           ],
           [
             "Justin Milliron",
@@ -1643,12 +1643,12 @@ window.FZ.data = {
           ],
           [
             "Chris Atkins",
-            38,
-            34,
-            230033.98,
-            6053.53,
-            52.5,
-            42.3
+            40,
+            35,
+            231530.98,
+            5788.27,
+            49.5,
+            42.1
           ],
           [
             "Nathaniel Pardes",
@@ -1683,24 +1683,24 @@ window.FZ.data = {
         "rows": [
           [
             "Roofing",
-            3888,
-            59919942.58,
-            15411.51,
+            3904,
+            60129976.53,
+            15402.15,
             27.6
           ],
           [
             "Gutters",
-            1520,
-            14387323.73,
-            9465.34,
-            36.5
+            1531,
+            14482065.91,
+            9459.22,
+            36.4
           ],
           [
             "Siding",
-            472,
-            4671260.13,
-            9896.74,
-            53.5
+            473,
+            4682309.63,
+            9899.17,
+            53.4
           ],
           [
             "Metal",
@@ -1739,9 +1739,9 @@ window.FZ.data = {
           ],
           [
             "Rack Mounted Solar",
-            32,
-            330813.36,
-            10337.92,
+            33,
+            376173.36,
+            11399.19,
             63.5
           ],
           [
@@ -1773,18 +1773,18 @@ window.FZ.data = {
             73.6
           ],
           [
+            "Stucco",
+            6,
+            55299.72,
+            9216.62,
+            31
+          ],
+          [
             "Skylights",
             5,
             49122.61,
             9824.52,
             54.5
-          ],
-          [
-            "Stucco",
-            4,
-            37248.17,
-            9312.04,
-            50
           ],
           [
             "Insulation",
@@ -1825,13 +1825,13 @@ window.FZ.data = {
         "rows": [
           [
             "Brandon Vera",
-            1348,
-            26706727.89,
-            19812.11,
+            1353,
+            26821479.75,
+            19823.71,
             "31.5d",
             "27.5d",
             38.7,
-            19812.11
+            19823.71
           ],
           [
             "David Schwan",
@@ -1855,23 +1855,23 @@ window.FZ.data = {
           ],
           [
             "Allison Webb",
-            348,
-            6701242.7,
-            19256.44,
+            354,
+            6845461.82,
+            19337.46,
             "25.5d",
-            "19.4d",
-            37.1,
-            19256.44
+            "19.7d",
+            37.6,
+            19337.46
           ],
           [
             "Ethan Wolfe",
-            306,
-            5946219.39,
-            19432.09,
+            311,
+            5974035.39,
+            19209.12,
             "25.7d",
             "20.2d",
-            33.7,
-            19432.09
+            33.8,
+            19209.12
           ],
           [
             "Bradley Essex - INACTIVE",
@@ -1885,13 +1885,13 @@ window.FZ.data = {
           ],
           [
             "Thomas Hayes",
-            247,
-            4467024.38,
-            18085.12,
+            251,
+            4559474.57,
+            18165.24,
             "30.6d",
-            "31.4d",
-            31.6,
-            18085.12
+            "31.3d",
+            31.5,
+            18165.24
           ],
           [
             "Bruce Lemon Jr.",
@@ -1979,9 +1979,9 @@ window.FZ.data = {
         "rows": [
           [
             "Allison Webb",
-            55,
+            56,
             25,
-            216,
+            221,
             13,
             26,
             8,
@@ -1993,7 +1993,7 @@ window.FZ.data = {
             0,
             1,
             3,
-            348
+            354
           ],
           [
             "Amanda Wade - INACTIVE",
@@ -2051,10 +2051,10 @@ window.FZ.data = {
           ],
           [
             "Brandon Vera",
-            73,
-            145,
+            74,
+            146,
             335,
-            273,
+            276,
             97,
             157,
             20,
@@ -2065,7 +2065,7 @@ window.FZ.data = {
             0,
             15,
             196,
-            1348
+            1353
           ],
           [
             "Brenda Dixon-INACTIVE",
@@ -2124,11 +2124,11 @@ window.FZ.data = {
           [
             "Ethan Wolfe",
             4,
-            15,
+            16,
             166,
             0,
             2,
-            116,
+            120,
             3,
             0,
             0,
@@ -2137,7 +2137,7 @@ window.FZ.data = {
             0,
             0,
             0,
-            306
+            311
           ],
           [
             "Jeff Craft",
@@ -2197,7 +2197,7 @@ window.FZ.data = {
             "Thomas Hayes",
             4,
             10,
-            37,
+            41,
             0,
             3,
             185,
@@ -2209,16 +2209,16 @@ window.FZ.data = {
             0,
             0,
             0,
-            247
+            251
           ],
           [
             "Total",
-            221,
-            386,
-            1617,
-            293,
+            223,
+            388,
+            1626,
+            296,
             216,
-            602,
+            606,
             35,
             1,
             106,
@@ -2227,7 +2227,7 @@ window.FZ.data = {
             279,
             162,
             209,
-            4312
+            4332
           ]
         ]
       }
@@ -2239,12 +2239,12 @@ window.FZ.data = {
         "Days to Start averages 26.4 days company-wide and 36.8 days in Cleveland (a sold job sits weeks before a crew touches it)."
       ],
       "watchList": [
-        "Gutters-only work runs at 36.5-day median complete versus 27.6 days for roofing, 32% slower cycle on the lowest-priced trade."
+        "Gutters-only work runs at 36.4-day median complete versus 27.6 days for roofing, 32% slower cycle on the lowest-priced trade."
       ],
       "positivesToBuildOn": [
         "October delivered $12.16M across 619 invoiced jobs at 32.5-day median complete, the highest revenue month and one of the fastest cycles of the year.",
-        "DC Metro hits 18.7-day median complete and a $18,773 average contract on 293 jobs.",
-        "Multi-trade jobs carry a $24,122 average contract versus $16,785 for single-trade, a 44% revenue lift per job.",
+        "DC Metro hits 19.1-day median complete and a $18,712 average contract on 296 jobs.",
+        "Multi-trade jobs carry a $24,141 average contract versus $16,769 for single-trade, a 44% revenue lift per job.",
         "Nashville is the best-balanced market: 20.4-day median complete, 31.5% multi-trade attach, $22,918 average contract on 279 jobs."
       ]
     }
@@ -2254,8 +2254,8 @@ window.FZ.data = {
     "title": "Residential Sales Overview",
     "subtitle": "YTD 2026",
     "lastSigned": "2026-11-28",
-    "ytdDays": 313,
-    "rowCount": 5585,
+    "ytdDays": 314,
+    "rowCount": 5600,
     "tabs": [
       {
         "id": "overview",
@@ -2313,35 +2313,35 @@ window.FZ.data = {
     "kpis": [
       {
         "label": "Signed Contracts YTD",
-        "value": "$96.47M",
-        "sub": "5,585 signed contracts across 13 markets"
+        "value": "$96.68M",
+        "sub": "5,600 signed contracts across 13 markets"
       },
       {
         "label": "Sold",
-        "value": "$94.75M",
-        "sub": "5,496 deals | 98.4% of signed contracts"
+        "value": "$95.23M",
+        "sub": "5,524 deals | 98.6% of signed contracts"
       },
       {
         "label": "Production Review",
-        "value": "$1.29M",
-        "sub": "62 deals | Ops Review, PM Review, Contracted"
+        "value": "$1.01M",
+        "sub": "50 deals | Ops Review, PM Review, Contracted"
       },
       {
         "label": "Kicked Back",
-        "value": "$293K",
-        "sub": "18 deals | 0.3% of signed contracts",
+        "value": "$299K",
+        "sub": "16 deals | 0.3% of signed contracts",
         "trend": "negative"
       },
       {
         "label": "Sales Action",
-        "value": "$53K",
+        "value": "$63K",
         "sub": "4 deals requiring sales follow-up",
         "trend": "neutral"
       },
       {
         "label": "Avg Deal Size",
-        "value": "$17,272",
-        "sub": "Median: $16,012 | Install avg: $19,643"
+        "value": "$17,265",
+        "sub": "Median: $16,004 | Install avg: $19,647"
       },
       {
         "label": "Organization",
@@ -2350,40 +2350,40 @@ window.FZ.data = {
       },
       {
         "label": "Annualized Sales Rate",
-        "value": "~$112.49M",
-        "sub": "Based on 313 days YTD"
+        "value": "~$112.39M",
+        "sub": "Based on 314 days YTD"
       },
       {
         "label": "Install vs Repair",
-        "value": "86.0% / 13.8%",
-        "sub": "4,805 installs | 773 repairs"
+        "value": "86.1% / 13.9%",
+        "sub": "4,819 installs | 776 repairs"
       }
     ],
     "pipelineBuckets": [
       {
         "label": "Sold",
-        "count": 5496,
-        "amount": 94752426.48
+        "count": 5524,
+        "amount": 95233313.73
       },
       {
         "label": "Production Review",
-        "count": 62,
-        "amount": 1290218.23
+        "count": 50,
+        "amount": 1008144.76
       },
       {
         "label": "Kicked Back",
-        "count": 18,
-        "amount": 293211.66
+        "count": 16,
+        "amount": 298593.15
       },
       {
         "label": "Sales Action",
         "count": 4,
-        "amount": 52570.11
+        "amount": 63085.11
       },
       {
         "label": "Other",
-        "count": 5,
-        "amount": 78398
+        "count": 6,
+        "amount": 79028.17
       }
     ],
     "stageBuckets": {
@@ -2509,26 +2509,26 @@ window.FZ.data = {
       {
         "key": "2026-10",
         "label": "October",
-        "count": 619,
-        "amount": 11259049.03,
-        "installs": 524,
+        "count": 621,
+        "amount": 11258483.3,
+        "installs": 527,
         "repairs": 92,
-        "avgDeal": 18189,
-        "repairPct": 14.9,
-        "installAvg": 20762,
-        "repairAvg": 3479
+        "avgDeal": 18130,
+        "repairPct": 14.8,
+        "installAvg": 20705,
+        "repairAvg": 3316
       },
       {
         "key": "2026-11",
         "label": "November",
-        "count": 115,
-        "amount": 2084428.27,
-        "installs": 97,
-        "repairs": 14,
-        "avgDeal": 18125,
-        "repairPct": 12.2,
-        "installAvg": 19254,
-        "repairAvg": 6257
+        "count": 128,
+        "amount": 2300334.44,
+        "installs": 108,
+        "repairs": 17,
+        "avgDeal": 17971,
+        "repairPct": 13.3,
+        "installAvg": 19744,
+        "repairAvg": 5519
       }
     ],
     "jobTypeMixByMonth": {
@@ -2539,11 +2539,11 @@ window.FZ.data = {
         "2026-04": 4946562.91,
         "2026-05": 4246843.79,
         "2026-06": 4233213.92,
-        "2026-07": 4793203.11,
+        "2026-07": 4797515.11,
         "2026-08": 4816946.2,
         "2026-09": 4450961.08,
-        "2026-10": 4145069.45,
-        "2026-11": 629901.19
+        "2026-10": 4197547.45,
+        "2026-11": 680916.19
       },
       "Insurance": {
         "2026-01": 1437020.6,
@@ -2555,8 +2555,8 @@ window.FZ.data = {
         "2026-07": 4992025.68,
         "2026-08": 4512423.02,
         "2026-09": 4745230.18,
-        "2026-10": 4936970.53,
-        "2026-11": 599504.51
+        "2026-10": 4987722.04,
+        "2026-11": 760674.25
       },
       "Retail-Financing": {
         "2026-01": 487089.46,
@@ -2568,28 +2568,28 @@ window.FZ.data = {
         "2026-07": 1381591.63,
         "2026-08": 1752357.96,
         "2026-09": 1920264.53,
-        "2026-10": 1670411.07,
-        "2026-11": 254371.37
+        "2026-10": 1651748.34,
+        "2026-11": 375106.1
       }
     },
     "jobTypeTotals": [
       {
         "jobType": "Insurance",
-        "count": 2121,
-        "amount": 44092363.14,
-        "avg": 20788
+        "count": 2128,
+        "amount": 44304284.39,
+        "avg": 20820
       },
       {
         "jobType": "Retail-No Financing",
-        "count": 2798,
-        "amount": 38345948.67,
-        "avg": 13705
+        "count": 2813,
+        "amount": 38453753.67,
+        "avg": 13670
       },
       {
         "jobType": "Retail-Financing",
-        "count": 583,
-        "amount": 12483741.99,
-        "avg": 21413
+        "count": 588,
+        "amount": 12585813.99,
+        "avg": 21404
       }
     ],
     "weeklyTrend": [
@@ -2796,7 +2796,7 @@ window.FZ.data = {
       {
         "w": 41,
         "count": 140,
-        "amount": 2521462.3
+        "amount": 2487841.57
       },
       {
         "w": 42,
@@ -2805,23 +2805,23 @@ window.FZ.data = {
       },
       {
         "w": 43,
-        "count": 139,
-        "amount": 2592314.15
+        "count": 140,
+        "amount": 2599299.15
       },
       {
         "w": 44,
-        "count": 108,
-        "amount": 2003720.74
+        "count": 109,
+        "amount": 2029790.74
       },
       {
         "w": 45,
-        "count": 109,
-        "amount": 2003133.8
+        "count": 114,
+        "amount": 2122147.56
       },
       {
         "w": 46,
-        "count": 3,
-        "amount": 49901.47
+        "count": 11,
+        "amount": 146793.88
       },
       {
         "w": 48,
@@ -2843,30 +2843,30 @@ window.FZ.data = {
       "rows": [
         [
           "Columbus",
-          37493252.22,
-          2055,
-          18245,
-          1771,
-          282,
-          13.7,
+          37568640.25,
+          2060,
+          18237,
+          1774,
+          285,
+          13.8,
           10
         ],
         [
           "Detroit Metro",
-          13453812.87,
-          831,
-          16190,
-          694,
+          13468131.93,
+          835,
+          16129,
+          698,
           137,
-          16.5,
+          16.4,
           5
         ],
         [
           "Cleveland",
-          10801585.92,
-          645,
-          16747,
-          553,
+          10804085.92,
+          646,
+          16725,
+          555,
           88,
           13.6,
           15
@@ -2883,23 +2883,23 @@ window.FZ.data = {
         ],
         [
           "DC Metro",
-          5853354.22,
-          400,
-          14633,
-          310,
+          5879894.22,
+          401,
+          14663,
+          311,
           90,
-          22.5,
+          22.4,
           9
         ],
         [
           "Richmond",
-          5300008.45,
-          239,
-          22176,
-          228,
+          5315008.45,
+          240,
+          22146,
+          229,
           10,
           4.2,
-          26
+          25
         ],
         [
           "Cincinnati",
@@ -2913,20 +2913,20 @@ window.FZ.data = {
         ],
         [
           "Dayton",
-          4215114.02,
-          252,
-          16727,
-          224,
+          4250167.37,
+          253,
+          16799,
+          225,
           28,
           11.1,
           14
         ],
         [
           "Knoxville",
-          2628117.44,
-          159,
-          16529,
-          158,
+          2674657.44,
+          161,
+          16613,
+          160,
           1,
           0.6,
           12
@@ -2984,38 +2984,38 @@ window.FZ.data = {
       "rows": [
         {
           "branch": "Columbus",
-          "opps": 3568,
-          "soldAmt": 21412150.99,
+          "opps": 3582,
+          "soldAmt": 21539100.63,
           "closePct": 41.3,
-          "nsli": 6001
+          "nsli": 6013
         },
         {
           "branch": "Detroit",
-          "opps": 1602,
-          "soldAmt": 10296950.19,
-          "closePct": 43,
-          "nsli": 6428
+          "opps": 1607,
+          "soldAmt": 10374151.19,
+          "closePct": 43.2,
+          "nsli": 6456
         },
         {
           "branch": "Cleveland",
-          "opps": 1196,
-          "soldAmt": 6317853.34,
-          "closePct": 35.2,
-          "nsli": 5282
+          "opps": 1206,
+          "soldAmt": 6335878.34,
+          "closePct": 35.1,
+          "nsli": 5254
         },
         {
           "branch": "DC Metro",
-          "opps": 979,
-          "soldAmt": 3832668.5,
+          "opps": 985,
+          "soldAmt": 3836868.5,
           "closePct": 31.7,
-          "nsli": 3915
+          "nsli": 3895
         },
         {
           "branch": "Cincinnati",
-          "opps": 781,
-          "soldAmt": 3582774.3,
-          "closePct": 31,
-          "nsli": 4587
+          "opps": 786,
+          "soldAmt": 3613700.3,
+          "closePct": 30.9,
+          "nsli": 4598
         },
         {
           "branch": "Nashville",
@@ -3026,24 +3026,24 @@ window.FZ.data = {
         },
         {
           "branch": "Dayton",
-          "opps": 460,
+          "opps": 463,
           "soldAmt": 2151488.71,
-          "closePct": 31.3,
-          "nsli": 4677
+          "closePct": 31.1,
+          "nsli": 4647
         },
         {
           "branch": "Raleigh",
-          "opps": 413,
+          "opps": 417,
           "soldAmt": 1515515.92,
-          "closePct": 32,
-          "nsli": 3670
+          "closePct": 31.7,
+          "nsli": 3634
         },
         {
           "branch": "Richmond",
           "opps": 174,
-          "soldAmt": 1285703.71,
-          "closePct": 40.8,
-          "nsli": 7389
+          "soldAmt": 1328714.63,
+          "closePct": 41.4,
+          "nsli": 7636
         },
         {
           "branch": "Greenville",
@@ -3061,36 +3061,36 @@ window.FZ.data = {
         },
         {
           "branch": "Grand Rapids",
-          "opps": 109,
+          "opps": 110,
           "soldAmt": 391221.74,
-          "closePct": 24.8,
-          "nsli": 3589
+          "closePct": 24.5,
+          "nsli": 3557
         }
       ],
       "totals": {
-        "opps": 10207,
-        "soldAmt": 56211460.97,
+        "opps": 10255,
+        "soldAmt": 56511773.53,
         "closePct": 38,
-        "nsli": 5507
+        "nsli": 5511
       },
-      "source": "Closing Percent By Branch-2026-11-10-09-00-05.xlsx",
+      "source": "Closing Percent By Branch-2026-11-11-09-00-07.xlsx",
       "format": "per-opportunity"
     },
     "marketKickbacks": [
       {
-        "market": "Columbus",
-        "kicked": 6,
-        "kickedAmount": 93487.54
-      },
-      {
         "market": "Detroit Metro",
-        "kicked": 4,
-        "kickedAmount": 70280
+        "kicked": 5,
+        "kickedAmount": 82740
       },
       {
         "market": "Richmond",
+        "kicked": 3,
+        "kickedAmount": 58044.47
+      },
+      {
+        "market": "Cincinnati",
         "kicked": 2,
-        "kickedAmount": 43044.47
+        "kickedAmount": 65418
       },
       {
         "market": "Cleveland",
@@ -3134,7 +3134,7 @@ window.FZ.data = {
         "avg": 15848,
         "medDays": 3,
         "jt": {
-          "Retail-Financing": 26,
+          "Retail-Financing": 27,
           "Retail-No Financing": 87,
           "Insurance": 39
         },
@@ -3176,7 +3176,7 @@ window.FZ.data = {
         "avg": 19778,
         "medDays": 10,
         "jt": {
-          "Retail-No Financing": 99,
+          "Retail-No Financing": 100,
           "Insurance": 4,
           "Retail-Financing": 4
         },
@@ -3190,7 +3190,7 @@ window.FZ.data = {
         "avg": 28362,
         "medDays": 33,
         "jt": {
-          "Insurance": 57,
+          "Insurance": 58,
           "Retail-No Financing": 16,
           "Retail-Financing": 1
         },
@@ -3260,12 +3260,12 @@ window.FZ.data = {
         "avg": 13944,
         "medDays": 13,
         "jt": {
-          "Retail-No Financing": 74,
-          "Retail-Financing": 1,
+          "Retail-No Financing": 75,
+          "Retail-Financing": 2,
           "Insurance": 45
         },
-        "installs": 90,
-        "repairs": 32
+        "installs": 89,
+        "repairs": 33
       },
       {
         "name": "Cole Burgess",
@@ -3330,7 +3330,7 @@ window.FZ.data = {
         "avg": 14623,
         "medDays": 9,
         "jt": {
-          "Retail-No Financing": 66,
+          "Retail-No Financing": 67,
           "Retail-Financing": 4,
           "Insurance": 35
         },
@@ -3339,17 +3339,17 @@ window.FZ.data = {
       },
       {
         "name": "Mark Daggett",
-        "amount": 1491578.98,
-        "count": 90,
-        "avg": 16573,
+        "amount": 1492178.98,
+        "count": 91,
+        "avg": 16398,
         "medDays": 5,
         "jt": {
-          "Retail-No Financing": 57,
+          "Retail-No Financing": 59,
           "Insurance": 24,
           "Retail-Financing": 7
         },
         "installs": 80,
-        "repairs": 10
+        "repairs": 11
       },
       {
         "name": "Frank Butts",
@@ -3358,8 +3358,8 @@ window.FZ.data = {
         "avg": 13642,
         "medDays": 11,
         "jt": {
-          "Retail-No Financing": 46,
-          "Insurance": 55,
+          "Retail-No Financing": 48,
+          "Insurance": 56,
           "Retail-Financing": 2
         },
         "installs": 97,
@@ -3387,33 +3387,30 @@ window.FZ.data = {
         "medDays": 4,
         "jt": {
           "Retail-No Financing": 60,
-          "Retail-Financing": 11,
+          "Retail-Financing": 12,
           "Insurance": 16
         },
-        "installs": 74,
-        "repairs": 14
+        "installs": 75,
+        "repairs": 13
       },
       {
-        "name": "Zachary Schneider",
-        "amount": 1409529.64,
-        "count": 81,
-        "avg": 17402,
-        "medDays": 21,
+        "name": "Austin Mitchell",
+        "amount": 1435070.98,
+        "count": 53,
+        "avg": 27077,
+        "medDays": 17,
         "jt": {
-          "Retail-No Financing": 35,
-          "Insurance": 46
+          "Insurance": 43,
+          "Retail-No Financing": 7,
+          "Retail-Financing": 2
         },
-        "installs": 67,
-        "repairs": 14
+        "installs": 51,
+        "repairs": 2
       }
     ],
     "speedSellers": [
       {
         "name": "Adam Petulla",
-        "medDays": 1
-      },
-      {
-        "name": "Mina Khalil",
         "medDays": 1
       },
       {
@@ -3439,6 +3436,10 @@ window.FZ.data = {
       {
         "name": "Seth Seigler",
         "medDays": 2
+      },
+      {
+        "name": "Mina Khalil",
+        "medDays": 2
       }
     ],
     "repairHeavy": [
@@ -3451,8 +3452,8 @@ window.FZ.data = {
       {
         "name": "Dan Haske",
         "repairs": 32,
-        "deals": 78,
-        "pct": 41
+        "deals": 79,
+        "pct": 40.5
       },
       {
         "name": "Darrell Philipps",
@@ -3489,31 +3490,31 @@ window.FZ.data = {
           "label": "Retail-No Fin",
           "median": 5,
           "mean": 22,
-          "count": 2618
+          "count": 2627
         },
         {
           "label": "Retail-Fin",
           "median": 3,
           "mean": 15,
-          "count": 568
+          "count": 574
         },
         {
           "label": "Insurance",
           "median": 27,
           "mean": 63,
-          "count": 1983
+          "count": 1988
         },
         {
           "label": "Repair",
           "median": 3,
           "mean": 14,
-          "count": 715
+          "count": 717
         },
         {
           "label": "Install",
           "median": 10,
-          "mean": 41,
-          "count": 4516
+          "mean": 40,
+          "count": 4530
         }
       ],
       "byMarket": [
@@ -3533,7 +3534,7 @@ window.FZ.data = {
           "market": "Detroit Metro",
           "median": 5,
           "mean": 22,
-          "count": 789
+          "count": 793
         },
         {
           "market": "Cincinnati",
@@ -3545,25 +3546,25 @@ window.FZ.data = {
           "market": "Raleigh",
           "median": 6,
           "mean": 47,
-          "count": 183
+          "count": 184
         },
         {
           "market": "DC Metro",
           "median": 9,
           "mean": 43,
-          "count": 381
+          "count": 382
         },
         {
           "market": "Columbus",
           "median": 10,
           "mean": 39,
-          "count": 1883
+          "count": 1887
         },
         {
           "market": "Knoxville",
           "median": 12,
           "mean": 39,
-          "count": 156
+          "count": 158
         },
         {
           "market": "Dayton",
@@ -3575,7 +3576,7 @@ window.FZ.data = {
           "market": "Cleveland",
           "median": 15,
           "mean": 41,
-          "count": 585
+          "count": 586
         },
         {
           "market": "NOVA",
@@ -3585,9 +3586,9 @@ window.FZ.data = {
         },
         {
           "market": "Richmond",
-          "median": 26,
+          "median": 25,
           "mean": 80,
-          "count": 226
+          "count": 227
         },
         {
           "market": "Grand Rapids",
@@ -3871,7 +3872,7 @@ window.FZ.data = {
           "target": 1976307
         }
       ],
-      "recent4WkAvg": 1022037.25
+      "recent4WkAvg": 1082531.3
     },
     "budgetRecovery": {
       "fullYearBudget": 125890005,
@@ -4137,155 +4138,155 @@ window.FZ.data = {
     },
     "pathToPlan": {
       "_comment": "Generated by build-path-to-plan.py from live V5 output. Conversion rates are survivorship-biased optimistic; see the module docstring. V5 remains the forecast of record.",
-      "generatedAt": "2026-11-09T09:04:16-05:00",
-      "modelRunDate": "2026-11-06",
+      "generatedAt": "2026-11-10T09:17:21-05:00",
+      "modelRunDate": "2026-11-09",
       "fiscalYear": 2026,
       "gap": {
         "fullYearBudget": 123956895,
-        "invoicedYtd": 84076690,
-        "stillToInvoice": 39880205,
-        "daysRemaining": 55,
+        "invoicedYtd": 84752710,
+        "stillToInvoice": 39204184,
+        "daysRemaining": 52,
         "weeksRemaining": 8
       },
       "bridge": {
         "rows": [
           {
             "label": "In Progress",
-            "amount": 7818451,
-            "convertPct": 91.4,
-            "lands": 7142661,
+            "amount": 8004459,
+            "convertPct": 90.5,
+            "lands": 7242130,
             "note": "Already installing. Needs completion and billing only."
           },
           {
             "label": "Not Started",
-            "amount": 10146792,
-            "convertPct": 77.8,
-            "lands": 7889725,
+            "amount": 10192471,
+            "convertPct": 75.6,
+            "lands": 7706746,
             "note": "Sold and processed, awaiting schedule. Throughput decides this."
           },
           {
             "label": "Sold Not Processed",
-            "amount": 1575917,
-            "convertPct": 77.8,
-            "lands": 1225368,
+            "amount": 1403447,
+            "convertPct": 75.6,
+            "lands": 1061176,
             "note": "Signed but not yet a job. Processing delay is pure lost time."
           }
         ],
-        "alreadySoldLands": 16257754,
-        "mustBeNewlySoldNet": 23622450,
-        "mustBeNewlySoldGross": 50855652,
-        "meanCapturePct": 46.5
+        "alreadySoldLands": 16010052,
+        "mustBeNewlySoldNet": 23194133,
+        "mustBeNewlySoldGross": 55240566,
+        "meanCapturePct": 42
       },
       "sellingWindow": {
         "weeks": [
           {
-            "weekStart": "11/06/2026",
-            "daysToYearEnd": 55,
-            "capturePct": 77.8,
-            "valueOfOneMillion": 777559
+            "weekStart": "11/09/2026",
+            "daysToYearEnd": 52,
+            "capturePct": 75.6,
+            "valueOfOneMillion": 756121
           },
           {
-            "weekStart": "11/13/2026",
-            "daysToYearEnd": 48,
-            "capturePct": 72.9,
-            "valueOfOneMillion": 728977
+            "weekStart": "11/16/2026",
+            "daysToYearEnd": 45,
+            "capturePct": 70.8,
+            "valueOfOneMillion": 707884
           },
           {
-            "weekStart": "11/20/2026",
-            "daysToYearEnd": 41,
-            "capturePct": 67.2,
-            "valueOfOneMillion": 672010
+            "weekStart": "11/23/2026",
+            "daysToYearEnd": 38,
+            "capturePct": 63.6,
+            "valueOfOneMillion": 636141
           },
           {
-            "weekStart": "11/27/2026",
-            "daysToYearEnd": 34,
-            "capturePct": 58.6,
-            "valueOfOneMillion": 585943
+            "weekStart": "11/30/2026",
+            "daysToYearEnd": 31,
+            "capturePct": 53.7,
+            "valueOfOneMillion": 536974
           },
           {
-            "weekStart": "12/04/2026",
-            "daysToYearEnd": 27,
-            "capturePct": 46.1,
-            "valueOfOneMillion": 460912
+            "weekStart": "12/07/2026",
+            "daysToYearEnd": 24,
+            "capturePct": 39.5,
+            "valueOfOneMillion": 395201
           },
           {
-            "weekStart": "12/11/2026",
-            "daysToYearEnd": 20,
-            "capturePct": 31.5,
-            "valueOfOneMillion": 315166
+            "weekStart": "12/14/2026",
+            "daysToYearEnd": 17,
+            "capturePct": 23.8,
+            "valueOfOneMillion": 238492
           },
           {
-            "weekStart": "12/18/2026",
-            "daysToYearEnd": 13,
-            "capturePct": 15.2,
-            "valueOfOneMillion": 152158
+            "weekStart": "12/21/2026",
+            "daysToYearEnd": 10,
+            "capturePct": 8.4,
+            "valueOfOneMillion": 83741
           },
           {
-            "weekStart": "12/25/2026",
-            "daysToYearEnd": 6,
-            "capturePct": 2.3,
-            "valueOfOneMillion": 23428
+            "weekStart": "12/28/2026",
+            "daysToYearEnd": 3,
+            "capturePct": 0.5,
+            "valueOfOneMillion": 5387
           }
         ],
-        "belowThreeQuartersFrom": "11/13/2026",
-        "belowHalfFrom": "12/04/2026"
+        "belowThreeQuartersFrom": "11/16/2026",
+        "belowHalfFrom": "12/07/2026"
       },
       "pullForward": {
-        "backlogTotal": 19541160,
-        "perDay": 138215,
-        "perWeek": 609817,
+        "backlogTotal": 19600377,
+        "perDay": 99631,
+        "perWeek": 670479,
         "leverageCurve": [
           {
-            "daysBeforeYearEnd": 55,
-            "onDate": "11/06/2026",
-            "worthPerDay": 138215
+            "daysBeforeYearEnd": 52,
+            "onDate": "11/09/2026",
+            "worthPerDay": 99631
           },
           {
             "daysBeforeYearEnd": 45,
             "onDate": "11/16/2026",
-            "worthPerDay": 109305
+            "worthPerDay": 111266
           },
           {
             "daysBeforeYearEnd": 30,
             "onDate": "12/01/2026",
-            "worthPerDay": 207830
+            "worthPerDay": 205795
           },
           {
             "daysBeforeYearEnd": 21,
             "onDate": "12/10/2026",
-            "worthPerDay": 365576
+            "worthPerDay": 362467
           },
           {
             "daysBeforeYearEnd": 14,
             "onDate": "12/17/2026",
-            "worthPerDay": 446282
+            "worthPerDay": 443608
           },
           {
             "daysBeforeYearEnd": 7,
             "onDate": "12/24/2026",
-            "worthPerDay": 535655
+            "worthPerDay": 535737
           }
         ],
-        "strandedBacklog": 3283405,
+        "strandedBacklog": 3590325,
         "completedAwaitingInvoice": {
-          "total": 2198739,
-          "jobs": 92,
-          "medianAgeDays": 8,
+          "total": 1855792,
+          "jobs": 79,
+          "medianAgeDays": 10,
           "agingBuckets": [
             {
               "bucket": "0-15 days",
-              "jobs": 54,
-              "amount": 1344452
+              "jobs": 43,
+              "amount": 1036674
             },
             {
               "bucket": "15-30 days",
               "jobs": 12,
-              "amount": 274678
+              "amount": 273928
             },
             {
               "bucket": "30-60 days",
-              "jobs": 10,
-              "amount": 271822
+              "jobs": 9,
+              "amount": 257224
             },
             {
               "bucket": "60-90 days",
@@ -4300,19 +4301,19 @@ window.FZ.data = {
           ],
           "byReason": [
             {
-              "reason": "Ready to Invoice",
-              "jobs": 37,
-              "amount": 938830
+              "reason": "Pending Supplement",
+              "jobs": 36,
+              "amount": 1005317
             },
             {
-              "reason": "Pending Supplement",
-              "jobs": 34,
-              "amount": 902461
+              "reason": "Ready to Invoice",
+              "jobs": 22,
+              "amount": 491244
             },
             {
               "reason": "Accounting Kickback",
               "jobs": 12,
-              "amount": 232522
+              "amount": 234305
             },
             {
               "reason": "Unspecified",
@@ -4325,80 +4326,79 @@ window.FZ.data = {
         "note": "Revenue moved into 2026 by finishing and billing existing work sooner. Requires no new selling."
       },
       "capacity": {
-        "requiredPerWeek": 6356957,
-        "demonstratedPerWeek": 2386742,
-        "liftRequiredPct": 166.3,
-        "trendPerWeek": -64482
+        "requiredPerWeek": 6905071,
+        "demonstratedPerWeek": 2275661,
+        "liftRequiredPct": 203.4,
+        "trendPerWeek": -111810
       },
       "scenarios": [
         {
           "name": "Hold current pace",
-          "weeklySales": 2386742,
-          "newSalesRevenue": 8869133,
-          "landsAt": 109203577,
+          "weeklySales": 2275661,
+          "newSalesRevenue": 7643945,
+          "landsAt": 108406707,
           "note": "Trailing 4-week average, carried flat."
         },
         {
           "name": "Stretch +15%",
-          "weeklySales": 2744753,
-          "newSalesRevenue": 10199503,
-          "landsAt": 110533947,
+          "weeklySales": 2617010,
+          "newSalesRevenue": 8790537,
+          "landsAt": 109553299,
           "note": "Ambitious but inside what the team has produced before."
         },
         {
           "name": "Required to hit plan",
-          "weeklySales": 6356957,
-          "newSalesRevenue": 23622450,
+          "weeklySales": 6905071,
+          "newSalesRevenue": 23194133,
           "landsAt": 123956895,
           "note": "What closing the full gap by selling alone would take."
         }
       ],
       "modelComparison": {
-        "v5FullYear": 93263234,
-        "paceLandingZone": 109203577,
+        "v5FullYear": 92829792,
+        "paceLandingZone": 108406707,
         "note": "V5 is the forecast of record. The pace landing zone runs higher because these conversion rates are drawn from jobs that did invoice and because V5 also carries a declining sales trend."
       },
       "verdict": {
         "band": "not-reachable",
         "headline": "Plan is not reachable by selling alone. Closing the gap needs a production pull-forward, a budget reset, or both.",
         "reasons": [
-          "Required $6,356,957/wk against a demonstrated $2,386,742/wk, a 166% lift.",
-          "Sales are trending down $64,482 per week, not flat.",
-          "After 11/13/2026, under 75% of what is sold still invoices this year.",
-          "$16,257,754 of the gap is already sold and needs production, not selling."
+          "Required $6,905,071/wk against a demonstrated $2,275,661/wk, a 203% lift.",
+          "Sales are trending down $111,810 per week, not flat.",
+          "After 11/16/2026, under 75% of what is sold still invoices this year.",
+          "$16,010,052 of the gap is already sold and needs production, not selling."
         ]
       }
     },
     "commentary": {
       "whatsWorking": [
-        "Sales Trajectory: Monthly sales moved from January $3.26M to November $2.08M (-36%). Annualized run rate: $112.49M.",
-        "Premium Deal Types: Insurance averages $20,788 per deal. Retail-Financing averages $21,413 (highest per-deal value). Retail-No Financing averages $13,705 (the volume engine).",
-        "Sold Conversion: 5,496 of 5,585 signed contracts (98.4%) have made it to Sold status for $94.75M in confirmed sales."
+        "Sales Trajectory: Monthly sales moved from January $3.26M to November $2.30M (-30%). Annualized run rate: $112.39M.",
+        "Premium Deal Types: Insurance averages $20,820 per deal. Retail-Financing averages $21,404 (highest per-deal value). Retail-No Financing averages $13,670 (the volume engine).",
+        "Sold Conversion: 5,524 of 5,600 signed contracts (98.6%) have made it to Sold status for $95.23M in confirmed sales."
       ],
       "whatNeedsAttention": [
-        "Kickback Concentration: Columbus has the most kickbacks (6, $93K). Total company kickbacks: 18 worth $293K.",
-        "Production Review Queue: 62 deals worth $1.29M sitting in Production Review. Watch for backlog growth, it delays revenue recognition."
+        "Kickback Concentration: Detroit Metro has the most kickbacks (5, $83K). Total company kickbacks: 16 worth $299K.",
+        "Production Review Queue: 50 deals worth $1.01M sitting in Production Review. Watch for backlog growth, it delays revenue recognition."
       ],
       "criticalRisks": [
-        "Columbus Kickback Concentration drives the company's largest single-market rework volume.",
-        "Pipeline kickbacks company-wide: 18 kickbacks totaling $293K.",
-        "Production Review backlog: 62 deals ($1.29M)."
+        "Detroit Metro Kickback Concentration drives the company's largest single-market rework volume.",
+        "Pipeline kickbacks company-wide: 16 kickbacks totaling $299K.",
+        "Production Review backlog: 50 deals ($1.01M)."
       ],
       "strengthsToAmplify": [
-        "Retail Velocity: 4d median close on 3,186 retail deals.",
-        "Insurance Density: $20,788 avg on 2,121 deals = $44.09M; +20% lift = ~$8.82M.",
-        "November repair rate at 12.2% vs YTD 13.8%, correction in latest month.",
-        "Financing Lifts Ticket: Retail-Financing averages $21,413, highest per-deal value."
+        "Retail Velocity: 4d median close on 3,201 retail deals.",
+        "Insurance Density: $20,820 avg on 2,128 deals = $44.30M; +20% lift = ~$8.86M.",
+        "Financing Lifts Ticket: Retail-Financing averages $21,404, highest per-deal value."
       ],
       "fixList": [
-        "Columbus Pipeline Kickback Intervention, pull every kickback and categorize root cause.",
-        "Production Review Bottleneck, 62 deals; add temporary PM capacity.",
-        "Financing Push, 583 financing deals YTD (10.4%) at $21,413 avg. Target 15% mix."
+        "Detroit Metro Pipeline Kickback Intervention, pull every kickback and categorize root cause.",
+        "Production Review Bottleneck, 50 deals; add temporary PM capacity.",
+        "Financing Push, 588 financing deals YTD (10.5%) at $21,404 avg. Target 15% mix."
       ],
       "actionPlan": {
         "thisWeek": [
-          "Columbus Pipeline Kickback Review, meet with branch leadership.",
-          "Production Review Surge Plan, 62 deals ($1.29M) in queue."
+          "Detroit Metro Pipeline Kickback Review, meet with branch leadership.",
+          "Production Review Surge Plan, 50 deals ($1.01M) in queue."
         ],
         "thisMonth": [
           "Supplement Escalation SOP, 7/14/30 day cadence with carrier escalation.",
@@ -4408,16 +4408,16 @@ window.FZ.data = {
         ],
         "thisQuarter": [
           "Add Kickback Reason field to accounting workflow.",
-          "Repair Business Decision, 773 repairs YTD at ~$2,451 avg.",
-          "Ops Capacity Planning, November hit 115 deals; summer typically exceeds spring."
+          "Repair Business Decision, 776 repairs YTD at ~$2,430 avg.",
+          "Ops Capacity Planning, November hit 128 deals; summer typically exceeds spring."
         ]
       }
     }
   },
   "REVENUE_FORECAST": {
     "title": "Residential Revenue Forecast",
-    "subtitle": "V5 Model with Job Type Analysis · Data as of November 09, 2026",
-    "runDate": "November 09, 2026",
+    "subtitle": "V5 Model with Job Type Analysis · Data as of November 10, 2026",
+    "runDate": "November 10, 2026",
     "tabs": [
       {
         "id": "executive",
@@ -4471,27 +4471,27 @@ window.FZ.data = {
     "kpis": [
       {
         "label": "YTD Sales (Created)",
-        "value": "$94.8M",
+        "value": "$95.3M",
         "sub": "Jobs processed into system"
       },
       {
         "label": "Invoiced YTD",
-        "value": "$84.75M",
-        "sub": "NetSuite AR · 4755 invoices booked"
+        "value": "$85.16M",
+        "sub": "NetSuite AR · 4782 invoices booked"
       },
       {
         "label": "4-Week Avg Weekly Sales",
         "value": "$2.3M",
-        "sub": "Trend: -111,810/week"
+        "sub": "Trend: -102,645/week"
       },
       {
         "label": "Current Week (Projected)",
-        "value": "$1.5M",
-        "sub": "WTD: $123K"
+        "value": "$1.7M",
+        "sub": "WTD: $246K"
       },
       {
         "label": "Annual Forecast",
-        "value": "$107.6M",
+        "value": "$107.4M",
         "sub": "Model invoiced revenue"
       },
       {
@@ -4501,20 +4501,20 @@ window.FZ.data = {
       },
       {
         "label": "Forecast vs Budget",
-        "value": "-$18.3M",
-        "sub": "14.6% under plan"
+        "value": "-$18.5M",
+        "sub": "14.7% under plan"
       },
       {
         "label": "Active Pipeline",
-        "value": "$19.6M",
+        "value": "$19.3M",
         "sub": "Backlog + IP + SNP"
       }
     ],
     "execSummary": {
       "budget": 125890005.2103,
-      "modelAnnualInvoiced": 107557713.8154,
-      "gap": 18332291.3949,
-      "narrative": "The V5 model projects $107.6M in annual invoiced revenue against a $125.9M plan. The challenge is timing, not volume: Q1 ramped slowly so Q2 invoicing will lag. If the current weekly pace of $2.3M holds, H2 should catch up as earlier sales convert to invoiced revenue."
+      "modelAnnualInvoiced": 107393878.1969,
+      "gap": 18496127.0134,
+      "narrative": "The V5 model projects $107.4M in annual invoiced revenue against a $125.9M plan. The challenge is timing, not volume: Q1 ramped slowly so Q2 invoicing will lag. If the current weekly pace of $2.3M holds, H2 should catch up as earlier sales convert to invoiced revenue."
     },
     "monthRevenue": {
       "april": {
@@ -4523,10 +4523,10 @@ window.FZ.data = {
         "netRevenue": -698354.2799999975,
         "beginningWip": 9104314.09,
         "endingWip": 0,
-        "materialCost": 4568359.2694,
-        "laborCost": 2741053.7666,
-        "grossProfit": -4140460.456,
-        "grossMarginPct": -130.6571
+        "materialCost": 4568682.7308,
+        "laborCost": 2749815.4126,
+        "grossProfit": -4149545.5634,
+        "grossMarginPct": -130.9438
       },
       "may": {
         "invoiced": 8564976.120000001,
@@ -4534,15 +4534,15 @@ window.FZ.data = {
         "netRevenue": 8564976.120000001,
         "beginningWip": 0,
         "endingWip": 0,
-        "materialCost": 4727832.9413,
-        "laborCost": 2836739.3035,
-        "grossProfit": 5007520.7494,
-        "grossMarginPct": 39.8304
+        "materialCost": 4819870.2179,
+        "laborCost": 2901001.0527,
+        "grossProfit": 4997494.8949,
+        "grossMarginPct": 39.2935
       }
     },
     "weeklyTargetsHeader": {
-      "avgWeeklyNeed": 2271540.0556,
-      "recent4WkAvg": 2275660.935,
+      "avgWeeklyNeed": 2283476.6137,
+      "recent4WkAvg": 2302288.7825,
       "gap": 0,
       "productionAvgWeeklyNeed": 2483987.5984,
       "productionCycleStart": 13,
@@ -4551,59 +4551,49 @@ window.FZ.data = {
     },
     "budgetRecoveryHeader": {
       "fullYearBudget": 125890005.2103,
-      "gap": 21050039.6619,
+      "gap": 21078865.0034,
       "upliftPct": 1.3,
-      "aprilGap": 502088.2086,
+      "aprilGap": 530913.5501,
       "q1OriginalBudget": 103034403.7434,
       "q1Actual": 82486452.29,
       "q1Shortfall": 20547951.4534,
-      "recoveryRatio": 2.9897
+      "recoveryRatio": 2.9904
     },
     "profitabilitySummary": {
-      "combinedGP": 62817451.17,
-      "combinedGP_pct": 40.0719,
-      "combinedRevenue": 156761757.39,
+      "combinedGP": 62861719.57,
+      "combinedGP_pct": 40.0034,
+      "combinedRevenue": 157140994.56,
       "y2025_GP_pct": 41.5376,
       "y2025_revenue": 73942457.17,
       "y2025_jobs": 3481,
-      "y2026_GP_pct": 38.7633,
-      "y2026_revenue": 82819300.22,
-      "y2026_jobs": 4266,
-      "materialCost": 58491214.2,
-      "laborCost": 35095217.68,
-      "commissions": 13375326.81,
-      "materialPctContract": 37.3122,
-      "laborPctContract": 22.3876,
-      "commissionPctContract": 8.5323
+      "y2026_GP_pct": 38.6398,
+      "y2026_revenue": 83198537.39,
+      "y2026_jobs": 4286,
+      "materialCost": 58630163.21,
+      "laborCost": 35288536.31,
+      "commissions": 13434673.17,
+      "materialPctContract": 37.3105,
+      "laborPctContract": 22.4566,
+      "commissionPctContract": 8.5494
     },
     "pipelineSnapshot": {
       "stages": [
         {
           "label": "New Sales",
-          "subtitle": "72 jobs · 4d avg",
-          "value": 1403446.52,
-          "jobs": 72,
+          "subtitle": "58 jobs · 3d avg",
+          "value": 1114766.02,
+          "jobs": 58,
           "color": "#3b82f6",
           "byMarket": [
             {
               "market": "Cleveland",
-              "jobs": 14,
-              "value": 318738.95
-            },
-            {
-              "market": "Columbus",
-              "jobs": 17,
-              "value": 308371.36
-            },
-            {
-              "market": "Detroit Metro",
               "jobs": 11,
-              "value": 194164
+              "value": 261935.67
             },
             {
               "market": "Cincinnati",
-              "jobs": 8,
-              "value": 164431.13
+              "jobs": 9,
+              "value": 179417.13
             },
             {
               "market": "Nashville",
@@ -4611,75 +4601,85 @@ window.FZ.data = {
               "value": 154158
             },
             {
-              "market": "Richmond",
-              "jobs": 5,
-              "value": 131776.26
+              "market": "Columbus",
+              "jobs": 8,
+              "value": 153969.34
+            },
+            {
+              "market": "Detroit Metro",
+              "jobs": 10,
+              "value": 103759.06
             },
             {
               "market": "Dayton",
-              "jobs": 3,
-              "value": 75189.35
+              "jobs": 4,
+              "value": 96628.35
             },
             {
               "market": "DC Metro",
-              "jobs": 7,
-              "value": 39774
+              "jobs": 5,
+              "value": 60314
+            },
+            {
+              "market": "Richmond",
+              "jobs": 3,
+              "value": 58044.47
             },
             {
               "market": "Knoxville",
-              "jobs": 1,
-              "value": 16843.47
+              "jobs": 2,
+              "value": 46540
             }
           ],
-          "avgDays": 3.9,
-          "medianDays": 3
+          "avgDays": 3.3,
+          "medianDays": 1
         },
         {
           "label": "Backlog",
-          "subtitle": "469 jobs · 27d avg",
-          "value": 10192470.88,
-          "jobs": 469,
+          "subtitle": "466 jobs · 27d avg",
+          "value": 10251996.13,
+          "jobs": 466,
           "color": "#f97316",
           "byMarket": [
             {
               "market": "Columbus",
-              "jobs": 170,
-              "value": 3891113.91
+              "jobs": 174,
+              "value": 4017254.32
             },
             {
               "market": "Cleveland",
               "jobs": 90,
-              "value": 2023787.74
+              "value": 2026475.74
             },
             {
               "market": "Detroit Metro",
-              "jobs": 83,
-              "value": 1883345.44
+              "jobs": 81,
+              "value": 1891621.44
             },
             {
               "market": "Cincinnati",
-              "jobs": 30,
-              "value": 610160.91
-            },
-            {
-              "market": "DC Metro",
-              "jobs": 26,
-              "value": 441129.35
+              "jobs": 27,
+              "value": 554844.91
             },
             {
               "market": "Richmond",
-              "jobs": 17,
-              "value": 432204.26
+              "jobs": 19,
+              "value": 500549.1
             },
             {
-              "market": "Nashville",
-              "jobs": 16,
-              "value": 306449.29
+              "market": "DC Metro",
+              "jobs": 25,
+              "value": 427834.35
             },
             {
               "market": "Raleigh",
-              "jobs": 16,
-              "value": 300715.28
+              "jobs": 15,
+              "value": 283111.28
+            },
+            {
+              "market": "Nashville",
+              "jobs": 14,
+              "value": 259896.82
             },
             {
               "market": "Dayton",
@@ -4689,7 +4689,7 @@ window.FZ.data = {
             {
               "market": "Knoxville",
               "jobs": 5,
-              "value": 88124.69
+              "value": 74968.16
             },
             {
               "market": "Greenville",
@@ -4702,45 +4702,50 @@ window.FZ.data = {
               "value": 37000
             }
           ],
-          "avgDays": 27.4,
-          "medianDays": 18
+          "avgDays": 27.1,
+          "medianDays": 15
         },
         {
           "label": "In Progress",
-          "subtitle": "260 jobs",
-          "value": 8004459.41,
-          "jobs": 260,
+          "subtitle": "262 jobs",
+          "value": 7937669.29,
+          "jobs": 262,
           "color": "#22c55e",
           "byMarket": [
             {
               "market": "Columbus",
-              "jobs": 115,
-              "value": 3482781.76
+              "jobs": 110,
+              "value": 3353524.28
             },
             {
               "market": "Cleveland",
               "jobs": 61,
-              "value": 1495852.11
+              "value": 1456191.11
             },
             {
               "market": "Nashville",
-              "jobs": 8,
-              "value": 740452.27
+              "jobs": 9,
+              "value": 766367.74
             },
             {
               "market": "Detroit Metro",
-              "jobs": 26,
-              "value": 630169.05
+              "jobs": 29,
+              "value": 687870.05
             },
             {
               "market": "Richmond",
-              "jobs": 8,
-              "value": 490617.36
+              "jobs": 9,
+              "value": 511004.31
             },
             {
               "market": "DC Metro",
               "jobs": 8,
-              "value": 347852.02
+              "value": 320213.16
+            },
+            {
+              "market": "Cincinnati",
+              "jobs": 12,
+              "value": 278040.91
             },
             {
               "market": "Dayton",
@@ -4748,24 +4753,19 @@ window.FZ.data = {
               "value": 270547
             },
             {
-              "market": "Cincinnati",
-              "jobs": 10,
-              "value": 253375.78
-            },
-            {
               "market": "Raleigh",
               "jobs": 7,
-              "value": 121575.92
-            },
-            {
-              "market": "Grand Rapids",
-              "jobs": 3,
-              "value": 86774.03
+              "value": 136225.59
             },
             {
               "market": "Knoxville",
+              "jobs": 3,
+              "value": 79492.93
+            },
+            {
+              "market": "Grand Rapids",
               "jobs": 2,
-              "value": 49492.93
+              "value": 43223.03
             },
             {
               "market": "Greenville",
@@ -4778,35 +4778,35 @@ window.FZ.data = {
         },
         {
           "label": "Completed",
-          "subtitle": "80 jobs",
-          "value": 1826808.35,
-          "jobs": 80,
+          "subtitle": "83 jobs",
+          "value": 1916059.98,
+          "jobs": 83,
           "color": "#a855f7",
           "byMarket": [
             {
               "market": "Columbus",
-              "jobs": 35,
-              "value": 882076.98
+              "jobs": 37,
+              "value": 888853.45
             },
             {
               "market": "Richmond",
               "jobs": 11,
-              "value": 331971.98
+              "value": 332036.98
             },
             {
               "market": "Cleveland",
-              "jobs": 13,
-              "value": 256514.99
+              "jobs": 14,
+              "value": 265312.95
             },
             {
               "market": "Cincinnati",
-              "jobs": 5,
-              "value": 117307.9
+              "jobs": 4,
+              "value": 129289.41
             },
             {
               "market": "DC Metro",
-              "jobs": 6,
-              "value": 105654.74
+              "jobs": 5,
+              "value": 112919.1
             },
             {
               "market": "Knoxville",
@@ -4814,14 +4814,24 @@ window.FZ.data = {
               "value": 57789.43
             },
             {
+              "market": "Grand Rapids",
+              "jobs": 1,
+              "value": 43551
+            },
+            {
               "market": "Detroit Metro",
-              "jobs": 3,
-              "value": 43672
+              "jobs": 2,
+              "value": 30896
             },
             {
               "market": "Raleigh",
+              "jobs": 2,
+              "value": 24802.73
+            },
+            {
+              "market": "Nashville",
               "jobs": 1,
-              "value": 21848.4
+              "value": 20637
             },
             {
               "market": "Dayton",
@@ -4838,8 +4848,8 @@ window.FZ.data = {
           "medianDays": null
         }
       ],
-      "totalJobs": 881,
-      "totalValue": 21427185.16
+      "totalJobs": 869,
+      "totalValue": 21220491.42
     },
     "commentary": {
       "actionableRecommendations": [
@@ -4871,74 +4881,74 @@ window.FZ.data = {
           [
             "Apr 2026",
             8201725.06,
-            21427185.16,
+            21220491.42,
             10113960.9,
-            7295320.7908,
-            -906404.2692
+            7295668.342,
+            -906056.718
           ],
           [
             "May 2026",
             14117621.6688,
-            21427185.16,
+            21220491.42,
             11714245.78,
-            9777394.8052,
-            -4340226.8636
+            9777376.8637,
+            -4340244.805
           ],
           [
             "Jun 2026",
             14800571.2162,
-            21427185.16,
+            21220491.42,
             11842012.17,
-            11612262.062,
-            -3188309.1541
+            11613048.0978,
+            -3187523.1183
           ],
           [
             "Jul 2026",
             11641331.0926,
-            21427185.16,
+            21220491.42,
             11754306.81,
-            9192911.7041,
-            -2448419.3885
+            9194112.291,
+            -2447218.8016
           ],
           [
             "Aug 2026",
             12738223.8858,
-            21427185.16,
+            21220491.42,
             10164317.12,
-            12678412.0404,
-            -59811.8454
+            12679059.8667,
+            -59164.0191
           ],
           [
             "Sep 2026",
             13673037.2551,
-            21427185.16,
+            21220491.42,
             12345448.67,
-            10941306.3403,
-            -2731730.9148
+            10942288.7863,
+            -2730748.4688
           ],
           [
             "Oct 2026",
             13483638.9808,
-            21427185.16,
-            12768439.24,
-            3108038.23,
-            -10375600.7508
+            21220491.42,
+            12486993.74,
+            2960536.0772,
+            -10523102.9035
           ],
           [
             "Nov 2026",
             12392297.9669,
-            21427185.16,
-            12303060.2448,
-            12285200.4191,
-            -107097.5478
+            21220491.42,
+            12399924.2179,
+            12256375.0776,
+            -135922.8893
           ],
           [
             "Dec 2026",
             7988852.274,
-            9016140.0316,
-            8739974.2572,
-            8329162.2951,
-            340310.0211
+            10566834.3328,
+            8761204.3423,
+            8336293.2987,
+            347441.0247
           ]
         ]
       },
@@ -4955,66 +4965,66 @@ window.FZ.data = {
         "rows": [
           [
             "Apr 2026",
-            21427185.16,
-            7499555.5408,
-            906404.2692,
+            21220491.42,
+            7499903.092,
+            906056.718,
             10113960.9
           ],
           [
             "May 2026",
-            21427185.16,
-            9878381.4218,
+            21220491.42,
+            9878363.4804,
             0,
             11714245.78
           ],
           [
             "Jun 2026",
-            21427185.16,
-            11004103.8197,
-            84319.4903,
+            21220491.42,
+            11004889.8555,
+            83533.4545,
             11842012.17
           ],
           [
             "Jul 2026",
-            21427185.16,
-            11402389.3164,
+            21220491.42,
+            11403589.9033,
             0,
             11754306.81
           ],
           [
             "Aug 2026",
-            21427185.16,
-            10735738.7372,
+            21220491.42,
+            10736386.5635,
             0,
             10164317.12
           ],
           [
             "Sep 2026",
-            21427185.16,
-            11510371.9087,
+            21220491.42,
+            11511354.3547,
             0,
             12345448.67
           ],
           [
             "Oct 2026",
-            21427185.16,
-            12212352.32,
-            60914.35,
-            12768439.24
+            21220491.42,
+            12064850.1672,
+            208416.5028,
+            12486993.74
           ],
           [
             "Nov 2026",
-            21427185.16,
-            5844470.0559,
-            6942818.5718,
-            12303060.2448
+            21220491.42,
+            5763191.9425,
+            7024096.6851,
+            12399924.2179
           ],
           [
             "Dec 2026",
-            9016140.0316,
-            2350737.7955,
-            7717575.0437,
-            8739974.2572
+            10566834.3328,
+            2321414.7562,
+            7746898.0831,
+            8761204.3423
           ]
         ]
       },
@@ -5095,23 +5105,23 @@ window.FZ.data = {
           [
             "Oct 2026 [Actual]",
             11.3828,
-            12768439.24,
-            12768439.24,
-            12768439.24
+            12486993.74,
+            12486993.74,
+            12486993.74
           ],
           [
             "Nov 2026",
             7.7142,
             0,
-            13728354.7835,
-            15449184.7326
+            13942161.9103,
+            15535885.96
           ],
           [
             "Dec 2026",
             2.7932,
             0,
-            4970770.6633,
-            5593849.7694
+            5048186.0718,
+            5625242.6002
           ]
         ]
       },
@@ -5127,51 +5137,51 @@ window.FZ.data = {
         "rows": [
           [
             "Wk 11/08",
-            8582489.0726,
-            2870714.0571,
-            5711775.0155
+            8652145.424,
+            2893315.6508,
+            5758829.7732
           ],
           [
             "Wk 11/15",
-            8582489.0726,
-            2870714.0571,
-            5711775.0155
+            8652145.424,
+            2893315.6508,
+            5758829.7732
           ],
           [
             "Wk 11/22",
-            8582489.0726,
-            2870714.0571,
-            5711775.0155
+            8652145.424,
+            2893315.6508,
+            5758829.7732
           ],
           [
             "Wk 11/29",
-            6666598.2884,
-            2229877.2836,
-            4436721.0048
+            6697755.6867,
+            2239759.0891,
+            4457996.5976
           ],
           [
             "Wk 12/06",
-            5900241.9748,
-            1973542.5742,
-            3926699.4006
+            5915999.7917,
+            1978336.4644,
+            3937663.3273
           ],
           [
             "Wk 12/13",
-            5900241.9748,
-            1973542.5742,
-            3926699.4006
+            5915999.7917,
+            1978336.4644,
+            3937663.3273
           ],
           [
             "Wk 12/20",
-            5900241.9748,
-            1973542.5742,
-            3926699.4006
+            5915999.7917,
+            1978336.4644,
+            3937663.3273
           ],
           [
             "Wk 12/27",
-            4214458.5534,
-            1409673.2673,
-            2804785.2861
+            4225714.1369,
+            1413097.4746,
+            2812616.6624
           ]
         ]
       },
@@ -5189,27 +5199,27 @@ window.FZ.data = {
         "rows": [
           [
             "Insurance",
-            23752.8907,
+            23746.6701,
             18,
-            1319.605,
-            40.3055,
-            40498678.58
+            1319.2594,
+            40.3981,
+            40630552.49
           ],
           [
             "Retail-Financing",
-            22007.737,
+            22044.8434,
             19,
-            1158.3019,
-            60.6786,
-            11025876.25
+            1160.2549,
+            60.6362,
+            11088556.25
           ],
           [
             "Retail-No Financing",
-            19265.3043,
+            19255.4232,
             19,
-            1013.9634,
-            61.0314,
-            36276567.93
+            1013.4433,
+            60.973,
+            36450516.19
           ]
         ]
       },
@@ -5230,24 +5240,24 @@ window.FZ.data = {
             13,
             4,
             18,
-            1705,
-            23752.8907
+            1711,
+            23746.6701
           ],
           [
             "Retail-Financing",
             13,
             6,
             19,
-            501,
-            22007.737
+            503,
+            22044.8434
           ],
           [
             "Retail-No Financing",
             13,
             6,
             19,
-            1883,
-            19265.3043
+            1893,
+            19255.4232
           ],
           [
             "Repair",
@@ -5270,43 +5280,43 @@ window.FZ.data = {
         "rows": [
           [
             "Columbus",
-            170,
-            3891113.91
+            174,
+            4017254.32
           ],
           [
             "Cleveland",
             90,
-            2023787.74
+            2026475.74
           ],
           [
             "Detroit Metro",
-            83,
-            1883345.44
+            81,
+            1891621.44
           ],
           [
             "Cincinnati",
-            30,
-            610160.91
-          ],
-          [
-            "DC Metro",
-            26,
-            441129.35
+            27,
+            554844.91
           ],
           [
             "Richmond",
-            17,
-            432204.26
+            19,
+            500549.1
           ],
           [
-            "Nashville",
-            16,
-            306449.29
+            "DC Metro",
+            25,
+            427834.35
           ],
           [
             "Raleigh",
-            16,
-            300715.28
+            15,
+            283111.28
+          ],
+          [
+            "Nashville",
+            14,
+            259896.82
           ],
           [
             "Dayton",
@@ -5316,7 +5326,7 @@ window.FZ.data = {
           [
             "Knoxville",
             5,
-            88124.69
+            74968.16
           ],
           [
             "Greenville",
@@ -5341,33 +5351,38 @@ window.FZ.data = {
         "rows": [
           [
             "Columbus",
-            115,
-            3482781.76
+            110,
+            3353524.28
           ],
           [
             "Cleveland",
             61,
-            1495852.11
+            1456191.11
           ],
           [
             "Nashville",
-            8,
-            740452.27
+            9,
+            766367.74
           ],
           [
             "Detroit Metro",
-            26,
-            630169.05
+            29,
+            687870.05
           ],
           [
             "Richmond",
-            8,
-            490617.36
+            9,
+            511004.31
           ],
           [
             "DC Metro",
             8,
-            347852.02
+            320213.16
+          ],
+          [
+            "Cincinnati",
+            12,
+            278040.91
           ],
           [
             "Dayton",
@@ -5375,24 +5390,19 @@ window.FZ.data = {
             270547
           ],
           [
-            "Cincinnati",
-            10,
-            253375.78
-          ],
-          [
             "Raleigh",
             7,
-            121575.92
-          ],
-          [
-            "Grand Rapids",
-            3,
-            86774.03
+            136225.59
           ],
           [
             "Knoxville",
+            3,
+            79492.93
+          ],
+          [
+            "Grand Rapids",
             2,
-            49492.93
+            43223.03
           ],
           [
             "Greenville",
@@ -5412,23 +5422,13 @@ window.FZ.data = {
         "rows": [
           [
             "Cleveland",
-            14,
-            318738.95
-          ],
-          [
-            "Columbus",
-            17,
-            308371.36
-          ],
-          [
-            "Detroit Metro",
             11,
-            194164
+            261935.67
           ],
           [
             "Cincinnati",
-            8,
-            164431.13
+            9,
+            179417.13
           ],
           [
             "Nashville",
@@ -5436,24 +5436,34 @@ window.FZ.data = {
             154158
           ],
           [
-            "Richmond",
-            5,
-            131776.26
+            "Columbus",
+            8,
+            153969.34
+          ],
+          [
+            "Detroit Metro",
+            10,
+            103759.06
           ],
           [
             "Dayton",
-            3,
-            75189.35
+            4,
+            96628.35
           ],
           [
             "DC Metro",
-            7,
-            39774
+            5,
+            60314
+          ],
+          [
+            "Richmond",
+            3,
+            58044.47
           ],
           [
             "Knoxville",
-            1,
-            16843.47
+            2,
+            46540
           ]
         ]
       },
@@ -5468,28 +5478,28 @@ window.FZ.data = {
         "rows": [
           [
             "Columbus",
-            35,
-            882076.98
+            37,
+            888853.45
           ],
           [
             "Richmond",
             11,
-            331971.98
+            332036.98
           ],
           [
             "Cleveland",
-            13,
-            256514.99
+            14,
+            265312.95
           ],
           [
             "Cincinnati",
-            5,
-            117307.9
+            4,
+            129289.41
           ],
           [
             "DC Metro",
-            6,
-            105654.74
+            5,
+            112919.1
           ],
           [
             "Knoxville",
@@ -5497,14 +5507,24 @@ window.FZ.data = {
             57789.43
           ],
           [
+            "Grand Rapids",
+            1,
+            43551
+          ],
+          [
             "Detroit Metro",
-            3,
-            43672
+            2,
+            30896
           ],
           [
             "Raleigh",
+            2,
+            24802.73
+          ],
+          [
+            "Nashville",
             1,
-            21848.4
+            20637
           ],
           [
             "Dayton",
@@ -5529,18 +5549,18 @@ window.FZ.data = {
         "rows": [
           [
             "Insurance",
-            1070343.3871,
-            47.1197
+            1075932.2043,
+            47.1182
           ],
           [
             "Retail-No Financing",
-            898478.845,
-            39.5537
+            902262.503,
+            39.5127
           ],
           [
             "Retail-Financing",
-            302717.8235,
-            13.3265
+            305281.9063,
+            13.3692
           ]
         ]
       },
@@ -5555,53 +5575,53 @@ window.FZ.data = {
         "rows": [
           [
             "Roofing",
-            1221225.3016,
-            53.762
+            1225003.4544,
+            53.6464
           ],
           [
             "Gutters",
-            871844.4243,
-            38.3812
+            877716.6908,
+            38.4377
           ],
           [
             "Siding",
-            54436.5912,
-            2.3965
+            55602.8149,
+            2.435
           ],
           [
             "Rack Mounted Solar",
-            22407.8631,
-            0.9865
+            22416.5532,
+            0.9817
           ],
           [
             "Metal",
-            21414.234,
-            0.9427
+            21422.5388,
+            0.9382
           ],
           [
             "Flat Roof",
-            18334.8929,
-            0.8072
+            18439.0827,
+            0.8075
           ],
           [
             "GAF Solar",
-            16040.7592,
-            0.7062
+            16046.9801,
+            0.7027
           ],
           [
             "Masonry",
-            15645.4297,
-            0.6888
-          ],
-          [
-            "Painting",
-            8979.8105,
-            0.3953
+            15651.4972,
+            0.6854
           ],
           [
             "Carpentry",
-            8837.6901,
-            0.3891
+            9280.8936,
+            0.4064
+          ],
+          [
+            "Painting",
+            8983.293,
+            0.3934
           ]
         ]
       },
@@ -5617,42 +5637,42 @@ window.FZ.data = {
           [
             "Wk 11/08",
             "Nov",
-            2870714.0571
+            2893315.6508
           ],
           [
             "Wk 11/15",
             "Nov",
-            2870714.0571
+            2893315.6508
           ],
           [
             "Wk 11/22",
             "Nov",
-            2870714.0571
+            2893315.6508
           ],
           [
             "Wk 11/29",
             "Nov",
-            2229877.2836
+            2239759.0891
           ],
           [
             "Wk 12/06",
             "Dec",
-            1973542.5742
+            1978336.4644
           ],
           [
             "Wk 12/13",
             "Dec",
-            1973542.5742
+            1978336.4644
           ],
           [
             "Wk 12/20",
             "Dec",
-            1973542.5742
+            1978336.4644
           ],
           [
             "Wk 12/27",
             "Dec",
-            1409673.2673
+            1413097.4746
           ]
         ]
       },
@@ -5890,21 +5910,21 @@ window.FZ.data = {
               2709480.75,
               2620252.04,
               2602074.12,
-              2596035.29,
-              3388320.59,
-              2488113.84,
+              2595405.12,
+              3391874.59,
+              2454493.11,
               2478676.69,
               2546772.33,
-              2101831.04,
-              1975363.68,
-              1502851.1525,
-              1907191.0733,
-              1795380.6417,
-              1683570.21,
-              1571759.7783,
-              1459949.3467,
-              1348138.915,
-              1236328.4833
+              2102721.67,
+              2080984.44,
+              1722217.986,
+              1967078.5307,
+              1864433.6711,
+              1761788.8114,
+              1659143.9518,
+              1556499.0921,
+              1453854.2325,
+              1351209.3729
             ]
           }
         ]
@@ -5940,15 +5960,15 @@ window.FZ.data = {
           {
             "label": "Forecast Net Revenue",
             "data": [
-              7295320.7908,
-              9777394.8052,
-              11612262.062,
-              9192911.7041,
-              12678412.0404,
-              10941306.3403,
-              3108038.23,
-              12285200.4191,
-              8329162.2951
+              7295668.342,
+              9777376.8637,
+              11613048.0978,
+              9194112.291,
+              12679059.8667,
+              10942288.7863,
+              2960536.0772,
+              12256375.0776,
+              8336293.2987
             ]
           }
         ]
@@ -5976,9 +5996,9 @@ window.FZ.data = {
               11754306.81,
               10164317.12,
               12345448.67,
-              12768439.24,
-              12303060.2448,
-              8739974.2572
+              12486993.74,
+              12399924.2179,
+              8761204.3423
             ]
           }
         ]
@@ -6020,35 +6040,35 @@ window.FZ.data = {
           {
             "label": "Model Revenue",
             "data": [
-              3072418.9075,
-              3092788.9792,
-              4455789.5845,
-              7499555.5408,
-              9878381.4218,
-              11004103.8197,
-              11402389.3164,
-              10735738.7372,
-              11510371.9087,
-              12212352.32,
-              12285200.4191,
-              10408622.8604
+              3074017.8986,
+              3092469.0502,
+              4455924.8899,
+              7499903.092,
+              9878363.4804,
+              11004889.8555,
+              11403589.9033,
+              10736386.5635,
+              11511354.3547,
+              12064850.1672,
+              12256375.0776,
+              10415753.8639
             ]
           },
           {
             "label": "From Known Sales",
             "data": [
-              3072418.9075,
-              3092788.9792,
-              4455789.5845,
-              7499555.5408,
-              9878381.4218,
-              11004103.8197,
-              11402389.3164,
-              10735738.7372,
-              11510371.9087,
-              12212352.32,
-              5844470.0559,
-              2350737.7955
+              3074017.8986,
+              3092469.0502,
+              4455924.8899,
+              7499903.092,
+              9878363.4804,
+              11004889.8555,
+              11403589.9033,
+              10736386.5635,
+              11511354.3547,
+              12064850.1672,
+              5763191.9425,
+              2321414.7562
             ]
           }
         ]
@@ -6071,16 +6091,16 @@ window.FZ.data = {
           {
             "label": "Mix %",
             "data": [
-              39.6642,
-              13.6794,
-              10.9217,
-              6.7578,
-              6.409,
-              5.1074,
-              4.8836,
-              4.3477,
-              2.772,
-              2.7219
+              39.7144,
+              13.6969,
+              10.9114,
+              6.7251,
+              6.3827,
+              5.1759,
+              4.86,
+              4.3267,
+              2.7586,
+              2.7264
             ]
           }
         ]
@@ -6099,34 +6119,34 @@ window.FZ.data = {
           {
             "label": "Insurance",
             "data": [
-              40.3055,
-              31.1986,
-              16.51,
-              6.5217,
-              2.7027,
-              1.3514
+              40.3981,
+              31.1475,
+              16.5105,
+              6.4988,
+              2.6932,
+              1.3466
             ]
           },
           {
             "label": "Retail-Financing",
             "data": [
-              60.6786,
-              28.1437,
-              7.3852,
-              1.1976,
-              0.998,
-              0.3992
+              60.6362,
+              28.0318,
+              7.5547,
+              1.1928,
+              0.994,
+              0.3976
             ]
           },
           {
             "label": "Retail-No Financing",
             "data": [
-              61.0314,
-              25.731,
-              7.2302,
-              3.0303,
-              1.3822,
-              0.8506
+              60.973,
+              25.7536,
+              7.2448,
+              3.0672,
+              1.3749,
+              0.8461
             ]
           }
         ]
@@ -6211,8 +6231,8 @@ window.FZ.data = {
       9151616.350000001,
       9929275.619999997,
       12273266.67,
-      12285200.4191,
-      10408622.8604
+      12256375.0776,
+      10415753.8639
     ],
     "revFromKnown": [
       3312733.0599999987,
@@ -6225,8 +6245,8 @@ window.FZ.data = {
       9151616.350000001,
       9929275.619999997,
       12273266.67,
-      5844470.0559,
-      2350737.7955
+      5763191.9425,
+      2321414.7562
     ],
     "requiredSales": [
       3257140.76,
@@ -6238,190 +6258,190 @@ window.FZ.data = {
       11754306.81,
       10164317.12,
       12345448.67,
-      12768439.24,
-      12303060.2448,
-      8739974.2572
+      12486993.74,
+      12399924.2179,
+      8761204.3423
     ],
     "backlogData": [
       {
         "month": "Jan 2026",
-        "total_backlog": 21427185.16,
-        "wip_est": 9831267.76,
-        "not_started": 11595917.4,
+        "total_backlog": 21220491.42,
+        "wip_est": 9853729.27,
+        "not_started": 11366762.15,
         "budget_rev": 3312733.06,
-        "pipeline_backlog": 21427185.16,
+        "pipeline_backlog": 21220491.42,
         "new_sales_backlog": 0,
         "pipe_invoicing": 0,
         "future_invoicing": 0,
-        "rev_from_backlog": 3072418.9075,
-        "revenue_gap": 240314.1525,
+        "rev_from_backlog": 3074017.8986,
+        "revenue_gap": 238715.1614,
         "adjusted_required_sales": 3257140.76,
-        "backlog_surplus": 18170044.4
+        "backlog_surplus": 17963350.66
       },
       {
         "month": "Feb 2026",
-        "total_backlog": 21427185.16,
-        "wip_est": 9831267.76,
-        "not_started": 11595917.4,
+        "total_backlog": 21220491.42,
+        "wip_est": 9853729.27,
+        "not_started": 11366762.15,
         "budget_rev": 2855781.11,
-        "pipeline_backlog": 21427185.16,
+        "pipeline_backlog": 21220491.42,
         "new_sales_backlog": 0,
         "pipe_invoicing": 0,
         "future_invoicing": 0,
-        "rev_from_backlog": 3092788.9792,
+        "rev_from_backlog": 3092469.0502,
         "revenue_gap": 0,
         "adjusted_required_sales": 3101368.34,
-        "backlog_surplus": 18325816.82
+        "backlog_surplus": 18119123.08
       },
       {
         "month": "Mar 2026",
-        "total_backlog": 21427185.16,
-        "wip_est": 9831267.76,
-        "not_started": 11595917.4,
+        "total_backlog": 21220491.42,
+        "wip_est": 9853729.27,
+        "not_started": 11366762.15,
         "budget_rev": 6228299.34,
-        "pipeline_backlog": 21427185.16,
+        "pipeline_backlog": 21220491.42,
         "new_sales_backlog": 0,
         "pipe_invoicing": 0,
         "future_invoicing": 0,
-        "rev_from_backlog": 4455789.5845,
-        "revenue_gap": 1772509.7555,
+        "rev_from_backlog": 4455924.8899,
+        "revenue_gap": 1772374.4501,
         "adjusted_required_sales": 5679200.03,
-        "backlog_surplus": 15747985.13
+        "backlog_surplus": 15541291.39
       },
       {
         "month": "Apr 2026",
-        "total_backlog": 21427185.16,
-        "wip_est": 9831267.76,
-        "not_started": 11595917.4,
+        "total_backlog": 21220491.42,
+        "wip_est": 9853729.27,
+        "not_started": 11366762.15,
         "budget_rev": 8405959.81,
-        "pipeline_backlog": 21427185.16,
+        "pipeline_backlog": 21220491.42,
         "new_sales_backlog": 0,
         "pipe_invoicing": 0,
         "future_invoicing": 0,
-        "rev_from_backlog": 7499555.5408,
-        "revenue_gap": 906404.2692,
+        "rev_from_backlog": 7499903.092,
+        "revenue_gap": 906056.718,
         "adjusted_required_sales": 10113960.9,
-        "backlog_surplus": 11313224.26
+        "backlog_surplus": 11106530.52
       },
       {
         "month": "May 2026",
-        "total_backlog": 21427185.16,
-        "wip_est": 12856311.096,
-        "not_started": 8570874.064,
+        "total_backlog": 21220491.42,
+        "wip_est": 12732294.852,
+        "not_started": 8488196.568,
         "budget_rev": 8564976.12,
-        "pipeline_backlog": 21427185.16,
+        "pipeline_backlog": 21220491.42,
         "new_sales_backlog": 0,
         "pipe_invoicing": 0,
         "future_invoicing": 0,
-        "rev_from_backlog": 9878381.4218,
+        "rev_from_backlog": 9878363.4804,
         "revenue_gap": 0,
         "adjusted_required_sales": 11714245.78,
-        "backlog_surplus": 9712939.38
+        "backlog_surplus": 9506245.64
       },
       {
         "month": "Jun 2026",
-        "total_backlog": 21427185.16,
-        "wip_est": 12856311.096,
-        "not_started": 8570874.064,
+        "total_backlog": 21220491.42,
+        "wip_est": 12732294.852,
+        "not_started": 8488196.568,
         "budget_rev": 11088423.31,
-        "pipeline_backlog": 21427185.16,
+        "pipeline_backlog": 21220491.42,
         "new_sales_backlog": 0,
         "pipe_invoicing": 0,
         "future_invoicing": 0,
-        "rev_from_backlog": 11004103.8197,
-        "revenue_gap": 84319.4903,
+        "rev_from_backlog": 11004889.8555,
+        "revenue_gap": 83533.4545,
         "adjusted_required_sales": 11842012.17,
-        "backlog_surplus": 9585172.99
+        "backlog_surplus": 9378479.25
       },
       {
         "month": "Jul 2026",
-        "total_backlog": 21427185.16,
-        "wip_est": 12856311.096,
-        "not_started": 8570874.064,
+        "total_backlog": 21220491.42,
+        "wip_est": 12732294.852,
+        "not_started": 8488196.568,
         "budget_rev": 10676120.9,
-        "pipeline_backlog": 21427185.16,
+        "pipeline_backlog": 21220491.42,
         "new_sales_backlog": 0,
         "pipe_invoicing": 0,
         "future_invoicing": 0,
-        "rev_from_backlog": 11402389.3164,
+        "rev_from_backlog": 11403589.9033,
         "revenue_gap": 0,
         "adjusted_required_sales": 11754306.81,
-        "backlog_surplus": 9672878.35
+        "backlog_surplus": 9466184.61
       },
       {
         "month": "Aug 2026",
-        "total_backlog": 21427185.16,
-        "wip_est": 12856311.096,
-        "not_started": 8570874.064,
+        "total_backlog": 21220491.42,
+        "wip_est": 12732294.852,
+        "not_started": 8488196.568,
         "budget_rev": 9151616.35,
-        "pipeline_backlog": 21427185.16,
+        "pipeline_backlog": 21220491.42,
         "new_sales_backlog": 0,
         "pipe_invoicing": 0,
         "future_invoicing": 0,
-        "rev_from_backlog": 10735738.7372,
+        "rev_from_backlog": 10736386.5635,
         "revenue_gap": 0,
         "adjusted_required_sales": 10164317.12,
-        "backlog_surplus": 11262868.04
+        "backlog_surplus": 11056174.3
       },
       {
         "month": "Sep 2026",
-        "total_backlog": 21427185.16,
-        "wip_est": 12856311.096,
-        "not_started": 8570874.064,
+        "total_backlog": 21220491.42,
+        "wip_est": 12732294.852,
+        "not_started": 8488196.568,
         "budget_rev": 9929275.62,
-        "pipeline_backlog": 21427185.16,
+        "pipeline_backlog": 21220491.42,
         "new_sales_backlog": 0,
         "pipe_invoicing": 0,
         "future_invoicing": 0,
-        "rev_from_backlog": 11510371.9087,
+        "rev_from_backlog": 11511354.3547,
         "revenue_gap": 0,
         "adjusted_required_sales": 12345448.67,
-        "backlog_surplus": 9081736.49
+        "backlog_surplus": 8875042.75
       },
       {
         "month": "Oct 2026",
-        "total_backlog": 21427185.16,
-        "wip_est": 12856311.096,
-        "not_started": 8570874.064,
+        "total_backlog": 21220491.42,
+        "wip_est": 12732294.852,
+        "not_started": 8488196.568,
         "budget_rev": 12273266.67,
-        "pipeline_backlog": 21427185.16,
+        "pipeline_backlog": 21220491.42,
         "new_sales_backlog": 0,
         "pipe_invoicing": 0,
         "future_invoicing": 0,
-        "rev_from_backlog": 12212352.32,
-        "revenue_gap": 60914.35,
-        "adjusted_required_sales": 12768439.24,
-        "backlog_surplus": 8658745.92
+        "rev_from_backlog": 12064850.1672,
+        "revenue_gap": 208416.5028,
+        "adjusted_required_sales": 12486993.74,
+        "backlog_surplus": 8733497.68
       },
       {
         "month": "Nov 2026",
-        "total_backlog": 21427185.16,
-        "wip_est": 12856311.096,
-        "not_started": 8570874.064,
+        "total_backlog": 21220491.42,
+        "wip_est": 12732294.852,
+        "not_started": 8488196.568,
         "budget_rev": 12787288.6277,
-        "pipeline_backlog": 21427185.16,
+        "pipeline_backlog": 21220491.42,
         "new_sales_backlog": 0,
-        "pipe_invoicing": 18273375.01,
+        "pipe_invoicing": 16560398.17,
         "future_invoicing": 0,
-        "rev_from_backlog": 5844470.0559,
-        "revenue_gap": 6942818.5718,
-        "adjusted_required_sales": 12303060.2448,
-        "backlog_surplus": 9124124.9152
+        "rev_from_backlog": 5763191.9425,
+        "revenue_gap": 7024096.6851,
+        "adjusted_required_sales": 12399924.2179,
+        "backlog_surplus": 8820567.2021
       },
       {
         "month": "Dec 2026",
-        "total_backlog": 9016140.0316,
-        "wip_est": 5409684.019,
-        "not_started": 3606456.0126,
+        "total_backlog": 10566834.3328,
+        "wip_est": 6340100.5997,
+        "not_started": 4226733.7331,
         "budget_rev": 10068312.8393,
-        "pipeline_backlog": 3153810.15,
-        "new_sales_backlog": 5862329.8816,
-        "pipe_invoicing": 3124400.35,
-        "future_invoicing": 7368777.28,
-        "rev_from_backlog": 2350737.7955,
-        "revenue_gap": 7717575.0437,
-        "adjusted_required_sales": 8739974.2572,
-        "backlog_surplus": 276165.7744
+        "pipeline_backlog": 4660093.25,
+        "new_sales_backlog": 5906741.0828,
+        "pipe_invoicing": 4630683.45,
+        "future_invoicing": 7515174.22,
+        "rev_from_backlog": 2321414.7562,
+        "revenue_gap": 7746898.0831,
+        "adjusted_required_sales": 8761204.3423,
+        "backlog_surplus": 1805629.9905
       }
     ],
     "methodologyLock": {
@@ -6436,11 +6456,11 @@ window.FZ.data = {
     },
     "_source": "calculator/revenue-forecast.js V5-baseline-2026-05-04-shell-1.1",
     "netsuiteInvoiced": {
-      "source": "ResInvoicedYTDResults-2026-11-10.csv",
+      "source": "ResInvoicedYTDResults-2026-11-11.csv",
       "format": "per-invoice",
       "aggregatedOnly": false,
-      "totalInvoiced": 84752710.19000003,
-      "invoiceCount": 4755,
+      "totalInvoiced": 85163739.96000002,
+      "invoiceCount": 4782,
       "monthly": [
         3312733.0599999987,
         2855781.11,
@@ -6452,7 +6472,7 @@ window.FZ.data = {
         9151616.350000001,
         9929275.619999997,
         12273266.67,
-        2266257.899999999,
+        2677287.669999999,
         0
       ],
       "byBranch": {
@@ -6461,36 +6481,36 @@ window.FZ.data = {
           "count": 156
         },
         "Richmond": {
-          "invoiced": 4294973.6400000015,
-          "count": 248
+          "invoiced": 4294973.840000002,
+          "count": 249
         },
         "DC Metro": {
-          "invoiced": 6207469.589999999,
-          "count": 349
+          "invoiced": 6264639.089999999,
+          "count": 353
         },
         "Cleveland": {
-          "invoiced": 7076900.180000001,
-          "count": 444
+          "invoiced": 7145650.180000001,
+          "count": 446
         },
         "Nashville": {
-          "invoiced": 6514293.430000002,
-          "count": 305
+          "invoiced": 6516191.430000002,
+          "count": 306
         },
         "Columbus": {
-          "invoiced": 32617951.100000005,
-          "count": 1734
+          "invoiced": 32844782.92000001,
+          "count": 1744
         },
         "Dayton": {
           "invoiced": 4143692.1699999995,
           "count": 248
         },
         "Cincinnati": {
-          "invoiced": 4228117.980000001,
-          "count": 248
+          "invoiced": 4257641.230000001,
+          "count": 253
         },
         "Detroit": {
-          "invoiced": 11406840.639999999,
-          "count": 607
+          "invoiced": 11433697.639999999,
+          "count": 611
         },
         "Raleigh": {
           "invoiced": 2865901.6099999994,
@@ -6522,7 +6542,7 @@ window.FZ.data = {
         9,
         10
       ],
-      "latestInvoiceDate": "2026-11-09",
+      "latestInvoiceDate": "2026-11-10",
       "actualMonths": [
         {
           "monthIdx": 0,
@@ -6613,10 +6633,10 @@ window.FZ.data = {
     "subtitle": "Live job-level backlog",
     "headerMeta": {
       "totalJobs": 721,
-      "totalWOs": 1064,
-      "portfolioValue": 18121123.58,
-      "avgDaysInStatus": 20,
-      "lastBuild": "2026-11-10T14:17:21.299Z"
+      "totalWOs": 1059,
+      "portfolioValue": 18115497.71,
+      "avgDaysInStatus": 19,
+      "lastBuild": "2026-11-11T14:04:15.922Z"
     },
     "tabs": [
       {
@@ -6660,30 +6680,30 @@ window.FZ.data = {
       {
         "label": "Total Jobs",
         "value": "721",
-        "sub": "1,064 work orders",
+        "sub": "1,059 work orders",
         "tone": "info"
       },
       {
         "label": "In Progress",
-        "value": "256",
-        "sub": "35.5% of book",
+        "value": "260",
+        "sub": "36.1% of book",
         "tone": "info"
       },
       {
         "label": "Not Started",
-        "value": "465",
-        "sub": "64.5% of book",
+        "value": "461",
+        "sub": "63.9% of book",
         "tone": "info"
       },
       {
         "label": "Partially Complete",
-        "value": "67",
-        "sub": "26.2% of In Progress",
+        "value": "62",
+        "sub": "23.8% of In Progress",
         "tone": "crit"
       },
       {
         "label": "Avg Days in Status",
-        "value": "20",
+        "value": "19",
         "sub": "Job-level average",
         "tone": "warn"
       },
@@ -6697,13 +6717,13 @@ window.FZ.data = {
     "kpisRiskOpportunity": [
       {
         "label": "Revenue at Risk",
-        "value": "$4.68M",
+        "value": "$4.32M",
         "sub": "Jobs with WOs >30 days in status",
         "tone": "crit"
       },
       {
         "label": "Immediate Throughput Opportunity",
-        "value": "$2.24M",
+        "value": "$2.07M",
         "sub": "Partial-job value waiting on trailing trades",
         "tone": "good"
       }
@@ -6711,57 +6731,57 @@ window.FZ.data = {
     "kpisPartial": [
       {
         "label": "Partial Jobs",
-        "value": "67",
-        "sub": "26.2% of In Progress",
+        "value": "62",
+        "sub": "23.8% of In Progress",
         "tone": "warn"
       },
       {
         "label": "Trapped Value",
-        "value": "$2.24M",
+        "value": "$2.07M",
         "sub": "Recoverable contract value",
         "tone": "good"
       },
       {
         "label": "Open WOs on Partials",
-        "value": "82",
-        "sub": "Across 67 jobs",
+        "value": "77",
+        "sub": "Across 62 jobs",
         "tone": "info"
       },
       {
         "label": "RTS Ready Today",
-        "value": "26",
+        "value": "25",
         "sub": "No blocker, dispatch now",
         "tone": "good"
       },
       {
         "label": "Top Trailing Trade",
         "value": "Gutters",
-        "sub": "43 open WOs / 43 jobs",
+        "sub": "41 open WOs / 41 jobs",
         "tone": "warn"
       }
     ],
     "kpisHolds": [
       {
         "label": "Total Holds",
-        "value": "367",
+        "value": "346",
         "sub": "WOs in On Hold status",
         "tone": "crit"
       },
       {
         "label": "Pending Permit",
-        "value": "179",
-        "sub": "48.8% of all holds",
+        "value": "173",
+        "sub": "50.0% of all holds",
         "tone": "warn"
       },
       {
         "label": "Pending Sales",
-        "value": "26",
+        "value": "28",
         "sub": "Awaiting sales disposition",
         "tone": "warn"
       },
       {
         "label": "Avg Hold Age",
-        "value": "27d",
+        "value": "26d",
         "sub": "Mean days in hold across all sub-statuses",
         "tone": "info"
       }
@@ -6769,19 +6789,19 @@ window.FZ.data = {
     "kpisSales": [
       {
         "label": "Active Reps",
-        "value": "107",
+        "value": "106",
         "sub": "Reps with at least one open WO",
         "tone": "info"
       },
       {
         "label": "Stuck Value >30d",
-        "value": "$4.68M",
+        "value": "$4.32M",
         "sub": "Sum of stale value across all reps",
         "tone": "crit"
       },
       {
         "label": "Reps with Stuck Work",
-        "value": "62",
+        "value": "61",
         "sub": "Reps carrying any >30d WO",
         "tone": "warn"
       },
@@ -6795,26 +6815,26 @@ window.FZ.data = {
     "kpisBacklog": [
       {
         "label": "Not Started Jobs",
-        "value": "465",
-        "sub": "64.5% of book",
+        "value": "461",
+        "sub": "63.9% of book",
         "tone": "info"
       },
       {
         "label": "Not Started Value",
-        "value": "$10.20M",
+        "value": "$10.22M",
         "sub": "Signed and waiting",
         "tone": "good"
       },
       {
         "label": "Oldest Not Started",
-        "value": "196d",
+        "value": "197d",
         "sub": "Days in status, oldest job",
         "tone": "crit"
       },
       {
         "label": "Top Branch Concentration",
         "value": "Columbus",
-        "sub": "165 jobs (35.5% of backlog)",
+        "sub": "169 jobs (36.7% of backlog)",
         "tone": "warn"
       }
     ],
@@ -6835,12 +6855,12 @@ window.FZ.data = {
           {
             "label": "Work Orders",
             "data": [
-              367,
-              293,
-              243,
-              81,
-              46,
-              31,
+              346,
+              299,
+              252,
+              77,
+              50,
+              32,
               2,
               1
             ]
@@ -6854,21 +6874,21 @@ window.FZ.data = {
           "Cleveland",
           "Detroit Metro",
           "Cincinnati",
-          "DC Metro",
           "Richmond",
+          "DC Metro",
           "Dayton",
           "Nashville",
           "Raleigh",
           "Greenville",
-          "Grand Rapids",
-          "Knoxville"
+          "Knoxville",
+          "Grand Rapids"
         ],
         "datasets": [
           {
             "label": "Completed",
             "data": [
-              29,
-              33,
+              27,
+              31,
               6,
               2,
               2,
@@ -6884,68 +6904,68 @@ window.FZ.data = {
           {
             "label": "Open",
             "data": [
-              30,
-              11,
-              10,
+              26,
+              15,
+              14,
               5,
-              4,
-              4,
-              3,
+              5,
+              5,
+              2,
               7,
               2,
               0,
-              3,
-              1
+              2,
+              2
             ]
           },
           {
             "label": "On Hold",
             "data": [
-              148,
-              120,
-              35,
-              16,
-              20,
-              4,
-              6,
+              144,
+              100,
+              42,
+              15,
               5,
-              9,
+              21,
+              6,
               4,
-              0,
+              5,
+              2,
+              2,
               0
             ]
           },
           {
             "label": "RTS",
             "data": [
-              87,
-              67,
-              58,
-              14,
-              11,
-              19,
+              94,
+              73,
+              52,
               15,
-              8,
-              7,
-              1,
+              21,
+              11,
+              14,
+              4,
+              9,
               3,
-              3
+              1,
+              2
             ]
           },
           {
             "label": "Scheduled",
             "data": [
-              117,
-              23,
+              115,
+              33,
               25,
-              23,
-              10,
-              17,
+              20,
+              18,
+              7,
+              5,
+              12,
+              7,
               4,
-              9,
-              6,
-              4,
-              2,
+              3,
               3
             ]
           }
@@ -6967,26 +6987,26 @@ window.FZ.data = {
           {
             "label": "Avg Days",
             "data": [
-              59,
-              27,
+              61,
+              26,
               25,
-              19,
-              11,
+              17,
+              10,
               2,
-              1,
+              2,
               0
             ]
           },
           {
             "label": "Max Days",
             "data": [
-              246,
-              385,
-              83,
-              196,
+              247,
+              386,
               84,
-              15,
-              1,
+              197,
+              85,
+              16,
+              2,
               0
             ]
           }
@@ -7003,9 +7023,9 @@ window.FZ.data = {
           "Skylights",
           "Metal",
           "Flat Roof",
-          "Masonry",
-          "GAF Solar",
           "Carpentry",
+          "GAF Solar",
+          "Masonry",
           "Electrical",
           "Stucco",
           "Other",
@@ -7015,9 +7035,9 @@ window.FZ.data = {
           {
             "label": "Completed",
             "data": [
-              69,
+              66,
               4,
-              6,
+              5,
               0,
               0,
               0,
@@ -7035,18 +7055,18 @@ window.FZ.data = {
           {
             "label": "Open",
             "data": [
-              395,
+              388,
               336,
-              147,
+              153,
               31,
               18,
               18,
               15,
               6,
-              5,
+              4,
               4,
               3,
-              1,
+              2,
               2,
               1,
               1
@@ -7067,11 +7087,11 @@ window.FZ.data = {
           {
             "label": "WOs",
             "data": [
-              28,
               26,
-              21,
-              6,
-              1
+              25,
+              19,
+              5,
+              2
             ]
           }
         ]
@@ -7090,12 +7110,12 @@ window.FZ.data = {
           {
             "label": "Open WOs",
             "data": [
-              23,
-              3,
-              8,
-              21,
-              10,
-              17
+              24,
+              5,
+              7,
+              19,
+              7,
+              15
             ]
           }
         ]
@@ -7120,14 +7140,14 @@ window.FZ.data = {
           {
             "label": "Jobs",
             "data": [
-              165,
-              89,
-              82,
-              31,
-              26,
-              17,
-              16,
-              15,
+              169,
+              88,
+              80,
+              28,
+              25,
+              19,
+              14,
+              14,
               12,
               5,
               5,
@@ -7157,159 +7177,159 @@ window.FZ.data = {
         "rows": [
           [
             "Columbus",
-            411,
-            29,
-            148,
-            87,
-            117,
-            18,
+            406,
+            27,
+            144,
+            94,
+            115,
+            14,
             12,
-            70,
-            279,
-            7248540.37
+            65,
+            278,
+            7245423.3
           ],
           [
             "Cleveland",
-            254,
+            252,
+            31,
+            100,
+            73,
             33,
-            120,
-            67,
-            23,
+            9,
             6,
-            5,
-            43,
-            150,
-            3519513.93
+            41,
+            151,
+            3483790.93
           ],
           [
             "Detroit Metro",
-            134,
+            139,
             6,
-            35,
-            58,
+            42,
+            52,
             25,
-            6,
+            10,
             2,
-            28,
-            103,
-            2501973.49
+            35,
+            105,
+            2569447.49
           ],
           [
             "Cincinnati",
-            60,
+            57,
             2,
-            16,
-            14,
-            23,
-            2,
-            3,
-            9,
-            41,
-            889500.69
-          ],
-          [
-            "DC Metro",
-            47,
-            2,
+            15,
+            15,
             20,
-            11,
-            10,
+            2,
             3,
-            1,
-            10,
-            34,
-            759793.46
+            8,
+            40,
+            858849.82
           ],
           [
             "Richmond",
-            46,
+            51,
             2,
-            4,
-            19,
-            17,
-            2,
+            5,
+            21,
+            18,
+            3,
             2,
             3,
-            25,
-            1002892.62
+            28,
+            1091624.41
+          ],
+          [
+            "DC Metro",
+            46,
+            2,
+            21,
+            11,
+            7,
+            3,
+            2,
+            10,
+            33,
+            718859.6
           ],
           [
             "Dayton",
-            32,
+            31,
             4,
             6,
-            15,
-            4,
+            14,
+            5,
             0,
-            2,
+            1,
             3,
-            24,
-            403649.28
+            23,
+            402541.28
           ],
           [
             "Nashville",
-            31,
+            29,
             2,
-            5,
-            8,
-            9,
+            4,
+            4,
+            12,
             4,
             3,
             3,
-            24,
-            1046901.56
+            23,
+            1026264.56
           ],
           [
             "Raleigh",
-            25,
+            24,
             1,
+            5,
             9,
             7,
-            6,
             2,
             0,
-            5,
-            22,
-            406269.34
+            1,
+            21,
+            403315.01
           ],
           [
             "Greenville",
             9,
             0,
-            4,
-            1,
+            2,
+            3,
             4,
             0,
             0,
-            4,
+            2,
             7,
             80697.19
           ],
           [
-            "Grand Rapids",
+            "Knoxville",
             8,
             0,
-            0,
-            3,
-            2,
             2,
             1,
+            3,
+            2,
             0,
-            5,
-            123774.03
+            2,
+            8,
+            154461.09
           ],
           [
-            "Knoxville",
+            "Grand Rapids",
             7,
             0,
             0,
+            2,
             3,
-            3,
+            1,
             1,
             0,
-            1,
-            7,
-            137617.62
+            4,
+            80223.03
           ]
         ]
       },
@@ -7325,45 +7345,45 @@ window.FZ.data = {
         "rows": [
           [
             "Pending Permit",
-            175,
+            169,
             16,
-            385
+            386
           ],
           [
             "Pending Material",
-            139,
-            38,
-            228
+            120,
+            35,
+            229
           ],
           [
             "Pending Sales",
-            26,
-            32,
-            118
+            28,
+            31,
+            119
           ],
           [
             "Homeowner Request",
-            16,
-            61,
-            168
+            17,
+            59,
+            169
           ],
           [
             "Pending HOA",
             7,
-            14,
-            47
+            15,
+            48
           ],
           [
             "Spring Hold",
-            3,
-            5,
-            6
+            4,
+            42,
+            148
           ],
           [
             "(no sub-status)",
             1,
-            18,
-            18
+            19,
+            19
           ]
         ]
       },
@@ -7379,9 +7399,9 @@ window.FZ.data = {
         "rows": [
           [
             "Gutters",
-            43,
-            43,
-            1185109.93
+            41,
+            41,
+            1097388.93
           ],
           [
             "Siding",
@@ -7397,27 +7417,21 @@ window.FZ.data = {
           ],
           [
             "Roofing",
-            4,
-            4,
-            112866.06
+            3,
+            3,
+            66629.16
           ],
           [
             "Windows",
-            3,
-            3,
-            39306.06
+            2,
+            2,
+            21571.16
           ],
           [
             "Rack Mounted Solar",
             2,
             2,
             93105.25
-          ],
-          [
-            "Masonry",
-            1,
-            1,
-            27500
           ],
           [
             "Other",
@@ -7449,22 +7463,22 @@ window.FZ.data = {
         "rows": [
           [
             "Ready to Schedule",
-            129
+            143
           ],
           [
             "Scheduled",
-            105
+            100
           ],
           [
             "On Hold",
-            101
+            92
           ],
           [
             "Completed",
             4
           ],
           [
-            "In Progress",
+            "Requires Additional Service",
             1
           ]
         ]
@@ -7483,11 +7497,11 @@ window.FZ.data = {
         "rows": [
           [
             "Roofing",
-            464,
-            69,
-            395,
-            461,
-            12869341.42
+            454,
+            66,
+            388,
+            451,
+            12645562.4
           ],
           [
             "Gutters",
@@ -7495,15 +7509,15 @@ window.FZ.data = {
             4,
             336,
             340,
-            8317818.31
+            8350689.78
           ],
           [
             "Siding",
+            158,
+            5,
             153,
-            6,
-            147,
-            153,
-            3311519.9
+            158,
+            3429108.41
           ],
           [
             "Rack Mounted Solar",
@@ -7519,7 +7533,7 @@ window.FZ.data = {
             0,
             18,
             18,
-            195748.18
+            180713.28
           ],
           [
             "Skylights",
@@ -7543,15 +7557,15 @@ window.FZ.data = {
             0,
             6,
             6,
-            153350.55
+            157400.55
           ],
           [
-            "Masonry",
-            5,
+            "Carpentry",
+            4,
             0,
-            5,
-            5,
-            134309.36
+            4,
+            4,
+            290623.63
           ],
           [
             "GAF Solar",
@@ -7562,20 +7576,20 @@ window.FZ.data = {
             298150.92
           ],
           [
-            "Carpentry",
+            "Masonry",
             3,
             0,
             3,
             3,
-            272276.83
+            66842.36
           ],
           [
             "Electrical",
+            3,
+            1,
             2,
-            1,
-            1,
-            1,
-            28145
+            2,
+            47762.63
           ],
           [
             "Stucco",
@@ -7635,15 +7649,15 @@ window.FZ.data = {
         "rows": [
           [
             "Rob Blackmore-INACTIVE",
-            40,
+            39,
             16,
             381358.78,
-            32,
+            29,
             2
           ],
           [
             "Frank Drummond",
-            22,
+            23,
             19,
             242338.39,
             13,
@@ -7666,14 +7680,6 @@ window.FZ.data = {
             1
           ],
           [
-            "Frank Butts",
-            34,
-            20,
-            214766.64,
-            17,
-            1
-          ],
-          [
             "Mark Younce",
             14,
             10,
@@ -7682,11 +7688,11 @@ window.FZ.data = {
             2
           ],
           [
-            "Jake Ross",
-            25,
-            15,
-            179916.05,
-            12,
+            "Frank Butts",
+            38,
+            23,
+            186502.74,
+            14,
             1
           ],
           [
@@ -7698,22 +7704,6 @@ window.FZ.data = {
             1
           ],
           [
-            "Justin Koenig",
-            15,
-            8,
-            171969.52,
-            7,
-            1
-          ],
-          [
-            "Tyler Sponseller",
-            33,
-            23,
-            168546.43,
-            10,
-            1
-          ],
-          [
             "Derrick Sieber",
             8,
             7,
@@ -7722,17 +7712,33 @@ window.FZ.data = {
             1
           ],
           [
-            "Michael Cox",
+            "Justin Koenig",
+            15,
+            8,
+            157645.95,
+            5,
+            1
+          ],
+          [
+            "Tyler Sponseller",
+            33,
+            23,
+            154601.56,
             9,
-            6,
-            121307.89,
-            3,
+            1
+          ],
+          [
+            "Jake Ross",
+            26,
+            16,
+            125401.29,
+            7,
             1
           ],
           [
             "Matt Henry",
-            20,
-            14,
+            19,
+            13,
             118244.22,
             5,
             7
@@ -7752,6 +7758,14 @@ window.FZ.data = {
             101869.11,
             5,
             2
+          ],
+          [
+            "Scott Scaperato-INACTIVE",
+            13,
+            7,
+            94877.76,
+            8,
+            1
           ]
         ]
       },
@@ -7767,75 +7781,75 @@ window.FZ.data = {
         "rows": [
           [
             "Columbus",
-            165,
-            3770958.61,
-            196
+            169,
+            3897099.02,
+            197
           ],
           [
             "Cleveland",
-            89,
-            2022392.74,
-            110
+            88,
+            1985229.5,
+            111
           ],
           [
             "Detroit Metro",
-            82,
-            1927190.44,
-            168
+            80,
+            1935466.44,
+            169
           ],
           [
             "Cincinnati",
-            31,
-            636124.91,
-            41
+            28,
+            580808.91,
+            42
           ],
           [
             "DC Metro",
-            26,
-            441129.35,
-            147
+            25,
+            427834.35,
+            148
           ],
           [
             "Richmond",
-            17,
-            512275.26,
-            47
+            19,
+            580620.1,
+            48
           ],
           [
             "Nashville",
-            16,
-            306449.29,
-            60
+            14,
+            259896.82,
+            61
           ],
           [
             "Raleigh",
-            15,
-            284693.42,
-            61
+            14,
+            267089.42,
+            111
           ],
           [
             "Dayton",
             12,
             129191.86,
-            42
+            43
           ],
           [
             "Greenville",
             5,
             45728.01,
-            8
+            7
           ],
           [
             "Knoxville",
             5,
-            88124.69,
-            12
+            74968.16,
+            13
           ],
           [
             "Grand Rapids",
             2,
             37000,
-            4
+            5
           ]
         ]
       },
@@ -7860,7 +7874,7 @@ window.FZ.data = {
             "Rack Mounted Solar",
             "",
             "Frank Drummond",
-            196,
+            197,
             5800
           ],
           [
@@ -7870,7 +7884,7 @@ window.FZ.data = {
             "Roofing",
             "Homeowner Request",
             "Gary Benedict Jr",
-            168,
+            169,
             13597
           ],
           [
@@ -7878,9 +7892,9 @@ window.FZ.data = {
             "Erik Steensen",
             "DC Metro",
             "GAF Solar",
-            "Pending Material",
+            "Spring Hold",
             "Derrick Sieber",
-            147,
+            148,
             59822
           ],
           [
@@ -7890,8 +7904,18 @@ window.FZ.data = {
             "Siding",
             "Homeowner Request",
             "Mark Daggett",
-            137,
+            138,
             27000
+          ],
+          [
+            "Job-116908",
+            "Corey and Shemika Hamilton",
+            "Raleigh",
+            "Gutters",
+            "",
+            "Trevor Frazier",
+            111,
+            11805.8
           ],
           [
             "Job-117302",
@@ -7900,7 +7924,7 @@ window.FZ.data = {
             "Gutters",
             "Pending Material",
             "Jake Ross",
-            110,
+            111,
             19654.5
           ],
           [
@@ -7910,7 +7934,7 @@ window.FZ.data = {
             "Siding",
             "Pending Material",
             "Frank Butts",
-            109,
+            110,
             16713.23
           ],
           [
@@ -7920,7 +7944,7 @@ window.FZ.data = {
             "Siding",
             "Pending Sales",
             "Frank Drummond",
-            92,
+            93,
             2608
           ],
           [
@@ -7930,7 +7954,7 @@ window.FZ.data = {
             "Roofing",
             "",
             "David Poole",
-            84,
+            85,
             15829
           ],
           [
@@ -7940,58 +7964,18 @@ window.FZ.data = {
             "Roofing",
             "Homeowner Request",
             "David Poole",
-            83,
+            84,
             9833
-          ],
-          [
-            "Job-119479",
-            "Louis Mallis",
-            "Cleveland",
-            "Siding",
-            "Pending Material",
-            "Tyler Sponseller",
-            78,
-            13944.87
-          ],
-          [
-            "Job-119486",
-            "Lisa Smith",
-            "Cleveland",
-            "Gutters",
-            "Pending Material",
-            "Jake Ross",
-            78,
-            16235.07
           ],
           [
             "Job-119532",
             "Bhupati Pradhan",
             "Cleveland",
-            "Gutters",
+            "Siding",
             "Pending Material",
             "Bryce Fink",
-            77,
+            78,
             24066.79
-          ],
-          [
-            "Job-119538",
-            "Joseph Kundrat",
-            "Cleveland",
-            "Siding",
-            "Pending Material",
-            "Bryce Fink",
-            77,
-            28203.82
-          ],
-          [
-            "Job-119484",
-            "Mark Townson",
-            "Cleveland",
-            "Siding",
-            "",
-            "Scott Scaperato-INACTIVE",
-            76,
-            4500
           ],
           [
             "Job-119679",
@@ -8000,8 +7984,38 @@ window.FZ.data = {
             "Gutters",
             "",
             "Tyler Sponseller",
-            75,
+            76,
             2272
+          ],
+          [
+            "Job-119842",
+            "Terrie Moore",
+            "Cleveland",
+            "Gutters",
+            "Pending Material",
+            "Jake Ross",
+            72,
+            30872.09
+          ],
+          [
+            "Job-120022",
+            "Christina Gustavson",
+            "Columbus",
+            "Roofing",
+            "Pending Permit",
+            "Bill Applegate",
+            70,
+            12894.63
+          ],
+          [
+            "Job-120057",
+            "Marcia Philpotts",
+            "Cleveland",
+            "Siding",
+            "Pending Material",
+            "Frank Butts",
+            70,
+            16598.96
           ]
         ]
       }
@@ -8010,15 +8024,15 @@ window.FZ.data = {
       "permitsByBranch": [
         {
           "branch": "Columbus",
-          "permits": 70
+          "permits": 65
         },
         {
           "branch": "Cleveland",
-          "permits": 43
+          "permits": 41
         },
         {
           "branch": "Detroit Metro",
-          "permits": 28
+          "permits": 35
         },
         {
           "branch": "DC Metro",
@@ -8026,15 +8040,7 @@ window.FZ.data = {
         },
         {
           "branch": "Cincinnati",
-          "permits": 9
-        },
-        {
-          "branch": "Raleigh",
-          "permits": 5
-        },
-        {
-          "branch": "Greenville",
-          "permits": 4
+          "permits": 8
         },
         {
           "branch": "Richmond",
@@ -8049,26 +8055,34 @@ window.FZ.data = {
           "permits": 3
         },
         {
+          "branch": "Greenville",
+          "permits": 2
+        },
+        {
           "branch": "Knoxville",
+          "permits": 2
+        },
+        {
+          "branch": "Raleigh",
           "permits": 1
         }
       ]
     },
     "actionPlan": {
-      "strategicGoal": "Convert $2.24M of trapped partial-job revenue into billable revenue, reduce $4.68M of at-risk contract value, and clear the not-started backlog without adding headcount.",
+      "strategicGoal": "Convert $2.07M of trapped partial-job revenue into billable revenue, reduce $4.32M of at-risk contract value, and clear the not-started backlog without adding headcount.",
       "immediate": [
-        "Dispatch the 26 RTS WOs sitting on partial jobs. No blocker, no hold, just dispatch.",
-        "Re-dispatch the 31 RAS WOs (oldest at 83 days). These are pure re-work fastballs.",
-        "Gutters sweep: 43 open WOs across 43 partial jobs blocking $1.19M. Highest single-trade leverage in the book.",
-        "Columbus permit sweep: 70 pending-permit WOs concentrated at one branch. AHJ-relations problem, not a company-wide one.",
-        "Close out the 9 zombie jobs (all WOs Completed, parent still In Progress). Pure paperwork."
+        "Dispatch the 25 RTS WOs sitting on partial jobs. No blocker, no hold, just dispatch.",
+        "Re-dispatch the 32 RAS WOs (oldest at 84 days). These are pure re-work fastballs.",
+        "Gutters sweep: 41 open WOs across 41 partial jobs blocking $1.10M. Highest single-trade leverage in the book.",
+        "Columbus permit sweep: 65 pending-permit WOs concentrated at one branch. AHJ-relations problem, not a company-wide one.",
+        "Close out the 10 zombie jobs (all WOs Completed, parent still In Progress). Pure paperwork."
       ],
       "structural": [
         "Stand up a partial-job dispatch SLA: any job that crosses 14 days with at least one Completed WO and at least one open WO triggers a daily stand-up review.",
         "Add a Permit Aging escalation path: any pending-permit WO over 14 days routes to the branch GM with a daily AHJ touchpoint requirement.",
         "Trade-specific dispatch surge for the dominant trailing trade (currently Gutters): evaluate whether sub-fleet expansion or schedule re-balance moves the number faster than headcount.",
         "Pending Sales disposition cadence: weekly meeting with the top stuck reps to triage. Most are dispositions, not deals to lose.",
-        "Not-Started intake review: 465 jobs ($10.20M) sit waiting. Audit the dispatch trigger so jobs do not languish post-signature."
+        "Not-Started intake review: 461 jobs ($10.22M) sit waiting. Audit the dispatch trigger so jobs do not languish post-signature."
       ],
       "cadence": [
         "Weekly Monday Action Plan refresh: re-baseline the Immediate list every 7 days.",
@@ -8077,7 +8091,7 @@ window.FZ.data = {
         "Monthly Salesperson View read: surface the top stuck reps to sales leadership for joint disposition.",
         "Quarterly Trade Analysis read: validate that Roofing-to-Gutters cadence still matches install volume."
       ],
-      "bottomLine": "The book is healthy in volume terms. The drag is in the middle of the funnel: partial jobs trap $2.24M, holds are concentrated in permits, and the not-started cohort needs an intake audit. The fix list is operational, not strategic. The top three workstreams (RTS dispatch, RAS re-dispatch, permit sweep) move the number without adding headcount."
+      "bottomLine": "The book is healthy in volume terms. The drag is in the middle of the funnel: partial jobs trap $2.07M, holds are concentrated in permits, and the not-started cohort needs an intake audit. The fix list is operational, not strategic. The top three workstreams (RTS dispatch, RAS re-dispatch, permit sweep) move the number without adding headcount."
     }
   }
 };
